@@ -1,0 +1,28 @@
+{
+  "name": "zvms-apis-gen-main",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prettier": "^2.8.1",
+    "zvms-apis-paths-data": "link:../../../apis/paths",
+    "zvms-apis-paths-gen": "link:../paths",
+    "zvms-apis-types-data": "link:../../../apis/types",
+    "zvms-apis-types-gen": "link:../types",
+    "zvms-apis-users-data": "link:../../../apis/users",
+    "zvms-apis-users-gen": "link:../users",
+    "zvms-config": "link:../../../config"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.17",
+    "@types/prettier": "^2.7.1"
+  }
+}

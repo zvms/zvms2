@@ -1,0 +1,14 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "./dist"
+    },
+    "include": [
+        "./src"
+    ],
+    "references": [
+        {
+            "path": "../../scripts/gen/users"
+        }
+    ]
+}

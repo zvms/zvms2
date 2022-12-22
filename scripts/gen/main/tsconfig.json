@@ -1,0 +1,36 @@
+{
+    "extends": "../../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "types": [
+            "node",
+            "prettier"
+        ]
+    },
+    "include": [
+        "./src"
+    ],
+    "references": [
+        {
+            "path": "../../../apis/paths"
+        },
+        {
+            "path": "../../../apis/types"
+        },
+        {
+            "path": "../../../apis/users"
+        },
+        {
+            "path": "../paths"
+        },
+        {
+            "path": "../types"
+        },
+        {
+            "path": "../users"
+        },
+        {
+            "path": "../../../config"
+        }
+    ]
+}

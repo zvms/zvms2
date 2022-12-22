@@ -1,0 +1,7 @@
+lockfileVersion: 5.4
+
+specifiers:
+  zvms-apis-types-gen: link:../../scripts/gen/types
+
+dependencies:
+  zvms-apis-types-gen: link:../../scripts/gen/types

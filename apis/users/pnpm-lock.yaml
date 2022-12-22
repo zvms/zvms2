@@ -1,0 +1,7 @@
+lockfileVersion: 5.4
+
+specifiers:
+  zvms-apis-users-gen: link:../../scripts/gen/users
+
+dependencies:
+  zvms-apis-users-gen: link:../../scripts/gen/users

@@ -1,0 +1,23 @@
+{
+  "name": "zvms-apis-paths-gen",
+  "version": "1.0.0",
+  "description": "Apis and pyi&dts file generator",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "gen": "ts-node index.ts --files",
+    "dev": "nodemon --exec npm run gen -e js,ts -i ./gen"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "zvms-apis-types-gen": "link:../types"
+  }
+}

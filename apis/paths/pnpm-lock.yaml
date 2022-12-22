@@ -1,0 +1,11 @@
+lockfileVersion: 5.4
+
+specifiers:
+  zvms-apis-paths-gen: link:../../scripts/gen/paths
+  zvms-apis-types-data: link:../types
+  zvms-apis-users-data: link:../users
+
+dependencies:
+  zvms-apis-paths-gen: link:../../scripts/gen/paths
+  zvms-apis-types-data: link:../types
+  zvms-apis-users-data: link:../users

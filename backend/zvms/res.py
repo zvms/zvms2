@@ -1,0 +1,23 @@
+from enum import IntFlag, IntEnum
+
+class AUTH(IntFlag):
+    NONE    = 0b0000001
+    STUDENT = 0b0000010
+    TEACHER = 0b0000100
+    CLASS   = 0b0001000
+    MANAGER = 0b0010000
+    AUDITOR = 0b0100000
+    SYSTEM  = 0b1000000
+
+class VOL_TYPE(IntEnum):
+    INSIDE = 1
+    OUTSIDE = 2
+    LARGE = 3
+
+class STATUS(IntEnum):
+    WAITING_FOR_SIGNUP_AUDIT = 1
+    UNSUBMITTED = 2
+    WAITING_FOR_FIRST_AUDIT = 3
+    WAITING_FOR_FINAL_AUDIT = 4
+    ACCEPTED = 5
+    REJECTED = 6

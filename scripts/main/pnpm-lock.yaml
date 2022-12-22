@@ -1,0 +1,9 @@
+lockfileVersion: 5.4
+
+specifiers:
+  zvms-apis-gen-main: link:../gen/main
+  zvms-config: link:../../config
+
+dependencies:
+  zvms-apis-gen-main: link:../gen/main
+  zvms-config: link:../../config
