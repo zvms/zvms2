@@ -16,3 +16,11 @@ export function mkdirSync(path: string) {
 export function writeFileSync(file: string, data: string) {
     return fs.writeFileSync(toRoot(file), data);
 }
+
+export function readFileSync(file: string) {
+    return fs.readFileSync(toRoot(file), { encoding: "utf-8" });
+}
+
+export function readdirSync(path: string) {
+    return fs.readdirSync(toRoot(path));
+}

@@ -24,10 +24,9 @@ export function pyImplsPost(path: string, post?: Method) {
         const decl = pyReq2paramsDecl(post.req);
         const res = pyResType(path2LCamal(crtItemPath), post.res);
         return `
-${res.decl}
+# [POST] ${crtItemPath}
 def post${path2LCamal(crtItemPath)}(${decl})\
  -> ${res.name} : '''
-## POST ${crtItemPath}
 ${pyComments(post)}
 '''`
     } else {

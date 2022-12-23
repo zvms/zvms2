@@ -16,7 +16,7 @@ export function pathsGen(apis: Apis, implFiles: ImplFiles): PathsGenerated {
             name: partName,
             fApi: genTs(partName, part),
             views: genViewsPy(partName, part),
-            impls: genImplsPy(partName, part, implFiles)
+            impls: genImplsPy(partName, part, implFiles[partName])
         })
     }
     return result;

@@ -8,7 +8,7 @@ import { structsDefGenTs, typesIndexRaw } from "zvms-apis-types-gen";
 
 import * as fs from "./fs.js";
 
-import { resolve } from "node:path";
+import { join } from "node:path";
 import { format } from "prettier";
 
 const { paths } = zvmsConfig;
@@ -23,38 +23,42 @@ function generate(): (() => void)[] {
     let todos: (() => void)[] = [];
 
     let implFiles: ImplFiles = {};
+    const fileList = fs.readdirSync(paths.b.impls);
+    for(const file of fileList){
+        implFiles[file] = fs.readFileSync(join(paths.b.impls,file));
+    }
 
     todos.push(...pathsGen(pathsData, implFiles).map(
         ({ name, fApi, views, impls }) => (
             () => {
-                fs.writeFileSync(resolve(paths.f.fApi, name + ".ts"), prettierTs(fApi));
-                fs.writeFileSync(resolve(paths.b.views, name + ".py"), views);
-                fs.writeFileSync(resolve(paths.b.impls, name + ".py"), impls);
+                fs.writeFileSync(join(paths.f.fApi, name + ".ts"), prettierTs(fApi));
+                fs.writeFileSync(join(paths.b.views, name + ".py"), views);
+                fs.writeFileSync(join(paths.b.impls, name + ".py"), impls);
             }
         )
     ));
     todos.push(() => {
-        fs.writeFileSync(resolve(paths.f.fApi, "index.ts"), fApiIndexRaw);
-        fs.writeFileSync(resolve(paths.b.views, "__init__.py"), viewsInitRaw);
-        fs.writeFileSync(resolve(paths.b.impls, "__init__.py"), implsInitRaw);
+        fs.writeFileSync(join(paths.f.fApi, "index.ts"), fApiIndexRaw);
+        fs.writeFileSync(join(paths.b.views, "__init__.py"), viewsInitRaw);
+        fs.writeFileSync(join(paths.b.impls, "__init__.py"), implsInitRaw);
     });
 
     todos.push(() => {
-        fs.writeFileSync(resolve(paths.f.users, "catagories.ts"), prettierTs(catagoriesGenTs(userCatagories)));
-        fs.writeFileSync(resolve(paths.f.users, "auth.ts"), prettierTs(authGenTs(authData)));
-        fs.writeFileSync(resolve(paths.f.users, "index.ts"), usersIndexRaw);
+        fs.writeFileSync(join(paths.f.users, "catagories.ts"), prettierTs(catagoriesGenTs(userCatagories)));
+        fs.writeFileSync(join(paths.f.users, "auth.ts"), prettierTs(authGenTs(authData)));
+        fs.writeFileSync(join(paths.f.users, "index.ts"), usersIndexRaw);
     })
 
     todos.push(() => {
-        fs.writeFileSync(resolve(paths.f.types, "structs.ts"), prettierTs(structsDefGenTs(structsData)));
-        fs.writeFileSync(resolve(paths.f.types, "index.ts"), typesIndexRaw);
+        fs.writeFileSync(join(paths.f.types, "structs.ts"), prettierTs(structsDefGenTs(structsData)));
+        fs.writeFileSync(join(paths.f.types, "index.ts"), typesIndexRaw);
     })
 
     return todos;
 }
 
 function prepare() {
-    const backupPath = resolve(paths.backup, `${Date.now()}`);
+    const backupPath = join(paths.backup, `${Date.now()}`);
     fs.mkdirSync(backupPath);
     const backupList = [
         [paths.f.fApi, "f-fApi"],
@@ -66,7 +70,7 @@ function prepare() {
         [paths.b.types, "b-types"]
     ];
     for (const item of backupList) {
-        fs.cpSync(item[0], resolve(backupPath, item[1]), { recursive: true });
+        fs.cpSync(item[0], join(backupPath, item[1]), { recursive: true });
     }
 }
 
