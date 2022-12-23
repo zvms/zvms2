@@ -8,7 +8,7 @@ def list_classes():
     '''获取班级列表'''
     res = req.get('/classes')
     if res:
-        for i in res['classes']:
+        for i in res:
             print(i['id'], i['name'])
 
 @classes.route('class <int:id>')

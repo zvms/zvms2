@@ -1,11 +1,12 @@
 from flask import request
 from functools import wraps
 from jwt.exceptions import InvalidSignatureError
+from datetime import datetime
 import json
 
 from zvms import app, db
 from zvms.res import AUTH
-from zvms.util import ZvmsError, ZvmsSuccess, debug_mode, success, error
+from zvms.util import ZvmsError, success, error
 import zvms.tokenlib as tk
 
 class Named:
@@ -91,8 +92,8 @@ def parse(json):
         bool: lambda: 'boolean',
         type(None): lambda: 'null',
         str: lambda: 'string',
-        list: lambda: '[ ' + ', '.join(map(parse, json)) + ' ]',
-        dict: lambda: '{ ' + ', '.join(map(lambda p: f'"{p[0]}": {parse(p[1])}', json), json.items()) + ' }'
+        list: lambda: '[' + ', '.join(map(parse, json)) + ']',
+        dict: lambda: '{' + ', '.join(map(lambda p: f'"{p[0]}": {parse(p[1])}', json.items())) + '}'
     }.get(type(json))()
 
 
@@ -133,9 +134,11 @@ def deco(impl, params, auth):
                 'expected': str(params), 'found': parse(json_data)})
 
         try:
+            with open('log.txt', 'a', encoding='utf-8') as f:
+                if auth:
+                    f.write(f'({token_data["id"]}) ')
+                f.write(f'[{datetime.now()}] {request.method} {request.url}\n')
             return impl(*args, **kwargs, **json_data, token_data=token_data)
         except ZvmsError as ex:
             return error(ex.message)
-        except ZvmsSuccess as ex:
-            return success(ex.message, **ex.result)
     return wrapper

@@ -17,13 +17,16 @@ def login(id, pwd):
     if res:
         headers['Authorization'] = res['token']
         App.config['prompt'] = f'{id}> '
-        print(f'''用户名: {res['name']}
-班级: {res['clz']}''')
+        print('''用户名: {name}
+班级: {clzName}({clz})
+权限: {auth}'''.format(**res))
 
 @users.route('user logout')
 def logout():
     '''登出'''
     req.post('/users/logout')
+    headers['Authorization'] = ''
+    App.config['prompt'] = '(未登录)> '
 
 @users.route('user <int:id>')
 def get_user_info(id):

@@ -1,15 +1,15 @@
 class Ident:
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
     def match(self, cmd):
         return cmd == self.name
 
 class Param:
-    def __init__(self, name, master):
+    def __init__(self, name: str, master):
         self.name = name
         self.__master = master
 
-    def match(self, cmd):
+    def match(self, cmd: str):
         if 'int:' in self.name:
             try:
                 self.__master.args.append(int(cmd))
@@ -20,7 +20,7 @@ class Param:
         return True
 
 class Option:
-    def __init__(self, name, master):
+    def __init__(self, name: str, master):
         self.name = name
         self.__master = master
         self.anno = ''
@@ -43,10 +43,10 @@ class Option:
             try:
                 if not p.match(next(cmd_iter)):
                     return False
-            except StopAsyncIteration:
+            except StopIteration:
                 return False
 
-    def add_param(self, param):
+    def add_param(self, param: Param):
         self.__params.append(Param(param, self))
 
     def help(self):
@@ -54,5 +54,5 @@ class Option:
         for param in self.__params:
             print(param.name, end=' ')
         if self.anno:
-            print(':', self.anno)
+            print(':', self.anno, end='')
         print()

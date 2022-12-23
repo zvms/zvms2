@@ -21,3 +21,8 @@ class STATUS(IntEnum):
     WAITING_FOR_FINAL_AUDIT = 4
     ACCEPTED = 5
     REJECTED = 6
+
+class NOTICE_TYPE(IntEnum):
+    USER_NOTICE = 1
+    CLASS_NOTICE = 2
+    SCHOOL_NOTICE = 3

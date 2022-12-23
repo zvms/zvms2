@@ -2,24 +2,30 @@ from .elems import Ident, Param, Option
 from .util import split
 
 class Rule:
-    def __init__(self, rule):
+    def __init__(self, rule: str):
         self.args = []
         self.kwargs = {}
         self.__elems = []
         self.__options = {}
         option = ''
+        anno = False
         for s in split(rule):
             if s[0] == '-':
-                self.__options[s] = Option(s, self)
-                option = s
+                if s[-1] == ':':
+                    option = s[:-1]
+                    anno = True
+                else:
+                    option = s
+                self.__options[option] = Option(option, self)
             elif option:
-                if option[-1] == ':' and not self.__options[option].anno:
+                if anno:
                     self.__options[option].anno = s
                 elif s[0] == '<' and s[-1] == '>':
                     self.__options[option].add_param(s)
                 else:
                     option = ''
                     self.__elems.append(Ident(s))
+                anno = False
             elif s[0] == '<' and s[-1] == '>':
                 self.__elems.append(Param(s, self))
             else:
@@ -32,7 +38,8 @@ class Rule:
             print('\n可选的参数')
             for option in self.__options.values():
                 option.help()
-        print()
+        else:
+            print()
 
     def interpret(self, cmd):
         self.args.clear()

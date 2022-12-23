@@ -7,7 +7,7 @@ def list_classes(token_data):
     '''
     
     '''
-    return success('获取成功', classes=list(Class.query.select('id', 'name')))
+    return success('获取成功', list(Class.query.select('id', 'name')))
 
 #[GET] /classes/<int:id>
 def get_class_info(id, token_data):

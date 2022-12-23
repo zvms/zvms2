@@ -1,13 +1,17 @@
 from flask_sqlalchemy.query import Query
-from sqlalchemy.orm.collections import InstrumentedList
+from sqlalchemy.sql import and_
+import datetime
 
 from zvms import db
+from zvms.res import *
 import json
 
-def success(message, **result):
+def success(message, *result, **kwresult):
     ret = {'type': 'SUCCESS', 'message': message}
     if result:
-        ret['result'] = result
+        ret['result'] = result[0]
+    elif kwresult:
+        ret['result'] = kwresult
     db.session.commit()
     return json.dumps(ret)
 
@@ -17,26 +21,6 @@ def error(message):
 class ZvmsError(Exception):
     def __init__(self, message):
         self.message = message
-
-class ZvmsSuccess(Exception):
-    def __init__(self, message, **result):
-        self.message = message
-        self.result = result
-        db.session.commit()
-
-no_commit = False
-
-def debug_mode(on=None):
-    global no_commit
-    if on == None:
-        return not no_commit
-    no_commit = not on
-
-def get_or_error(self, *args, **kwargs):
-    ret = self.get(*args **kwargs)
-    if ret:
-        return ret
-    raise ZvmsError('未查找到相关记录')
 
 def select(self, *cols, **aliases):
     return dict(zip(cols + tuple(aliases.values()), map(self.__getattribute__, cols + tuple(aliases.keys()))))
@@ -60,7 +44,7 @@ def __init__(self, **kwargs):
     for k, v in kwargs.items():
         self.__setattr__(k, v)
 
-# 我管这种东西叫拓展方法
+# 我管这种东西叫扩展方法
 # 我知道这很不好, 但写起来是真的爽
 # 如果不合适的话可以改掉
 
@@ -72,7 +56,18 @@ db.Model.__init__ = __init__
 def apply(func):
     return lambda self, *cols, **aliases: map(lambda x: func(x, *cols, **aliases), self)
 
-Query.select = InstrumentedList.select = apply(select)
-Query.update = InstrumentedList.update = apply(update)
-Query.select_value = InstrumentedList.select_value = apply(lambda x: [x.__getattribute__(i) for i in x])
+Query.select = apply(select)
+Query.update = apply(update)
+Query.select_value = apply(db.Model.__getattribute__)
 Query.get_or_error = get_or_error
+
+def try_parse_time(str):
+    try:
+        return datetime.datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
+    except ValueError:
+        raise ZvmsError('请求接口错误: 非法的时间字符串')
+
+def auth_self(id, token_data, message):
+    print(id, token_data['id'], (token_data['auth'] & AUTH.SYSTEM))
+    if id != token_data['id'] and not (token_data['auth'] & AUTH.SYSTEM):
+        raise ZvmsError(message)

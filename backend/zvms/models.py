@@ -33,6 +33,10 @@ class User(db.Model):
         return Notice.query.filter_by(sender=self.id)
 
     @property
+    def clz(self):
+        return Class.query.get_or_error(self.clz_id)
+
+    @property
     def notices_received(self):
         return Notice.query.filter_by(id.in_(UserNotice.query.filter_by(user_id=self.id).select_value('notice_id')))
 

@@ -1,28 +1,9 @@
+from datetime import datetime
 
-import typing
+from zvms.util import *
 
-
-ReportitemsResponse = TypedDict('ReportitemsResponse',
-            {
-                "data": typing.Sequence[str]
-            }
-        )
-        
-def getReportitems(param1: typing.Sequence[typing.Sequence[str]],
-param2: str) -> ReportitemsResponse : '''
-## GET reportitems
-# 获取反馈列表
-
-''' 
-
-
-def postReportitems() -> None : '''
-## POST reportitems
-
-'''
-
- 
-
-
- 
-
+#[POST] /report
+def report(report, token_data):
+    with open('report.txt', 'a', encoding='utf-8') as f:
+        f.write(f'[{datetime.now()}] {report}\n')
+    return success('反馈成功')
