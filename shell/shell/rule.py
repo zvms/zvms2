@@ -3,15 +3,14 @@ from .util import split
 
 class Rule:
     def __init__(self, rule: str):
-        self.args = []
         self.kwargs = {}
         self.__elems = []
         self.__options = {}
         option = ''
         anno = False
         for s in split(rule):
-            if s[0] == '-':
-                if s[-1] == ':':
+            if s.startswith('-'):
+                if s.endswith(':'):
                     option = s[:-1]
                     anno = True
                 else:
@@ -20,13 +19,13 @@ class Rule:
             elif option:
                 if anno:
                     self.__options[option].anno = s
-                elif s[0] == '<' and s[-1] == '>':
+                elif s.startswith('<') and s.endswith('>'):
                     self.__options[option].add_param(s)
                 else:
                     option = ''
                     self.__elems.append(Ident(s))
                 anno = False
-            elif s[0] == '<' and s[-1] == '>':
+            elif s.startswith('<') and s.endswith('>'):
                 self.__elems.append(Param(s, self))
             else:
                 self.__elems.append(Ident(s))
@@ -42,7 +41,6 @@ class Rule:
             print()
 
     def interpret(self, cmd):
-        self.args.clear()
         self.kwargs.clear()
         elem_iter = iter(self.__elems)
         cmd_iter = iter(cmd)
@@ -51,10 +49,10 @@ class Rule:
                 c = next(cmd_iter)
             except StopIteration:
                 try:
-                    next(elem_iter)
+                    c = next(elem_iter)
                     return None
                 except StopIteration:
-                    return self.args.copy(), self.kwargs.copy()
+                    return self.kwargs.copy()
             if c in self.__options:
                 if not self.__options[c].match(cmd_iter):
                     return None

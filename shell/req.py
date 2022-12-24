@@ -1,4 +1,5 @@
 from urllib.request import urlopen, Request
+from urllib.parse import quote
 from urllib.error import URLError
 import json
 
@@ -13,7 +14,7 @@ class Requester:
         
     def __request(url, data, headers, method):
         try:
-            req = Request(url, headers=headers, method=method)
+            req = Request(quote(url, safe='/:?='), headers=headers, method=method)
             if data:
                 res = json.load(urlopen(req, data))
             else:

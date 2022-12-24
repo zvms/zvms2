@@ -1,9 +1,8 @@
 from operator import attrgetter
-import datetime
-import hashlib
 
 from zvms import db
 from zvms.res import *
+from zvms.util import *
 
 class Class(db.Model):
     __tablename__ = 'class'
@@ -13,18 +12,18 @@ class Class(db.Model):
 
     @property
     def members(self):
-        return User.query.filter_by(clz_id=self.id)
+        return User.query.filter_by(cls_id=self.id)
 
     @property
     def notices_received(self):
-        return Notice.query.filter_by(id.in_(ClassNotice.query.filter_by(clz_id=self.id).select_value('notice_id')))
+        return Notice.query.filter_by(id.in_(ClassNotice.query.filter_by(cls_id=self.id).select_value('notice_id')))
 
 class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(5))
-    clz_id = db.Column(db.Integer, name='class')
+    cls_id = db.Column(db.Integer, name='class')
     pwd = db.Column(db.String(32))
     auth = db.Column(db.Integer)
 
@@ -33,16 +32,25 @@ class User(db.Model):
         return Notice.query.filter_by(sender=self.id)
 
     @property
-    def clz(self):
-        return Class.query.get_or_error(self.clz_id)
+    def cls(self):
+        return Class.query.get(self.cls_id)
 
-    @property
-    def notices_received(self):
-        return Notice.query.filter_by(id.in_(UserNotice.query.filter_by(user_id=self.id).select_value('notice_id')))
+    def __filter_thoughts(self, type):
+        return sum(select_value(filter(lambda sv: Volunteer.query.get(sv.vol_id).
+                    type == type and sv.reward is not None,
+                    StuVol.query.filter_by(stu_id=self.id)), 'reward'))
 
     @property
     def inside(self):
-        return 
+        return self.__filter_thoughts(VOL_TYPE.INSIDE)
+
+    @property
+    def outside(self):
+        return self.__filter_thoughts(VOL_TYPE.OUTSIDE)
+
+    @property
+    def large(self):
+        return self.__filter_thoughts(VOL_TYPE.LARGE)
 
 class Notice(db.Model):
     __tablename__ = 'notice'
@@ -77,7 +85,7 @@ class StuVol(db.Model):
 class ClassVol(db.Model):
     __tablename__ = 'class_vol'
 
-    clz_id = db.Column(db.Integer, primary_key=True)
+    cls_id = db.Column(db.Integer, primary_key=True)
     vol_id = db.Column(db.Integer, primary_key=True)
     max = db.Column(db.Integer)
 
@@ -97,7 +105,7 @@ class UserNotice(db.Model):
 class ClassNotice(db.Model):
     __tablename__ = 'class_notice'
 
-    clz_id = db.Column(db.Integer, primary_key=True)
+    cls_id = db.Column(db.Integer, primary_key=True)
     notice_id = db.Column(db.Integer, primary_key=True)
 
 class SchoolNotice(db.Model):

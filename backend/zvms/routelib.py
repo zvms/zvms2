@@ -5,7 +5,7 @@ from datetime import datetime
 import json
 
 from zvms import app, db
-from zvms.res import AUTH
+from zvms.res import *
 from zvms.util import ZvmsError, success, error
 import zvms.tokenlib as tk
 
@@ -20,13 +20,14 @@ class Named:
     def __str__(self):
         return self.name
 
+# 下面的谓词开头大写是因为它们有"类型"的含义(虽然实际上不是), 同时还避免了与内置函数重名
 Any = Named(lambda _: True, 'any')
 Int = Named(lambda x: isinstance(x, int), 'number(int)')
 Float = Named(lambda x: isinstance(x, float), 'number(float)')
-Number = Named(lambda x: Int(x) or Float(x), 'number')
+Number = Named(lambda x: isinstance(x, (int, float)), 'number')
 Boolean = Named(lambda x: isinstance(x, bool), 'boolean')
 String = Named(lambda x: isinstance(x, str), 'string')
-Null = Named(lambda x: x == None, 'null')
+Null = Named(lambda x: x is None, 'null')
 
 class Array:
     def __init__(self, sub, allow_empty=True):
@@ -42,7 +43,7 @@ class Array:
         return self.allow_empty or len(json) > 0
 
     def __str__(self):
-        return f'[ {self.sub}, ... ]{"" if self.allow_empty else "(不可为空)"}'
+        return f'[{self.sub}, ...]{"" if self.allow_empty else "(不可为空)"}'
 
 class Object:
     def __init__(self, **pairs):
@@ -57,7 +58,7 @@ class Object:
         return True
 
     def __str__(self):
-        return '{ ' + ', '.join(map(lambda p: f'"{p[0]}": {p[1]}', self.pairs.items())) + ' }'
+        return '{' + ', '.join(map(lambda p: f'"{p[0]}": {p[1]}', self.pairs.items())) + '}'
 
 class Option:
     def __init__(self, *options):
@@ -97,7 +98,7 @@ def parse(json):
     }.get(type(json))()
 
 
-def route(*,rule, method='GET', impl_func, params=Any, auth=0xffff):
+def route(*,rule, method='GET', impl_func, params=Any, auth=AUTH.ALL):
     app.add_url_rule(rule, methods=[method], view_func=deco(impl_func, params, auth))
 
 # 不要听下面的注释, 现在已经没有装饰器了
@@ -114,7 +115,6 @@ def deco(impl, params, auth):
                 json_data = json.loads(request.get_data().decode("utf-8"))
             except:
                 json_data = {}
-            
         token_data = {}
         if auth != None:
             try:
@@ -124,15 +124,13 @@ def deco(impl, params, auth):
                 token_data = tk.read(token_data)
                 if not tk.exists(token_data):
                     return json.dumps({'type':'ERROR', 'message':"Token失效, 请重新登陆"})
-                if not (token_data['auth'] & (auth | AUTH.SYSTEM)):
+                if not auth.authorized(token_data['auth']):
                     return json.dumps({'type': 'ERROR', 'message': '权限不足'})
             except InvalidSignatureError as ex:
                 return json.dumps({'type':'ERROR', 'message':"未获取到Token, 请重新登陆"})
-
         if not params(json_data):
             return json.dumps({'type': 'ERROR', 'message': '请求接口错误',
                 'expected': str(params), 'found': parse(json_data)})
-
         try:
             with open('log.txt', 'a', encoding='utf-8') as f:
                 if auth:

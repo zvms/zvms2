@@ -1,5 +1,5 @@
 # what the fuck?
-def split(raw: str, vars: dict[str, str]={}) -> list[str]:
+def split(raw: str, vars: dict[str, str] = {}) -> list[str]:
     ret = []
     literals = {"'": 0, '"': 0}
     s = ''

@@ -18,7 +18,7 @@ def login(id, pwd):
         headers['Authorization'] = res['token']
         App.config['prompt'] = f'{id}> '
         print('''用户名: {name}
-班级: {clzName}({clz})
+班级: {clsName}({cls})
 权限: {auth}'''.format(**res))
 
 @users.route('user logout')
@@ -34,15 +34,19 @@ def get_user_info(id):
     res = req.get(f'/users/{id}')
     if res:
         print('''姓名: {name}
-班级: {clz}
+班级: {cls}
 权限: {auth}'''.format(**res))
+        if res['auth'] & 0b10:
+            print('''校内时间: {inside}
+校外时间: {outside}
+大型时间: {large}'''.format(**res))
 
 @users.route('user mod-pwd <old> <new>')
 def modify_password(old, new):
     '''修改自己的密码'''
     req.patch('/users/mod-pwd', old=md5ify(old), new=md5ify(new))
 
-@users.route('user change-class <clz>')
-def change_class(clz):
+@users.route('user change-class <cls>')
+def change_class(cls):
     '''修改自己(老师)的班级'''
-    req.patch('/users/change-class', clz=clz)
+    req.patch('/users/change-class', cls=cls)

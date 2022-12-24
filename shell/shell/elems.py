@@ -10,13 +10,13 @@ class Param:
         self.__master = master
 
     def match(self, cmd: str):
-        if 'int:' in self.name:
+        if self.name.startswith('<int:'):
             try:
-                self.__master.args.append(int(cmd))
+                self.__master.kwargs[self.name[5:-1]] = int(cmd)
                 return True
             except ValueError:
                 return False
-        self.__master.args.append(cmd)
+        self.__master.kwargs[self.name[1:-1]] = cmd
         return True
 
 class Option:
@@ -24,21 +24,21 @@ class Option:
         self.name = name
         self.__master = master
         self.anno = ''
-        self.args = []
+        self.kwargs = {}
         self.__params = []
 
     def match(self, cmd_iter):
-        self.args.clear()
+        self.kwargs.clear()
         param_iter = iter(self.__params)
         while True:
             try:
                 p = next(param_iter)
             except StopIteration:
-                if self.name[-1] == ':':
+                if self.name.endswith(':'):
                     slice = self.name[1:-1]
                 else:
                     slice = self.name[1:]
-                self.__master.kwargs[slice] = self.args.copy()
+                self.__master.kwargs[slice] = self.kwargs.copy()
                 return True
             try:
                 if not p.match(next(cmd_iter)):

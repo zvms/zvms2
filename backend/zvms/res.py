@@ -8,6 +8,10 @@ class AUTH(IntFlag):
     MANAGER = 0b0010000
     AUDITOR = 0b0100000
     SYSTEM  = 0b1000000
+    ALL     = 0b1111111
+
+    def authorized(self, that):
+        return (self | AUTH.SYSTEM) & that
 
 class VOL_TYPE(IntEnum):
     INSIDE = 1
