@@ -7,10 +7,9 @@ export function pyViewsGet(path: string, get?: Method) {
         const decl = pyReq2paramsDecl(get.req);
         const res = pyResType(path2LCamal(crtItemPath), get.res);
         return `
-${res.decl}
+# [GET] ${crtItemPath}
 def get${path2LCamal(crtItemPath)}(${decl})\
  -> ${res.name} : '''
-## GET ${crtItemPath}
 ${pyComments(get)}
 '''`
     } else {

@@ -46,4 +46,6 @@ export interface DefaultParams {
     [key: string]: unknown;
 }
 
-export type ImplFiles = Record<string, string>;
+export type ImplFile = string;
+
+export type ImplFiles = Record<string, ImplFile>;
