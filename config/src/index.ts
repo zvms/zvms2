@@ -8,8 +8,9 @@ const zvmsConfig = {
         b: {
             views: "/backend/zvms/views/",
             impls: "/backend/zvms/impls/",
-            users: "/backend/zvms/users/",
-            types: "/backend/zvms/types/"
+            res: "/backend/zvms/res/",
+            users: "/backend/zvms/res/users/",
+            types: "/backend/zvms/res/types/"
         },
         backup: "/.backup/"
     }

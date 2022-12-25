@@ -51,13 +51,36 @@ export const userCatagories = {
 `;
     for (const name in raw) {
         const catagory = raw[name];
-        str +=
-            `\t${name}: {
-\t\tid: ${catagory.id},
-\t\tname: "${catagory.name}",
-\t},\n`
+        str += `
+    ${name}: {
+        id: ${catagory.id},
+        name: "${catagory.name}",
+    },\n`
     }
-    str += `
-}`;
+    str += `\n}`;
+    return str;
+}
+
+function toSnackUppercase(str: string) {
+    let result = "";
+    for (const c of str) {
+        if (65 <= c.charCodeAt(0) && c.charCodeAt(0) <= 90) {
+            result += "_";
+        }
+        result += c;
+    }
+    return result.toUpperCase();
+}
+
+export function catagoriesGenPy({ raw }: UserCatagories) {
+    let str = `\n`;
+    for (const name in raw) {
+        const catagory = raw[name];
+        str += `
+${toSnackUppercase(name)} = {
+    'id': ${catagory.id},
+    'name': '${catagory.name}',
+},\n`
+    }
     return str;
 }

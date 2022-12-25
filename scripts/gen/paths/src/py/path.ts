@@ -2,7 +2,7 @@ import { Path } from "../types.js";
 import { pyViewsGet, pyImplsGet } from "./get.js";
 import { pyViewsPost, pyImplsPost } from "./post.js";
 
-export function pyViewsPath(path: string, pathData: Path) {
+export function pyViewsPath(partName: string, path: string, pathData: Path) {
     let str = "";
     if (pathData.paths) {
         for (let itemName in pathData.paths) {
@@ -12,16 +12,16 @@ export function pyViewsPath(path: string, pathData: Path) {
                 `${item.desc ? `'''
 ${item.desc}
 '''`: ""}
-${pyViewsGet(crtPath, item.get)} 
-${pyViewsPost(crtPath, item.post)}
+${pyViewsGet(partName, crtPath, item.get)} 
+${pyViewsPost(partName, crtPath, item.post)}
 `
-            str += pyViewsPath(crtPath, item);
+            str += pyViewsPath(partName, crtPath, item);
         }
     }
     return str;
 }
 
-export function pyImplsPath(path: string, pathData: Path) {
+export function pyImplsPath(partName: string, path: string, pathData: Path) {
     let str = "";
     if (pathData.paths) {
         for (let itemName in pathData.paths) {
@@ -31,10 +31,10 @@ export function pyImplsPath(path: string, pathData: Path) {
                 `${item.desc ? `'''
 ${item.desc}
 '''`: ""}
-${pyImplsGet(crtPath, item.get)} 
-${pyImplsPost(crtPath, item.post)}
+${pyImplsGet(partName, crtPath, item.get)} 
+${pyImplsPost(partName, crtPath, item.post)}
 `
-            str += pyImplsPath(crtPath, item);
+            str += pyImplsPath(partName, crtPath, item);
         }
     }
     return str;

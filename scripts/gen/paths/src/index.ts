@@ -12,6 +12,7 @@ export function pathsGen(apis: Apis, implFiles: ImplFiles): PathsGenerated {
     const result: PathsGenerated = [];
     for (const partName in apis) {
         const part = (apis)[partName];
+        console.log("Generating", partName);
         result.push({
             name: partName,
             fApi: genTs(partName, part),

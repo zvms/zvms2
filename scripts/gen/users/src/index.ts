@@ -4,3 +4,7 @@ export * from "./catagories.js";
 export const usersIndexRaw =
     `export * from "./auth.ts.js";
 export * from "./index.ts.js";`;
+
+export const usersInitRaw =
+    `export * from "./auth.ts.js";
+export * from "./index.ts.js";`;

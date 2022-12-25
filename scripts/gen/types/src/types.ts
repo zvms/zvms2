@@ -1,54 +1,16 @@
-import { Type, Description } from "zvms-apis-types-gen";
-import { AuthData } from "zvms-apis-users-gen";
-export { Type, Description };
-
-export interface Apis {
-    [partPath: string]: Part;
-}
-
-export interface Part {
-    paths: Paths;
+export interface Type {
     desc?: Description;
-    cfg?: Config;
+    ts: string;
+    py: string;
+    ck: string; //Python runtime type checking
 }
 
-export type PathItem = string;
+export type Description = string;
 
-export interface Paths {
-    [pathItem: PathItem]: Path;
-}
+export type GenFunc = (params: any) => Type;
 
-export interface Path {
-    paths?: Paths;
-    desc?: Description;
-    get?: Method;
-    post?: Method;
-    cfg?: Config
-}
+export const typesIndexRaw =
+    `export * from "./structs";`
 
-export interface Method {
-    name:string;
-    desc?: Description;
-    req?: Params;
-    res?: Params;
-    _req?: DefaultParams;
-    _res?: DefaultParams;
-    cfg?: Config;
-    auths?: (AuthData[0])[];
-}
-
-export interface Params {
-    [key: string]: Type;
-}
-
-export interface Config {
-    token?: boolean;
-}
-
-export interface DefaultParams {
-    [key: string]: unknown;
-}
-
-export type ImplFile = string;
-
-export type ImplFiles = Record<string, ImplFile>;
+export const typesInitRaw =
+    `export * from "./structs";`

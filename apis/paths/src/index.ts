@@ -1,4 +1,4 @@
-export {class2 as class} from "./class.js";
+export {classes} from "./classes.js";
 export {notice} from "./notice.js";
 export {report} from "./report.js";
 export {student} from "./student.js";

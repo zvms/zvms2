@@ -41,11 +41,8 @@ export function pyResType(apiName: string, res?: Params) {
 }
 
 export function pyComments(m: Method) {
-    return `${pyAddSharp(m.desc)}${pyAddSharp(cfg2str(m.cfg))}${pyReq2paramsDesc(m.req).join("\n")}`
-}
-
-export function pyAddSharp(str: string | undefined) {
-    return str ? "# " + str + "\n" : "";
+    return `${m.desc}${cfg2str(m.cfg)}${pyReq2paramsDesc(m.req).join("\n")}`
+        .replaceAll("\n", "\n    ");
 }
 
 export function pyCommentStr(comment?: string) {

@@ -1,4 +1,5 @@
 import { Type, Description } from "zvms-apis-types-gen";
+import { AuthData } from "zvms-apis-users-gen";
 export { Type, Description };
 
 export interface Apis {
@@ -26,12 +27,14 @@ export interface Path {
 }
 
 export interface Method {
+    name:string;
     desc?: Description;
     req?: Params;
     res?: Params;
     _req?: DefaultParams;
     _res?: DefaultParams;
     cfg?: Config;
+    auths?: (AuthData[0])[];
 }
 
 export interface Params {

@@ -7,13 +7,10 @@ from zvms.util import *
 def list_signup(**kwargs):
     if 'c' not in kwargs:
         return error('请求接口错误: 没有指定班级')
-    ret = list(StuVol.query.select(stu_id='stuId', vol_id='volId'))
+    ret = list(StuVol.query.select(stu_id='stuId', vol_id='volId', stu_name='stuName', vol_name='volName'))
     if not ret:
         return error('未查询到相关数据')
-    for i in ret:
-        i['stuName'] = User.query.get(i['stuId']).name
-        i['volName'] = Volunteer.query.get(i['volId']).name
-    return success('获取成功', list(ret))
+    return success('获取成功', ret)
 
 #[PATCH] /signup/<int:stuId>/<int:volId>
 def audit_signup(stuId, volId, token_data):
