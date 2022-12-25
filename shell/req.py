@@ -9,17 +9,18 @@ class Requester:
         self.__headers = headers
 
     def __getattr__(self, method):
-        return lambda url, **data: Requester.__request(self.__domain + url,
-            json.dumps(data).encode(), self.__headers, method.upper())
+        return lambda url, echo=False, **data: Requester.__request(self.__domain + url,
+            echo, json.dumps(data).encode(), self.__headers, method.upper())
         
-    def __request(url, data, headers, method):
+    def __request(url, echo, data, headers, method):
         try:
             req = Request(quote(url, safe='/:?='), headers=headers, method=method)
             if data:
                 res = json.load(urlopen(req, data))
             else:
                 res = json.load(urlopen(req))
-            print(res['message'])
+            if echo:
+                print(res['message'])
             if res['type'] == 'SUCCESS':
                 return res.get('result')
             for k, v in res.items():

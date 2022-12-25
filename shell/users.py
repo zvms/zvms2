@@ -17,7 +17,6 @@ def login(id, pwd):
     if res:
         headers['Authorization'] = res['token']
         App.config['prompt'] = f'{id}> '
-        print(f'权限: {res["auth"]}')
 
 @users.route('user logout')
 def logout():

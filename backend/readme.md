@@ -15,5 +15,12 @@
 
 ## 运行
 ```bash
-python3 run.py
+flask --app zvms run
+```
+
+或
+
+```bash
+export FLASK_APP = zvms
+flask run
 ```

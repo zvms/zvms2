@@ -1,7 +1,7 @@
 from flask import request
 from functools import wraps
 from jwt.exceptions import InvalidSignatureError
-from datetime import datetime
+import datetime
 import json
 
 from zvms import app, db
@@ -46,7 +46,7 @@ def deco(impl, params, auth):
             with open('log.txt', 'a', encoding='utf-8') as f:
                 if auth:
                     f.write(f'({token_data["id"]}) ')
-                f.write(f'[{datetime.now()}] {request.method} {request.url}\n')
+                f.write(f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
             return impl(*args, **kwargs, **json_data, token_data=token_data)
         except ZvmsError as ex:
             return error(ex.message)

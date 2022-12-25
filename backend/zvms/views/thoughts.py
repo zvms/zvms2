@@ -9,6 +9,12 @@ route(
 
 route(
     rule='/thoughts/<int:stuId>/<int:volId>',
+    method='GET',
+    impl_func=zvms.impls.thoughts.get_thought_info,
+)
+
+route(
+    rule='/thoughts/<int:stuId>/<int:volId>',
     method='PATCH',
     impl_func=zvms.impls.thoughts.update_thought
 )

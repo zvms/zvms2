@@ -1,3 +1,4 @@
+from base64 import b64decode
 import sys
 import hashlib
 
@@ -36,12 +37,13 @@ def search_thoughts(**kwargs):
     def filter_status(sv):
         return Volunteer.query.get(sv.vol_id).status == S
     def process_query(query):
-        ret = list(query.select('status', stu_id='stuId', vol_id='volId',
+        ret = list(apply(select)(query, 'status', stu_id='stuId', vol_id='volId',
                                  stu_name='stuName', vol_name='volName'))
+        print(ret)
         if not ret:
             return error('未查询到相关数据')
         return success('获取成功', ret)
-    return process_query(filter(filter_, Notice.query.filter(*conds)))
+    return process_query(filter(filter_, StuVol.query.filter(*conds)))
 
 #[GET] /thoughts/<int:stuId>/<int:volId>
 def get_thought_info(stuId, volId, token_data):
@@ -66,7 +68,7 @@ Thought = Object(
 #[PATCH] /thoughts/<int:stuId>/<int:volId>
 def update_thought(token_data, stuId, volId, **kwargs):
     thought = StuVol.query.get_or_error((stuId, volId))
-    auth =token_data['auth']
+    auth = token_data['auth']
     def submit_thought():
         if not Thought(kwargs):
             return interface_error(Thought, kwargs)
@@ -76,6 +78,7 @@ def update_thought(token_data, stuId, volId, **kwargs):
         elif sys.platform == 'linux':
             statis_folder = '/tmp/zvms_backend'
         for pic in kwargs['pics']:
+            pic = b64decode(pic)
             hash = md5ify(pic)
             if Picture.query.filter_by(stu_id=stuId, vol_id=volId, hash=hash).first():
                 continue
@@ -106,7 +109,6 @@ def update_thought(token_data, stuId, volId, **kwargs):
             case STATUS.ACCEPTED | STATUS.REJECTED:
                 if not AUTH.AUDITOR.authorized(auth):
                     return error('权限不足')
-                # if not isinstance(kwargs.get('reward') 
                 thought.status = kwargs['status']
             case STATUS.WAITING_FOR_FINAL_AUDIT:
                 if not (AUTH.TEACHER | AUTH.CLASS).authorized(auth):

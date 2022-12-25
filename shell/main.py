@@ -12,6 +12,7 @@ from report import report
 from notices import notices
 from volunteers import volunteers
 from signup import signup
+from thoughts import thoughts
 
 app = App('zvms-shell', '镇海中学义工管理系统终端', title='镇海中学义工管理系统终端', prompt='(未登录)> ')
 
@@ -21,6 +22,7 @@ app.register(report)
 app.register(notices)
 app.register(volunteers)
 app.register(signup)
+app.register(thoughts)
 
 if __name__ == '__main__':
     app.run_shell()

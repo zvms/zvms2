@@ -19,3 +19,9 @@ app.test_request_context().push()
 db = SQLAlchemy(app)
 db.create_all()
 migrate = Migrate(app, db)
+
+# from zvms.views import *
+import zvms.views
+from zvms.tokenlib import init_app
+
+init_app(app)

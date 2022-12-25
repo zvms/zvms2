@@ -1,4 +1,4 @@
-from .elems import Ident, Param, Option
+from .elems import Ident, Param, Option, VarParams
 from .util import split
 
 class Rule:
@@ -6,6 +6,7 @@ class Rule:
         self.kwargs = {}
         self.__elems = []
         self.__options = {}
+        self.__varparams = None
         option = ''
         anno = False
         for s in split(rule):
@@ -23,8 +24,17 @@ class Rule:
                     self.__options[option].add_param(s)
                 else:
                     option = ''
-                    self.__elems.append(Ident(s))
+                    if s.startswith('*'):
+                        self.__varparams = VarParams(s[1:], self)
+                    elif self.__varparams:
+                        self.__varparams.add_param(s)
+                    else:
+                        self.__elems.append(Ident(s))
                 anno = False
+            elif s.startswith('*'):
+                self.__varparams = VarParams(s[1:], self)
+            elif self.__varparams:
+                self.__varparams.add_param(s)
             elif s.startswith('<') and s.endswith('>'):
                 self.__elems.append(Param(s, self))
             else:
@@ -37,10 +47,13 @@ class Rule:
             print('\n可选的参数')
             for option in self.__options.values():
                 option.help()
-        else:
-            print()
+        if self.__varparams:
+            print('\n变长参数: ')
+            self.__varparams.help()
 
     def interpret(self, cmd):
+        if self.__varparams:
+            self.__varparams.ready()
         self.kwargs.clear()
         elem_iter = iter(self.__elems)
         cmd_iter = iter(cmd)
@@ -49,9 +62,10 @@ class Rule:
                 c = next(cmd_iter)
             except StopIteration:
                 try:
-                    c = next(elem_iter)
-                    return None
+                    next(elem_iter)
                 except StopIteration:
+                    if self.__varparams and not self.__varparams.ok():
+                        return None
                     return self.kwargs.copy()
             if c in self.__options:
                 if not self.__options[c].match(cmd_iter):
@@ -61,4 +75,8 @@ class Rule:
                 if not next(elem_iter).match(c):
                     return None
             except StopIteration:
-                return None
+                if self.__varparams:
+                    if not self.__varparams.match(c):
+                        return None
+                else:
+                    return None
