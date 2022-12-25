@@ -19,7 +19,7 @@ def get_user_info(id, token_data):
     user = User.query.get_or_error(id)
     return success('获取成功', **user.select('name', 'auth',
                    *(('inside', 'outside', 'large') if user.auth & AUTH.STUDENT else ()),
-                   cls_id='cls'), clsName=user.cls.name)
+                   cls_id='cls', cls_name='clsName'), clsName=user.cls.name)
 
 #[PATCH] /users/mod-pwd
 def modify_password(old, new, token_data):

@@ -1,8 +1,8 @@
 from shell import App
 
-def morf(kwargs, echo=False):
+def morf(kwargs, key='description', echo=False):
     if 'm' in kwargs:
-        ret = kwargs['m']['description']
+        ret = kwargs['m'][key]
         del kwargs['m']
         return ret
     elif 'f' in kwargs:

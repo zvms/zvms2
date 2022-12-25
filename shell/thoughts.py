@@ -34,7 +34,7 @@ def thought(stuId, volId, **kwargs):
             if 'pics' in res:
                 browser.open(' '.join((f'http://127.0.0.1:1145/static/pics/{i}.jpg'for i in res['pics'])))
     args = {'pics': []}
-    tmp = morf(kwargs, False)
+    tmp = morf(kwargs, 'thought', False)
     if tmp:
         args['thought'] = tmp
     for i in kwargs['pics']:

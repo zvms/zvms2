@@ -12,10 +12,6 @@ class Class(db.Model):
     def members(self):
         return User.query.filter_by(cls_id=self.id)
 
-    @property
-    def notices_received(self):
-        return Notice.query.filter_by(id.in_(ClassNotice.query.filter_by(cls_id=self.id).select_value('notice_id')))
-
 class User(db.Model):
     __tablename__ = 'user'
 
@@ -32,6 +28,10 @@ class User(db.Model):
     @property
     def cls(self):
         return Class.query.get(self.cls_id)
+
+    @property
+    def cls_name(self):
+        return self.cls.name
 
     def __filter_thoughts(self, type):
         return sum(select_value(filter(lambda sv: Volunteer.query.get(sv.vol_id).

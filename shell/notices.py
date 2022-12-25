@@ -19,7 +19,7 @@ def search_notices(**kwargs):
 @notices.route('notice send <int:type> <title> <deadtime> -m: 正文 <content> -f: 存放正文的文件路径 <file> -t: 目标 <int:target>')
 def send_notice(**kwargs):
     '''发送通知'''
-    content = morf(kwargs)
+    content = morf(kwargs, 'content')
     if content is not None:
         if 't' in kwargs:
             target = kwargs['t'][0]
@@ -36,6 +36,6 @@ def delete_notice(id):
 @notices.route('notice mod <int:id> <title> <deadtime> -m: 正文 <content> -f: 存放正文的文件路径 <file>')
 def modify_notice(**kwargs):
     '''修改通知'''
-    content = morf(kwargs)
+    content = morf(kwargs, 'content')
     if content is not None:
         req.put(f'/notices/{id}', **kwargs, content=content)
