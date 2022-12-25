@@ -17,9 +17,7 @@ def login(id, pwd):
     if res:
         headers['Authorization'] = res['token']
         App.config['prompt'] = f'{id}> '
-        print('''用户名: {name}
-班级: {clsName}({cls})
-权限: {auth}'''.format(**res))
+        print(f'权限: {res["auth"]}')
 
 @users.route('user logout')
 def logout():
@@ -34,7 +32,7 @@ def get_user_info(id):
     res = req.get(f'/users/{id}')
     if res:
         print('''姓名: {name}
-班级: {cls}
+班级: {cls}({clsName})
 权限: {auth}'''.format(**res))
         if res['auth'] & 0b10:
             print('''校内时间: {inside}

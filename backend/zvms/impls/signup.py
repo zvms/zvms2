@@ -31,7 +31,7 @@ def signup(stuId, volId, token_data):
         return error('学生已报名该义工')
     if User.query.get_or_error(stuId, '该学生不存在').auth & AUTH.TEACHER:
         return error('不能报名教师')
-    if (token_data['auth'] & AUTH.TEACHER) or (token_data['auth'] & AUTH.CLASS):
+    if (AUTH.TEACHER | AUTH.CLASS).authorized(token_data['auth']):
         auth_cls(User.query.get(stuId).cls_id, token_data)
         StuVol(
             stu_id=stuId,

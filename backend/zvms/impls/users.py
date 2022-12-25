@@ -7,8 +7,8 @@ def login(id, pwd, token_data):
     user = User.query.get(id)
     if not user or user.pwd != pwd:
         return error('用户名或密码错误')
-    return success('登录成功', name=user.name, cls=user.cls_id, clsName=user.cls.name, 
-    token=tk.generate(**user.select('id', 'auth', cls_id='cls')), auth=user.auth)
+    return success('登录成功', token=tk.generate(**user.select('id', 'auth', cls_id='cls')),
+                    auth=user.auth)
 
 #[POST] /users/logout
 def logout(token_data):

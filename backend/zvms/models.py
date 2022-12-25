@@ -1,5 +1,3 @@
-from operator import attrgetter
-
 from zvms import db
 from zvms.res import *
 from zvms.util import *
@@ -82,6 +80,18 @@ class StuVol(db.Model):
     reason = db.Column(db.String(1024))
     reward = db.Column(db.Integer)
 
+    @property
+    def pics(self):
+        return Picture.query.filter_by(stu_id=self.stu_id, vol_id=self.vol_id).select_value('hash')
+
+    @property
+    def stu_name(self):
+        return User.query.get(self.stu_id).name
+
+    @property
+    def vol_name(self):
+        return Volunteer.query.get(self.vol_id).name
+
 class ClassVol(db.Model):
     __tablename__ = 'class_vol'
 
@@ -92,8 +102,9 @@ class ClassVol(db.Model):
 class Picture(db.Model):
     __tablename__ = 'picture'
 
-    stu_id = db.Column(db.Integer, primary_key=True)
-    vol_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True) # 这一列其实不需要, 但sqlalchemy强制表要有主键
+    stu_id = db.Column(db.Integer)
+    vol_id = db.Column(db.Integer)
     hash = db.Column(db.String(32))
 
 class UserNotice(db.Model):

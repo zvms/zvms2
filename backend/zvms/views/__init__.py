@@ -4,3 +4,4 @@ import zvms.views.report
 import zvms.views.notices
 import zvms.views.volunteers
 import zvms.views.signup
+import zvms.views.thoughts

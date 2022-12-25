@@ -34,6 +34,7 @@ create table stu_vol(
     primary key(stu_id, vol_id)
 );
 create table picture(
+    id int primary key auto_increment,
     stu_id int, 
     vol_id int, 
     hash char(32), 
