@@ -78,7 +78,7 @@ def update_volunteer(token_data, id, classes, **kwargs):
             ).insert()
         else:
             cv.max = cls['max']
-        if cv.now() > cls['max']:
+        if cv.now > cls['max']:
             return error('义工报名溢出')
     vol.update(**kwargs)
     return success('修改成功')
