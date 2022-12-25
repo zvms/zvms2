@@ -25,16 +25,19 @@ def get_volunteer_info(id):
 举办者: {holder}
 类型: {vol_type}
 报酬: {reward}
+参与者:
 '''.format(**res, vol_type=vol_types[res['type']]))
+        for i in res['joiners']:
+            print('{name}({id})'.format(**i))
 
-@volunteers.route('vol create <name> <time> <int:type> <int:reward> -m: 描述 <description> -f: 存放描述的文件路径 <file>')
+@volunteers.route('vol create <name> <time> <int:type> <int:reward> -m: 描述 <description> -f: 存放描述的文件路径 <file> *classes int:id int:max')
 def create_volunteer(**kwargs):
     '''创建义工'''
     description = morf(kwargs)
     if description is not None:
         req.post('/volunteers', **kwargs, description=description)
 
-@volunteers.route('vol mod <int:id> <name> <time> <int:type> <int:reward> -m: 描述 <description> -f: 存放描述的文件路径 <file>')
+@volunteers.route('vol mod <int:id> <name> <time> <int:type> <int:reward> -m: 描述 <description> -f: 存放描述的文件路径 <file> *classes int:id int:max')
 def modify_volunteers(id, **kwargs):
     '''修改义工'''
     description = morf(kwargs)

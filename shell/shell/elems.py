@@ -57,7 +57,7 @@ class VarParams:
             return True
 
     def help(self):
-        print(self.name, end= '')
+        print(self.name, end= ': ')
         for param in self.__params:
             print(param.name, end=' ')
         print()

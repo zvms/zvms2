@@ -15,6 +15,10 @@ def md5ify(raw):
 def search_thoughts(**kwargs):
     conds = [StuVol.status != STATUS.WAITING_FOR_SIGNUP_AUDIT]
     filter_ = lambda _: True
+    def filter_cls(sv):
+        return User.query.get(sv.stu_id).cls_id == c
+    def filter_status(sv):
+        return Volunteer.query.get(sv.vol_id).status == S
     try:
         if 'c' in kwargs:
             c = int(kwargs['c'])
@@ -32,14 +36,9 @@ def search_thoughts(**kwargs):
             conds.append(StuVol.vol_id == int(kwargs['v']))
     except ValueError:
         return error('请求接口错误: 非法的URL参数')
-    def filter_cls(sv):
-        return User.query.get(sv.stu_id).cls_id == c
-    def filter_status(sv):
-        return Volunteer.query.get(sv.vol_id).status == S
     def process_query(query):
         ret = list(apply(select)(query, 'status', stu_id='stuId', vol_id='volId',
                                  stu_name='stuName', vol_name='volName'))
-        print(ret)
         if not ret:
             return error('未查询到相关数据')
         return success('获取成功', ret)

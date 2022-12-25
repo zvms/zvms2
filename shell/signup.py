@@ -5,6 +5,7 @@ signup = App('signup', '报名管理: ')
 
 @signup.route('signup <int:cls>')
 def list_signup(cls):
+    '''获取报名列表'''
     res = req.get(f'/signup?c={cls}')
     if res:
         for i in res:
@@ -12,8 +13,15 @@ def list_signup(cls):
 
 @signup.route('signup <int:stu> <int:vol>')
 def signup_for(stu, vol):
+    '''提交报名'''
     req.post(f'/signup/{stu}', volId=vol)
 
 @signup.route('signup audit <int:stu> <int:vol>')
 def audit_signup(stu, vol):
+    '''审核报名'''
     req.patch(f'/signup/{stu}/{vol}')
+
+@signup.route('signup rollback <int:stu> <int:vol>')
+def rollback_signup(stu, vol):
+    '''撤回报名'''
+    req.delete(f'/signup/{stu}/{vol}')

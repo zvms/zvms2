@@ -17,4 +17,4 @@ def morf(kwargs, echo=False):
     return None
 
 def search(kwargs):
-    return '&'.join((f'{k}={v[0] if v else "_"}' for k, v in kwargs.items()))
+    return '&'.join((f'{k}={list(v.values())[0] if v else "_"}' for k, v in kwargs.items()))

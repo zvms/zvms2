@@ -73,9 +73,22 @@ def auth_self(id, token_data, message):
     if id != token_data['id'] and not (token_data['auth'] & AUTH.SYSTEM):
         raise ZvmsError(message)
 
-def auth_cls(cls, token_data):
+def auth_cls(cls, token_data, message='权限不足: 不能审核其他班级'):
     if cls != token_data['cls'] and not (token_data['auth'] & AUTH.SYSTEM):
-        raise ZvmsError("权限不足: 不能审核其他班级")
+        raise ZvmsError(message)
+
+def count(seq, predicate):
+    ret = 0
+    for i in seq:
+        if predicate(i):
+            ret += 1
+    return ret
+
+def exists(seq, predicate):
+    for i in seq:
+        if predicate(i):
+            return True
+    return False
 
 class Named:
     def __init__(self, raw, name):
@@ -98,7 +111,7 @@ String = Named(lambda x: isinstance(x, str), 'string')
 Null = Named(lambda x: x is None, 'null')
 
 class Array:
-    def __init__(self, sub, allow_empty=True):
+    def __init__(self, sub, allow_empty=False):
         self.sub = sub
         self.allow_empty = allow_empty
 
@@ -106,27 +119,31 @@ class Array:
         if not isinstance(json, list):
             return False
         for i in json:
-            if not self.sub(json):
+            if not self.sub(i):
                 return False
-        return self.allow_empty or len(json) > 0
+        return self.allow_empty or json
 
     def __str__(self):
         return f'[{self.sub}, ...]{"" if self.allow_empty else "(不可为空)"}'
 
 class Object:
-    def __init__(self, **pairs):
-        self.pairs = pairs
+    def __init__(self, **members):
+        self.members = members
 
     def __call__(self, json):
         if not isinstance(json, dict):
             return False
-        for k, v in self.pairs.items():
+        for k, v in self.members.items():
             if k not in json or not v(json[k]):
                 return False
         return True
 
     def __str__(self):
-        return '{' + ', '.join(map(lambda p: f'"{p[0]}": {p[1]}', self.pairs.items())) + '}'
+        return '{' + ', '.join(map(lambda p: f'"{p[0]}": {p[1]}', self.members.items())) + '}'
+
+class Extends(Object):
+    def __init__(self, super, **members):
+        self.members = super.members | members
 
 class Option:
     def __init__(self, *options):

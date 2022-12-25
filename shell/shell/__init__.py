@@ -45,6 +45,7 @@ class App:
                 rule.help()
                 if view.__doc__:
                     print(view.__doc__)
+                print()
         if not args:
             print_(self.__doc__)
             help_route()

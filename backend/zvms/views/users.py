@@ -1,11 +1,12 @@
 from zvms.routelib import *
+from zvms.views.structs import Login
 import zvms.impls.users
 
 route(
     rule='/users/login',
     method='POST',
     impl_func=zvms.impls.users.login,
-    params=Object(id=Int, pwd=String),
+    params=Login,
     auth=None
 )
 

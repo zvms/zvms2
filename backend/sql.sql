@@ -62,3 +62,20 @@ create table school_notice(
 create table log(
     id int primary key auto_increment
 );
+-- 各个用户的权限, 用+组合
+-- 按照计划, zvms不会有管理员接口, 所以用户都必须通过数据库操作直接添加
+-- 当然你也可以用flask, 这样做: flask --app zvms shell
+-- 然后from zvms.models import *
+-- from zvms.util import *
+-- from zvms.res import *
+-- User(...).insert()
+-- ...
+-- db.session.commit()
+set @none = 1;
+set @student = 2;
+set @teacher = 4;
+set @class = 8;
+set @manager = 16;
+set @auditor = 32;
+set @system = 64;
+-- 顺便, 班级也是手动加的

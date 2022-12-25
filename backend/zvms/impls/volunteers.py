@@ -32,30 +32,54 @@ def search_volunteers(token_data, **kwargs):
 #[GET] /volunteers/<int:id>
 def get_volunteer_info(id, token_data):
     ret = Volunteer.query.get_or_error(id).select('name', 'description',
-                                                  'time', 'type', 'reward', holder_id='holder')
+        'time', 'type', 'reward', 'joiners', holder_id='holder')
     ret['time'] = str(ret['time'])
     return success('获取成功', **ret)
 
 #[POST] /volunteers
-def create_volunteer(token_data, **kwargs):
+def create_volunteer(token_data, classes, **kwargs):
     try:
         VOL_TYPE(kwargs['type'])
     except ValueError:
         return error('请求接口错误: 未知的义工类型')
-    Volunteer(
+    id = Volunteer(
         **kwargs,
         holder_id=token_data['id'],
-    ).insert()
+    ).insert().id
+    for cls in classes:
+        cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
+        if cls['max'] > cls_.members.count():
+            return error('义工永远无法报满')
+        ClassVol(
+            cls_id=cls['id'],
+            vol_id=id,
+            max=cls['max']
+        ).insert()
     return success('创建成功')
 
 #[PUT] /volunteers/<int:id>
-def update_volunteer(token_data, id, **kwargs):
+def update_volunteer(token_data, id, classes, **kwargs):
     try:
         VOL_TYPE(kwargs['type'])
     except ValueError:
         return error('请求接口错误: 未知的义工类型')
     vol = Volunteer.query.get_or_error(id)
     auth_self(vol.holder_id, token_data, '权限不足: 不能修改其他人的义工')
+    for cls in classes:
+        cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
+        if cls['max'] > cls_.members.count():
+            return error('义工永远无法报满')
+        cv = ClassVol.query.get((cls['id'], id))
+        if cv:
+            ClassVol(
+                cls_id=cls['id'],
+                vol_id=id,
+                max=cls['max']
+            ).insert()
+        else:
+            cv.max = cls['max']
+        if cv.now() > cls['max']:
+            return error('义工报名溢出')
     vol.update(**kwargs)
     return success('修改成功')
 
@@ -63,4 +87,6 @@ def update_volunteer(token_data, id, **kwargs):
 def delete_volunteer(token_data, id):
     auth_self(Volunteer.query.get_or_error(id).holder_id, token_data, '权限不足: 不能删除其他人的义工')
     Volunteer.query.filter_by(id=id).delete()
+    StuVol.query.filter_by(vol_id=id).delete()
+    ClassVol.query.filter_by(vol_id=id).delete()
     return success('删除成功')

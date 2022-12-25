@@ -8,6 +8,19 @@ def md5ify(raw):
     md5.update(raw.encode())
     return md5.hexdigest()
 
+AUTH = {
+    0b1: '无',
+    0b10: '学生',
+    0b100: '教师',
+    0b1000: '支书',
+    0b10000: '管理员',
+    0b100000: '审计员',
+    0b1000000: '系统'
+}
+
+def auth2str(auth):
+    return ','.join((v for k, v in AUTH.items() if k & auth))
+
 users = App('users', '用户管理:')
 
 @users.route('user login <int:id> <pwd>')
@@ -32,7 +45,7 @@ def get_user_info(id):
     if res:
         print('''姓名: {name}
 班级: {cls}({clsName})
-权限: {auth}'''.format(**res))
+权限: {auth_str}'''.format(**res, auth_str=auth2str(res['auth'])))
         if res['auth'] & 0b10:
             print('''校内时间: {inside}
 校外时间: {outside}

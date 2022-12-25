@@ -1,5 +1,6 @@
 from zvms.routelib import *
 from zvms.res import AUTH
+from zvms.views.structs import Notice, NoticeBody
 import zvms.impls.notices
 
 route(
@@ -12,13 +13,7 @@ route(
     rule='/notices',
     method='POST',
     impl_func=zvms.impls.notices.send_notice,
-    params=Object(
-        title=String,
-        content=String,
-        deadtime=String,
-        target=Option(Int, Null),
-        type=Int
-    ),
+    params=Notice,
     auth=AUTH.MANAGER | AUTH.TEACHER
 )
 
@@ -34,9 +29,5 @@ route(
     method='PUT',
     impl_func=zvms.impls.notices.update_notice,
     auth=AUTH.MANAGER | AUTH.TEACHER,
-    params=Object(
-        title=String,
-        content=String,
-        deadtime=String
-    )
+    params=NoticeBody
 )

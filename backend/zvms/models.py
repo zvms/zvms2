@@ -70,6 +70,11 @@ class Volunteer(db.Model):
     type = db.Column(db.SMALLINT)
     reward = db.Column(db.Integer)
 
+    @property
+    def joiners(self):
+        return list(User.query.filter(User.id.in_(StuVol.query.filter(StuVol.vol_id == self.id,
+            StuVol.status != STATUS.WAITING_FOR_SIGNUP_AUDIT).select_value('stu_id'))).select('name', 'id'))
+
 class StuVol(db.Model):
     __tablename__ = 'stu_vol'
 
@@ -85,6 +90,10 @@ class StuVol(db.Model):
         return Picture.query.filter_by(stu_id=self.stu_id, vol_id=self.vol_id).select_value('hash')
 
     @property
+    def stu(self):
+        return User.query.get(self.stu_id)
+
+    @property
     def stu_name(self):
         return User.query.get(self.stu_id).name
 
@@ -95,9 +104,13 @@ class StuVol(db.Model):
 class ClassVol(db.Model):
     __tablename__ = 'class_vol'
 
-    cls_id = db.Column(db.Integer, primary_key=True)
+    cls_id = db.Column(db.Integer, primary_key=True, name='class_id')
     vol_id = db.Column(db.Integer, primary_key=True)
     max = db.Column(db.Integer)
+
+    @property
+    def now(self):
+        return count(StuVol.query.filter_by(vol_id=self.vol_id), lambda sv: sv.stu.cls_id == self.cls_id)
 
 class Picture(db.Model):
     __tablename__ = 'picture'

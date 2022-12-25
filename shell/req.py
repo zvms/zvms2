@@ -9,7 +9,7 @@ class Requester:
         self.__headers = headers
 
     def __getattr__(self, method):
-        return lambda url, echo=False, **data: Requester.__request(self.__domain + url,
+        return lambda url, echo=True, **data: Requester.__request(self.__domain + url,
             echo, json.dumps(data).encode(), self.__headers, method.upper())
         
     def __request(url, echo, data, headers, method):

@@ -26,13 +26,18 @@ def audit_signup(stuId, volId, token_data):
 
 #[POST] /signup/<int:stuId>
 def signup(stuId, volId, token_data):
-    Volunteer.query.get_or_error(volId, '该义工不存在')
+    if Volunteer.query.get_or_error(volId, '该义工不存在').time < datetime.datetime.now():
+        return error('该义工报名已截至')
     if StuVol.query.get((stuId, volId)):
         return error('学生已报名该义工')
-    if User.query.get_or_error(stuId, '该学生不存在').auth & AUTH.TEACHER:
+    stu = User.query.get_or_error(stuId, '该学生不存在')
+    cv = ClassVol.query.get_or_error((stu.cls_id, volId), '该班级不能报名')
+    if cv.now >= cv.max:
+        return error('名额已满')
+    if stu.auth & AUTH.TEACHER:
         return error('不能报名教师')
     if (AUTH.TEACHER | AUTH.CLASS).authorized(token_data['auth']):
-        auth_cls(User.query.get(stuId).cls_id, token_data)
+        auth_cls(User.query.get(stuId).cls_id, token_data, '不能报名其他班级')
         StuVol(
             stu_id=stuId,
             vol_id=volId,
@@ -46,3 +51,13 @@ def signup(stuId, volId, token_data):
             status=STATUS.WAITING_FOR_FIRST_AUDIT
         ).insert()
     return success('报名成功')
+    
+#[DELETE] /signup/<int:stuId>/<int:volId>
+def rollback(stuId, volId, token_data):
+    StuVol.query.get_or_error((stuId, volId), '未报名该义工')
+    if (AUTH.TEACHER | AUTH.CLASS).authorized(token_data['auth']):
+        auth_cls(User.query.get(stuId).cls_id, token_data, '不能修改其他班级')
+    else:
+        auth_self(stuId, token_data, '不能撤回其他人的报名')
+    StuVol.query.filter_by(stu_id=stuId, vol_id=volId).delete()
+    return success('撤回成功')

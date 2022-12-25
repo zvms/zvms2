@@ -43,12 +43,13 @@ class Rule:
     def help(self):
         for elem in self.__elems:
             print(elem.name, end=' ')
+        print()
         if self.__options:
-            print('\n可选的参数')
+            print('可选的参数')
             for option in self.__options.values():
                 option.help()
         if self.__varparams:
-            print('\n变长参数: ')
+            print('变长参数: ')
             self.__varparams.help()
 
     def interpret(self, cmd):
@@ -63,6 +64,7 @@ class Rule:
             except StopIteration:
                 try:
                     next(elem_iter)
+                    return None
                 except StopIteration:
                     if self.__varparams and not self.__varparams.ok():
                         return None
