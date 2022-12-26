@@ -20,7 +20,7 @@ route(
     method='POST',
     impl_func=zvms.impls.volunteers.create_volunteer,
     params=Volunteer,
-    auth=AUTH.MANAGER | AUTH.TEACHER
+    auth=AUTH.MANAGER | AUTH.TEACHER | AUTH.CLASS
 )
 
 route(

@@ -145,7 +145,7 @@ class Extends(Object):
     def __init__(self, super, **members):
         self.members = super.members | members
 
-class Option:
+class Union:
     def __init__(self, *options):
         self.options = options
 
@@ -158,7 +158,7 @@ class Option:
     def __str__(self):
         return '(' + ' | '.join(map(str, self.options)) + ')'
 
-class Group:
+class Intersection:
     def __init__(self, *items):
         self.items = items
 

@@ -8,7 +8,7 @@ NoticeBody = Object(
 
 Notice = Extends(NoticeBody,
     type=Int,
-    target=Option(Int, Null)
+    target=Union(Int, Null)
 )
 
 Report = Object(
@@ -22,6 +22,15 @@ Signup = Object(
 Login = Object(
     id=Int,
     pwd=String
+)
+
+ModPwd = Object(
+    old=String,
+    new=String
+)
+
+ChangeClass = Object(
+    cls=Int,
 )
 
 Volunteer = Object(

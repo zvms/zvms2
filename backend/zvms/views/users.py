@@ -1,5 +1,5 @@
 from zvms.routelib import *
-from zvms.views.structs import Login
+from zvms.views.structs import Login, ModPwd, ChangeClass
 import zvms.impls.users
 
 route(
@@ -25,12 +25,14 @@ route(
 route(
     rule='/users/mod-pwd',
     method='PATCH',
-    impl_func=zvms.impls.users.modify_password
+    impl_func=zvms.impls.users.modify_password,
+    params=ModPwd,
 )
 
 route(
     rule='/users/change-class',
     method='PATCH',
     impl_func=zvms.impls.users.change_class,
-    auth=AUTH.TEACHER
+    auth=AUTH.TEACHER,
+    params=ChangeClass
 )

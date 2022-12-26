@@ -46,15 +46,27 @@ def create_volunteer(token_data, classes, **kwargs):
         **kwargs,
         holder_id=token_data['id'],
     ).insert().id
-    for cls in classes:
-        cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
-        if cls['max'] > cls_.members.count():
-            return error('义工永远无法报满')
-        ClassVol(
-            cls_id=cls['id'],
-            vol_id=id,
-            max=cls['max']
-        ).insert()
+    if (AUTH.CLASS | AUTH.TEACHER).authorized(token_data['auth']):
+        for cls in classes:
+            cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
+            if cls['max'] > cls_.members.count():
+                return error('义工永远无法报满')
+            ClassVol(
+                cls_id=cls['id'],
+                vol_id=id,
+                max=cls['max']
+            ).insert()
+    else:
+        for cls in classes:
+            if cls != token_data['cls']:
+                return error('不能创建其他班级的义工')
+            if cls['max'] > Class.query.get(cls).members.count():
+                return error('义工永远无法报满')
+            ClassVol(
+                cls_id=cls['id'],
+                vol_id=id,
+                max=cls['max']
+            ).insert()
     return success('创建成功')
 
 #[PUT] /volunteers/<int:id>
