@@ -3,6 +3,12 @@ from zvms.views.structs import Login, ModPwd, ChangeClass
 import zvms.impls.users
 
 route(
+    rule='/check',
+    method='GET',
+    impl_func=zvms.impls.users.check
+)
+
+route(
     rule='/users/login',
     method='POST',
     impl_func=zvms.impls.users.login,

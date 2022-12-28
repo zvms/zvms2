@@ -2,6 +2,10 @@ from zvms.models import User
 from zvms.util import *
 import zvms.tokenlib as tk
 
+#[GET] /check
+def check(token_data):
+    return success('获取成功', token_data)
+
 #[POST] /users/login
 def login(id, pwd, token_data):
     user = User.query.get(id)
