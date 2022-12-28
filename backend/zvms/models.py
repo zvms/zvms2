@@ -29,10 +29,6 @@ class User(db.Model):
     def cls(self):
         return Class.query.get(self.cls_id)
 
-    @property
-    def cls_name(self):
-        return self.cls.name
-
     def __filter_thoughts(self, type):
         return sum(select_value(filter(lambda sv: Volunteer.query.get(sv.vol_id).
                     type == type and sv.reward is not None,

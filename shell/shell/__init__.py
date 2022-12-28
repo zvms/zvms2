@@ -93,7 +93,6 @@ class App:
         config = self.config | config
         App.config = config
         vars = {}
-        python_vars = {}
         if os.path.exists(config['vars_cfg']):
             with open(config['vars_cfg'], 'r') as f:
                 for line in f:
@@ -155,7 +154,7 @@ class App:
             elif cmd[0] in config['eval']:
                 if check(2):
                     try:
-                        ret = eval(split(line, vars)[1], python_vars)
+                        ret = eval(split(line, vars)[1],)
                         if ret is not None:
                             print(ret)
                     except:
@@ -163,7 +162,7 @@ class App:
             elif cmd[0] in config['exec']:
                 if check(2):
                     try:
-                        exec(split(line, vars)[1], python_vars)
+                        exec(split(line, vars)[1],)
                     except:
                         traceback.print_exc()
             elif cmd[0] in vars:

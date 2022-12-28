@@ -10,7 +10,7 @@ class Requester:
 
     def __getattr__(self, method):
         return lambda url, echo=True, **data: Requester.__request(self.__domain + url,
-            echo, json.dumps(data).encode(), self.__headers, method.upper())
+            echo, json.dumps(data).encode() if data else None, self.__headers, method.upper())
         
     def __request(url, echo, data, headers, method):
         try:
