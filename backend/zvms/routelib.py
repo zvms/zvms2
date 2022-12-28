@@ -20,8 +20,10 @@ def route(*,rule, method='GET', impl_func, params=Any, auth=AUTH.ALL):
 def deco(impl, params, auth):
     @wraps(impl)
     def wrapper(*args,**kwargs):
-        if request.method == 'GET':
+        if request.method in ('GET', 'DELETE'):
             json_data = request.args
+            if 'timestamp' in json_data:
+                del json_data['timestamp']
         else:
             try: # 为了防止空POST出锅
                 json_data = json.loads(request.get_data().decode("utf-8"))
