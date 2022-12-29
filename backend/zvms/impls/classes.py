@@ -1,4 +1,4 @@
-from zvms.models import Class
+from zvms.models import *
 from zvms.res import *
 from zvms.util import *
 
@@ -16,3 +16,24 @@ def get_class_info(id, token_data):
         teachers=filter_(AUTH.TEACHER),
         students=filter_(AUTH.STUDENT)
     )
+
+#[DELETE] /classes/<int:id>
+def delete_class(id, token_data):
+    Class.query.filter_by(id=id).delete()
+    ClassVol.query.filter_by(cls_id=id).delete()
+    ClassNotice.query.filter_by(cls_id=id).delete()
+    User.query.filter_by(cls_id=id).delete()
+    return success('删除成功')
+
+#[POST] /classes
+def create_class(id, name, token_data):
+    Class(
+        id=id,
+        name=name
+    ).insert()
+    return success('创建成功')
+
+#[PUT] /classes/<int:id>
+def modify_class(id, name, token_data):
+    Class.query.get_or_error(id, '班级不存在').name = name
+    return success('修改成功')

@@ -21,13 +21,13 @@ CREATE TABLE volunteer(
     name VARCHAR(32), 
     description VARCHAR(1024), 
     holder INT, time datetime, 
-    type smallINT, 
+    type SMALLINT, 
     reward INT
 );
 CREATE TABLE stu_vol(
     stu_id INT, 
     vol_id INT, 
-    status smallINT, 
+    status SMALLINT, 
     thought VARCHAR(1024), 
     reason VARCHAR(1024), 
     reward INT, 

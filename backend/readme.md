@@ -15,7 +15,7 @@
 
 ## 运行
 ```bash
-$ flask --app zvms run -p 1145 -host 0.0.0.0
+$ flask --app zvms run -p 1145 -h 0.0.0.0
 ```
 
 或
