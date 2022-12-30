@@ -125,7 +125,7 @@ class UserNotice(db.Model):
 class ClassNotice(db.Model):
     __tablename__ = 'class_notice'
 
-    cls_id = db.Column(db.Integer, primary_key=True)
+    cls_id = db.Column(db.Integer, primary_key=True, name='class_id')
     notice_id = db.Column(db.Integer, primary_key=True)
 
 class SchoolNotice(db.Model):

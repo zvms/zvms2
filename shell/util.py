@@ -1,3 +1,5 @@
+import hashlib
+
 from shell import App
 
 def morf(kwargs, key='description', echo=False):
@@ -18,3 +20,8 @@ def morf(kwargs, key='description', echo=False):
 
 def search(kwargs):
     return '&'.join((f'{k}={list(v.values())[0] if v else "_"}' for k, v in kwargs.items()))
+
+def md5ify(raw):
+    md5 = hashlib.md5()
+    md5.update(raw.encode())
+    return md5.hexdigest()

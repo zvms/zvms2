@@ -1,12 +1,6 @@
-import hashlib
-
 from shell import App
 from req import req,headers
-
-def md5ify(raw):
-    md5 = hashlib.md5()
-    md5.update(raw.encode())
-    return md5.hexdigest()
+from util import md5ify, search
 
 AUTH = {
     0b1: '无',
@@ -38,6 +32,13 @@ def logout():
     headers['Authorization'] = ''
     App.config['prompt'] = '(未登录)> '
 
+@users.route('user -n <name> -a <int:auth>')
+def search_users(**kwargs):
+    res = req.get(f'/users?{search(kwargs)}')
+    if res:
+        for i in res:
+            print(i['id'], i['name'])
+
 @users.route('user <int:id>')
 def get_user_info(id):
     '''获取一个用户的详细信息'''
@@ -60,3 +61,20 @@ def modify_password(old, new):
 def change_class(cls):
     '''修改自己(老师)的班级'''
     req.patch('/users/change-class', cls=cls)
+
+@users.route('user create *users int:id name int:cls int:auth pwd')
+def create_users(users):
+    '''创建一批用户'''
+    for user in users:
+        user['pwd'] = md5ify(user['pwd'])
+    req.post('/users', users=users)
+
+@users.route('user delete <int:id>')
+def delete_user(id):
+    '''删除一个用户'''
+    req.delete(f'/users/{id}')
+
+@users.route('user modify <int:id> <name> <int:cls> <int:auth>')
+def modify_user(id, name, auth, cls):
+    '''修改一个用户'''
+    req.put(f'/users/{id}', name=name, cls=cls, auth=auth)

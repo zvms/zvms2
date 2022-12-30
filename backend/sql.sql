@@ -1,66 +1,66 @@
-create table class(
-    id int primary key,
-    name varchar(5)
+CREATE TABLE class(
+    id INT PRIMARY KEY,
+    name VARCHAR(5)
 ); 
-create table user(
-    id int primary key,
-    name varchar(5),
-    class int, 
-    pwd char(32), 
-    auth int
+CREATE TABLE user(
+    id INT PRIMARY KEY,
+    name VARCHAR(5),
+    class INT, 
+    pwd CHAR(32), 
+    auth INT
 );
-create table notice(
-    id int primary key auto_increment, 
-    title varchar(32), 
-    content varchar(1024), 
-    sender int, 
+CREATE TABLE notice(
+    id INT PRIMARY KEY auto_increment, 
+    title VARCHAR(32), 
+    content VARCHAR(1024), 
+    sender INT, 
     deadtime datetime
 );
-create table volunteer(
-    id int primary key auto_increment, 
-    name varchar(32), 
-    description varchar(1024), 
-    holder int, time datetime, 
-    type smallint, 
-    reward int
+CREATE TABLE volunteer(
+    id INT PRIMARY KEY auto_increment, 
+    name VARCHAR(32), 
+    description VARCHAR(1024), 
+    holder INT, time datetime, 
+    type SMALLINT, 
+    reward INT
 );
-create table stu_vol(
-    stu_id int, 
-    vol_id int, 
-    status smallint, 
-    thought varchar(1024), 
-    reason varchar(1024), 
-    reward int, 
-    primary key(stu_id, vol_id)
+CREATE TABLE stu_vol(
+    stu_id INT, 
+    vol_id INT, 
+    status SMALLINT, 
+    thought VARCHAR(1024), 
+    reason VARCHAR(1024), 
+    reward INT, 
+    PRIMARY KEY(stu_id, vol_id)
 );
-create table picture(
-    id int primary key auto_increment,
-    stu_id int, 
-    vol_id int, 
-    hash char(32), 
-    primary key(stu_id, vol_id)
+CREATE TABLE picture(
+    id INT PRIMARY KEY auto_increment,
+    stu_id INT, 
+    vol_id INT, 
+    hash CHAR(32), 
+    PRIMARY KEY(stu_id, vol_id)
 );
-create table class_vol(
-    class_id int, 
-    vol_id int, 
-    max int, 
-    primary key(class_id, vol_id)
+CREATE TABLE class_vol(
+    class_id INT, 
+    vol_id INT, 
+    max INT, 
+    PRIMARY KEY(class_id, vol_id)
 ); 
-create table user_notice(
-    user_id int, 
-    notice_id int, 
-    primary key(user_id, notice_id)
+CREATE TABLE user_notice(
+    user_id INT, 
+    notice_id INT, 
+    PRIMARY KEY(user_id, notice_id)
 );
-create table class_notice(
-    class_id int, 
-    notice_id int, 
-    primary key(class_id, notice_id)
+CREATE TABLE class_notice(
+    class_id INT, 
+    notice_id INT, 
+    PRIMARY KEY(class_id, notice_id)
 );
-create table school_notice(
-    notice_id int primary key
+CREATE TABLE school_notice(
+    notice_id INT PRIMARY KEY
 );
-create table log(
-    id int primary key auto_increment
+CREATE TABLE log(
+    id INT PRIMARY KEY auto_increment
 );
 -- 各个用户的权限, 用+组合
 -- 按照计划, zvms不会有管理员接口, 所以用户都必须通过数据库操作直接添加
@@ -71,11 +71,11 @@ create table log(
 -- User(...).insert()
 -- ...
 -- db.session.commit()
-set @none = 1;
-set @student = 2;
-set @teacher = 4;
-set @class = 8;
-set @manager = 16;
-set @auditor = 32;
-set @system = 64;
+SET @none = 1;
+SET @student = 2;
+SET @teacher = 4;
+SET @class = 8;
+SET @manager = 16;
+SET @auditor = 32;
+SET @system = 64;
 -- 顺便, 班级也是手动加的

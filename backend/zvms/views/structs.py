@@ -1,5 +1,9 @@
 from zvms.routelib import *
 
+Class = Object(
+    name=String
+)
+
 NoticeBody = Object(
     title=String,
     content=String,
@@ -43,4 +47,22 @@ Volunteer = Object(
         id=Int,
         max=Int
     ))
+)
+
+Users = Object(
+    users=Array(
+        Object(
+            id=Int,
+            name=String,
+            cls=Int,
+            auth=Int,
+            pwd=String
+        )
+    )
+)
+
+User = Object(
+    name=String,
+    cls=Int,
+    auth=Int
 )

@@ -1,4 +1,5 @@
 from zvms.routelib import *
+from zvms.views.structs import Class
 import zvms.impls.classes
 
 route(
@@ -11,4 +12,26 @@ route(
     rule='/classes/<int:id>',
     method='GET',
     impl_func=zvms.impls.classes.get_class_info
+)
+
+route(
+    rule='/classes',
+    method='POST',
+    impl_func=zvms.impls.classes.create_class,
+    auth=AUTH.SYSTEM,
+    params=Class
+)
+
+route(
+    rule='/classes/<int:id>',
+    method='DELETE',
+    impl_func=zvms.impls.classes.delete_class,
+    auth=AUTH.SYSTEM
+)
+
+route(
+    rule='/classes/<int:id>',
+    method='PUT',
+    impl_func=zvms.impls.classes.modify_class,
+    auth=AUTH.SYSTEM
 )

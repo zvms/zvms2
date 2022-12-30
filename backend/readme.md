@@ -9,18 +9,18 @@
     ```
 3. 安装依赖包
     ```bash
-    cd zvms/backend
-    pip3 install -r requirement.txt
+    $ cd zvms/backend
+    $ pip3 install -r requirement.txt
     ```
 
 ## 运行
 ```bash
-flask --app zvms run
+$ flask --app zvms run -p 1145 -h 0.0.0.0
 ```
 
 或
 
 ```bash
-export FLASK_APP = zvms
-flask run
+$ export FLASK_APP = zvms
+$ flask run
 ```
