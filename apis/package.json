@@ -1,0 +1,32 @@
+{
+  "name": "zvms-apis-data",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "exports":{
+    "./paths":{
+      "types":"./dist/paths/index.d.ts",
+      "import":"./dist/paths/index.js"
+    },
+    "./types":{
+      "types":"./dist/types/index.d.ts",
+      "import":"./dist/types/index.js"
+    },
+    "./users":{
+      "types":"./dist/users/index.d.ts",
+      "import":"./dist/users/index.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "zvms-apis-paths-gen": "link:../scripts/gen/paths",
+    "zvms-apis-types-gen": "link:../scripts/gen/types",
+    "zvms-apis-users-gen": "link:../scripts/gen/users"
+  }
+}

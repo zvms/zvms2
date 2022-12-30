@@ -1,9 +1,9 @@
 import zvmsConfig from "zvms-config";
 import { ImplFiles, fApiIndexRaw, implsInitRaw, pathsGen, viewsInitRaw } from "zvms-apis-paths-gen";
-import * as pathsData from "zvms-apis-paths-data";
-import { userCatagories, authData } from "zvms-apis-users-data";
+import * as pathsData from "zvms-apis-data/paths";
+import { userCatagories, authData } from "zvms-apis-data/users";
 import { catagoriesGenTs, authGenTs, usersIndexRaw, authGenPy, catagoriesGenPy, usersInitRaw } from "zvms-apis-users-gen";
-import { structs as structsData } from "zvms-apis-types-data";
+import { structs as structsData } from "zvms-apis-data/types";
 import { structsDefGenCk, structsDefGenPy, structsDefGenTs, typesIndexRaw, typesInitRaw } from "zvms-apis-types-gen";
 
 import * as fs from "./fs.js";

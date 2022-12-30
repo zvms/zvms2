@@ -1,5 +1,5 @@
 import { Part } from "zvms-apis-paths-gen";
-import { arr, str, int, bool, structs} from "zvms-apis-types-data";
+import { arr, str, int, bool, structs} from "../../types";
 export const volunteer: Part = {
     desc: "义工活动相关",
     paths: {

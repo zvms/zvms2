@@ -1,5 +1,5 @@
 import { Part } from "zvms-apis-paths-gen";
-import { arr, str } from "zvms-apis-types-data";
+import { arr, str } from "../../types";
 export const report: Part = {
     desc: "反馈",
     paths: {

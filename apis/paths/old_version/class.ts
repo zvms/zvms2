@@ -1,5 +1,5 @@
 import { Part } from "zvms-apis-paths-gen";
-import { arr, int, str } from "zvms-apis-types-data";
+import { arr, int, str } from "../../types";
 export const classes: Part = {
     desc: "班级相关",
     paths: {

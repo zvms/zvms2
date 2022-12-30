@@ -1,8 +1,8 @@
 import { $ } from "zvms-apis-paths-gen";
-import { authData as a } from "zvms-apis-users-data"
-import { arr, int, str } from "zvms-apis-types-data";
+import { authData as a } from "../users"
+import { arr, int, str } from "../types";
 
-export const classes = $(
+export default $(
     "/classes",
     [a.abc, a.abc],
     $(

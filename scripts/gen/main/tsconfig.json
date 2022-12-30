@@ -12,13 +12,7 @@
     ],
     "references": [
         {
-            "path": "../../../apis/paths"
-        },
-        {
-            "path": "../../../apis/types"
-        },
-        {
-            "path": "../../../apis/users"
+            "path": "../../../apis"
         },
         {
             "path": "../paths"

@@ -1,5 +1,5 @@
 import { Part } from "zvms-apis-paths-gen";
-import { arr, str, int, structs } from "zvms-apis-types-data";
+import { arr, str, int, structs } from "../../types";
 export const notice: Part = {
     desc: "公告相关",
     paths: {

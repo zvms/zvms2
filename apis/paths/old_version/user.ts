@@ -1,5 +1,5 @@
 import { Part } from "zvms-apis-paths-gen";
-import { str, int } from "zvms-apis-types-data";
+import { str, int } from "../../types";
 export const user: Part = {
     desc: "用户相关",
     paths: {
