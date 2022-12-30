@@ -10,7 +10,7 @@ const {
     except
 } = userCatagories
 
-export const authData: AuthData = {
+export const authData = {
     mePageOnNav: except(none),
     abc: [student]
-}   
+} as const;

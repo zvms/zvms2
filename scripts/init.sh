@@ -1,3 +1,4 @@
+pnpm i -g typescript
 cd ..
 cd ./apis
 cd ./paths

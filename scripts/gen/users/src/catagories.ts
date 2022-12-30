@@ -8,7 +8,10 @@ export type UserCatagoriesRaw = {
 export type UserCatagoriesById = {
     [id: number]: UserCatagory
 }
-export type UserCatagoryList = UserCatagory[];
+export type UserCatagoryList = readonly UserCatagory[];
+
+let a = [1 as any as UserCatagory,
+1 as any as UserCatagory] as const as UserCatagoryList
 
 export type UserCatagories = {
     raw: UserCatagoriesRaw,
@@ -26,7 +29,7 @@ export function createUserCatagories(rawCatagories: UserCatagoriesRaw): UserCata
         raw: rawCatagories,
         byId,
         except(...catagory) {
-            let res: UserCatagoryList = [];
+            let res: UserCatagory[] = [];
             for (const ir in rawCatagories) {
                 let t = true;
                 const r = rawCatagories[ir]

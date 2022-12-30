@@ -1,8 +1,6 @@
 import { UserCatagoryList } from "./catagories.js";
 
-export type AuthData = {
-    [k: string]: UserCatagoryList;
-}
+export type AuthData = Record<string, UserCatagoryList>;
 
 function rjust(str: string, n: number, chr?: string) {
     chr = chr || '0'

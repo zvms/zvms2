@@ -1,53 +1,83 @@
 import { Type, Description } from "zvms-apis-types-gen";
-import { AuthData } from "zvms-apis-users-gen";
+import { UserCatagoryList } from "zvms-apis-users-gen";
 export { Type, Description };
 
-export interface Apis {
-    [partPath: string]: Part;
+export type MethodName =
+    | "GET"
+    | "POST"
+    | "PUT"
+    | "DELETE"
+    | "PATCH";
+export interface Params {
+    [key: string]: Type;
 }
-
-export interface Part {
-    paths: Paths;
-    desc?: Description;
-    cfg?: Config;
+export interface DefaultParams {
+    [key: string]: unknown;
 }
-
-export type PathItem = string;
-
-export interface Paths {
-    [pathItem: PathItem]: Path;
-}
-
-export interface Path {
-    paths?: Paths;
-    desc?: Description;
-    get?: Method;
-    post?: Method;
-    cfg?: Config
-}
-
 export interface Method {
-    name:string;
+    method: MethodName,
     desc?: Description;
+    auths?: UserCatagoryList;
     req?: Params;
     res?: Params;
     _req?: DefaultParams;
     _res?: DefaultParams;
-    cfg?: Config;
-    auths?: (AuthData[0])[];
 }
 
-export interface Params {
-    [key: string]: Type;
+type AllowedPathCharLowercase =
+    | "a" | "b" | "c" | "d" | "e"
+    | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
+    | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u"
+    | "v" | "w" | "x" | "y" | "z";
+type AllowedPathCharUppercase = Uppercase<AllowedPathCharLowercase>;
+type AllowedPathCharSpecial =
+    | "-" | "_"
+    | "<" | ">" | ":";
+type AllowedPathChar =
+    | AllowedPathCharLowercase
+    | AllowedPathCharUppercase
+    | AllowedPathCharSpecial;
+export type PathItemName
+    <S extends string, S0 extends string = S>
+    = S extends `${AllowedPathChar}${infer S1}` ?
+    S1 extends "" ?
+    `/${S0}` : PathItemName<S1, S0>
+    : never;
+export interface PathItem {
+    name: string,
+    //desc: Description,
+    auth: UserCatagoryList[],
+    methods: Method[],
+    children: PathItem[]
 }
 
-export interface Config {
-    token?: boolean;
+export function $<S extends string>(
+    name: PathItemName<S>,
+    //desc: Description,
+    auth: UserCatagoryList[],
+    ...etc: (Method | PathItem)[]
+): PathItem {
+    let methods: Method[] = [],
+        children: PathItem[] = [];
+    for (const v of etc) {
+        if (Object.hasOwn(v, "method")) {
+            const m = v as Method;
+            methods.push(m);
+        } else {
+            const c = v as PathItem;
+            children.push(c);
+        }
+    }
+    return {
+        name,
+        //desc,
+        auth,
+        methods,
+        children
+    }
 }
 
-export interface DefaultParams {
-    [key: string]: unknown;
-}
+export type Apis = PathItem[];
 
 export type ImplFile = string;
 
