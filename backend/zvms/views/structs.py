@@ -12,7 +12,7 @@ NoticeBody = Object(
 
 Notice = Extends(NoticeBody,
     type=Int,
-    target=Union(Int, Null)
+    targets=Union(Array(Int), Null)
 )
 
 Report = Object(

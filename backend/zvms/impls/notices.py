@@ -30,24 +30,22 @@ def search_notices(token_data, **kwargs):
     return process_query(Notice.query.filter(*conds))
 
 #[POST] /notices
-def send_notice(title, content, deadtime, type, target, token_data):
+def send_notice(title, content, deadtime, type, targets, token_data):
     try_parse_time(deadtime)
     id = Notice(title=title, content=content, deadtime=deadtime,
                 sender=token_data['id']).insert().id
-    if target is None and type != NOTICE_TYPE.SCHOOL_NOTICE:
+    if targets is None and type != NOTICE_TYPE.SCHOOL_NOTICE:
         return error('请求接口错误: 必须指定目标')
     match type:
         case NOTICE_TYPE.USER_NOTICE:
-            target_user = User.query.get(target)
-            if not target_user:
-                return error('未找到目标用户')
-            if target_user.auth == AUTH.STUDENT and not (token_data['auth'] & AUTH.SYSTEM):
-                return error('不能对普通学生发通知')
-            UserNotice(user_id=target, notice_id=id).insert()
+            for i in targets:
+                if User.query.get_or_error(i, '未找到目标用户').auth == AUTH.STUDENT and not (token_data['auth'] & AUTH.SYSTEM):
+                    return error('不能对普通学生发通知')
+                UserNotice(user_id=i, notice_id=id).insert()
         case NOTICE_TYPE.CLASS_NOTICE:
-            if not Class.query.get(target):
-                return error('未找到目标班级')
-            ClassNotice(cls_id=target, notice_id=id).insert()
+            for i in targets:
+                Class.query.get_or_error(i, '未找到目标班级')
+                ClassNotice(cls_id=i, notice_id=id).insert()
         case NOTICE_TYPE.SCHOOL_NOTICE:
             SchoolNotice(notice_id=id).insert()
         case _:

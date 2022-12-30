@@ -16,17 +16,16 @@ def search_notices(**kwargs):
 {content}
 过期于{deadtime}'''.format(**i))
 
-@notices.route('notice send <int:type> <title> <deadtime> -m: 正文 <content> -f: 存放正文的文件路径 <file> -t: 目标 <int:target>')
+@notices.route('notice send <int:type> <title> <deadtime> -m: 正文 <content> -f: 存放正文的文件路径 <file> *targets int:target')
 def send_notice(**kwargs):
     '''发送通知'''
     content = morf(kwargs, 'content')
     if content is not None:
-        if 't' in kwargs:
-            target = kwargs['t'][0]
-            del kwargs['t']
+        if kwargs['targets']:
+            kwargs['targets'] = [i['target'] for i in kwargs['targets']]
         else:
-            target = None
-        req.post('/notices', **kwargs, content=content, target=target)
+            kwargs['targets'] = None
+        req.post('/notices', **kwargs, content=content)
 
 @notices.route('notice del <int:id>')
 def delete_notice(id):
