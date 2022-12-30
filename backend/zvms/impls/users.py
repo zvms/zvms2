@@ -42,6 +42,8 @@ def get_user_info(id, token_data):
 
 #[PATCH] /users/mod-pwd
 def modify_password(old, new, token_data):
+    if len(new) != 32:
+        return error('密码不符合规范')
     user = User.query.get(token_data['id'])
     if user.pwd != old:
         return error('旧密码错误')
@@ -57,6 +59,8 @@ def change_class(cls, token_data):
 def create_users(users, token_data):
     for user in users:
         Class.query.get_or_error(user['cls'], '班级不存在')
+        if len(user['pwd']) != 32:
+            return error('密码不符合规范')
         User(
             id=user['id'],
             name=user['name'],

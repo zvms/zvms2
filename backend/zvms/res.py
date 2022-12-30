@@ -1,4 +1,10 @@
 from enum import IntFlag, IntEnum
+import sys
+
+if sys.platform == 'win32':
+    STATIC_FOLDER = 'C:\zcvms-backend'
+elif sys.platform == 'linux':
+    STATIC_FOLDER = '/tmp/zvms-backend'
 
 class AUTH(IntFlag):
     NONE    = 0b0000001
