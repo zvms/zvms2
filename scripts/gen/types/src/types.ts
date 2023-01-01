@@ -10,7 +10,9 @@ export type Description = string;
 export type GenFunc = (params: any) => Type;
 
 export const typesIndexRaw =
-    `export * from "./structs";`
+    `export * from "./structs.js";`;
 
 export const typesInitRaw =
-    `export * from "./structs";`
+    `__ALL__ = [
+    "./structs"
+]`;

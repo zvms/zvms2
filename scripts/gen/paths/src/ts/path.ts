@@ -1,22 +1,16 @@
-import { Path } from "../types.js";
-import { tsGet } from "./get.js";
-import { tsPost } from "./post.js";
+import { GenCtx, PathItem } from "../types.js";
+import { tsMethod } from "./method.js";
 
-export function tsPath(path: string, pathData: Path) {
-    let str = "";
-    if (pathData.paths) {
-        for (let itemName in pathData.paths) {
-            let item = pathData.paths[itemName];
-            let crtPath = path + itemName;
-            str +=
-                `${item.desc ? `/**
- * ${item.desc}
- */`: ""}
-${tsGet(crtPath, item.get)} 
-${tsPost(crtPath, item.post)}
-`
-            str += tsPath(crtPath, item);
-        }
-    }
-    return str;
+export function tsPath(ctx: GenCtx, pathData: PathItem): string {
+    let oldPath = ctx.path;
+    ctx.path += pathData.name;
+    let result =
+        (pathData.methods?.map(
+            m => tsMethod(ctx, m)
+        ).join("\n") || "")
+        + (pathData.children?.map(
+            c => tsPath(ctx, c)
+        ).join("\n") || "");
+    ctx.path = oldPath;
+    return result;
 }

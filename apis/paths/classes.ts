@@ -1,6 +1,6 @@
 import { $ } from "zvms-apis-paths-gen";
-import { authData as a } from "../users"
-import { arr, int, str } from "../types";
+import { authData as a } from "../users/index.js";
+import { arr, int, str } from "../types/index.js";
 
 export default $(
     "/classes",
@@ -9,7 +9,8 @@ export default $(
         "/list",
         [a.abc],
         {
-            method: "GET",
+            type: "GET",
+            name: "get_class_list",
             desc: "获取班级列表",//Postscript: name随年份自动计算
             req: {
             },

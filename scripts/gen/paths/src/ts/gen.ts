@@ -1,15 +1,17 @@
-import { Part } from "../types.js";
+import { PathItem } from "../types.js";
 import { tsPath } from "./path.js";
 
-const tsAddBeforeFile = `
-import {get, post} from "./utils";
+const tsAddBeforeFile = `import {get, post} from "./utils";
 import * as structs from "../types/structs";
 `;
 const tsAddAfterFile = "";
 
-export function genTs(name: string, part: Part): string {
+export function genTs(part: PathItem): string {
     let str = tsAddBeforeFile;
-    str += tsPath(name, part);
+    str += tsPath({
+        fileName: part.name.slice(1),
+        path: part.name
+    }, part);
     str += tsAddAfterFile;
     str = str;
     return str;

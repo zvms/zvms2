@@ -1,5 +1,5 @@
 import { Method, Params } from "../types.js";
-import { cfg2str, paramName } from "../commonUtils.js";
+import { paramName } from "../commonUtils.js";
 
 export * from "../commonUtils.js";
 
@@ -12,36 +12,34 @@ export function pyReq2paramsDecl(req?: Params): string {
     return ks.join(",\n");
 }
 
-export function pyReq2paramsDesc(req?: Params): string[] {
-    if (!req) return [];
-    // let descs: string[] = [];
-    // for (const k in req) {
-    //     descs.push(` * @param ${paramName(k)} ${req[k].desc || ""}`)
-    // }
-    // return descs;
-    return [];
+export function pyParamsTypeCheck(req?: Params): string {
+    if (!req) return "Object()";
+    let result: string[] = [];
+    for (const k in req) {
+        result.push(req[k].ck);
+    }
+    return `Object(${result.join(", ")})`;
 }
 
-export function pyResType(apiName: string, res?: Params) {
-    if (!res) return { decl: "", name: "None" };
-    let members: string[] = [];
-    for (const k in res) {
-        members.push(`"${paramName(k)}": ${res[k].py}`);
-    }
-    let typeName = apiName + "Response";
-    return {
-        decl: `${typeName} = TypedDict('${typeName}',
-            {
-                ${members.join(",\n")}
-            }
-        )
-        `,
-        name: typeName
-    };
-}
+// export function pyResType(apiName: string, res?: Params) {
+//     if (!res) return { decl: "", name: "None" };
+//     let members: string[] = [];
+//     for (const k in res) {
+//         members.push(`"${paramName(k)}": ${res[k].py}`);
+//     }
+//     let typeName = apiName + "Response";
+//     return {
+//         decl: `${typeName} = TypedDict('${typeName}',
+//             {
+//                 ${members.join(",\n")}
+//             }
+//         )`,
+//         name: typeName
+//     };
+// }
 
 export function pyComments(m: Method) {
-    return `${m.desc}${cfg2str(m.cfg)}${pyReq2paramsDesc(m.req).join("\n")}`
+    return (m.desc || "")
         .replaceAll("\n", "\n    ");
 }
 

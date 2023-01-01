@@ -1,6 +1,6 @@
 import zvmsConfig from "zvms-config";
 import { ImplFiles, fApiIndexRaw, implsInitRaw, pathsGen, viewsInitRaw } from "zvms-apis-paths-gen";
-import * as pathsData from "zvms-apis-data/paths";
+import pathsData from "zvms-apis-data/paths";
 import { userCatagories, authData } from "zvms-apis-data/users";
 import { catagoriesGenTs, authGenTs, usersIndexRaw, authGenPy, catagoriesGenPy, usersInitRaw } from "zvms-apis-users-gen";
 import { structs as structsData } from "zvms-apis-data/types";
@@ -16,7 +16,7 @@ const { paths } = zvmsConfig;
 export function main() {
     const todos = generate();
     backup();
-    apply(todos);
+    //apply(todos);
 }
 
 function generate(): (() => void)[] {
@@ -24,8 +24,8 @@ function generate(): (() => void)[] {
 
     let implFiles: ImplFiles = {};
     const fileList = fs.readdirSync(paths.b.impls);
-    for(const file of fileList){
-        implFiles[file] = fs.readFileSync(join(paths.b.impls,file));
+    for (const file of fileList) {
+        implFiles[file] = fs.readFileSync(join(paths.b.impls, file));
     }
 
     todos.push(...pathsGen(pathsData, implFiles).map(
@@ -33,14 +33,14 @@ function generate(): (() => void)[] {
             () => {
                 fs.writeFileSync(join(paths.f.fApi, name + ".ts"), prettierTs(fApi));
                 fs.writeFileSync(join(paths.b.views, name + ".py"), views);
-                //fs.writeFileSync(join(paths.b.impls, name + ".py"), impls);
+                fs.writeFileSync(join(paths.b.impls, name + ".py"), impls);
             }
         )
     ));
     todos.push(() => {
-        fs.writeFileSync(join(paths.f.fApi, "index.ts"), fApiIndexRaw);
-        fs.writeFileSync(join(paths.b.views, "__init__.py"), viewsInitRaw);
-        fs.writeFileSync(join(paths.b.impls, "__init__.py"), implsInitRaw);
+        fs.writeFileSync(join(paths.f.fApi, "index.ts"), fApiIndexRaw(pathsData));
+        fs.writeFileSync(join(paths.b.views, "__init__.py"), viewsInitRaw(pathsData));
+        fs.writeFileSync(join(paths.b.impls, "__init__.py"), implsInitRaw(pathsData));
     });
 
     todos.push(() => {

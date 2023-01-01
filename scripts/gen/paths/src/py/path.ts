@@ -1,41 +1,30 @@
-import { Path } from "../types.js";
-import { pyViewsGet, pyImplsGet } from "./get.js";
-import { pyViewsPost, pyImplsPost } from "./post.js";
+import { PathItem, GenCtx, ImplCodes } from "../types.js";
+import { pyViewsMethod, pyImplsMethod } from "./method.js";
 
-export function pyViewsPath(partName: string, path: string, pathData: Path) {
-    let str = "";
-    if (pathData.paths) {
-        for (let itemName in pathData.paths) {
-            let item = pathData.paths[itemName];
-            let crtPath = path + itemName;
-            str +=
-                `${item.desc ? `'''
-${item.desc}
-'''`: ""}
-${pyViewsGet(partName, crtPath, item.get)} 
-${pyViewsPost(partName, crtPath, item.post)}
-`
-            str += pyViewsPath(partName, crtPath, item);
-        }
-    }
-    return str;
+export function pyViewsPath(ctx: GenCtx, pathData: PathItem): string {
+    let oldPath = ctx.path;
+    ctx.path += pathData.name;
+    let result =
+        (pathData.methods?.map(
+            m => pyViewsMethod(ctx, m)
+        ).join("\n") || "")
+        + (pathData.children?.map(
+            c => pyViewsPath(ctx, c)
+        ).join("\n"));
+    ctx.path = oldPath;
+    return result;
 }
 
-export function pyImplsPath(partName: string, path: string, pathData: Path) {
-    let str = "";
-    if (pathData.paths) {
-        for (let itemName in pathData.paths) {
-            let item = pathData.paths[itemName];
-            let crtPath = path + itemName;
-            str +=
-                `${item.desc ? `'''
-${item.desc}
-'''`: ""}
-${pyImplsGet(partName, crtPath, item.get)} 
-${pyImplsPost(partName, crtPath, item.post)}
-`
-            str += pyImplsPath(partName, crtPath, item);
-        }
-    }
-    return str;
+export function pyImplsPath(ctx: GenCtx, pathData: PathItem, implCodes: ImplCodes): string {
+    let oldPath = ctx.path;
+    ctx.path += pathData.name;
+    let result =
+        (pathData.methods?.map(
+            m => pyImplsMethod(ctx, m, implCodes)
+        ).join("\n") || "")
+        + (pathData.children?.map(
+            c => pyImplsPath(ctx, c, implCodes)
+        ).join("\n") || "");
+    ctx.path = oldPath;
+    return result;
 }

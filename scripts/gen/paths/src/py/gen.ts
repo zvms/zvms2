@@ -1,24 +1,23 @@
-import { Part, ImplFile } from "../types.js";
+import { PathItem, ImplFile, ImplCodes } from "../types.js";
 import { pyViewsPath, pyImplsPath } from "./path.js";
 
-const pyViewsAddBeforeFile = `
-import typing
-`;
+const pyViewsAddBeforeFile = ``;
 const pyViewsAddAfterFile = "";
 
-export function genViewsPy(name: string, part: Part): string {
+export function genViewsPy(part: PathItem): string {
     let str = pyViewsAddBeforeFile;
-    str += pyViewsPath(name, name, part);
+    str += pyViewsPath({
+        fileName: part.name.slice(1),
+        path: part.name
+    }, part);
     str += pyViewsAddAfterFile;
     return str;
 }
 
-const pyImplsAddBeforeFile = `
-import typing
-`;
+const pyImplsAddBeforeFile = `import typing`;
 const pyImplsAddAfterFile = "";
 
-export function genImplsPy(name: string, part: Part, implFile: ImplFile): string {
+export function genImplsPy(part: PathItem, implFile: ImplFile): string {
     // console.log(implFile?.slice(0, 50));
     // let results =
     //     /# *\[GET\] ([\w/<>:]+)\ndef (\w+)\([\w, :\*]*\)(-> \w+ )?:\n(    \'\'\'[\s\S]*?\'\'\')?/gm
@@ -28,24 +27,36 @@ export function genImplsPy(name: string, part: Part, implFile: ImplFile): string
     // if (results !== null) {
     //     results[0]
     // }
-
-    let methods = "GET|POST|PATCH";
     let matched = implFile.matchAll(
-        RegExp(
-            `\
-(?<=# *\\[${methods}\\] ([\\w/<>:]+)\\n\
-def (\\w+)\\([\\w, :\\*]*\\)(-> \\w+ )?:\\n\
-(    \\'\\'\\'[\\s\\S]*?\\'\\'\\')?)[\\s\\S]*?\
-(?=$|(# *\\[${methods}\\]))`,
-            "gm"
-        )
+        /(?<=^|#\s*\[([A-Z]+)\]\s*([\w/<:>]+)\ndef\s*\w+\(.*?\)\s*(\->\w\s*)?\s*:(\n\s*'''.*?''')?).*?(?=$|#\s*\[[A-Z]+\]\s*([\w/<:>]+)\ndef\s*\w+\(.*?\))/gs
     );
-
-
-
-
+    let implCodes: ImplCodes = {};
+    let isBeginning = true, beginning = "";
+    for (const m of matched) {
+        if (isBeginning) {
+            isBeginning = false;
+            if (m[1] === undefined && m[2] === undefined) {
+                beginning = m[0];
+            } else {
+                implCodes[m[1] + " " + m[2]] = [m[0], false];
+            }
+        } else {
+            implCodes[m[1] + " " + m[2]] = [m[0], false];
+        }
+    }
     let str = pyImplsAddBeforeFile;
-    str += pyImplsPath(name, name, part);
+    str += pyImplsPath({
+        fileName: part.name.slice(1),
+        path: part.name
+    }, part, implCodes);
     str += pyImplsAddAfterFile;
+
+    for (const k in implCodes) {
+        if (!implCodes[k][1]) {
+            console.error("WARNING: unused implCode!");
+            console.error("    - file:  ", part.name);
+            console.error("    - method:", implCodes[k]);
+        }
+    }
     return str;
 }

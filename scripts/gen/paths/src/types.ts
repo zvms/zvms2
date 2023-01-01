@@ -15,7 +15,8 @@ export interface DefaultParams {
     [key: string]: unknown;
 }
 export interface Method {
-    method: MethodName,
+    name: string;
+    type: MethodName,
     desc?: Description;
     auths?: UserCatagoryList;
     req?: Params;
@@ -82,3 +83,10 @@ export type Apis = PathItem[];
 export type ImplFile = string;
 
 export type ImplFiles = Record<string, ImplFile>;
+
+export interface GenCtx {
+    fileName: string,
+    path: string
+}
+
+export type ImplCodes = Record<string, [code: string, used: boolean]>;

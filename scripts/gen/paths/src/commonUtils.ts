@@ -1,49 +1,4 @@
-import { Config, Params } from "./types.js";
-
-export function path2LCamal(path: string) {
-    let s = "";
-    let isFirstLetter = true;
-    let isParamName = false;
-    let isParamType = false;
-    let params: { name: string, type: string }[] = [];
-    for (const c of path) {
-        if (c === "/") {
-            isFirstLetter = true;
-        } else if (c === "<") {
-            isFirstLetter = false;
-            isParamName = true;
-            params.push({ name: "", type: "" })
-        } else if (c === ">") {
-            isFirstLetter = false;
-            isParamName = false;
-            isParamType = false;
-        } else if (c === ">") {
-            isFirstLetter = false;
-            isParamName = false;
-            isParamType = false;
-        } else {
-            if (isParamName) {
-                params[params.length - 1].name += c;
-            } else if (isParamType) {
-                params[params.length - 1].type += c;
-            } else {
-                s += isFirstLetter ? c.toUpperCase() : c;
-            }
-            isFirstLetter = false;
-        }
-    }
-    if (params.length > 0) {
-        s += "By" + params.map(({ name }) => {
-            return name[0].toUpperCase() + name.slice(1)
-        }).join("");
-    }
-    return s;
-}
-
-
-export function cfg2str(cfg?: Config) {
-    if (!cfg) return "";
-}
+import { Params } from "./types.js";
 
 export function req2paramsApply(req?: Params): string {
     if (!req) return "";
@@ -56,4 +11,17 @@ export function req2paramsApply(req?: Params): string {
 
 export function paramName(n: string) {
     return n === "class" ? `classId` : n;
+}
+
+export function snack2camal(str: string, upperCaseFirst = false) {
+    let result = "", upperCase = upperCaseFirst;
+    for (let c of str) {
+        if (c === "_") upperCase = true;
+        else if (upperCase) {
+            upperCase = false;
+            c = c.toUpperCase();
+        }
+        result += c;
+    }
+    return result;
 }

@@ -1,5 +1,5 @@
 import { Method, Params } from "../types.js";
-import { cfg2str, paramName } from "../commonUtils.js";
+import { paramName } from "../commonUtils.js";
 
 export * from "../commonUtils.js";
 
@@ -31,7 +31,7 @@ export function tsResType(res?: Params) {
 }
 
 export function tsComments(m: Method) {
-    return `${tsAddStar(m.desc)}${tsAddStar(cfg2str(m.cfg))}${tsReq2paramsDesc(m.req).join("\n")}`
+    return `${tsAddStar(m.desc)}${tsReq2paramsDesc(m.req).join("\n")}`
 }
 
 export function tsAddStar(str: string | undefined) {

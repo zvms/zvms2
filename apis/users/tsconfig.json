@@ -4,7 +4,7 @@
         "outDir": "../dist/users"
     },
     "include": [
-        "./**.ts"
+        "./*.ts"
     ],
     "references": [
         {

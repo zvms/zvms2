@@ -10,15 +10,14 @@ export { genTs } from "./ts/gen.js";
 export type PathsGenerated = { name: string, fApi: string, views: string, impls: string }[];
 export function pathsGen(apis: Apis, implFiles: ImplFiles): PathsGenerated {
     const result: PathsGenerated = [];
-    for (const partName in apis) {
-        const part = (apis)[partName];
-        console.log("Generating", partName);
+    for (const part of apis) {
+        console.log("Generating", part.name);
         result.push({
-            name: partName,
-            fApi: genTs(partName, part),
-            views: genViewsPy(partName, part),
-            impls: genImplsPy(partName, part, implFiles[partName])
-        })
+            name: part.name.slice(1),
+            fApi: genTs(part),
+            views: genViewsPy(part),
+            impls: genImplsPy(part, implFiles[part.name.slice(1)])
+        });
     }
     return result;
 }

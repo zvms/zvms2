@@ -4,7 +4,7 @@
         "outDir": "../dist/types"
     },
     "include": [
-        "./**.ts"
+        "./*.ts"
     ],
     "references": [
         {
