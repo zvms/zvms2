@@ -60,3 +60,11 @@ export function createStructs<Raw extends StructsRaw>(raw: Raw): Structs<Raw> {
     }
     return result;
 }
+
+export function createDangerousStructRef(name:string):Type{
+    return {
+        ts: `structs.${name}`,
+        py: `structs.${name}`,
+        ck: `structs.ck.${name}`
+    }
+}

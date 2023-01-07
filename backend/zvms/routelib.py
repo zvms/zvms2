@@ -9,9 +9,23 @@ from zvms.res import *
 from zvms.util import *
 import zvms.tokenlib as tk
 
-
 def route(*,rule, method='GET', impl_func, params=Any, auth=AUTH.ALL):
     app.add_url_rule(rule, methods=[method], view_func=deco(impl_func, params, auth))
+
+def route_get(*,rule, impl_func, params, auth):
+    app.add_url_rule(rule, methods=['GET'], view_func=deco(impl_func, params, auth))
+
+def route_post(*,rule, impl_func, params, auth):
+    app.add_url_rule(rule, methods=['POST'], view_func=deco(impl_func, params, auth))
+
+def route_put(*,rule, impl_func, params, auth):
+    app.add_url_rule(rule, methods=['PUT'], view_func=deco(impl_func, params, auth))
+
+def route_delete(*,rule, impl_func, params, auth):
+    app.add_url_rule(rule, methods=['DELETE'], view_func=deco(impl_func, params, auth))
+
+def route_patch(*,rule, impl_func, params, auth):
+    app.add_url_rule(rule, methods=['PATCH'], view_func=deco(impl_func, params, auth))
 
 # 不要听下面的注释, 现在已经没有装饰器了
 # 以后把调试的代码写在这边，把一些公用的功能也可以移到这边

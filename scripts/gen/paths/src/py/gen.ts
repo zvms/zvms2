@@ -1,7 +1,10 @@
 import { PathItem, ImplFile, ImplCodes } from "../types.js";
 import { pyViewsPath, pyImplsPath } from "./path.js";
 
-const pyViewsAddBeforeFile = ``;
+const pyViewsAddBeforeFile = `from zvms.routelib import *
+from zvms.res
+import zvms.impls
+`;
 const pyViewsAddAfterFile = "";
 
 export function genViewsPy(part: PathItem): string {
@@ -14,7 +17,12 @@ export function genViewsPy(part: PathItem): string {
     return str;
 }
 
-const pyImplsAddBeforeFile = `import typing`;
+const pyImplsAddBeforeFile = `import typing
+
+from zvms.models import *
+from zvms.res import *
+from zvms.util import *
+`;
 const pyImplsAddAfterFile = "";
 
 export function genImplsPy(part: PathItem, implFile: ImplFile): string {

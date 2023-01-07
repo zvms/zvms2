@@ -1,5 +1,5 @@
 import { Type, Description } from "zvms-apis-types-gen";
-import { UserCatagoryList } from "zvms-apis-users-gen";
+import { UserCatagoryList, UserCatagory } from "zvms-apis-users-gen";
 export { Type, Description };
 
 export type MethodName =
@@ -8,9 +8,9 @@ export type MethodName =
     | "PUT"
     | "DELETE"
     | "PATCH";
-export interface Params {
+export type Params = {
     [key: string]: Type;
-}
+} | Type;
 export interface DefaultParams {
     [key: string]: unknown;
 }
@@ -18,7 +18,7 @@ export interface Method {
     name: string;
     type: MethodName,
     desc?: Description;
-    auths?: UserCatagoryList;
+    auths?: UserCatagoryList[];
     req?: Params;
     res?: Params;
     _req?: DefaultParams;
