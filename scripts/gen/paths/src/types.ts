@@ -61,7 +61,7 @@ export function $<S extends string>(
     let methods: Method[] = [],
         children: PathItem[] = [];
     for (const v of etc) {
-        if (Object.hasOwn(v, "method")) {
+        if (Object.hasOwn(v, "type")) {
             const m = v as Method;
             methods.push(m);
         } else {
