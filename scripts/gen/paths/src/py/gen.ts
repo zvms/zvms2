@@ -63,7 +63,7 @@ export function genImplsPy(part: PathItem, implFile: ImplFile): string {
         if (!implCodes[k][1]) {
             console.error("WARNING: unused implCode!");
             console.error("    - file:  ", part.name);
-            console.error("    - method:", implCodes[k]);
+            console.error("    - method:", k);
         }
     }
     return str;

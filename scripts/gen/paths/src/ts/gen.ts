@@ -13,6 +13,5 @@ export function genTs(part: PathItem): string {
         path: part.name
     }, part);
     str += tsAddAfterFile;
-    str = str;
     return str;
 }

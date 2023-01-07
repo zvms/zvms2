@@ -7,10 +7,10 @@ export function tsPath(ctx: GenCtx, pathData: PathItem): string {
     let result =
         (pathData.methods?.map(
             m => tsMethod(ctx, m)
-        ).join("\n") || "")
+        )?.join("\n") || "")
         + (pathData.children?.map(
             c => tsPath(ctx, c)
-        ).join("\n") || "");
+        )?.join("\n") || "");
     ctx.path = oldPath;
     return result;
 }

@@ -7,10 +7,10 @@ export function pyViewsPath(ctx: GenCtx, pathData: PathItem): string {
     let result =
         (pathData.methods?.map(
             m => pyViewsMethod(ctx, m)
-        ).join("\n") || "")
+        )?.join("\n") || "")
         + (pathData.children?.map(
             c => pyViewsPath(ctx, c)
-        ).join("\n"));
+        )?.join("\n") || "");
     ctx.path = oldPath;
     return result;
 }
@@ -21,10 +21,10 @@ export function pyImplsPath(ctx: GenCtx, pathData: PathItem, implCodes: ImplCode
     let result =
         (pathData.methods?.map(
             m => pyImplsMethod(ctx, m, implCodes)
-        ).join("\n") || "")
+        )?.join("\n") || "")
         + (pathData.children?.map(
             c => pyImplsPath(ctx, c, implCodes)
-        ).join("\n") || "");
+        )?.join("\n") || "");
     ctx.path = oldPath;
     return result;
 }

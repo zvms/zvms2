@@ -16,7 +16,7 @@ const { paths } = zvmsConfig;
 export function main() {
     const todos = generate();
     backup();
-    //apply(todos);
+    apply(todos);
 }
 
 function generate(): (() => void)[] {
