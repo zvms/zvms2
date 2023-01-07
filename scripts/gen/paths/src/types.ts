@@ -10,7 +10,7 @@ export type MethodName =
     | "PATCH";
 export type Params = {
     [key: string]: Type;
-} | Type;
+};
 export interface DefaultParams {
     [key: string]: unknown;
 }

@@ -1,6 +1,6 @@
 import { $ } from "zvms-apis-paths-gen";
 import { authData as a } from "../users/index.js";
-import { str ,structs} from "../types/index.js";
+import { int } from "../types/index.js";
 
 export default $(
     "/signup",
@@ -16,20 +16,22 @@ export default $(
             type: "GET",
             name: "signup",
             desc: "",
-            req:structs.Signup
+            req: {
+                volId: int()
+            }
         },
         $(
             "/<int:volId>",
             [],
             {
-                type:"PATCH",
-                name:"audit_signup",
-                auths:[a.auditSignup]
+                type: "PATCH",
+                name: "audit_signup",
+                auths: [a.auditSignup]
             },
             {
-                type:"DELETE",
-                name:"rollback",
-                auths:[a.rollbackSignup]
+                type: "DELETE",
+                name: "rollback",
+                auths: [a.rollbackSignup]
             }
         )
     )

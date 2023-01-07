@@ -4,7 +4,12 @@ export type StructRaw = Record<string, Type>;
 
 export type StructsRaw = Record<string, StructRaw>;
 
-export type Structs<Raw> = Record<keyof Raw, Type & { tsDef: string, pyDef: string, ckDef: string }>;
+export type Structs<Raw> = Record<keyof Raw, Type & {
+    tsDef: string,
+    pyDef: string,
+    ckDef: string,
+    raw: StructRaw
+}>;
 
 export function structsDefGenTs(data: Structs<any>): string {
     let str = ``;
@@ -53,6 +58,7 @@ export function createStructs<Raw extends StructsRaw>(raw: Raw): Structs<Raw> {
             tsDef,
             pyDef,
             ckDef,
+            raw: struct,
             ts: `structs.${name}`,
             py: `structs.${name}`,
             ck: `structs.ck.${name}`
@@ -61,7 +67,7 @@ export function createStructs<Raw extends StructsRaw>(raw: Raw): Structs<Raw> {
     return result;
 }
 
-export function createDangerousStructRef(name:string):Type{
+export function createDangerousStructRef(name: string): Type {
     return {
         ts: `structs.${name}`,
         py: `structs.${name}`,

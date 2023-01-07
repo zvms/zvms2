@@ -1,6 +1,6 @@
 import { $ } from "zvms-apis-paths-gen";
 import { authData as a } from "../users/index.js";
-import { str ,structs} from "../types/index.js";
+import { int, str, arr, structs } from "../types/index.js";
 
 export default $(
     "/users",
@@ -8,56 +8,66 @@ export default $(
     {
         type: "GET",
         name: "search_users",
-        auths:[a.readMyUserInfo]
+        auths: [a.readMyUserInfo]
     },
     {
         type: "POST",
         name: "create_users",
         auths: [a.writeUserInfo],
-        req: structs.Users
+        req: {
+            users: arr(structs.UserOfUsers)
+        }
     },
     $(
         "/check",
         [],
         {
-            type:"GET",
-            name:"check"
+            type: "GET",
+            name: "check"
         }
     ),
     $(
         "/login",
         [],
         {
-            type:"POST",
-            name:"login",
-            auths:[a.login],
-            req:structs.Login
+            type: "POST",
+            name: "login",
+            auths: [a.login],
+            req: {
+                id: int(),
+                pwd: str()
+            },
         }
     ),
     $(
         "/logout",
         [],
         {
-            type:"POST",
-            name:"logout"
+            type: "POST",
+            name: "logout"
         }
     ),
     $(
         "/mod-pwd",
         [],
         {
-            type:"PATCH",
-            name:"modify_password",
-            req:structs.ModPwd
+            type: "PATCH",
+            name: "modify_password",
+            req: {
+                old: str(),
+                new: str()
+            }
         }
     ),
     $(
         "/change-class",
         [],
         {
-            type:"PATCH",
-            name:"change_class",
-            req:structs.ChangeClass
+            type: "PATCH",
+            name: "change_class",
+            req: {
+                newClsId: int()
+            }
         }
     ),
     $(

@@ -16,20 +16,6 @@ export const structs = createStructs({
     Report: {
         content: str()
     },
-    Signup: {
-        volId: int(),
-    },
-    Login: {
-        id: int(),
-        pwd: str()
-    },
-    ModPwd: {
-        old: str(),
-        new: str()
-    },
-    ChangeClass: {
-        clsId: int()
-    },
     VolunteerRecordClass: {
         id: int(),
         max: int()

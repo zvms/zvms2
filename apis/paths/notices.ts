@@ -13,7 +13,7 @@ export default $(
         type: "POST",
         name: "send_notice",
         auths: [],
-        req: structs.Notice
+        req: structs.Notice.raw
     },
     $(
         "/<int:id>",

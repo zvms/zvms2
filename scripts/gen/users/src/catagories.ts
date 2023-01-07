@@ -10,9 +10,6 @@ export type UserCatagoriesById = {
 }
 export type UserCatagoryList = readonly UserCatagory[];
 
-let a = [1 as any as UserCatagory,
-1 as any as UserCatagory] as const as UserCatagoryList
-
 export type UserCatagories = {
     raw: UserCatagoriesRaw,
     byId: UserCatagoriesById,

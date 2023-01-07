@@ -12,8 +12,8 @@ export default $(
     {
         type: "POST",
         name: "create_volunteer",
-        auths: [a.createVol],
-        req: structs.VolunteerRecord
+        auths: [],
+        req: structs.VolunteerRecord.raw
     },
     $(
         "/<int:id>",
@@ -26,13 +26,13 @@ export default $(
         {
             type: "PUT",
             name: "update_volunteer",
-            auths: [a.updateVol],
-            req: structs.VolunteerRecord
+            auths: [],
+            req: structs.VolunteerRecord.raw
         },
         {
             type: "DELETE",
             name: "delete_volunteer",
-            auths: [a.deleteVol]
+            auths: []
         }
     )
 );

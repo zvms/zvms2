@@ -1,5 +1,5 @@
 import { $ } from "zvms-apis-paths-gen";
-import { structs } from "../types/index.js";
+import { str, structs } from "../types/index.js";
 
 export default $(
     "/report",
@@ -7,6 +7,8 @@ export default $(
     {
         type: "POST",
         name: "report",
-        req: structs.Report
+        req: {
+            content: str()
+        }
     }
 );
