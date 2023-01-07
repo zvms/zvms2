@@ -48,6 +48,23 @@ export function createUserCatagories(rawCatagories: UserCatagoriesRaw): UserCata
     }
 }
 
+export function createUserOrder(...catagories: UserCatagory[]) {
+    return {
+        over(c: UserCatagory): UserCatagoryList {
+            return catagories.slice(catagories.findIndex(v => v.id === c.id) + 1);
+        },
+        overEqual(c: UserCatagory): UserCatagoryList {
+            return catagories.slice(catagories.findIndex(v => v.id === c.id));
+        },
+        less(c: UserCatagory): UserCatagoryList {
+            return catagories.slice(catagories.findIndex(v => v.id === c.id));
+        },
+        lessEqual(c: UserCatagory): UserCatagoryList {
+            return catagories.slice(catagories.findIndex(v => v.id === c.id) + 1);
+        }
+    }
+}
+
 export function catagoriesGenTs({ raw }: UserCatagories) {
     let str = `
 export const userCatagories = {
