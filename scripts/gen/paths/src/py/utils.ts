@@ -39,8 +39,13 @@ export function pyParamsTypeCheck(req?: Params): string {
 // }
 
 export function pyComments(m: Method) {
-    return (m.desc || "")
-        .replaceAll("\n", "\n    ");
+    if (m.desc && m.desc !== "") {
+        return `'''
+    ${m.desc            .replaceAll("\n", "\n    ")}
+    '''\n`;
+    } else {
+        return "";
+    }
 }
 
 export function pyCommentStr(comment?: string) {

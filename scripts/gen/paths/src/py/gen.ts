@@ -11,7 +11,7 @@ export function genViewsPy(part: PathItem): string {
     let str = pyViewsAddBeforeFile;
     str += pyViewsPath({
         fileName: part.name.slice(1),
-        path: part.name
+        path: ""
     }, part);
     str += pyViewsAddAfterFile;
     return str;
@@ -22,6 +22,7 @@ const pyImplsAddBeforeFile = `import typing
 from zvms.models import *
 from zvms.res import *
 from zvms.util import *
+
 `;
 const pyImplsAddAfterFile = "";
 
@@ -36,7 +37,7 @@ export function genImplsPy(part: PathItem, implFile: ImplFile): string {
     //     results[0]
     // }
     let matched = implFile.matchAll(
-        /(?<=^|#\s*\[([A-Z]+)\]\s*([\w/<:>]+)\ndef\s*\w+\(.*?\)\s*(\->\w\s*)?\s*:(\n\s*'''.*?''')?).*?(?=$|#\s*\[[A-Z]+\]\s*([\w/<:>]+)\ndef\s*\w+\(.*?\))/gs
+        /(?<=^|#\s*\[([A-Z]+)\]\s*([\w/<:>]+)\ndef\s*\w+\(.*?\)\s*(\->\w\s*)?\s*:(\n\s*'''.*?''')?).*?(?=$|\n#\s*\[[A-Z]+\]\s*([\w/<:>]+)\ndef\s*\w+\(.*?\))/gs
     );
     let implCodes: ImplCodes = {};
     let isBeginning = true, beginning = "";
@@ -55,7 +56,7 @@ export function genImplsPy(part: PathItem, implFile: ImplFile): string {
     let str = pyImplsAddBeforeFile;
     str += pyImplsPath({
         fileName: part.name.slice(1),
-        path: part.name
+        path: ""
     }, part, implCodes);
     str += pyImplsAddAfterFile;
 

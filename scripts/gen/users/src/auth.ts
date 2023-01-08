@@ -21,7 +21,7 @@ export function authGenTs(data: AuthData) {
 export function authGenPy(data: AuthData) {
     let str = ``;
     for (const name in data) {
-        str += `${name} = 0b${rjust(data[name].reduce((p, c) => p & c.id, 0).toString(2),8,"0")},\n`
+        str += `\t${name} = 0b${rjust(data[name].reduce((p, c) => p & c.id, 0).toString(2),8,"0")},\n`
     }
     str += `}`;
     return str;

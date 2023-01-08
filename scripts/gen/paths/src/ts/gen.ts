@@ -10,7 +10,7 @@ export function genTs(part: PathItem): string {
     let str = tsAddBeforeFile;
     str += tsPath({
         fileName: part.name.slice(1),
-        path: part.name
+        path: ""
     }, part);
     str += tsAddAfterFile;
     return str;

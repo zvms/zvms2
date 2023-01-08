@@ -54,8 +54,8 @@ export default $(
             type: "PATCH",
             name: "modify_password",
             req: {
-                old: str(),
-                new: str()
+                oldMD5: str(),
+                newMD5: str()
             }
         }
     ),

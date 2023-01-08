@@ -14,5 +14,6 @@ export const typesIndexRaw =
 
 export const typesInitRaw =
     `__ALL__ = [
-    "./structs"
+    "./structs",
+    "./structs_ck"
 ]`;

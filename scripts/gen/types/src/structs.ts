@@ -15,25 +15,25 @@ export function structsDefGenTs(data: Structs<any>): string {
     let str = ``;
     for (const name in data) {
         const struct = data[name];
-        str += struct.tsDef;
+        str += "\n" + struct.tsDef;
     }
     return str;
 }
 
 export function structsDefGenPy(data: Structs<any>): string {
-    let str = ``;
+    let str = `import typing\n`;
     for (const name in data) {
         const struct = data[name];
-        str += struct.pyDef;
+        str += "\n" + struct.pyDef;
     }
     return str;
 }
 
 export function structsDefGenCk(data: Structs<any>): string {
-    let str = ``;
+    let str = `from zvms.util import *\n`;
     for (const name in data) {
         const struct = data[name];
-        str += struct.ckDef;
+        str += "\n" + struct.ckDef;
     }
     return str;
 }
@@ -43,17 +43,20 @@ export function createStructs<Raw extends StructsRaw>(raw: Raw): Structs<Raw> {
     for (const name in raw) {
         const struct = raw[name];
         let tsDef = `export interface ${name}{\n`;
-        let pyDef = `${name} = TypedDict('${name}',{\n`;
+        let pyDef = `${name} = typing.TypedDict('${name}', {\n`;
         let ckDef = `${name} = Object(\n`
         for (const key in struct) {
             const type = struct[key];
-            tsDef += `\t${key}:${type.ts};\n`;
-            pyDef += `\t'${key}':${type.py},\n`;
+            tsDef += `\t${key}: ${type.ts};\n`;
+            pyDef += `\t'${key}': ${type.py},\n`;
             ckDef += `\t${key}=${type.ck},\n`;
         }
-        tsDef += "}\n";
-        pyDef += "})\n";
-        ckDef += ")"
+        tsDef = (tsDef + "}")
+            .replaceAll("structs.", "");// This is bad!
+        pyDef = (pyDef.slice(0, -2) + "\n})")
+            .replaceAll("structs.", "");// This is bad!
+        ckDef = (ckDef.slice(0, -2) + "\n)")
+            .replaceAll("structs.ck.", "");// This is bad!
         result[name] = {
             tsDef,
             pyDef,
