@@ -90,14 +90,15 @@ function toSnackUppercase(str: string) {
 }
 
 export function catagoriesGenPy({ raw }: UserCatagories) {
-    let str = `\n`;
+    let str = `from enum import Enum
+
+class UserCatagory(Enum):`;
     for (const name in raw) {
         const catagory = raw[name];
-        str += `
-${toSnackUppercase(name)} = {
-    'id': ${catagory.id},
-    'name': '${catagory.name}',
-},\n`
+        str += `\n    ${toSnackUppercase(name)} = {
+        'id': ${catagory.id},
+        'name': '${catagory.name}',
+    }`;
     }
-    return str;
+    return str + "\n";
 }

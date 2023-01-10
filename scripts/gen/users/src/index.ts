@@ -9,4 +9,5 @@ export const usersInitRaw =
     `__ALL__ = [
     "./auths",
     "./catagories"
-]`;
+]
+`;

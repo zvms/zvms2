@@ -19,10 +19,11 @@ export function authGenTs(data: AuthData) {
 }
 
 export function authGenPy(data: AuthData) {
-    let str = ``;
+    let str = `from enum import IntFlag
+
+class AUTH(IntFlag):`;
     for (const name in data) {
-        str += `\t${name} = 0b${rjust(data[name].reduce((p, c) => p & c.id, 0).toString(2),8,"0")},\n`
+        str += `\n    ${name} = 0b${rjust(data[name].reduce((p, c) => p & c.id, 0).toString(2),8,"0")},`
     }
-    str += `}`;
-    return str;
+    return str.slice(0,-1) + "\n";
 }

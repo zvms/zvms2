@@ -26,7 +26,7 @@ export function structsDefGenPy(data: Structs<any>): string {
         const struct = data[name];
         str += "\n" + struct.pyDef;
     }
-    return str;
+    return str + "\n";
 }
 
 export function structsDefGenCk(data: Structs<any>): string {
@@ -35,7 +35,7 @@ export function structsDefGenCk(data: Structs<any>): string {
         const struct = data[name];
         str += "\n" + struct.ckDef;
     }
-    return str;
+    return str + "\n";
 }
 
 export function createStructs<Raw extends StructsRaw>(raw: Raw): Structs<Raw> {

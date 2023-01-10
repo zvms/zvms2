@@ -1,4 +1,5 @@
 from enum import IntFlag
+
 class AUTH(IntFlag):
     mePageOnNav = 0b00000000,
     login = 0b00000000,
@@ -21,4 +22,4 @@ class AUTH(IntFlag):
     readAnyUserInfo = 0b00000000,
     writeUserInfo = 0b00000000,
     readAnyClass = 0b00000000,
-    writeClass = 0b00000000,
+    writeClass = 0b00000000

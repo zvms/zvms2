@@ -16,4 +16,5 @@ export const typesInitRaw =
     `__ALL__ = [
     "./structs",
     "./structs_ck"
-]`;
+]
+`;
