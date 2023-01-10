@@ -13,7 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "zvms-apis-types-gen": "link:../types",
-    "zvms-apis-users-gen": "link:../users"
+    "zvms-apis-users-gen": "link:../users",
+    "zvms-scripts-utils": "link:../../utils"
   },
   "devDependencies": {
     "@types/node": "^18.11.18"

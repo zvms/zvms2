@@ -1,5 +1,5 @@
 {
-  "name": "zvms-apis-users-gen",
+  "name": "zvms-scripts-utils",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/src/index.js",
@@ -12,6 +12,5 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "zvms-scripts-utils": "link:../../utils"
   }
 }

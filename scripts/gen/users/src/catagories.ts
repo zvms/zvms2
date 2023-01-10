@@ -1,3 +1,6 @@
+import { number2ByteCode } from "zvms-scripts-utils"
+import { camal2Snake } from "zvms-scripts-utils"
+
 export interface UserCatagory {
     id: number, // permanent, unique
     name: string// for display
@@ -78,27 +81,37 @@ export const userCatagories = {
     return str;
 }
 
-function toSnackUppercase(str: string) {
-    let result = "";
-    for (const c of str) {
-        if (65 <= c.charCodeAt(0) && c.charCodeAt(0) <= 90) {
-            result += "_";
-        }
-        result += c;
-    }
-    return result.toUpperCase();
-}
-
 export function catagoriesGenPy({ raw }: UserCatagories) {
-    let str = `from enum import Enum
-
-class UserCatagory(Enum):`;
+    let str = `from enum import IntFlag\n\n
+class USER_CATAGORIES(IntFlag):`;
     for (const name in raw) {
         const catagory = raw[name];
-        str += `\n    ${toSnackUppercase(name)} = {
+        str += `\n    ${camal2Snake(name).toUpperCase()} = ${number2ByteCode(catagory.id, 8)}`
+    }
+
+    str += `\n
+class UserCatagoriesInfo:`;
+    for (const name in raw) {
+        const catagory = raw[name];
+        str += `\n    ${name} = {
         'id': ${catagory.id},
         'name': '${catagory.name}',
     }`;
     }
+    str += `
+    @staticmethod
+    def byId(id):
+        _data = {`;
+    for (const name in raw) {
+        const catagory = raw[name];
+        str += `
+            USER_CATAGORIES.${camal2Snake(name).toUpperCase()}: {
+                'id': ${catagory.id},
+                'name': '${catagory.name}',
+            },`;
+    }
+    str+=`
+        }
+        return _data[id]`
     return str + "\n";
 }
