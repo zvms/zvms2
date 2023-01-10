@@ -1,10 +1,10 @@
-import zvmsConfig from "zvms-config";
-import { ImplFiles, fApiIndexRaw, implsInitRaw, pathsGen, viewsInitRaw } from "zvms-apis-paths-gen";
 import pathsData from "zvms-apis-data/paths";
-import { userCatagories, authData } from "zvms-apis-data/users";
-import { catagoriesGenTs, authGenTs, usersIndexRaw, authGenPy, catagoriesGenPy, usersInitRaw } from "zvms-apis-users-gen";
-import { structs as structsData } from "zvms-apis-data/types";
-import { structsDefGenCk, structsDefGenPy, structsDefGenTs, typesIndexRaw, typesInitRaw } from "zvms-apis-types-gen";
+import { structs as structsData, enums as enumsData } from "zvms-apis-data/types";
+import { authData, userCatagories } from "zvms-apis-data/users";
+import { fApiIndexRaw, ImplFiles, implsInitRaw, pathsGen, viewsInitRaw } from "zvms-apis-paths-gen";
+import { enumsDefGenPy, enumsDefGenTs, structsDefGenCk, structsDefGenPy, structsDefGenTs, typesIndexRaw, typesInitRaw } from "zvms-apis-types-gen";
+import { authGenPy, authGenTs, catagoriesGenPy, catagoriesGenTs, usersIndexRaw, usersInitRaw } from "zvms-apis-users-gen";
+import zvmsConfig from "zvms-config";
 
 import * as fs from "./fs.js";
 
@@ -53,6 +53,8 @@ function generate(): (() => void)[] {
     })
 
     todos.push(() => {
+        fs.writeFileSync(join(paths.f.types, "enums.ts"), prettierTs(enumsDefGenTs(enumsData)));
+        fs.writeFileSync(join(paths.b.types, "enums.py"), enumsDefGenPy(enumsData));
         fs.writeFileSync(join(paths.f.types, "structs.ts"), prettierTs(structsDefGenTs(structsData)));
         fs.writeFileSync(join(paths.b.types, "structs.py"), structsDefGenPy(structsData));
         fs.writeFileSync(join(paths.b.types, "structs_ck.py"), structsDefGenCk(structsData));

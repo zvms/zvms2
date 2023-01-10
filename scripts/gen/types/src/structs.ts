@@ -11,45 +11,18 @@ export type Structs<Raw> = Record<keyof Raw, Type & {
     raw: StructRaw
 }>;
 
-export function structsDefGenTs(data: Structs<any>): string {
-    let str = ``;
-    for (const name in data) {
-        const struct = data[name];
-        str += "\n" + struct.tsDef;
-    }
-    return str;
-}
-
-export function structsDefGenPy(data: Structs<any>): string {
-    let str = `import typing\n`;
-    for (const name in data) {
-        const struct = data[name];
-        str += "\n" + struct.pyDef;
-    }
-    return str + "\n";
-}
-
-export function structsDefGenCk(data: Structs<any>): string {
-    let str = `from zvms.util import *\n`;
-    for (const name in data) {
-        const struct = data[name];
-        str += "\n" + struct.ckDef;
-    }
-    return str + "\n";
-}
-
 export function createStructs<Raw extends StructsRaw>(raw: Raw): Structs<Raw> {
     let result: Structs<Raw> = {} as any;
     for (const name in raw) {
         const struct = raw[name];
         let tsDef = `export interface ${name}{\n`;
         let pyDef = `${name} = typing.TypedDict('${name}', {\n`;
-        let ckDef = `${name} = Object(\n`
+        let ckDef = `${name} = Object(\n`;
         for (const key in struct) {
             const type = struct[key];
-            tsDef += `\t${key}: ${type.ts};\n`;
-            pyDef += `\t'${key}': ${type.py},\n`;
-            ckDef += `\t${key}=${type.ck},\n`;
+            tsDef += `    ${key}: ${type.ts};\n`;
+            pyDef += `    '${key}': ${type.py},\n`;
+            ckDef += `    ${key}=${type.ck},\n`;
         }
         tsDef = (tsDef + "}")
             .replaceAll("structs.", "");// This is bad!
@@ -76,4 +49,31 @@ export function createDangerousStructRef(name: string): Type {
         py: `structs.${name}`,
         ck: `structs.ck.${name}`
     }
+}
+
+export function structsDefGenTs(data: Structs<any>): string {
+    let str = ``;
+    for (const name in data) {
+        const struct = data[name];
+        str += "\n" + struct.tsDef;
+    }
+    return str;
+}
+
+export function structsDefGenPy(data: Structs<any>): string {
+    let str = `import typing\n\n`;
+    for (const name in data) {
+        const struct = data[name];
+        str += "\n" + struct.pyDef;
+    }
+    return str + "\n";
+}
+
+export function structsDefGenCk(data: Structs<any>): string {
+    let str = `from zvms.util import *\n\n`;
+    for (const name in data) {
+        const struct = data[name];
+        str += "\n" + struct.ckDef;
+    }
+    return str + "\n";
 }

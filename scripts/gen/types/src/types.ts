@@ -15,6 +15,7 @@ export const typesIndexRaw =
 export const typesInitRaw =
     `__ALL__ = [
     "./structs",
-    "./structs_ck"
+    "./structs_ck",
+    "./enum"
 ]
 `;

@@ -1,4 +1,5 @@
 __ALL__ = [
     "./structs",
-    "./structs_ck"
+    "./structs_ck",
+    "./enum"
 ]
