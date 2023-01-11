@@ -52,7 +52,7 @@ def send_notice(title, content, deadtime, type, targets, token_data):
             return error('未知的目标类型')
     return success('发送成功')
 
-#[DELETE] /users/<int:id>
+#[DELETE] /notices/<int:id>
 def delete_notice(id, token_data):
     notice = Notice.query.get_or_error(id)
     auth_self(notice.sender, token_data, '权限不足: 不能删除其他人的通知')

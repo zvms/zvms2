@@ -2,7 +2,7 @@ from zvms.models import *
 from zvms.utils import *
 import zvms.tokenlib as tk
 
-#[GET] /check
+#[GET] /users/check
 def check(token_data):
     return success('获取成功', token_data)
 

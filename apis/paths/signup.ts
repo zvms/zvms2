@@ -13,7 +13,7 @@ export default $(
         "/<int:stuId>",
         [],
         {
-            type: "GET",
+            type: "POST",
             name: "signup",
             desc: "",
             req: {

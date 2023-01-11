@@ -10,14 +10,6 @@ export default $(
         name: "search_users",
         auths: [a.readMyUserInfo]
     },
-    {
-        type: "POST",
-        name: "create_users",
-        auths: [a.writeUserInfo],
-        req: {
-            users: arr(structs.UserOfUsers)
-        }
-    },
     $(
         "/check",
         [],
@@ -46,6 +38,18 @@ export default $(
             type: "POST",
             name: "logout"
         }
+    ),
+    $(
+        "/create",
+        [],
+        {
+            type: "POST",
+            name: "create_users",
+            auths: [a.writeUserInfo],
+            req: {
+                users: arr(structs.UserOfUsers)
+            }
+        },
     ),
     $(
         "/mod-pwd",
