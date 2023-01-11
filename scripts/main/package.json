@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "gen":"tsc -b && node ./dist/src/index.js"
+    "gen": "tsc -b && node ./dist/src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +15,8 @@
   "dependencies": {
     "zvms-apis-gen-main": "link:../gen/main",
     "zvms-config": "link:../../config"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18"
   }
 }

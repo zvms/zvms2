@@ -13,10 +13,11 @@ import { format } from "prettier";
 
 const { paths } = zvmsConfig;
 
-export function main() {
+export function main(output: boolean) {
     const todos = generate();
     backup();
-    apply(todos);
+    if (output) apply(todos);
+    else console.log("Outputing is closed.")
 }
 
 function generate(): (() => void)[] {

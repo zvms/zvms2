@@ -47,7 +47,7 @@ export type PathItemName
 export interface PathItem {
     name: string,
     //desc: Description,
-    auth: UserCatagoryList[],
+    //auth: UserCatagoryList[],
     methods: Method[],
     children: PathItem[]
 }
@@ -55,7 +55,7 @@ export interface PathItem {
 export function $<S extends string>(
     name: PathItemName<S>,
     //desc: Description,
-    auth: UserCatagoryList[],
+    //auth: UserCatagoryList[],
     ...etc: (Method | PathItem)[]
 ): PathItem {
     let methods: Method[] = [],
@@ -72,7 +72,7 @@ export function $<S extends string>(
     return {
         name,
         //desc,
-        auth,
+        //auth,
         methods,
         children
     }
