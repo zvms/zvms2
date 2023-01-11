@@ -3,7 +3,7 @@ import sys
 import hashlib
 
 from zvms.models import *
-from zvms.util import *
+from backend.zvms.utils import *
 from zvms.res import *
 
 def md5ify(raw):

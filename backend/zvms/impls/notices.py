@@ -1,5 +1,5 @@
 from zvms.models import *
-from zvms.util import *
+from backend.zvms.utils import *
 from zvms.res import *
 
 #[GET] /notices

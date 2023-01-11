@@ -1,6 +1,6 @@
 from zvms.models import *
 from zvms.res import *
-from zvms.util import *
+from backend.zvms.utils import *
 
 
 #[GET] /signup

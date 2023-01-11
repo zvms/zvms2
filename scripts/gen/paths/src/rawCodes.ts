@@ -6,12 +6,12 @@ export function fApiIndexRaw(data: Apis) {
 
 export function viewsInitRaw(data: Apis) {
     return "__ALL__ = [\n"
-        + data.map(v => `    ${v.name}`).join(",\n")
+        + data.map(v => `    '${v.name}'`).join(",\n")
         + "\n]";
 }
 
 export function implsInitRaw(data: Apis) {
     return "__ALL__ = [\n"
-        + data.map(v => `    ${v.name}`).join(",\n")
+        + data.map(v => `    '${v.name}'`).join(",\n")
         + "\n]";
 }

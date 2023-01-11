@@ -1,6 +1,6 @@
 from zvms import db
 from zvms.res import *
-from zvms.util import *
+from backend.zvms.utils import *
 
 class Class(db.Model):
     __tablename__ = 'class'

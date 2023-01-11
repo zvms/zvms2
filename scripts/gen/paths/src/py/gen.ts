@@ -2,7 +2,8 @@ import { PathItem, ImplFile, ImplCodes } from "../types.js";
 import { pyViewsPath, pyImplsPath } from "./path.js";
 
 const pyViewsAddBeforeFile = `from zvms.routelib import *
-from zvms.res
+import zvms.res as res
+import zvms.utils as utils
 import zvms.impls
 `;
 const pyViewsAddAfterFile = "";

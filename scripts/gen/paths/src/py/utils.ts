@@ -18,7 +18,7 @@ export function pyParamsTypeCheck(req?: Params): string {
     for (const k in req) {
         result.push(req[k].ck);
     }
-    return `Object(${result.join(", ")})`;
+    return `utils.Object(${result.join(", ")})`;
 }
 
 // export function pyResType(apiName: string, res?: Params) {
