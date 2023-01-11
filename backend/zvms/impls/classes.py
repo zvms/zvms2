@@ -1,6 +1,6 @@
 from zvms.models import *
 from zvms.res import *
-from backend.zvms.utils import *
+from zvms.utils import *
 
 #[GET] /classes
 def list_classes(token_data):

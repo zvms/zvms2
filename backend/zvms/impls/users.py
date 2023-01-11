@@ -1,5 +1,5 @@
 from zvms.models import *
-from backend.zvms.utils import *
+from zvms.utils import *
 import zvms.tokenlib as tk
 
 #[GET] /check

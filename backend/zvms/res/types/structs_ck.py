@@ -1,4 +1,4 @@
-from backend.zvms.utils import *
+from zvms.utils import *
 
 
 NoticeBody = Object(
