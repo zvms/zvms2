@@ -4,9 +4,7 @@ import { str ,structs} from "../types/index.js";
 
 export default $(
     "/notices",
-    [],
-    {
-        type: "GET",
+    {   type: "GET",
         name: "search_notices"
     },
     {
@@ -17,7 +15,6 @@ export default $(
     },
     $(
         "/<int:id>",
-        [],
         {
             type: "GET",
             name: "get_notice",

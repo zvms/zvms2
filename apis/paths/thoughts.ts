@@ -4,14 +4,12 @@ import { int, structs } from "../types/index.js";
 
 export default $(
     "/thoughts",
-    [],
     {
         type: "GET",
         name: "search_thoughts"
     },
     $(
         "/<int:stuId>",
-        [],
         {
             type: "GET",
             name: "signup",
@@ -22,7 +20,6 @@ export default $(
         },
         $(
             "/<int:volId>",
-            [],
             {
                 type: "GET",
                 name: "get_thought_info",

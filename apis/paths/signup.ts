@@ -4,14 +4,12 @@ import { int } from "../types/index.js";
 
 export default $(
     "/signup",
-    [],
     {
         type: "GET",
         name: "list_signup"
     },
     $(
         "/<int:stuId>",
-        [],
         {
             type: "POST",
             name: "signup",
@@ -22,7 +20,6 @@ export default $(
         },
         $(
             "/<int:volId>",
-            [],
             {
                 type: "PATCH",
                 name: "audit_signup",

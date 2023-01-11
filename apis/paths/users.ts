@@ -4,7 +4,6 @@ import { int, str, arr, structs } from "../types/index.js";
 
 export default $(
     "/users",
-    [],
     {
         type: "GET",
         name: "search_users",
@@ -12,7 +11,6 @@ export default $(
     },
     $(
         "/check",
-        [],
         {
             type: "GET",
             name: "check"
@@ -20,7 +18,6 @@ export default $(
     ),
     $(
         "/login",
-        [],
         {
             type: "POST",
             name: "login",
@@ -33,7 +30,6 @@ export default $(
     ),
     $(
         "/logout",
-        [],
         {
             type: "POST",
             name: "logout"
@@ -41,7 +37,6 @@ export default $(
     ),
     $(
         "/create",
-        [],
         {
             type: "POST",
             name: "create_users",
@@ -53,7 +48,6 @@ export default $(
     ),
     $(
         "/mod-pwd",
-        [],
         {
             type: "PATCH",
             name: "modify_password",
@@ -65,7 +59,6 @@ export default $(
     ),
     $(
         "/change-class",
-        [],
         {
             type: "PATCH",
             name: "change_class",
@@ -76,10 +69,10 @@ export default $(
     ),
     $(
         "/<int:id>",
-        [a.readMyUserInfo],
         {
             type: "GET",
-            name: "get_user_info"
+            name: "get_user_info",
+            auths: [a.writeUserInfo]
         },
         {
             type: "DELETE",

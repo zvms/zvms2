@@ -4,7 +4,6 @@ import { str } from "../types/index.js";
 
 export default $(
     "/classes",
-    [],
     {
         type: "GET",
         name: "list_classes",
@@ -20,7 +19,6 @@ export default $(
     },
     $(
         "/<int:id>",
-        [],
         {
             type: "GET",
             name: "get_class_info",

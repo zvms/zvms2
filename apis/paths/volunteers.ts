@@ -4,7 +4,6 @@ import { str, structs } from "../types/index.js";
 
 export default $(
     "/volunteers",
-    [],
     {
         type: "GET",
         name: "search_volunteers"
@@ -17,7 +16,6 @@ export default $(
     },
     $(
         "/<int:id>",
-        [],
         {
             type: "GET",
             name: "get_volunteer_info",
