@@ -5,7 +5,7 @@ export function pyViewsMethod(ctx: GenCtx, method: Method) {
         return `
 route_${method.type.toLowerCase()}(
     rule='${ctx.path}',
-    impl_func=zvms.impls.${ctx.fileName}.${method.name},
+    impl_func=impls.${ctx.fileName}.${method.name},
     params=${pyParamsTypeCheck(method.req)},
     auth=${method.auths?.flatMap(v1=>v1.map(v2=>v2.id)).reduce((v1,v2)=>v1&v2,0)||"0b11111111"}
 )`;}

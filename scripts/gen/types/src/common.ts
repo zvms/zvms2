@@ -40,3 +40,11 @@ export function bool(desc?: Description): Type {
         desc
     }
 }
+export function any(desc?: Description): Type {
+    return {
+        ts: `any`,
+        py: `typing.Any`,
+        ck: `Any`,
+        desc
+    }
+}
