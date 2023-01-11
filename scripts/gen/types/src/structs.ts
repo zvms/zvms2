@@ -52,7 +52,7 @@ export function createDangerousStructRef(name: string): Type {
 }
 
 export function structsDefGenTs(data: Structs<any>): string {
-    let str = ``;
+    let str = `import * as enums from "./enums.js";`;
     for (const name in data) {
         const struct = data[name];
         str += "\n" + struct.tsDef;

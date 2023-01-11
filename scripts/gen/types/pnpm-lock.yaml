@@ -1,0 +1,7 @@
+lockfileVersion: 5.4
+
+specifiers:
+  zvms-scripts-utils: link:../../utils
+
+dependencies:
+  zvms-scripts-utils: link:../../utils

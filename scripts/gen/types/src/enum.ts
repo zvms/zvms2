@@ -1,9 +1,11 @@
+import { snake2Camal } from "zvms-scripts-utils";
+import { Type } from "./types";
 
-export type EnumRaw<T> = Record<string, T>;
+export type EnumRaw<T> = Record<string, T> & { _type: Type };
 
 export type EnumsRaw<T> = Record<string, EnumRaw<T>>;
 
-export type Enums<T, Raw> = Record<keyof Raw, {
+export type Enums<T, Raw> = Record<keyof Raw, Type & {
     tsDef: string,
     pyDef: string,
     raw: EnumRaw<T>
@@ -16,12 +18,17 @@ export function createEnums<T, Raw extends EnumsRaw<T>>(raw: Raw): Enums<T, Raw>
         let tsDef = `export enum ${name}{\n`;
         let pyDef = `class ${name}(Enum):\n`;
         for (const key in enumRaw) {
-            const v = enumRaw[key];
-            tsDef += `    ${key}= ${v},\n`;
-            pyDef += `    ${key}: ${v}\n`;
+            if (key !== "_type") {
+                const v = enumRaw[key];
+                tsDef += `    ${snake2Camal(key.toLowerCase(), true)} = ${v},\n`;
+                pyDef += `    ${key}: ${v}\n`;
+            }
         }
         tsDef = tsDef + "}";
         result[name] = {
+            ts: `enums.${name}`,
+            py: enumRaw._type.py,
+            ck: enumRaw._type.ck,
             tsDef,
             pyDef,
             raw: enumRaw
@@ -30,7 +37,7 @@ export function createEnums<T, Raw extends EnumsRaw<T>>(raw: Raw): Enums<T, Raw>
     return result;
 }
 
-export function enumsDefGenTs(data: Enums<any,any>): string {
+export function enumsDefGenTs(data: Enums<any, any>): string {
     let str = ``;
     for (const name in data) {
         const struct = data[name];
@@ -39,11 +46,11 @@ export function enumsDefGenTs(data: Enums<any,any>): string {
     return str;
 }
 
-export function enumsDefGenPy(data: Enums<any,any>): string {
+export function enumsDefGenPy(data: Enums<any, any>): string {
     let str = `from enum import Enum\n\n`;
     for (const name in data) {
         const struct = data[name];
         str += "\n" + struct.pyDef;
     }
-    return str + "\n";
+    return str;
 }

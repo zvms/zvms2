@@ -12,5 +12,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "zvms-scripts-utils": "link:../../utils"
   }
 }
