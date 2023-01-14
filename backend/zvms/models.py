@@ -2,6 +2,7 @@ from zvms import db
 from zvms.res import *
 from zvms.utils import *
 
+
 class Class(db.Model):
     __tablename__ = 'class'
 
@@ -11,6 +12,7 @@ class Class(db.Model):
     @property
     def members(self):
         return User.query.filter_by(cls_id=self.id)
+
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -31,8 +33,8 @@ class User(db.Model):
 
     def __filter_thoughts(self, type):
         return sum(select_value(filter(lambda sv: Volunteer.query.get(sv.vol_id).
-                    type == type and sv.reward is not None,
-                    StuVol.query.filter_by(stu_id=self.id)), 'reward'))
+                                       type == type and sv.reward is not None,
+                                       StuVol.query.filter_by(stu_id=self.id)), 'reward'))
 
     @property
     def inside(self):
@@ -40,11 +42,12 @@ class User(db.Model):
 
     @property
     def outside(self):
-        return self.__filter_thoughts(VOL_TYPE.OUTSIDE)
+        return self.__filter_thoughts(VolType.OUTSIDE)
 
     @property
     def large(self):
-        return self.__filter_thoughts(VOL_TYPE.LARGE)
+        return self.__filter_thoughts(VolType.LARGE)
+
 
 class Notice(db.Model):
     __tablename__ = 'notice'
@@ -54,6 +57,7 @@ class Notice(db.Model):
     content = db.Column(db.String(1024))
     sender = db.Column(db.Integer)
     deadtime = db.Column(db.DateTime)
+
 
 class Volunteer(db.Model):
     __tablename__ = 'volunteer'
@@ -69,7 +73,8 @@ class Volunteer(db.Model):
     @property
     def joiners(self):
         return list(User.query.filter(User.id.in_(StuVol.query.filter(StuVol.vol_id == self.id,
-            StuVol.status != STATUS.WAITING_FOR_SIGNUP_AUDIT).select_value('stu_id'))).select('name', 'id'))
+                                                                      StuVol.status != Status.WAITING_FOR_SIGNUP_AUDIT).select_value('stu_id'))).select('name', 'id'))
+
 
 class StuVol(db.Model):
     __tablename__ = 'stu_vol'
@@ -97,6 +102,7 @@ class StuVol(db.Model):
     def vol_name(self):
         return Volunteer.query.get(self.vol_id).name
 
+
 class ClassVol(db.Model):
     __tablename__ = 'class_vol'
 
@@ -108,13 +114,16 @@ class ClassVol(db.Model):
     def now(self):
         return count(StuVol.query.filter_by(vol_id=self.vol_id), lambda sv: sv.stu.cls_id == self.cls_id)
 
+
 class Picture(db.Model):
     __tablename__ = 'picture'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True) # 这一列其实不需要, 但sqlalchemy强制表要有主键
+    # 这一列其实不需要, 但sqlalchemy强制表要有主键
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     stu_id = db.Column(db.Integer)
     vol_id = db.Column(db.Integer)
     hash = db.Column(db.String(32))
+
 
 class UserNotice(db.Model):
     __tablename__ = 'user_notice'
@@ -122,16 +131,19 @@ class UserNotice(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     notice_id = db.Column(db.Integer, primary_key=True)
 
+
 class ClassNotice(db.Model):
     __tablename__ = 'class_notice'
 
     cls_id = db.Column(db.Integer, primary_key=True, name='class_id')
     notice_id = db.Column(db.Integer, primary_key=True)
 
+
 class SchoolNotice(db.Model):
     __tablename__ = 'school_notice'
 
     notice_id = db.Column(db.Integer, primary_key=True)
+
 
 class Log(db.Model):
     __tablename__ = 'log'

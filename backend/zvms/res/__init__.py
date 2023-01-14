@@ -1,9 +1,7 @@
 import sys
 
-__all__ = [
-    "types",
-    "users"
-]
+from .types import *
+from .users import *
 
 if sys.platform == 'win32':
     STATIC_FOLDER = 'C:\\zvms-backend'

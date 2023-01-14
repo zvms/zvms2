@@ -9,7 +9,7 @@ from zvms.res import *
 
 def search_thoughts(**kwargs):
     '[GET] /thoughts'
-    conds = [StuVol.status != STATUS.WAITING_FOR_SIGNUP_AUDIT]
+    conds = [StuVol.status != Status.WAITING_FOR_SIGNUP_AUDIT]
     def filter_(_): return True
 
     def filter_cls(sv):
@@ -47,7 +47,7 @@ def search_thoughts(**kwargs):
 def get_thought_info(stuId, volId, token_data):
     '[GET] /thoughts/<int:stuId>/<int:volId>'
     thought = StuVol.query.get_or_error((stuId, volId))
-    if thought.status == STATUS.WAITING_FOR_SIGNUP_AUDIT:
+    if thought.status == Status.WAITING_FOR_SIGNUP_AUDIT:
         return error('未查询到相关数据')
     ret = {}
     if thought.reason is not None:
@@ -99,26 +99,26 @@ def update_thought(token_data, stuId, volId, **kwargs):
         return success('提交成功')
     if 'status' in kwargs:
         match kwargs['status']:
-            case STATUS.UNSUBMITTED:
+            case Status.UNSUBMITTED:
                 if 'reason' not in kwargs or not isinstance(kwargs['reason'], str):
                     return error('请求接口错误: "reason"参数')
                 if not AUTH.AUDITOR.authorized(auth):
                     return error('权限不足')
                 thought.update(
-                    reason=kwargs['reason'], status=STATUS.UNSUBMITTED)
-            case STATUS.WAITING_FOR_FIRST_AUDIT:
+                    reason=kwargs['reason'], status=Status.UNSUBMITTED)
+            case Status.WAITING_FOR_FIRST_AUDIT:
                 if (AUTH.TEACHER | AUTH.CLASS).authorized(auth):
                     auth_cls(User.query.get(stuId), token_data)
-                    thought.status = STATUS.WAITING_FOR_FINAL_AUDIT
+                    thought.status = Status.WAITING_FOR_FINAL_AUDIT
                 else:
                     auth_self(stuId, token_data, '不能提交其他人的感想')
-                    thought.status = STATUS.WAITING_FOR_FIRST_AUDIT
+                    thought.status = Status.WAITING_FOR_FIRST_AUDIT
                 submit_thought()
-            case STATUS.ACCEPTED | STATUS.REJECTED:
+            case Status.ACCEPTED | Status.REJECTED:
                 if not AUTH.AUDITOR.authorized(auth):
                     return error('权限不足')
                 thought.status = kwargs['status']
-            case STATUS.WAITING_FOR_FINAL_AUDIT:
+            case Status.WAITING_FOR_FINAL_AUDIT:
                 if not (AUTH.TEACHER | AUTH.CLASS).authorized(auth):
                     return error('权限不足')
                 thought.status = kwargs['status']

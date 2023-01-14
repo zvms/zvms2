@@ -5,13 +5,19 @@ export function fApiIndexRaw(data: Apis) {
 }
 
 export function viewsInitRaw(data: Apis) {
-    return "__all__ = [\n"
+    return "from . import "
+        + data.map(v => v.name).join(", ")
+        + "\n\n\n"
+        + "__all__ = [\n"
         + data.map(v => `    '${v.name}'`).join(",\n")
-        + "\n]";
+        + "\n]\n";
 }
 
 export function implsInitRaw(data: Apis) {
-    return "__all__ = [\n"
+    return "from . import "
+        + data.map(v => v.name).join(", ")
+        + "\n\n\n"
+        + "__all__ = [\n"
         + data.map(v => `    '${v.name}'`).join(",\n")
-        + "\n]";
+        + "\n]\n";
 }

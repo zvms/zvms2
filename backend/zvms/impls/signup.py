@@ -20,7 +20,7 @@ def audit_signup(stuId, volId, token_data):
     if not stu_vol:
         return error('学生未报名该义工')
     auth_cls(User.query.get(stuId).cls_id, token_data)
-    stu_vol.status = STATUS.UNSUBMITTED
+    stu_vol.status = Status.UNSUBMITTED
     return success('审核成功')
 
 
@@ -41,14 +41,14 @@ def signup(stuId, volId, token_data):
         StuVol(
             stu_id=stuId,
             vol_id=volId,
-            status=STATUS.UNSUBMITTED,
+            status=Status.UNSUBMITTED,
         ).insert()
     else:
         auth_self(stuId, token_data, '不能给其他人报名')
         StuVol(
             stu_id=stuId,
             vol_id=volId,
-            status=STATUS.WAITING_FOR_FIRST_AUDIT
+            status=Status.WAITING_FOR_FIRST_AUDIT
         ).insert()
     return success('报名成功')
 

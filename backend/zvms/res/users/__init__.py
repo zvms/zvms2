@@ -1,4 +1,2 @@
-__all__ = [
-    "./auths",
-    "./catagories"
-]
+from .auth import *
+from .catagories import *

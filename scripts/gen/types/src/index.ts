@@ -6,11 +6,3 @@ export * from "./enum.js";
 export const typesIndexRaw =
     `export * from "./structs.js";
 export * from "./enums.js";`;
-
-export const typesInitRaw =
-    `__all__ = [
-    "./structs",
-    "./structs_ck",
-    "./enum"
-]
-`;
