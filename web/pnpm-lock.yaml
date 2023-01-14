@@ -21,7 +21,7 @@ specifiers:
   dayjs: ^1.11.6
   eslint: ^8.22.0
   eslint-plugin-vue: ^9.3.0
-  jsdom: ^20.0.3
+  jsdom: ^21.0.0
   lodash: ^4.17.21
   mockjs: ^1.1.0
   npm-run-all: ^4.1.5
@@ -70,7 +70,7 @@ devDependencies:
   dayjs: 1.11.6
   eslint: 8.29.0
   eslint-plugin-vue: 9.8.0_eslint@8.29.0
-  jsdom: 20.0.3
+  jsdom: 21.0.0
   lodash: 4.17.21
   mockjs: 1.1.0
   npm-run-all: 4.1.5
@@ -82,7 +82,7 @@ devDependencies:
   unplugin-auto-import: 0.12.0_@vueuse+core@9.6.0
   unplugin-vue-components: 0.22.11_vue@3.2.45
   vite: 4.0.4_@types+node@18.11.10
-  vitest: 0.27.0_jsdom@20.0.3
+  vitest: 0.27.0_jsdom@21.0.0
   vue-tsc: 1.0.11_typescript@4.9.4
   vuetify: 3.0.3_vue@3.2.45
 
@@ -2901,8 +2901,8 @@ packages:
       argparse: 2.0.1
     dev: true
 
-  /jsdom/20.0.3:
-    resolution: {integrity: sha512-SYhBvTh89tTfCD/CRdSOm13mOBa42iTaTyfyEWBdKcGdPxPtLFBXuHR8XHb33YNYaP+lLbmSvBTsnoesCNJEsQ==}
+  /jsdom/21.0.0:
+    resolution: {integrity: sha512-AIw+3ZakSUtDYvhwPwWHiZsUi3zHugpMEKlNPaurviseYoBqo0zBd3zqoUi3LPCNtPFlEP8FiW9MqCZdjb2IYA==}
     engines: {node: '>=14'}
     peerDependencies:
       canvas: ^2.5.0
@@ -4544,7 +4544,7 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.27.0_jsdom@20.0.3:
+  /vitest/0.27.0_jsdom@21.0.0:
     resolution: {integrity: sha512-BnOa7T6CnXVC6UgcAsvFOZ2Dtvqkt+/Nl6CRgh4qVT70vElf65XwEL6zMRyTF+h2QXJziEkxYdrLo5WCxckMLQ==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
@@ -4574,7 +4574,7 @@ packages:
       cac: 6.7.14
       chai: 4.3.7
       debug: 4.3.4
-      jsdom: 20.0.3
+      jsdom: 21.0.0
       local-pkg: 0.4.2
       picocolors: 1.0.0
       source-map: 0.6.1
