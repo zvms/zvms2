@@ -16,7 +16,7 @@ export function pyParamsTypeCheck(req?: Params): string {
     if (!req) return "Object()";
     let result: string[] = [];
     for (const k in req) {
-        result.push(req[k].ck);
+        result.push(`${k}=${req[k].ck}`);
     }
     return `Object(${result.join(", ")})`;
 }
