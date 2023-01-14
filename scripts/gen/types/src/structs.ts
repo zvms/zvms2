@@ -70,7 +70,7 @@ export function structsDefGenPy(data: Structs<any>): string {
 }
 
 export function structsDefGenCk(data: Structs<any>): string {
-    let str = `from zvms.util import *\n\n`;
+    let str = `from zvms.utils import *\n\n`;
     for (const name in data) {
         const struct = data[name];
         str += "\n" + struct.ckDef;
