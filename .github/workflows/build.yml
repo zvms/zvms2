@@ -28,7 +28,7 @@ jobs:
     - name: Init
       working-directory: ./scripts
       run: |
-        pnpm i -g typescript
+        npm i -g typescript
         bash ./init.sh
 
     - name: Build scripts & run gen
