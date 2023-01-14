@@ -11,8 +11,8 @@ def md5ify(raw):
     md5.update(raw.encode())
     return md5.hexdigest()
 
-#[GET] /thoughts
 def search_thoughts(**kwargs):
+    '[GET] /thoughts'
     conds = [StuVol.status != STATUS.WAITING_FOR_SIGNUP_AUDIT]
     filter_ = lambda _: True
     def filter_cls(sv):
@@ -44,8 +44,8 @@ def search_thoughts(**kwargs):
         return success('获取成功', ret)
     return process_query(filter(filter_, StuVol.query.filter(*conds)))
 
-#[GET] /thoughts/<int:stuId>/<int:volId>
 def get_thought_info(stuId, volId, token_data):
+    '[GET] /thoughts/<int:stuId>/<int:volId>'
     thought = StuVol.query.get_or_error((stuId, volId))
     if thought.status == STATUS.WAITING_FOR_SIGNUP_AUDIT:
         return error('未查询到相关数据')
@@ -64,8 +64,8 @@ Thought = Object(
     pics=Array(String)
 )
 
-#[PATCH] /thoughts/<int:stuId>/<int:volId>
 def update_thought(token_data, stuId, volId, **kwargs):
+    '[PATCH] /thoughts/<int:stuId>/<int:volId>'
     thought = StuVol.query.get_or_error((stuId, volId))
     auth = token_data['auth']
     def submit_thought():

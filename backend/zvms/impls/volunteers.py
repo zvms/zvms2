@@ -2,8 +2,8 @@ from zvms.models import *
 from zvms.res import *
 from zvms.utils import *
 
-#[GET] /volunteers
 def search_volunteers(token_data, **kwargs):
+    '[GET] /volunteers'
     conds = []
     try:
         if 'h' in kwargs:
@@ -29,15 +29,15 @@ def search_volunteers(token_data, **kwargs):
         return process_query(Volunteer.query)
     return process_query(Volunteer.query.filter(*conds))
 
-#[GET] /volunteers/<int:id>
 def get_volunteer_info(id, token_data):
+    '[GET] /volunteers/<int:id>'
     ret = Volunteer.query.get_or_error(id).select('name', 'description',
         'time', 'type', 'reward', 'joiners', holder_id='holder')
     ret['time'] = str(ret['time'])
     return success('获取成功', **ret)
 
-#[POST] /volunteers
 def create_volunteer(token_data, classes, **kwargs):
+    '[POST] /volunteers'
     try:
         VOL_TYPE(kwargs['type'])
     except ValueError:
@@ -69,8 +69,8 @@ def create_volunteer(token_data, classes, **kwargs):
             ).insert()
     return success('创建成功')
 
-#[PUT] /volunteers/<int:id>
 def update_volunteer(token_data, id, classes, **kwargs):
+    '[PUT] /volunteers/<int:id>'
     try:
         VOL_TYPE(kwargs['type'])
     except ValueError:
@@ -95,8 +95,8 @@ def update_volunteer(token_data, id, classes, **kwargs):
     vol.update(**kwargs)
     return success('修改成功')
 
-#[DELETE] /volunteers/<int:id>
 def delete_volunteer(token_data, id):
+    '[DELETE] /volunteers/<int:id>'
     auth_self(Volunteer.query.get_or_error(id).holder_id, token_data, '权限不足: 不能删除其他人的义工')
     Volunteer.query.filter_by(id=id).delete()
     StuVol.query.filter_by(vol_id=id).delete()

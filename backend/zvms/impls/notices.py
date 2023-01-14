@@ -2,8 +2,8 @@ from zvms.models import *
 from zvms.utils import *
 from zvms.res import *
 
-#[GET] /notices
 def search_notices(token_data, **kwargs):
+    '[GET] /notices'
     conds = []
     try:
         if 'f' in kwargs:
@@ -29,8 +29,8 @@ def search_notices(token_data, **kwargs):
         return process_query(Notice.query)
     return process_query(Notice.query.filter(*conds))
 
-#[POST] /notices
 def send_notice(title, content, deadtime, type, targets, token_data):
+    '[POST] /notices'
     try_parse_time(deadtime)
     id = Notice(title=title, content=content, deadtime=deadtime,
                 sender=token_data['id']).insert().id
@@ -52,8 +52,8 @@ def send_notice(title, content, deadtime, type, targets, token_data):
             return error('未知的目标类型')
     return success('发送成功')
 
-#[DELETE] /notices/<int:id>
 def delete_notice(id, token_data):
+    '[DELETE] /notices/<int:id>'
     notice = Notice.query.get_or_error(id)
     auth_self(notice.sender, token_data, '权限不足: 不能删除其他人的通知')
     Notice.query.filter_by(id=id).delete()
@@ -62,8 +62,8 @@ def delete_notice(id, token_data):
     UserNotice.query.filter_by(notice_id=id).delete()
     return success('删除成功')
 
-#[PUT] /notices/<int:id>
 def update_notice(id, title, content, deadtime, token_data):
+    '[PUT] /notices/<int:id>'
     notice = Notice.query.get_or_error(id)
     auth_self(notice.sender, token_data, '权限不足: 不能修改其他人的通知')
     try_parse_time(deadtime)
