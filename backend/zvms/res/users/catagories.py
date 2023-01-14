@@ -1,7 +1,7 @@
 from enum import IntFlag
 
 
-class USER_CATAGORIES(IntFlag):
+class UserCatagories(IntFlag):
     NONE = 0b00000001
     STUDENT = 0b00000010
     TEACHER = 0b00000100
@@ -42,31 +42,31 @@ class UserCatagoriesInfo:
     @staticmethod
     def byId(id):
         _data = {
-            USER_CATAGORIES.NONE: {
+            UserCatagories.NONE: {
                 'id': 1,
                 'name': '未登录',
             },
-            USER_CATAGORIES.STUDENT: {
+            UserCatagories.STUDENT: {
                 'id': 2,
                 'name': '学生',
             },
-            USER_CATAGORIES.TEACHER: {
+            UserCatagories.TEACHER: {
                 'id': 4,
                 'name': '教师',
             },
-            USER_CATAGORIES.ACLASS: {
+            UserCatagories.ACLASS: {
                 'id': 8,
                 'name': '班级',
             },
-            USER_CATAGORIES.MANAGER: {
+            UserCatagories.MANAGER: {
                 'id': 16,
                 'name': '管理',
             },
-            USER_CATAGORIES.AUDITOR: {
+            UserCatagories.AUDITOR: {
                 'id': 32,
                 'name': '审计部',
             },
-            USER_CATAGORIES.SYSTEM: {
+            UserCatagories.SYSTEM: {
                 'id': 64,
                 'name': '系统',
             },

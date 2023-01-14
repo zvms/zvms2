@@ -11,7 +11,7 @@ from zvms.utils import *
 from zvms import app, db
 
 
-def route(*, rule, method='GET', impl_func, params=Any, auth=AUTH.ALL):
+def route(*, rule, method='GET', impl_func, params, auth):
     app.add_url_rule(rule, methods=[method],
                      view_func=deco(impl_func, params, auth))
 
