@@ -6,17 +6,21 @@ from zvms.models import *
 from zvms.utils import *
 from zvms.res import *
 
+
 def md5ify(raw):
     md5 = hashlib.md5()
     md5.update(raw.encode())
     return md5.hexdigest()
 
+
 def search_thoughts(**kwargs):
     '[GET] /thoughts'
     conds = [StuVol.status != STATUS.WAITING_FOR_SIGNUP_AUDIT]
-    filter_ = lambda _: True
+    def filter_(_): return True
+
     def filter_cls(sv):
         return User.query.get(sv.stu_id).cls_id == c
+
     def filter_status(sv):
         return Volunteer.query.get(sv.vol_id).status == S
     try:
@@ -24,7 +28,7 @@ def search_thoughts(**kwargs):
             c = int(kwargs['c'])
             if 'S' in kwargs:
                 S = int(kwargs['S'])
-                filter_ = lambda sv: filter_cls(sv) and filter_status(sv)
+                def filter_(sv): return filter_cls(sv) and filter_status(sv)
             else:
                 filter_ = filter_cls
         if 'S' in kwargs:
@@ -36,6 +40,7 @@ def search_thoughts(**kwargs):
             conds.append(StuVol.vol_id == int(kwargs['v']))
     except ValueError:
         return error('请求接口错误: 非法的URL参数')
+
     def process_query(query):
         ret = list(apply(select)(query, 'status', stu_id='stuId', vol_id='volId',
                                  stu_name='stuName', vol_name='volName'))
@@ -43,6 +48,7 @@ def search_thoughts(**kwargs):
             return error('未查询到相关数据')
         return success('获取成功', ret)
     return process_query(filter(filter_, StuVol.query.filter(*conds)))
+
 
 def get_thought_info(stuId, volId, token_data):
     '[GET] /thoughts/<int:stuId>/<int:volId>'
@@ -59,15 +65,18 @@ def get_thought_info(stuId, volId, token_data):
         ret['thought'] = thought.thought
     return success('获取成功', ret)
 
+
 Thought = Object(
     thought=String,
     pics=Array(String)
 )
 
+
 def update_thought(token_data, stuId, volId, **kwargs):
     '[PATCH] /thoughts/<int:stuId>/<int:volId>'
     thought = StuVol.query.get_or_error((stuId, volId))
     auth = token_data['auth']
+
     def submit_thought():
         if not Thought(kwargs):
             return interface_error(Thought, kwargs)
@@ -96,7 +105,8 @@ def update_thought(token_data, stuId, volId, **kwargs):
                     return error('请求接口错误: "reason"参数')
                 if not AUTH.AUDITOR.authorized(auth):
                     return error('权限不足')
-                thought.update(reason=kwargs['reason'], status=STATUS.UNSUBMITTED)
+                thought.update(
+                    reason=kwargs['reason'], status=STATUS.UNSUBMITTED)
             case STATUS.WAITING_FOR_FIRST_AUDIT:
                 if (AUTH.TEACHER | AUTH.CLASS).authorized(auth):
                     auth_cls(User.query.get(stuId), token_data)

@@ -2,6 +2,7 @@ import datetime
 
 from zvms.utils import *
 
+
 def report(report, token_data):
     '[POST] /report'
     with open('report.txt', 'a', encoding='utf-8') as f:

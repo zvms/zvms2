@@ -2,9 +2,11 @@ from zvms.models import *
 from zvms.utils import *
 import zvms.tokenlib as tk
 
+
 def check(token_data):
     '[GET] /users/check'
     return success('获取成功', token_data)
+
 
 def login(id, pwd, token_data):
     '[POST] /users/login'
@@ -13,10 +15,12 @@ def login(id, pwd, token_data):
         return error('用户名或密码错误')
     return success('登录成功', token=tk.generate(**user.select('id', 'auth', cls_id='cls')))
 
+
 def logout(token_data):
     '[POST] /users/logout'
     tk.remove(token_data)
     return success('登出成功')
+
 
 def search_users(token_data, n=None, a=None):
     '[GET] /users'
@@ -26,19 +30,22 @@ def search_users(token_data, n=None, a=None):
         query = User.query
     if a:
         try:
-            filter_ = lambda u: u.auth & int(a)
+            def filter_(u): return u.auth & int(a)
         except ValueError:
             return error('非法URL参数')
     else:
-        filter_ = lambda _: True
+        def filter_(_): return True
     return success('获取成功', list(apply(select)(filter(filter_, query), 'id', 'name')))
+
 
 def get_user_info(id, token_data):
     '[GET] /users/<int:id>'
     user = User.query.get_or_error(id)
     return success('获取成功', **user.select('name', 'auth',
-                   *(('inside', 'outside', 'large') if user.auth & AUTH.STUDENT else ()),
+                   *(('inside', 'outside', 'large')
+                     if user.auth & AUTH.STUDENT else ()),
                    cls_id='cls'), clsName=user.cls.name)
+
 
 def modify_password(old, new, token_data):
     '[PATCH] /users/mod-pwd'
@@ -50,10 +57,12 @@ def modify_password(old, new, token_data):
     user.pwd = new
     return success('修改成功')
 
+
 def change_class(cls, token_data):
     '[PATCH] /users/change-class'
     User.query.get(token_data['id']).cls_id = cls
     return success('修改成功')
+
 
 def create_users(users, token_data):
     '[POST] /users/create'
@@ -70,6 +79,7 @@ def create_users(users, token_data):
         ).insert()
     return success('创建成功')
 
+
 def modify_user(id, name, cls, auth, token_data):
     '[PUT] /users/<int:id>'
     Class.query.get_or_error(cls, '班级不存在')
@@ -79,6 +89,7 @@ def modify_user(id, name, cls, auth, token_data):
         auth=auth,
     )
     return success('修改成功')
+
 
 def delete_user(id, token_data):
     '[DELETE] /users/<int:id>'

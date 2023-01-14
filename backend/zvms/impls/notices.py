@@ -2,6 +2,7 @@ from zvms.models import *
 from zvms.utils import *
 from zvms.res import *
 
+
 def search_notices(token_data, **kwargs):
     '[GET] /notices'
     conds = []
@@ -15,11 +16,14 @@ def search_notices(token_data, **kwargs):
             conds.append(Notice.id.in_(ClassNotice.query.filter_by(
                 cls_id=int(kwargs['c'])).select_value('notice_id')))
         if 's' in kwargs:
-            conds.append(Notice.id.in_(SchoolNotice.query.select_value('notice_id')))
+            conds.append(Notice.id.in_(
+                SchoolNotice.query.select_value('notice_id')))
     except ValueError:
         return error('请求接口错误: 非法的URL参数')
+
     def process_query(query):
-        ret = list(query.select('id', 'title', 'content', 'sender', 'deadtime'))
+        ret = list(query.select('id', 'title',
+                   'content', 'sender', 'deadtime'))
         for i in ret:
             i['deadtime'] = str(i['deadtime'])
         if not ret:
@@ -28,6 +32,7 @@ def search_notices(token_data, **kwargs):
     if not conds:
         return process_query(Notice.query)
     return process_query(Notice.query.filter(*conds))
+
 
 def send_notice(title, content, deadtime, type, targets, token_data):
     '[POST] /notices'
@@ -52,6 +57,7 @@ def send_notice(title, content, deadtime, type, targets, token_data):
             return error('未知的目标类型')
     return success('发送成功')
 
+
 def delete_notice(id, token_data):
     '[DELETE] /notices/<int:id>'
     notice = Notice.query.get_or_error(id)
@@ -61,6 +67,7 @@ def delete_notice(id, token_data):
     ClassNotice.query.filter_by(notice_id=id).delete()
     UserNotice.query.filter_by(notice_id=id).delete()
     return success('删除成功')
+
 
 def update_notice(id, title, content, deadtime, token_data):
     '[PUT] /notices/<int:id>'
