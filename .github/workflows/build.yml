@@ -22,13 +22,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2
-
     - name: Init
       working-directory: ./scripts
       run: |
-        npm i -g typescript
+        npm i -g pnpm typescript
         bash ./init.sh
 
     - name: Build scripts & run gen
