@@ -7,12 +7,6 @@ from zvms.utils import *
 from zvms.res import *
 
 
-def md5ify(raw):
-    md5 = hashlib.md5()
-    md5.update(raw.encode())
-    return md5.hexdigest()
-
-
 def search_thoughts(**kwargs):
     '[GET] /thoughts'
     conds = [StuVol.status != STATUS.WAITING_FOR_SIGNUP_AUDIT]
@@ -66,14 +60,19 @@ def get_thought_info(stuId, volId, token_data):
     return success('获取成功', ret)
 
 
-Thought = Object(
-    thought=String,
-    pics=Array(String)
-)
-
-
 def update_thought(token_data, stuId, volId, **kwargs):
     '[PATCH] /thoughts/<int:stuId>/<int:volId>'
+
+    Thought = Object(
+        thought=String,
+        pics=Array(String)
+    )
+
+    def md5ify(raw):
+        md5 = hashlib.md5()
+        md5.update(raw.encode())
+        return md5.hexdigest()
+
     thought = StuVol.query.get_or_error((stuId, volId))
     auth = token_data['auth']
 
