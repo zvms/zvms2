@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Init
+      working-directory: ./scripts
+      run: |
+        npm i -g pnpm
+        pnpm i -g typescript
+        bash ./init.sh
+    
+    - name: Build scripts & run gen
+      working-directory: ./scripts/main
+      run: |
+        pnpm run gen
+
+    - name: Build webapp
+      working-directory: ./web
+      run: |
+        pnpm run build
