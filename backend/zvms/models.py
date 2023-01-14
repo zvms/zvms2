@@ -36,7 +36,7 @@ class User(db.Model):
 
     @property
     def inside(self):
-        return self.__filter_thoughts(VOL_TYPE.INSIDE)
+        return self.__filter_thoughts(VolType.INSIDE)
 
     @property
     def outside(self):

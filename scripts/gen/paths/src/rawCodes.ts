@@ -5,13 +5,13 @@ export function fApiIndexRaw(data: Apis) {
 }
 
 export function viewsInitRaw(data: Apis) {
-    return "__ALL__ = [\n"
+    return "__all__ = [\n"
         + data.map(v => `    '${v.name}'`).join(",\n")
         + "\n]";
 }
 
 export function implsInitRaw(data: Apis) {
-    return "__ALL__ = [\n"
+    return "__all__ = [\n"
         + data.map(v => `    '${v.name}'`).join(",\n")
         + "\n]";
 }

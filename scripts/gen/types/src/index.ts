@@ -8,7 +8,7 @@ export const typesIndexRaw =
 export * from "./enums.js";`;
 
 export const typesInitRaw =
-    `__ALL__ = [
+    `__all__ = [
     "./structs",
     "./structs_ck",
     "./enum"

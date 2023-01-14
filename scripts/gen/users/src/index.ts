@@ -6,7 +6,7 @@ export const usersIndexRaw =
 export * from "./catagories.js";`;
 
 export const usersInitRaw =
-    `__ALL__ = [
+    `__all__ = [
     "./auths",
     "./catagories"
 ]
