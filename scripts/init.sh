@@ -22,7 +22,9 @@ cd ../types
 pnpm i
 cd ../users
 pnpm i
-cd ../../../
+cd ../../
+cd utils
+pnpm i
+cd ../../
 cd ./web
 pnpm i
-
