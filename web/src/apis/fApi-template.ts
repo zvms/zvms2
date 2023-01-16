@@ -1,6 +1,8 @@
 import { toasts } from "@/utils/dialogs";
 import { useLoadingStore } from "@/stores";
-import Axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import Axios, {type AxiosResponse } from "axios";
+import * as structs from "./types/structs";
+import * as enums from "./types/enums";
 
 interface ForegroundApiConfig {
     beforeRequest(info: ReqInfo): void;

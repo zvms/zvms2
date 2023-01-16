@@ -5,9 +5,9 @@ import { req2paramsApply, tsReq2paramsDecl, tsResType, tsComments } from "./util
 
 export function tsMethod(ctx: GenCtx, method: Method) {
     const decl = tsReq2paramsDecl(method.req);
-    return `/**
- * ## [${method.type.toUpperCase()}] ${ctx.path}
- ${tsComments(method)}
+    return `
+/**
+ * ## [${method.type.toUpperCase()}] ${ctx.path}${tsComments(method)}
  */
 ${snake2Camal(method.name)}(${decl}): ForegroundApiRunner<${tsResType(method.res)}> {
     return createForegroundApiRunner(
@@ -15,6 +15,6 @@ ${snake2Camal(method.name)}(${decl}): ForegroundApiRunner<${tsResType(method.res
         "${method.type.toUpperCase()}",
         "${ctx.path}",
         ${req2paramsApply(method.req)}
-    });
+    );
 }`;
 }

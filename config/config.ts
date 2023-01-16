@@ -1,7 +1,7 @@
 const zvmsConfig = {
     paths: {
         f: {
-            fApi: "/web/src/apis/fApi/",
+            fApi: "/web/src/apis/",
             users: "/web/src/apis/users/",
             types: "/web/src/apis/types/"
         },

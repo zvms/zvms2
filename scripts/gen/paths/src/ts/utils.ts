@@ -22,12 +22,12 @@ export function tsReq2paramsDesc(req?: Params): string[] {
 }
 
 export function tsResType(res?: Params) {
-    if (!res) return "undefined";
+    if (!res) return "[]";
     let members = "";
     for (const k in res) {
-        members += `${tsCommentStr(res[k].desc)}${paramName(k)}: ${res[k].ts}\n`;
+        members += `${tsCommentStr(res[k].desc)}${paramName(k)}: ${res[k].ts},`;
     }
-    return "Promise<{\n" + members + "}>";
+    return "[" + members + "]";
 }
 
 export function tsComments(m: Method) {
@@ -35,7 +35,7 @@ export function tsComments(m: Method) {
 }
 
 export function tsAddStar(str: string | undefined) {
-    return str ? " * " + str + "\n" : "";
+    return str ? "\n * " + str : "";
 }
 
 export function tsCommentStr(comment?: string) {

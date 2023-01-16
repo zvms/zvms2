@@ -29,7 +29,7 @@ function generate(): (() => void)[] {
     //     implFiles[file] = fs.readFileSync(join(paths.b.impls, file));
     // }
 
-    let fApiTemplate = fs.readFileSync(join(paths.f.fApi, "fApi-raw.ts"));
+    let fApiTemplate = fs.readFileSync(join(paths.f.fApi, "fApi-template.ts"));
 
     const pathsGenerated = pathsGen(pathsData, implFiles, fApiTemplate);
     todos.push(...pathsGenerated.files.map(
@@ -40,27 +40,41 @@ function generate(): (() => void)[] {
             }
         )
     ));
+    const fApiOpt = prettierTs(pathsGenerated.fApi),
+        viewsInitOpt = viewsInitRaw(pathsData),
+        implsInitOpt = implsInitRaw(pathsData);
     todos.push(() => {
-        fs.writeFileSync(join(paths.f.fApi, "fApi.ts"), prettierTs(pathsGenerated.fApi));
-        fs.writeFileSync(join(paths.b.views, "__init__.py"), viewsInitRaw(pathsData));
-        fs.writeFileSync(join(paths.b.impls, "__init__.py"), implsInitRaw(pathsData));
+        fs.writeFileSync(join(paths.f.fApi, "fApi.ts"), fApiOpt);
+        fs.writeFileSync(join(paths.b.views, "__init__.py"), viewsInitOpt);
+        //fs.writeFileSync(join(paths.b.impls, "__init__.py"), implsInitOpt);
     });
 
+    const catagoriesTsOpt = prettierTs(catagoriesGenTs(userCatagories)),
+        catagoriesPyOpt = catagoriesGenPy(userCatagories),
+        authTsOpt = prettierTs(authGenTs(authData)),
+        authPyOpt = authGenPy(authData),
+        usersIndexOpt = usersIndexRaw;
     todos.push(() => {
-        fs.writeFileSync(join(paths.f.users, "catagories.ts"), prettierTs(catagoriesGenTs(userCatagories)));
-        fs.writeFileSync(join(paths.b.users, "catagories.py"), catagoriesGenPy(userCatagories));
-        fs.writeFileSync(join(paths.f.users, "auth.ts"), prettierTs(authGenTs(authData)));
-        fs.writeFileSync(join(paths.b.users, "auth.py"), authGenPy(authData));
-        fs.writeFileSync(join(paths.f.users, "index.ts"), usersIndexRaw);
+        fs.writeFileSync(join(paths.f.users, "catagories.ts"), catagoriesTsOpt);
+        fs.writeFileSync(join(paths.b.users, "catagories.py"), catagoriesPyOpt);
+        fs.writeFileSync(join(paths.f.users, "auth.ts"), authTsOpt);
+        fs.writeFileSync(join(paths.b.users, "auth.py"), authPyOpt);
+        fs.writeFileSync(join(paths.f.users, "index.ts"), usersIndexOpt);
     })
 
+    const enumsTsOpt = prettierTs(enumsDefGenTs(enumsData)),
+        enumsPyOpt = enumsDefGenPy(enumsData),
+        structsTsOpt = prettierTs(structsDefGenTs(structsData)),
+        structsPyOpt = structsDefGenPy(structsData),
+        structsCkOpt = structsDefGenCk(structsData),
+        typesIndexOpt = typesIndexRaw;
     todos.push(() => {
-        fs.writeFileSync(join(paths.f.types, "enums.ts"), prettierTs(enumsDefGenTs(enumsData)));
-        fs.writeFileSync(join(paths.b.types, "enums.py"), enumsDefGenPy(enumsData));
-        fs.writeFileSync(join(paths.f.types, "structs.ts"), prettierTs(structsDefGenTs(structsData)));
-        fs.writeFileSync(join(paths.b.types, "structs.py"), structsDefGenPy(structsData));
-        fs.writeFileSync(join(paths.b.types, "structs_ck.py"), structsDefGenCk(structsData));
-        fs.writeFileSync(join(paths.f.types, "index.ts"), typesIndexRaw);
+        fs.writeFileSync(join(paths.f.types, "enums.ts"), enumsTsOpt);
+        fs.writeFileSync(join(paths.b.types, "enums.py"), enumsPyOpt);
+        fs.writeFileSync(join(paths.f.types, "structs.ts"), structsTsOpt);
+        fs.writeFileSync(join(paths.b.types, "structs.py"), structsPyOpt);
+        fs.writeFileSync(join(paths.b.types, "structs_ck.py"), structsCkOpt);
+        fs.writeFileSync(join(paths.f.types, "index.ts"), typesIndexOpt);
     })
 
     return todos;
@@ -87,5 +101,10 @@ function apply(todos: (() => void)[]) {
 }
 
 function prettierTs(str: string) {
-    return format(str, { parser: "typescript" });
+    try {
+        return format(str, { parser: "typescript" });
+    } catch (e) {
+        console.error(e, str);
+        return str;
+    }
 }
