@@ -24,17 +24,17 @@ function generate(): (() => void)[] {
     let todos: (() => void)[] = [];
 
     let implFiles: ImplFiles = {};
-    const fileList = fs.readdirSync(paths.b.impls);
-    for (const file of fileList) {
-        implFiles[file] = fs.readFileSync(join(paths.b.impls, file));
-    }
+    // const fileList = fs.readdirSync(paths.b.impls);
+    // for (const file of fileList) {
+    //     implFiles[file] = fs.readFileSync(join(paths.b.impls, file));
+    // }
 
     todos.push(...pathsGen(pathsData, implFiles).map(
-        ({ name, fApi, views, impls }) => (
+        ({ name, fApi, views/*, impls*/ }) => (
             () => {
                 fs.writeFileSync(join(paths.f.fApi, name + ".ts"), prettierTs(fApi));
                 fs.writeFileSync(join(paths.b.views, name + ".py"), views);
-                fs.writeFileSync(join(paths.b.impls, name + ".py"), impls);
+                //fs.writeFileSync(join(paths.b.impls, name + ".py"), impls);
             }
         )
     ));
