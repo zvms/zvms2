@@ -1,7 +1,7 @@
 import pathsData from "zvms-apis-data/paths";
 import { structs as structsData, enums as enumsData } from "zvms-apis-data/types";
 import { authData, userCatagories } from "zvms-apis-data/users";
-import { fApiIndexRaw, ImplFiles, implsInitRaw, pathsGen, viewsInitRaw } from "zvms-apis-paths-gen";
+import { ImplFiles, implsInitRaw, pathsGen, viewsInitRaw } from "zvms-apis-paths-gen";
 import { enumsDefGenPy, enumsDefGenTs, structsDefGenCk, structsDefGenPy, structsDefGenTs, typesIndexRaw } from "zvms-apis-types-gen";
 import { authGenPy, authGenTs, catagoriesGenPy, catagoriesGenTs, usersIndexRaw } from "zvms-apis-users-gen";
 import zvmsConfig from "zvms-config";
@@ -29,17 +29,19 @@ function generate(): (() => void)[] {
     //     implFiles[file] = fs.readFileSync(join(paths.b.impls, file));
     // }
 
-    todos.push(...pathsGen(pathsData, implFiles).map(
-        ({ name, fApi, views/*, impls*/ }) => (
+    let fApiTemplate = fs.readFileSync(join(paths.f.fApi, "fApi-raw.ts"));
+
+    const pathsGenerated = pathsGen(pathsData, implFiles, fApiTemplate);
+    todos.push(...pathsGenerated.files.map(
+        ({ name, views/*, impls*/ }) => (
             () => {
-                fs.writeFileSync(join(paths.f.fApi, name + ".ts"), prettierTs(fApi));
                 fs.writeFileSync(join(paths.b.views, name + ".py"), views);
                 //fs.writeFileSync(join(paths.b.impls, name + ".py"), impls);
             }
         )
     ));
     todos.push(() => {
-        fs.writeFileSync(join(paths.f.fApi, "index.ts"), fApiIndexRaw(pathsData));
+        fs.writeFileSync(join(paths.f.fApi, "fApi.ts"), prettierTs(pathsGenerated.fApi));
         fs.writeFileSync(join(paths.b.views, "__init__.py"), viewsInitRaw(pathsData));
         fs.writeFileSync(join(paths.b.impls, "__init__.py"), implsInitRaw(pathsData));
     });

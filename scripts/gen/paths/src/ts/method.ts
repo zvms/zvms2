@@ -9,8 +9,11 @@ export function tsMethod(ctx: GenCtx, method: Method) {
  * ## [${method.type.toUpperCase()}] ${ctx.path}
  ${tsComments(method)}
  */
-export function ${snake2Camal(method.name)}(${decl}): ${tsResType(method.res)} {
-    return ${method.type.toLowerCase()}("${ctx.path}", {
+${snake2Camal(method.name)}(${decl}): ForegroundApiRunner<${tsResType(method.res)}> {
+    return createForegroundApiRunner(
+        this,
+        "${method.type.toUpperCase()}",
+        "${ctx.path}",
         ${req2paramsApply(method.req)}
     });
 }`;
