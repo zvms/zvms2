@@ -5,7 +5,7 @@ export * from "../commonUtils.js";
 
 export function tsReq2paramsDecl(req?: Params): string {
     if (!req) return "";
-    let ks: string[] = [];
+    const ks: string[] = [];
     for (const k in req) {
         ks.push(paramName(k) + ": " + req[k].ts);
     }
@@ -14,7 +14,7 @@ export function tsReq2paramsDecl(req?: Params): string {
 
 export function tsReq2paramsDesc(req?: Params): string[] {
     if (!req) return [];
-    let descs: string[] = [];
+    const descs: string[] = [];
     for (const k in req) {
         descs.push(` * @param ${paramName(k)} ${req[k].desc || ""}`)
     }

@@ -58,7 +58,7 @@ export function $<S extends string>(
     //auth: UserCatagoryList[],
     ...etc: (Method | PathItem)[]
 ): PathItem {
-    let methods: Method[] = [],
+    const methods: Method[] = [],
         children: PathItem[] = [];
     for (const v of etc) {
         if (Object.hasOwn(v, "type")) {

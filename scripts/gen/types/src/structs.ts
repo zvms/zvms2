@@ -12,7 +12,7 @@ export type Structs<Raw> = Record<keyof Raw, Type & {
 }>;
 
 export function createStructs<Raw extends StructsRaw>(raw: Raw): Structs<Raw> {
-    let result: Structs<Raw> = {} as any;
+    const result: Structs<Raw> = {} as any;
     for (const name in raw) {
         const struct = raw[name];
         let tsDef = `export interface ${name}{\n`;

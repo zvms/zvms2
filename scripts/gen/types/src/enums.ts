@@ -12,7 +12,7 @@ export type Enums<T, Raw> = Record<keyof Raw, Type & {
 }>;
 
 export function createEnums<T, Raw extends EnumsRaw<T>>(raw: Raw): Enums<T, Raw> {
-    let result: Enums<T, Raw> = {} as any;
+    const result: Enums<T, Raw> = {} as any;
     for (const name in raw) {
         const enumRaw = raw[name];
         let tsDef = `export enum ${name}{\n`;

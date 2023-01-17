@@ -36,10 +36,10 @@ export function genImplsPy(part: PathItem, implFile: ImplFile): string {
     // if (results !== null) {
     //     results[0]
     // }
-    let matched = implFile.matchAll(
+    const matched = implFile.matchAll(
         /(?<=^|#\s*\[([A-Z]+)\]\s*([\w/<:>]+)\ndef\s*\w+\(.*?\)\s*(\->\w\s*)?\s*:(\n\s*'''.*?''')?).*?(?=$|\n#\s*\[[A-Z]+\]\s*([\w/<:>]+)\ndef\s*\w+\(.*?\))/gs
     );
-    let implCodes: ImplCodes = {};
+    const implCodes: ImplCodes = {};
     let isBeginning = true, beginning = "";
     for (const m of matched) {
         if (isBeginning) {

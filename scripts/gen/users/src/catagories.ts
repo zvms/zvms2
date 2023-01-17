@@ -20,7 +20,7 @@ export type UserCatagories = {
 };
 
 export function createUserCatagories(rawCatagories: UserCatagoriesRaw): UserCatagories {
-    let byId: UserCatagoriesById = {};
+    const byId: UserCatagoriesById = {};
     for (const ir in rawCatagories) {
         const r = rawCatagories[ir]
         byId[r.id] = r;
@@ -29,7 +29,7 @@ export function createUserCatagories(rawCatagories: UserCatagoriesRaw): UserCata
         raw: rawCatagories,
         byId,
         except(...catagory) {
-            let res: UserCatagory[] = [];
+            const res: UserCatagory[] = [];
             for (const ir in rawCatagories) {
                 let t = true;
                 const r = rawCatagories[ir]

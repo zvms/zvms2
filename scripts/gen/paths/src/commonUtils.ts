@@ -2,7 +2,7 @@ import { Params } from "./types.js";
 
 export function req2paramsApply(req?: Params): string {
     if (!req) return "";
-    let ks: string[] = [];
+    const ks: string[] = [];
     for (const k in req) {
         ks.push(paramName(k));
     }
