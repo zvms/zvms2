@@ -1,4 +1,3 @@
-from zvms import db
 from zvms.models import Log
 import jwt
 
@@ -16,12 +15,10 @@ def exists(data):
 
 def remove(token):
     Log.query.filter_by(id=token['logid']).delete()
-    db.session.commit()
 
 
 def generate(**data):
     log = Log().insert()
-    db.session.commit()
     return jwt.encode(data | {'logid': log.id}, key=key)
 
 

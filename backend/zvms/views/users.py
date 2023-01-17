@@ -1,5 +1,6 @@
-from zvms.routelib import *
+from zvms.routelib import route
 from zvms.views.structs import Login, ModPwd, ChangeClass, Users, User
+from zvms.res import Categ
 import zvms.impls.users
 
 route(
@@ -45,7 +46,7 @@ route(
     rule='/users/change-class',
     method='PATCH',
     impl_func=zvms.impls.users.change_class,
-    auth=AUTH.TEACHER,
+    auth=Categ.TEACHER,
     params=ChangeClass
 )
 
@@ -53,14 +54,14 @@ route(
     rule='/users/<int:id>',
     method='DELETE',
     impl_func=zvms.impls.users.delete_user,
-    auth=AUTH.SYSTEM
+    auth=Categ.SYSTEM
 )
 
 route(
     rule='/users',
     method='POST',
     impl_func=zvms.impls.users.create_users,
-    auth=AUTH.SYSTEM,
+    auth=Categ.SYSTEM,
     params=Users
 )
 
@@ -68,6 +69,6 @@ route(
     rule='/users/<int:id>',
     method='PUT',
     impl_func=zvms.impls.users.modify_user,
-    auth=AUTH.SYSTEM,
+    auth=Categ.SYSTEM,
     params=User
 )

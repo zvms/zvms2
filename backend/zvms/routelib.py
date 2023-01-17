@@ -2,50 +2,23 @@ import datetime
 import json
 from functools import wraps
 
-import zvms.tokenlib as tk
 from flask import request
 from jwt.exceptions import InvalidSignatureError
-from zvms.res import *
-from zvms.utils import *
 
-from zvms import app, db
-
-
-def route(*, rule, method='GET', impl_func, params, auth):
-    app.add_url_rule(rule, methods=[method],
-                     view_func=deco(impl_func, params, auth))
+import zvms.tokenlib as tk
+from zvms.typing.checker import Any
+from zvms.res import Categ
+from zvms.util import *
+from zvms import app
 
 
-def route_get(*, rule, impl_func, params, auth):
-    app.add_url_rule(rule, methods=['GET'],
-                     view_func=deco(impl_func, params, auth))
-
-
-def route_post(*, rule, impl_func, params, auth):
-    app.add_url_rule(rule, methods=['POST'],
-                     view_func=deco(impl_func, params, auth))
-
-
-def route_put(*, rule, impl_func, params, auth):
-    app.add_url_rule(rule, methods=['PUT'],
-                     view_func=deco(impl_func, params, auth))
-
-
-def route_delete(*, rule, impl_func, params, auth):
-    app.add_url_rule(rule, methods=['DELETE'],
-                     view_func=deco(impl_func, params, auth))
-
-
-def route_patch(*, rule, impl_func, params, auth):
-    app.add_url_rule(rule, methods=['PATCH'],
-                     view_func=deco(impl_func, params, auth))
+def route(*, rule, method='GET', impl_func, params=Any, auth=Categ.ANY):
+    app.add_url_rule(rule, methods=[method], view_func=deco(impl_func, params, auth))
 
 # 不要听下面的注释, 现在已经没有装饰器了
 # 以后把调试的代码写在这边，把一些公用的功能也可以移到这边
 # 在所有函数名前面加上@Deco()
 # 这样路由的函数直接返回一个字典就好了
-
-
 def deco(impl, params, auth):
     @wraps(impl)
     def wrapper(*args, **kwargs):
@@ -66,11 +39,11 @@ def deco(impl, params, auth):
                     raise InvalidSignatureError()
                 token_data = tk.read(token_data)
                 if not tk.exists(token_data):
-                    return json.dumps({'type': 'ERROR', 'message': "Token失效, 请重新登陆"})
+                    return json.dumps({'type': 'ERROR', 'message': "Token失效, 请重新登陆"}), 401
                 if not auth.authorized(token_data['auth']):
-                    return json.dumps({'type': 'ERROR', 'message': '权限不足'})
+                    return json.dumps({'type': 'ERROR', 'message': '权限不足'}), 403
             except InvalidSignatureError as ex:
-                return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"})
+                return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"}), 401
         if not params(json_data):
             return interface_error(params, json_data)
         try:
@@ -81,5 +54,7 @@ def deco(impl, params, auth):
                     f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
             return impl(*args, **kwargs, **json_data, token_data=token_data)
         except ZvmsError as ex:
-            return error(ex.message)
+            return error(ex.code, ex.message)
+        except:
+            return error(500, '服务器内部错误')
     return wrapper

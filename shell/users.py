@@ -2,7 +2,7 @@ from shell import App
 from req import req,headers
 from util import md5ify, search
 
-AUTH = {
+Categ = {
     0b1: '无',
     0b10: '学生',
     0b100: '教师',
@@ -13,7 +13,7 @@ AUTH = {
 }
 
 def auth2str(auth):
-    return ','.join((v for k, v in AUTH.items() if k & auth))
+    return ','.join((v for k, v in Categ.items() if k & auth))
 
 users = App('users', '用户管理:')
 

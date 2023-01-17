@@ -2,8 +2,7 @@ from sqlalchemy import Column, Integer, String, SmallInteger, DateTime
 
 from zvms import db
 from zvms.res import *
-from zvms.util import *
-
+from zvms.util import ModelMixIn, select_value
 
 class Class(ModelMixIn, db.Model):
     __tablename__ = 'class'
@@ -35,8 +34,8 @@ class User(ModelMixIn, db.Model):
 
     def __filter_thoughts(self, type):
         return sum(select_value(filter(lambda sv: Volunteer.query.get(sv.vol_id).
-                                       type == type and sv.reward is not None,
-                                       StuVol.query.filter_by(stu_id=self.id)), 'reward'))
+            type == type and sv.reward is not None,
+            StuVol.query.filter_by(stu_id=self.id)), 'reward'))
 
     @property
     def inside(self):
@@ -84,7 +83,7 @@ class StuVol(ModelMixIn, db.Model):
 
     stu_id = Column(Integer, primary_key=True)
     vol_id = Column(Integer, primary_key=True)
-    status = Column(SMALLINT)
+    status = Column(SmallInteger)
     thought = Column(String(1024))
     reason = Column(String(1024))
     reward = Column(Integer)

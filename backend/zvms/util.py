@@ -9,9 +9,11 @@ from sqlalchemy.orm import Query as _Query
 from zvms import db
 from zvms.res import *
 
+
 class _QueryProperty:
     def __get__(self, obj, cls):
         return Query(cls.query)
+
 
 def foo(func):
     @wraps(func)
@@ -21,9 +23,11 @@ def foo(func):
         return func(self, *args, **kwargs)
     return wrapper
 
+
 @foo
 def select(self, *cols, **aliases):
     return dict(zip(chain(cols, aliases.values()), map(self.__getattribute__, chain(cols, aliases.keys()))))
+
 
 @foo
 def update(self, **updates):
@@ -33,6 +37,7 @@ def update(self, **updates):
         self.__setattribute__(k, v)
     self.on_update()
 
+
 @foo
 def insert(self):
     db.session.add(self)
@@ -40,11 +45,22 @@ def insert(self):
     self.on_insert()
     return self
 
+
 def incr(amount):
     return lambda x: x + amount
-    
+
+
 def select_value(self, col):
     return map(lambda x: x.__getattribute__(col), self)
+
+
+
+def list_or_error(self, message='未查询到相关信息'):
+    ret = list(self)
+    if not ret:
+        raise ZvmsError(404, message)
+    return ret
+
 
 class Query:
     select = select
@@ -63,13 +79,13 @@ class Query:
     def get_or_error(self, ident, message='未查询到相关信息'):
         ret = self.__query.get(ident)
         if not ret:
-            raise ZvmsError(message)
+            raise ZvmsError(404, message)
         return ret
 
     def first_or_error(self, message='未查询到相关信息'):
         ret = self.__query.first()
         if not ret:
-            raise ZvmsError(message)
+            raise ZvmsError(404, message)
         return ret
 
     def __iter__(self):
@@ -84,6 +100,7 @@ class Query:
             ret = func(*args, **kwargs)
             return Query(ret) if isinstance(ret, _Query) else ret
         return wrapper
+
 
 class ModelMixIn:
     select = select
@@ -101,14 +118,16 @@ class ModelMixIn:
 
     query = _QueryProperty()
 
+
 def success(message, **kwresult):
     ret = {'type': 'SUCCESS', 'message': message} | kwresult
     db.session.commit()
     return json.dumps(ret)
 
-def error(message):
-    db.session.commit()
-    return json.dumps({'type': 'ERROR', 'message': message})
+
+def error(code, message):
+    db.session.rollback()
+    return json.dumps({'type': 'ERROR', 'message': message}), code
 
 
 def success(message, *result, **kwresult):
@@ -121,12 +140,9 @@ def success(message, *result, **kwresult):
     return json.dumps(ret)
 
 
-def error(message):
-    return json.dumps({'type': 'ERROR', 'message': message})
-
-
 class ZvmsError(Exception):
-    def __init__(self, message):
+    def __init__(self, code, message):
+        self.code = code
         self.message = message
 
 
@@ -138,12 +154,12 @@ def try_parse_time(str):
 
 
 def auth_self(id, token_data, message):
-    if id != token_data['id'] and not (token_data['auth'] & AUTH.SYSTEM):
+    if id != token_data['id'] and not (token_data['auth'] & Categ.SYSTEM):
         raise ZvmsError(message)
 
 
 def auth_cls(cls, token_data, message='权限不足: 不能审核其他班级'):
-    if cls != token_data['cls'] and not (token_data['auth'] & AUTH.SYSTEM):
+    if cls != token_data['cls'] and not (token_data['auth'] & Categ.SYSTEM):
         raise ZvmsError(message)
 
 

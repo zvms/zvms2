@@ -18,14 +18,14 @@ def search_volunteers(token_data, **kwargs):
         if 'n' in kwargs:
             conds.append(Volunteer.name.like(f'%{kwargs["n"]}%'))
     except ValueError:
-        return error('请求接口错误: 非法的URL参数')
+        return error(400, '请求接口错误: 非法的URL参数')
 
     def process_query(query):
         ret = list(query.select('id', 'name', 'time'))
         for i in ret:
             i['time'] = str(i['time'])
         if not ret:
-            return error('未查询到相关数据')
+            return error(404, '未查询到相关数据')
         return success('获取成功', ret)
     if not conds:
         return process_query(Volunteer.query)
@@ -43,18 +43,18 @@ def get_volunteer_info(id, token_data):
 def create_volunteer(token_data, classes, **kwargs):
     '[POST] /volunteers'
     try:
-        VOL_TYPE(kwargs['type'])
+        VolType(kwargs['type'])
     except ValueError:
-        return error('请求接口错误: 未知的义工类型')
+        return error(400, '请求接口错误: 未知的义工类型')
     id = Volunteer(
         **kwargs,
         holder_id=token_data['id'],
     ).insert().id
-    if (AUTH.CLASS | AUTH.TEACHER).authorized(token_data['auth']):
+    if (Categ.CLASS | Categ.TEACHER).authorized(token_data['auth']):
         for cls in classes:
             cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
             if cls['max'] > cls_.members.count():
-                return error('义工永远无法报满')
+                return error(400, '义工永远无法报满')
             ClassVol(
                 cls_id=cls['id'],
                 vol_id=id,
@@ -63,9 +63,9 @@ def create_volunteer(token_data, classes, **kwargs):
     else:
         for cls in classes:
             if cls != token_data['cls']:
-                return error('不能创建其他班级的义工')
+                return error(403, '不能创建其他班级的义工')
             if cls['max'] > Class.query.get(cls).members.count():
-                return error('义工永远无法报满')
+                return error(400, '义工永远无法报满')
             ClassVol(
                 cls_id=cls['id'],
                 vol_id=id,
@@ -77,15 +77,15 @@ def create_volunteer(token_data, classes, **kwargs):
 def update_volunteer(token_data, id, classes, **kwargs):
     '[PUT] /volunteers/<int:id>'
     try:
-        VOL_TYPE(kwargs['type'])
+        VolType(kwargs['type'])
     except ValueError:
-        return error('请求接口错误: 未知的义工类型')
+        return error(403, '请求接口错误: 未知的义工类型')
     vol = Volunteer.query.get_or_error(id)
     auth_self(vol.holder_id, token_data, '权限不足: 不能修改其他人的义工')
     for cls in classes:
         cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
         if cls['max'] > cls_.members.count():
-            return error('义工永远无法报满')
+            return error(403, '义工永远无法报满')
         cv = ClassVol.query.get((cls['id'], id))
         if cv:
             ClassVol(
@@ -96,7 +96,7 @@ def update_volunteer(token_data, id, classes, **kwargs):
         else:
             cv.max = cls['max']
         if cv.now > cls['max']:
-            return error('义工报名溢出')
+            return error(403, '义工报名溢出')
     vol.update(**kwargs)
     return success('修改成功')
 

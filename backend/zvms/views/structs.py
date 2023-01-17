@@ -1,4 +1,4 @@
-from zvms.routelib import *
+from zvms.typing.checker import *
 
 Class = Object(
     name=String

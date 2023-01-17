@@ -18,7 +18,7 @@ route(
     rule='/classes',
     method='POST',
     impl_func=zvms.impls.classes.create_class,
-    auth=AUTH.SYSTEM,
+    auth=Categ.SYSTEM,
     params=Class
 )
 
@@ -26,12 +26,12 @@ route(
     rule='/classes/<int:id>',
     method='DELETE',
     impl_func=zvms.impls.classes.delete_class,
-    auth=AUTH.SYSTEM
+    auth=Categ.SYSTEM
 )
 
 route(
     rule='/classes/<int:id>',
     method='PUT',
     impl_func=zvms.impls.classes.modify_class,
-    auth=AUTH.SYSTEM
+    auth=Categ.SYSTEM
 )

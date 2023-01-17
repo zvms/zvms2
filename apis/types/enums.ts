@@ -7,7 +7,12 @@ export const enums = createEnums({
         OUTSIDE: 2,
         LARGE: 3
     },
-    Status: {
+    VolStatus: {
+        _type: int(),
+        UNAUDITED: 1,
+        AUDITED: 2
+    },
+    ThoughtStatus: {
         _type: int(),
         WAITING_FOR_SIGNUP_AUDIT: 1,
         UNSUBMITTED: 2,

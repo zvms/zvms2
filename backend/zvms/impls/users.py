@@ -12,7 +12,7 @@ def login(id, pwd, token_data):
     '[POST] /users/login'
     user = User.query.get(id)
     if not user or user.pwd != pwd:
-        return error('用户名或密码错误')
+        return error(200, '用户名或密码错误')
     return success('登录成功', token=tk.generate(**user.select('id', 'auth', cls_id='cls')))
 
 
@@ -32,10 +32,10 @@ def search_users(token_data, n=None, a=None):
         try:
             def filter_(u): return u.auth & int(a)
         except ValueError:
-            return error('非法URL参数')
+            return error(400, '非法URL参数')
     else:
         def filter_(_): return True
-    return success('获取成功', list(apply(select)(filter(filter_, query), 'id', 'name')))
+    return success('获取成功', list(select(filter(filter_, query), 'id', 'name')))
 
 
 def get_user_info(id, token_data):
@@ -43,17 +43,17 @@ def get_user_info(id, token_data):
     user = User.query.get_or_error(id)
     return success('获取成功', **user.select('name', 'auth',
                    *(('inside', 'outside', 'large')
-                     if user.auth & AUTH.STUDENT else ()),
+                     if user.auth & Categ.STUDENT else ()),
                    cls_id='cls'), clsName=user.cls.name)
 
 
 def modify_password(old, new, token_data):
     '[PATCH] /users/mod-pwd'
     if len(new) != 32:
-        return error('密码不符合规范')
+        return error(400, '密码格式错误')
     user = User.query.get(token_data['id'])
     if user.pwd != old:
-        return error('旧密码错误')
+        return error(400, '旧密码错误')
     user.pwd = new
     return success('修改成功')
 
@@ -69,7 +69,7 @@ def create_users(users, token_data):
     for user in users:
         Class.query.get_or_error(user['cls'], '班级不存在')
         if len(user['pwd']) != 32:
-            return error('密码不符合规范')
+            return error(400, '密码格式错误')
         User(
             id=user['id'],
             name=user['name'],

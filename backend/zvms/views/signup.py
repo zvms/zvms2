@@ -20,7 +20,7 @@ route(
     rule='/signup/<int:stuId>/<int:volId>',
     method='PATCH',
     impl_func=zvms.impls.signup.audit_signup,
-    auth=AUTH.CLASS | AUTH.TEACHER
+    auth=Categ.CLASS | Categ.TEACHER
 )
 
 route(

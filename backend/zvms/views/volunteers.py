@@ -20,7 +20,7 @@ route(
     method='POST',
     impl_func=zvms.impls.volunteers.create_volunteer,
     params=Volunteer,
-    auth=AUTH.MANAGER | AUTH.TEACHER | AUTH.CLASS
+    auth=Categ.MANAGER | Categ.TEACHER | Categ.CLASS
 )
 
 route(
@@ -28,12 +28,12 @@ route(
     method='PUT',
     impl_func=zvms.impls.volunteers.update_volunteer,
     params=Volunteer,
-    auth=AUTH.MANAGER | AUTH.TEACHER
+    auth=Categ.MANAGER | Categ.TEACHER
 )
 
 route(
     rule='/volunteers/<int:id>',
     method='DELETE',
     impl_func=zvms.impls.volunteers.delete_volunteer,
-    auth=AUTH.MANAGER | AUTH.TEACHER
+    auth=Categ.MANAGER | Categ.TEACHER
 )

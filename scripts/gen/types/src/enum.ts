@@ -16,12 +16,12 @@ export function createEnums<T, Raw extends EnumsRaw<T>>(raw: Raw): Enums<T, Raw>
     for (const name in raw) {
         const enumRaw = raw[name];
         let tsDef = `export enum ${name}{\n`;
-        let pyDef = `class ${name}(Enum):\n`;
+        let pyDef = `class ${name}(IntEnum):\n`;
         for (const key in enumRaw) {
             if (key !== "_type") {
                 const v = enumRaw[key];
                 tsDef += `    ${snake2Camal(key.toLowerCase(), true)} = ${v},\n`;
-                pyDef += `    ${key}: ${v}\n`;
+                pyDef += `    ${key} = ${v}\n`;
             }
         }
         tsDef = tsDef + "}";
@@ -47,7 +47,7 @@ export function enumsDefGenTs(data: Enums<any, any>): string {
 }
 
 export function enumsDefGenPy(data: Enums<any, any>): string {
-    let str = `from enum import Enum\n\n`;
+    let str = `from enum import IntEnum\n\n`;
     for (const name in data) {
         const struct = data[name];
         str += "\n" + struct.pyDef;

@@ -1,4 +1,4 @@
-from .type_check import *
+from zvms.typing.checker import *
 
 
 NoticeBody = Object(

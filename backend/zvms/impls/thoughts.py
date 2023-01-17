@@ -33,14 +33,10 @@ def search_thoughts(**kwargs):
         if 'v' in kwargs:
             conds.append(StuVol.vol_id == int(kwargs['v']))
     except ValueError:
-        return error('请求接口错误: 非法的URL参数')
+        return error(400, '请求接口错误: 非法的URL参数')
 
     def process_query(query):
-        ret = list(apply(select)(query, 'status', stu_id='stuId', vol_id='volId',
-                                 stu_name='stuName', vol_name='volName'))
-        if not ret:
-            return error('未查询到相关数据')
-        return success('获取成功', ret)
+        return success('获取成功', list_or_error(select(query, 'status', stu_id='stuId', vol_id='volId', stu_name='stuName', vol_name='volName')))
     return process_query(filter(filter_, StuVol.query.filter(*conds)))
 
 
@@ -48,7 +44,7 @@ def get_thought_info(stuId, volId, token_data):
     '[GET] /thoughts/<int:stuId>/<int:volId>'
     thought = StuVol.query.get_or_error((stuId, volId))
     if thought.status == Status.WAITING_FOR_SIGNUP_AUDIT:
-        return error('未查询到相关数据')
+        return error(404, '未查询到相关数据')
     ret = {}
     if thought.reason is not None:
         ret['reason'] = thought.reason
@@ -101,13 +97,13 @@ def update_thought(token_data, stuId, volId, **kwargs):
         match kwargs['status']:
             case Status.UNSUBMITTED:
                 if 'reason' not in kwargs or not isinstance(kwargs['reason'], str):
-                    return error('请求接口错误: "reason"参数')
-                if not AUTH.AUDITOR.authorized(auth):
-                    return error('权限不足')
+                    return error(400, '请求接口错误: "reason"参数')
+                if not Categ.AUDITOR.authorized(auth):
+                    return error(403, '权限不足')
                 thought.update(
                     reason=kwargs['reason'], status=Status.UNSUBMITTED)
             case Status.WAITING_FOR_FIRST_AUDIT:
-                if (AUTH.TEACHER | AUTH.CLASS).authorized(auth):
+                if (Categ.TEACHER | Categ.CLASS).authorized(auth):
                     auth_cls(User.query.get(stuId), token_data)
                     thought.status = Status.WAITING_FOR_FINAL_AUDIT
                 else:
@@ -115,15 +111,15 @@ def update_thought(token_data, stuId, volId, **kwargs):
                     thought.status = Status.WAITING_FOR_FIRST_AUDIT
                 submit_thought()
             case Status.ACCEPTED | Status.REJECTED:
-                if not AUTH.AUDITOR.authorized(auth):
-                    return error('权限不足')
+                if not Categ.AUDITOR.authorized(auth):
+                    return error(403, '权限不足')
                 thought.status = kwargs['status']
             case Status.WAITING_FOR_FINAL_AUDIT:
-                if not (AUTH.TEACHER | AUTH.CLASS).authorized(auth):
-                    return error('权限不足')
+                if not (Categ.TEACHER | Categ.CLASS).authorized(auth):
+                    return error(403, '权限不足')
                 thought.status = kwargs['status']
             case _:
-                return error('请求接口错误: 无效的感想状态')
+                return error(400, '请求接口错误: 无效的感想状态')
         return success('审核成功')
     else:
         auth_self(thought.stu_id, token_data, '不能修改其他人的感想')

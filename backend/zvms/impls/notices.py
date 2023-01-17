@@ -19,7 +19,7 @@ def search_notices(token_data, **kwargs):
             conds.append(Notice.id.in_(
                 SchoolNotice.query.select_value('notice_id')))
     except ValueError:
-        return error('请求接口错误: 非法的URL参数')
+        return error(400, '请求接口错误: 非法的URL参数')
 
     def process_query(query):
         ret = list(query.select('id', 'title',
@@ -27,7 +27,7 @@ def search_notices(token_data, **kwargs):
         for i in ret:
             i['deadtime'] = str(i['deadtime'])
         if not ret:
-            return error('未查询到相关数据')
+            return error(404, '未查询到相关数据')
         return success('获取成功', ret)
     if not conds:
         return process_query(Notice.query)
@@ -39,22 +39,22 @@ def send_notice(title, content, deadtime, type, targets, token_data):
     try_parse_time(deadtime)
     id = Notice(title=title, content=content, deadtime=deadtime,
                 sender=token_data['id']).insert().id
-    if targets is None and type != NOTICE_TYPE.SCHOOL_NOTICE:
-        return error('请求接口错误: 必须指定目标')
+    if targets is None and type != NoticeType.SCHOOL_NOTICE:
+        return error(400, '请求接口错误: 必须指定目标')
     match type:
-        case NOTICE_TYPE.USER_NOTICE:
+        case NoticeType.USER_NOTICE:
             for i in targets:
-                if User.query.get_or_error(i, '未找到目标用户').auth == AUTH.STUDENT and not (token_data['auth'] & AUTH.SYSTEM):
-                    return error('不能对普通学生发通知')
+                if User.query.get_or_error(i, '未找到目标用户').auth == Categ.STUDENT and not (token_data['auth'] & Categ.SYSTEM):
+                    return error(403, '不能对普通学生发通知')
                 UserNotice(user_id=i, notice_id=id).insert()
-        case NOTICE_TYPE.CLASS_NOTICE:
+        case NoticeType.CLASS_NOTICE:
             for i in targets:
                 Class.query.get_or_error(i, '未找到目标班级')
                 ClassNotice(cls_id=i, notice_id=id).insert()
-        case NOTICE_TYPE.SCHOOL_NOTICE:
+        case NoticeType.SCHOOL_NOTICE:
             SchoolNotice(notice_id=id).insert()
         case _:
-            return error('未知的目标类型')
+            return error(400, '未知的目标类型')
     return success('发送成功')
 
 
