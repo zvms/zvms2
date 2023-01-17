@@ -1,4 +1,4 @@
-import list from './list.vue'
-import stulist from './stulist.vue'
+import list from "./list.vue";
+import stulist from "./stulist.vue";
 
-export {list, stulist}
+export { list, stulist };

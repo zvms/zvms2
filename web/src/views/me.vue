@@ -41,9 +41,7 @@
     </v-card> -->
 
     <v-card>
-      <v-card-title>
-        通知
-      </v-card-title>
+      <v-card-title> 通知 </v-card-title>
       <v-list shaped>
         <v-list-item-group color="primary">
           <v-list-item
@@ -62,7 +60,7 @@
         </v-list-item-group>
       </v-list>
     </v-card>
-    
+
     <v-dialog v-model="dialog" max-width="80%">
       <v-card>
         <v-card-title>{{ curNoticeTitle }}</v-card-title>
@@ -74,9 +72,21 @@
 
 <script lang="ts">
 import { useInfoStore } from "@/stores";
-import { VContainer, VCard, VCardTitle, VCardText, VChip, VIcon, VList, VListItem, VListItemTitle, VListItemSubtitle, VDialog } from "vuetify/lib/components";
-import {fApi, checkToken} from "../apis";
-import {permissionNames} from "../utils/permissions";
+import {
+  VContainer,
+  VCard,
+  VCardTitle,
+  VCardText,
+  VChip,
+  VIcon,
+  VList,
+  VListItem,
+  VListItemTitle,
+  VListItemSubtitle,
+  VDialog,
+} from "vuetify/lib/components";
+import { fApi, checkToken } from "../apis";
+import { permissionNames } from "../utils/permissions";
 
 export default {
   name: "me",
@@ -91,9 +101,9 @@ export default {
     dialog: false,
     curNoticeTitle: "",
     curNoticeText: "",
-    timer: undefined
+    timer: undefined,
   }),
-  mounted () {
+  mounted() {
     this.initChips();
     // this.randomThought();
   },
@@ -101,7 +111,7 @@ export default {
     pageload: async function () {
       await checkToken();
     },
-    initChips () {
+    initChips() {
       this.chips = [
         {
           id: 1,
@@ -113,7 +123,7 @@ export default {
       ];
     },
     randomThought: async function () {
-      this.thought  = await fApi.fetchRandomThought();
+      this.thought = await fApi.fetchRandomThought();
     },
     showNotice(notice) {
       this.dialog = true;
@@ -121,15 +131,14 @@ export default {
       let s = "";
       for (const c of notice.text) {
         if (c == "\n") {
-          s += "<br />"
+          s += "<br />";
         } else {
-          s += c
+          s += c;
         }
       }
       this.curNoticeText = s;
-    }
+    },
   },
-  
 };
 </script>
 

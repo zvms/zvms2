@@ -1,10 +1,10 @@
-import { defineStore, mapState } from 'pinia'
+import { defineStore, mapState } from "pinia";
 
-export const useLoadingStore = defineStore('loading', {
+export const useLoadingStore = defineStore("loading", {
   state: () => {
     return {
-      loadingNum: 0
-    }
+      loadingNum: 0,
+    };
   },
   actions: {
     incLoading() {
@@ -18,10 +18,10 @@ export const useLoadingStore = defineStore('loading', {
     },
   },
   getters: {
-    isLoading: (state) => state.loadingNum > 0
-  }
-})
+    isLoading: (state) => state.loadingNum > 0,
+  },
+});
 
-export function mapIsLoading(){
-  return mapState(useLoadingStore,["isLoading"]);
+export function mapIsLoading() {
+  return mapState(useLoadingStore, ["isLoading"]);
 }

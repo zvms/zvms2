@@ -3,18 +3,32 @@
     <v-card>
       <v-card-title>
         未审核感想列表
-        <v-text-field v-model="search" append-icon="mdi-magnify" label="搜索" single-line hide-details></v-text-field>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="搜索"
+          single-line
+          hide-details
+        ></v-text-field>
       </v-card-title>
       <v-card-text>
-        <v-data-table fixed-header :headers="headers" :items="thoughts" :search="search" @click:row="rowClick"
-          loading-text="加载中..." no-data-text="没有数据哦" no-results-text="没有结果">
+        <v-data-table
+          fixed-header
+          :headers="headers"
+          :items="thoughts"
+          :search="search"
+          @click:row="rowClick"
+          loading-text="加载中..."
+          no-data-text="没有数据哦"
+          no-results-text="没有结果"
+        >
         </v-data-table>
       </v-card-text>
     </v-card>
     <v-dialog v-model="dialog1" max-width="80%">
       <v-card>
         <v-card-title>详细信息</v-card-title>
-        <v-simple-table style="margin:20px;">
+        <v-simple-table style="margin: 20px">
           <tbody>
             <tr>
               <td>义工编号</td>
@@ -56,40 +70,53 @@
               <td>图片</td>
               <td>
                 <ul v-for="img in pictures" :key="img.id">
-                  <li><img :src="'data:image/png;base64,' + img.src" class="pic"></li>
+                  <li>
+                    <img
+                      :src="'data:image/png;base64,' + img.src"
+                      class="pic"
+                    />
+                  </li>
                 </ul>
               </td>
             </tr>
             <tr>
               <td>发放的校内时长（分钟）</td>
               <td>
-                <v-text-field v-model="inside" label="不填为默认值" prepend-icon="mdi-view-list" />
+                <v-text-field
+                  v-model="inside"
+                  label="不填为默认值"
+                  prepend-icon="mdi-view-list"
+                />
               </td>
             </tr>
             <tr>
               <td>发放的校外时长（分钟）</td>
               <td>
-                <v-text-field v-model="outside" label="不填为默认值" prepend-icon="mdi-view-list" />
+                <v-text-field
+                  v-model="outside"
+                  label="不填为默认值"
+                  prepend-icon="mdi-view-list"
+                />
               </td>
             </tr>
             <tr>
               <td>发放的大型时长（分钟）</td>
               <td>
-                <v-text-field v-model="large" label="不填为默认值" prepend-icon="mdi-view-list" />
+                <v-text-field
+                  v-model="large"
+                  label="不填为默认值"
+                  prepend-icon="mdi-view-list"
+                />
               </td>
             </tr>
           </tbody>
         </v-simple-table>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="audit(1)">通过
-          </v-btn>
-          <v-btn color="red" @click="audit(2)">拒绝
-          </v-btn>
-          <v-btn color="yellow" @click="audit(3)">打回
-          </v-btn>
-          <v-btn color="primary" @click="dialog1 = false">取消
-          </v-btn>
+          <v-btn color="primary" @click="audit(1)">通过 </v-btn>
+          <v-btn color="red" @click="audit(2)">拒绝 </v-btn>
+          <v-btn color="yellow" @click="audit(3)">打回 </v-btn>
+          <v-btn color="primary" @click="dialog1 = false">取消 </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -99,7 +126,12 @@
 <script lang="ts">
 import { toasts, confirm } from "../../utils/dialogs.js";
 import { permissionTypes } from "../../utils/permissions";
-import { validate, validateNotNAN, validateNotLargerThan, validateNotNegative } from "../../utils/validation";
+import {
+  validate,
+  validateNotNAN,
+  validateNotLargerThan,
+  validateNotNegative,
+} from "../../utils/validation";
 import { fApi, checkToken } from "../../apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
@@ -127,9 +159,9 @@ export default {
     outside: undefined,
     large: undefined,
 
-    pictures: []
+    pictures: [],
   }),
-  mounted () {
+  mounted() {
     this.pageload();
   },
   methods: {
@@ -137,7 +169,7 @@ export default {
       await checkToken();
       this.thoughts = await fApi.fetchUnauditedVolunteers();
     },
-    granted () {
+    granted() {
       return this.infoStore.permission < permissionTypes.teacher;
     },
     rowClick: async function (item) {
@@ -147,10 +179,10 @@ export default {
       this.thought = item.thought;
       this.pictures = item.picture;
 
-      console.log(this.pictures)
+      console.log(this.pictures);
 
       let vol = await fApi.fetchOneVolunteer(this.volid);
-      toasts.success(vol.message);//TODO
+      toasts.success(vol.message); //TODO
       this.volDate = vol.date;
       this.volTime = vol.time;
       this.volDesc = vol.description;
@@ -175,14 +207,18 @@ export default {
           this.large = "0";
         }
 
-        validate([this.inside, this.outside, this.large], [
-          validateNotNAN(),
-          validateNotNegative(),
-          validateNotLargerThan(4)
-        ]);
+        validate(
+          [this.inside, this.outside, this.large],
+          [validateNotNAN(), validateNotNegative(), validateNotLargerThan(4)]
+        );
 
-
-        let data = await fApi.audit(this.stuid, status, this.inside, this.outside, this.large)
+        let data = await fApi.audit(
+          this.stuid,
+          status,
+          this.inside,
+          this.outside,
+          this.large
+        );
         if (data.type == "SUCCESS") {
           toasts.success(data.message);
           this.volDate = data.date;
@@ -194,18 +230,18 @@ export default {
         } else {
           toasts.error(data.message);
         }
-        this.inside = undefined
-        this.outside = undefined
-        this.large = undefined
+        this.inside = undefined;
+        this.outside = undefined;
+        this.large = undefined;
         // location.reload();
-        this.pageload()
+        this.pageload();
       }
-    }
+    },
   },
   computed: {
     ...mapIsLoading(),
-    ...mapStores(useInfoStore)
-  }
+    ...mapStores(useInfoStore),
+  },
 };
 </script>
 

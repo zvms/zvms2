@@ -1,2 +1,1 @@
-export function initAxios() {
-}
+export function initAxios() {}

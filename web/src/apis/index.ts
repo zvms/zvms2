@@ -10,7 +10,9 @@ import { logout as mockLogout } from "./mockApis/logout";
 
 import { devConfig } from "../dev";
 
-export const initAxios = devConfig.backend === "mock" ? mockInitAxios : realInitAxios;
+export const initAxios =
+  devConfig.backend === "mock" ? mockInitAxios : realInitAxios;
 export const fApi = devConfig.backend === "mock" ? mockFApi : realFApi;
-export const checkToken = devConfig.backend === "mock" ? mockCheckToken : realCheckToken;
+export const checkToken =
+  devConfig.backend === "mock" ? mockCheckToken : realCheckToken;
 export const logout = devConfig.backend === "mock" ? mockLogout : realLogout;
