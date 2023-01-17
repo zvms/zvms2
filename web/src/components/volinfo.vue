@@ -71,9 +71,9 @@ export default {
     this.init();
   },
   methods: {
-    timeToHint(a) {
-      let hr = parseInt(a / 60);
-      let mi = parseInt(a % 60);
+    timeToHint(a:number) {
+      let hr = Math.floor(a / 60);
+      let mi = a % 60;
       if (hr != 0)
         if (mi != 0) return hr + " 小时 " + mi + " 分钟";
         else return hr + " 小时 ";
