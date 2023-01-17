@@ -126,7 +126,7 @@ import { fApi } from "../apis";
 import { toasts } from "../utils/dialogs";
 
 export default {
-  name: "volcert",
+  name: "vol-cert",
   props: ["volid", "stuid", "stuname"],
   data: () => ({
     toggled: false,

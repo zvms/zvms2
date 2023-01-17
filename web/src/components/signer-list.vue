@@ -6,11 +6,11 @@
     <v-simple-table dense>
       <tbody>
         <tr>
-          <td>简介</td>
-          <td>{{ vol.description }}</td>
+          <td>学号</td>
+          <td>{{ vol.stuid }}</td>
         </tr>
         <tr>
-          <td>日期</td>
+          <td>姓名</td>
           <td>{{ vol.date }}</td>
         </tr>
         <tr>
@@ -48,8 +48,10 @@
 
 <script lang="ts">
 import { fApi } from "../apis";
+import { timeToHint } from "@/utils/calc";
+
 export default {
-  name: "volinfo",
+  name: "vol-info",
   props: ["volid"],
   data: () => ({
     vol: {
@@ -71,14 +73,6 @@ export default {
     this.init();
   },
   methods: {
-    timeToHint(a:number) {
-      let hr = Math.floor(a / 60);
-      let mi = a % 60;
-      if (hr != 0)
-        if (mi != 0) return hr + " 小时 " + mi + " 分钟";
-        else return hr + " 小时 ";
-      else return mi + "分钟";
-    },
     init: async function () {
       if (this.volid != 0 && this.volid != undefined) {
         this.vol = await fApi.fetchOneVolunteer(this.volid);
@@ -101,6 +95,7 @@ export default {
       };
       this.init();
     },
+    timeToHint,
   },
   watch: {
     volid() {

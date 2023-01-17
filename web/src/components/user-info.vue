@@ -4,7 +4,7 @@
 
 <script lang="ts">
 export default {
-  name: "userinfo",
+  name: "user-info",
   props: ["userid"],
   data: () => ({}),
   watch: {},

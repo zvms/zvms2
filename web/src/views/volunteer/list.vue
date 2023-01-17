@@ -182,7 +182,7 @@
 <script lang="ts">
 import { toasts } from "@/utils/dialogs.js";
 import { permissionTypes } from "@/utils/permissions";
-import volinfo from "@/components/volinfo.vue";
+import volinfo from "@/components/vol-info.vue";
 import { fApi, checkToken } from "@/apis";
 import axios from "axios";
 import { useInfoStore, useLastseenvolStore } from "@/stores";

@@ -22,7 +22,7 @@ const router = createRouter({
     {
       path: "/modifyPwd",
       name: "modifyPwd",
-      component: () => import("../views/modifyPwd.vue"),
+      component: () => import("../views/modify-pwd.vue"),
     },
     {
       path: "/logout",
@@ -42,7 +42,7 @@ const router = createRouter({
     {
       path: "/class/stulist/:classid",
       name: "classStulist",
-      component: () => import("../views/class/stulist.vue"),
+      component: () => import("../views/class/stu-list.vue"),
     },
     {
       path: "/volunteer/list",

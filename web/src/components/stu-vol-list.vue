@@ -38,10 +38,10 @@
 
 <script lang="ts">
 import { fApi } from "../apis";
-import volcert from "./volcert.vue";
+import volcert from "./vol-cert.vue";
 
 export default {
-  name: "stuvolist",
+  name: "stu-vol-list",
   props: ["userid", "title"],
   components: {
     volcert,
