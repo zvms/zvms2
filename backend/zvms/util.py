@@ -150,17 +150,17 @@ def try_parse_time(str):
     try:
         return datetime.datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
     except ValueError:
-        raise ZvmsError('请求接口错误: 非法的时间字符串')
+        raise ZvmsError(400, '请求接口错误: 非法的时间字符串')
 
 
 def auth_self(id, token_data, message):
-    if id != token_data['id'] and not (token_data['auth'] & Categ.SYSTEM):
-        raise ZvmsError(message)
+    if id != token_data['id'] and not (token_data['categ'] & Categ.SYSTEM):
+        raise ZvmsError(403, message)
 
 
 def auth_cls(cls, token_data, message='权限不足: 不能审核其他班级'):
-    if cls != token_data['cls'] and not (token_data['auth'] & Categ.SYSTEM):
-        raise ZvmsError(message)
+    if cls != token_data['cls'] and not (token_data['categ'] & Categ.SYSTEM):
+        raise ZvmsError(403, message)
 
 
 def count(seq, predicate):

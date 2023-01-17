@@ -7,7 +7,7 @@ CREATE TABLE user(
     name VARCHAR(5),
     class INT, 
     pwd CHAR(32), 
-    auth INT
+    categ INT
 );
 CREATE TABLE notice(
     id INT PRIMARY KEY auto_increment, 

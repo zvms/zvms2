@@ -1,45 +1,63 @@
 from zvms.typing.checker import *
+from zvms.res import VolType
 
+Class = Object(
+    name=String(5)
+)
 
 NoticeBody = Object(
-    title=String,
-    content=String,
-    deadtime=String
+    title=String(32),
+    content=String(1024),
+    deadtime=String(19)
 )
-Notice = Object(
-    title=String,
-    content=String,
-    deadtime=String,
-    type=Int,
+
+Notice = Extends(NoticeBody,
     targets=Array(Int)
 )
+
 Report = Object(
-    content=String
+    report=String()
 )
-VolunteerRecordClass = Object(
+
+Signup = Object(
+    stuLst=Array(Int)
+)
+
+Thought = Object(
+    content=String(1024),
+    pictures=Array(String(32))
+)
+
+Login = Object(
     id=Int,
-    max=Int
+    pwd=String(32)
 )
-VolunteerRecord = Object(
-    name=String,
-    description=String,
-    time=String,
-    type=Int,
-    reward=Int,
-    classes=Array(VolunteerRecordClass)
+
+ModPwd = Object(
+    old=String(32),
+    new=String(32)
 )
-UserOfUsers = Object(
-    id=Int,
-    name=String,
-    cls=Int,
-    auth=Int,
-    pwd=String
+
+ChangeClass = Object(
+    cls=Int
 )
-Users = Object(
-    users=Array(UserOfUsers)
-)
+
 User = Object(
-    name=String,
+    name=String(5),
     cls=Int,
-    auth=Int
+    categ=Int
+)
+
+Users = Object(
+    users=Array(Extends(User,
+        id=Int
+    ))
+)
+
+Volunteer = Object(
+    name=String(32),
+    description=String(1024),
+    time=String(20),
+    type=Literal(VolType.INSIDE, VolType.OUTSIDE, VolType.LARGE),
+    reward=Int
 )

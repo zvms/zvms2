@@ -4,7 +4,7 @@ from zvms.res import *
 
 
 def search_notices(token_data, **kwargs):
-    '[GET] /notices'
+    '[GET] /notic/search'
     conds = []
     try:
         if 'f' in kwargs:
@@ -34,43 +34,52 @@ def search_notices(token_data, **kwargs):
     return process_query(Notice.query.filter(*conds))
 
 
-def send_notice(title, content, deadtime, type, targets, token_data):
-    '[POST] /notices'
+def _save_notice(title, content, deadtime, token_data):
     try_parse_time(deadtime)
-    id = Notice(title=title, content=content, deadtime=deadtime,
-                sender=token_data['id']).insert().id
-    if targets is None and type != NoticeType.SCHOOL_NOTICE:
-        return error(400, '请求接口错误: 必须指定目标')
-    match type:
-        case NoticeType.USER_NOTICE:
-            for i in targets:
-                if User.query.get_or_error(i, '未找到目标用户').auth == Categ.STUDENT and not (token_data['auth'] & Categ.SYSTEM):
-                    return error(403, '不能对普通学生发通知')
-                UserNotice(user_id=i, notice_id=id).insert()
-        case NoticeType.CLASS_NOTICE:
-            for i in targets:
-                Class.query.get_or_error(i, '未找到目标班级')
-                ClassNotice(cls_id=i, notice_id=id).insert()
-        case NoticeType.SCHOOL_NOTICE:
-            SchoolNotice(notice_id=id).insert()
-        case _:
-            return error(400, '未知的目标类型')
+    return Notice(
+        title=title,
+        content=content,
+        deadtime=deadtime,
+        sender=token_data['id']
+    ).insert().id
+
+
+def send_user_notice(title, content, deadtime, targets, token_data):
+    '[POST] /notice/send/user'
+    id = _save_notice(title, content, deadtime, token_data)
+    for i in targets:
+        if User.query.get_or_error(i, '未找到目标用户').categ == Categ.STUDENT and not (token_data['categ'] & Categ.SYSTEM):
+            return error(403, '不能对普通学生发通知')
+        UserNotice(user_id=i, notice_id=id).insert()
+    return success('发送成功')
+
+
+def send_class_notice(title, content, deadtime, targets, token_data):
+    '[POST] /notice/send/class'
+    id = _save_notice(title, content, deadtime, token_data)
+    for i in targets:
+        Class.query.get_or_error(i, '未找到目标班级')
+        ClassNotice(cls_id=i, notice_id=id).insert()
+    return success('发送成功')
+
+def send_school_notice(title, content, deadtime, token_data):
+    '[POST] /notice/send/school'
+    SchoolNotice(
+        notice_id=_save_notice(title, content, deadtime, token_data)
+    ).insert()
     return success('发送成功')
 
 
 def delete_notice(id, token_data):
-    '[DELETE] /notices/<int:id>'
+    '[POST] /notice/<int:id>/delete'
     notice = Notice.query.get_or_error(id)
     auth_self(notice.sender, token_data, '权限不足: 不能删除其他人的通知')
     Notice.query.filter_by(id=id).delete()
-    SchoolNotice.query.filter_by(notice_id=id).delete()
-    ClassNotice.query.filter_by(notice_id=id).delete()
-    UserNotice.query.filter_by(notice_id=id).delete()
     return success('删除成功')
 
 
-def update_notice(id, title, content, deadtime, token_data):
-    '[PUT] /notices/<int:id>'
+def modify_notice(id, title, content, deadtime, token_data):
+    '[POST] /notic/<int:id>/modify'
     notice = Notice.query.get_or_error(id)
     auth_self(notice.sender, token_data, '权限不足: 不能修改其他人的通知')
     try_parse_time(deadtime)

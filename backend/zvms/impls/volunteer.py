@@ -4,7 +4,7 @@ from zvms.util import *
 
 
 def search_volunteers(token_data, **kwargs):
-    '[GET] /volunteers'
+    '[GET] /volunteer/search'
     conds = []
     try:
         if 'h' in kwargs:
@@ -17,6 +17,8 @@ def search_volunteers(token_data, **kwargs):
                 cls_id=int(kwargs['c'])).select_value('notice_id')))
         if 'n' in kwargs:
             conds.append(Volunteer.name.like(f'%{kwargs["n"]}%'))
+        if 'a' in kwargs:
+            conds.append(Volunteer.status == int(kwargs['a']))
     except ValueError:
         return error(400, '请求接口错误: 非法的URL参数')
 
@@ -33,24 +35,23 @@ def search_volunteers(token_data, **kwargs):
 
 
 def get_volunteer_info(id, token_data):
-    '[GET] /volunteers/<int:id>'
+    '[GET] /volunteer/<int:id>'
     ret = Volunteer.query.get_or_error(id).select('name', 'description',
-                                                  'time', 'type', 'reward', 'joiners', holder_id='holder')
+        'time', 'type', 'reward', 'joiners', holder_id='holder')
     ret['time'] = str(ret['time'])
     return success('获取成功', **ret)
 
 
 def create_volunteer(token_data, classes, **kwargs):
-    '[POST] /volunteers'
-    try:
-        VolType(kwargs['type'])
-    except ValueError:
-        return error(400, '请求接口错误: 未知的义工类型')
+    '[POST] /volunteer/create'
+    if token_data['categ'] == Categ.STUDENT and kwargs['type'] == VolType.OUTSIDE:
+        return error(403, '权限不足: 只能创建校外义工')
     id = Volunteer(
         **kwargs,
         holder_id=token_data['id'],
+        status=VolStatus.UNAUDITED if token_data['categ'] == Categ.STUDENT else VolStatus.AUDITED
     ).insert().id
-    if (Categ.CLASS | Categ.TEACHER).authorized(token_data['auth']):
+    if (Categ.CLASS | Categ.TEACHER).authorized(token_data['categ']):
         for cls in classes:
             cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
             if cls['max'] > cls_.members.count():
@@ -74,12 +75,8 @@ def create_volunteer(token_data, classes, **kwargs):
     return success('创建成功')
 
 
-def update_volunteer(token_data, id, classes, **kwargs):
-    '[PUT] /volunteers/<int:id>'
-    try:
-        VolType(kwargs['type'])
-    except ValueError:
-        return error(403, '请求接口错误: 未知的义工类型')
+def modify_volunteer(token_data, id, classes, **kwargs):
+    '[POST] /volunteer/<int:id>/modify'
     vol = Volunteer.query.get_or_error(id)
     auth_self(vol.holder_id, token_data, '权限不足: 不能修改其他人的义工')
     for cls in classes:
@@ -102,10 +99,18 @@ def update_volunteer(token_data, id, classes, **kwargs):
 
 
 def delete_volunteer(token_data, id):
-    '[DELETE] /volunteers/<int:id>'
-    auth_self(Volunteer.query.get_or_error(
-        id).holder_id, token_data, '权限不足: 不能删除其他人的义工')
+    '[POST] /volunteer/<int:id>/delete'
+    auth_self(Volunteer.query.get_or_error(id).holder_id, token_data, '权限不足: 不能删除其他人的义工')
     Volunteer.query.filter_by(id=id).delete()
-    StuVol.query.filter_by(vol_id=id).delete()
-    ClassVol.query.filter_by(vol_id=id).delete()
     return success('删除成功')
+
+
+def audit_volunteer(token_data, id):
+    '[POST] /volunteer/<int:id>/audit'
+    vol = Volunteer.query.get_or_error(id)
+    if (Categ.TEACHER | Categ.CLASS) & token_data['categ']:
+        auth_cls(vol.holder.cls_id, token_data)
+    Volunteer.query.get_or_error(id).update(
+        status=VolStatus.AUDITED
+    )
+    return success('审核成功')

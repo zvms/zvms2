@@ -1,6 +1,6 @@
 from zvms.routelib import *
 from zvms.res import *
-from zvms.views.structs import Signup
+from zvms.typing.structs import Signup
 import zvms.impls.signup
 
 route(
@@ -10,21 +10,21 @@ route(
 )
 
 route(
-    rule='/signup/<int:stuId>',
+    rule='/signup/<int:volId>',
     method='POST',
     impl_func=zvms.impls.signup.signup,
     params=Signup,
 )
 
 route(
-    rule='/signup/<int:stuId>/<int:volId>',
-    method='PATCH',
+    rule='/signup/<int:volId>/<int:stuId>/audit',
+    method='POST',
     impl_func=zvms.impls.signup.audit_signup,
-    auth=Categ.CLASS | Categ.TEACHER
+    categ=Categ.CLASS | Categ.TEACHER
 )
 
 route(
-    rule='/signup/<int:stuId>/<int:volId>',
-    method='DELETE',
+    rule='/signup/<int:volId>/<int:stuId>/rollback',
+    method='POST',
     impl_func=zvms.impls.signup.rollback
 )

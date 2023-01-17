@@ -17,8 +17,17 @@ Int = Named(lambda x: isinstance(x, int), 'number(int)')
 Float = Named(lambda x: isinstance(x, float), 'number(float)')
 Number = Named(lambda x: isinstance(x, (int, float)), 'number')
 Boolean = Named(lambda x: isinstance(x, bool), 'boolean')
-String = Named(lambda x: isinstance(x, str), 'string')
 Null = Named(lambda x: x is None, 'null')
+
+class String:
+    def __init__(self, max_length=None):
+        self.max_length = max_length
+
+    def __call__(self, json):
+        return isinstance(json, (list, tuple)) and (self.max_length is None or len(json) <= self.max_length)
+
+    def __str__(self):
+        return 'string' + '' if self.max_length is None else f'({self.max_length})'
 
 
 class Array:
@@ -85,3 +94,23 @@ class Intersection:
 
     def __str__(self):
         return '(' + ' & '.join(map(str, self.options)) + ')'
+
+class Literal:
+    def __init__(self, *literals):
+        self.literals = literals
+
+    def __call__(self, json):
+        return json in self.literals
+
+    def __str__(self):
+        return '(' + ', '.join(map(Literal.__literal_to_str, self.literals)) + ')'
+
+    def __literal_to_str(literal):
+        if isinstance(literal, (int, float)):
+            return str(literal)
+        if isinstance(literal, bool):
+            return 'true' if literal else 'false'
+        if isinstance(literal, str):
+            return f'"{literal}"'
+        if literal is None:
+            return 'null'

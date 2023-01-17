@@ -12,14 +12,14 @@ from zvms.util import *
 from zvms import app
 
 
-def route(*, rule, method='GET', impl_func, params=Any, auth=Categ.ANY):
-    app.add_url_rule(rule, methods=[method], view_func=deco(impl_func, params, auth))
+def route(*, rule, method='GET', impl_func, params=Any, categ=Categ.ANY):
+    app.add_url_rule(rule, methods=[method], view_func=deco(impl_func, params, categ))
 
 # 不要听下面的注释, 现在已经没有装饰器了
 # 以后把调试的代码写在这边，把一些公用的功能也可以移到这边
 # 在所有函数名前面加上@Deco()
 # 这样路由的函数直接返回一个字典就好了
-def deco(impl, params, auth):
+def deco(impl, params, categ):
     @wraps(impl)
     def wrapper(*args, **kwargs):
         if request.method in ('GET', 'DELETE'):
@@ -32,15 +32,15 @@ def deco(impl, params, auth):
             except:
                 json_data = {}
         token_data = {}
-        if auth != None:
+        if categ != None:
             try:
-                token_data = request.headers.get('Authorization')
+                token_data = request.headers.get('categorization')
                 if not token_data:
                     raise InvalidSignatureError()
                 token_data = tk.read(token_data)
                 if not tk.exists(token_data):
                     return json.dumps({'type': 'ERROR', 'message': "Token失效, 请重新登陆"}), 401
-                if not auth.authorized(token_data['auth']):
+                if not categ.authorized(token_data['categ']):
                     return json.dumps({'type': 'ERROR', 'message': '权限不足'}), 403
             except InvalidSignatureError as ex:
                 return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"}), 401
@@ -48,7 +48,7 @@ def deco(impl, params, auth):
             return interface_error(params, json_data)
         try:
             with open('log.txt', 'a', encoding='utf-8') as f:
-                if auth:
+                if categ:
                     f.write(f'({token_data["id"]}) ')
                 f.write(
                     f'[{datetime.datetime.now()}] {request.method} {request.url}\n')

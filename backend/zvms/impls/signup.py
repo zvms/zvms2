@@ -10,49 +10,53 @@ def list_signup(**kwargs):
     return success('获取成功', list_or_error(StuVol.query.select(stu_id='stuId', vol_id='volId', stu_name='stuName', vol_name='volName')))
 
 
-def audit_signup(stuId, volId, token_data):
-    '[PATCH] /signup/<int:stuId>/<int:volId>'
-    stu_vol = StuVol.query.get((stuId, volId))
+def audit_signup(volId, stuId, token_data):
+    '[POST] /signup/<int:volId>/<int:stuId>'
+    stu_vol = StuVol.query.get((volId, stuId))
     if not stu_vol:
         return error(406, '学生未报名该义工')
     auth_cls(User.query.get(stuId).cls_id, token_data)
-    stu_vol.status = Status.UNSUBMITTED
+    stu_vol.status = ThoughtStatus.UNSUBMITTED
     return success('审核成功')
 
 
-def signup(stuId, volId, token_data):
-    '[POST] /signup/<int:stuId>'
-    if Volunteer.query.get_or_error(volId, '该义工不存在').time < datetime.datetime.now():
+def signup(stuLst, volId, token_data):
+    '[POST] /signup/<int:volId>'
+    vol = Volunteer.query.get_or_error(volId, '该义工不存在')
+    if vol.status == VolStatus.UNAUDITED:
+        return error(406, '该义工未过审')
+    if vol.time < datetime.datetime.now():
         return error(406, '该义工报名已截至')
-    if StuVol.query.get((stuId, volId)):
-        return error(406, '学生已报名该义工')
-    stu = User.query.get_or_error(stuId, '该学生不存在')
-    cv = ClassVol.query.get_or_error((stu.cls_id, volId), '该班级不能报名')
-    if cv.now >= cv.max:
-        return error(406, '名额已满')
-    if stu.auth & Categ.TEACHER:
-        return error(406, '不能报名教师')
-    if (Categ.TEACHER | Categ.CLASS).authorized(token_data['auth']):
-        auth_cls(User.query.get(stuId).cls_id, token_data, '不能报名其他班级')
-        StuVol(
-            stu_id=stuId,
-            vol_id=volId,
-            status=Status.UNSUBMITTED,
-        ).insert()
-    else:
-        auth_self(stuId, token_data, '不能给其他人报名')
-        StuVol(
-            stu_id=stuId,
-            vol_id=volId,
-            status=Status.WAITING_FOR_FIRST_AUDIT
-        ).insert()
+    for stuId in stuLst:
+        if StuVol.query.get((volId, stuId)):
+            return error(406, '学生已报名该义工')
+        stu = User.query.get_or_error(stuId, '该学生不存在')
+        cv = ClassVol.query.get_or_error((stu.cls_id, volId), '该班级不能报名')
+        if cv.now >= cv.max:
+            return error(406, '名额已满')
+        if stu.categ & Categ.TEACHER:
+            return error(406, '不能报名教师')
+        if (Categ.TEACHER | Categ.CLASS).authorized(token_data['categ']):
+            auth_cls(User.query.get(stuId).cls_id, token_data, '不能报名其他班级')
+            StuVol(
+                stu_id=stuId,
+                vol_id=volId,
+                status=ThoughtStatus.UNSUBMITTED,
+            ).insert()
+        else:
+            auth_self(stuId, token_data, '不能给其他人报名')
+            StuVol(
+                stu_id=stuId,
+                vol_id=volId,
+                status=ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT
+            ).insert()
     return success('报名成功')
 
 
-def rollback(stuId, volId, token_data):
-    '[DELETE] /signup/<int:stuId>/<int:volId>'
-    StuVol.query.get_or_error((stuId, volId), '未报名该义工')
-    if (Categ.TEACHER | Categ.CLASS).authorized(token_data['auth']):
+def rollback(volId, stuId, token_data):
+    '[POST] /signup/<int:volId>/<int:stuId>/audit'
+    StuVol.query.get_or_error((volId, stuId), '未报名该义工')
+    if (Categ.TEACHER | Categ.CLASS).authorized(token_data['categ']):
         auth_cls(User.query.get(stuId).cls_id, token_data, '不能修改其他班级')
     else:
         auth_self(stuId, token_data, '不能撤回其他人的报名')
