@@ -13,11 +13,13 @@ export function snake2Camal(str: string, largeCamal = false) {
     let result = "", upperCase = largeCamal;
     for (let c of str) {
         if (c === "_") upperCase = true;
-        else if (upperCase) {
-            upperCase = false;
-            c = c.toUpperCase();
+        else {
+            if (upperCase) {
+                upperCase = false;
+                c = c.toUpperCase();
+            }
+            result += c;
         }
-        result += c;
     }
     return result;
 }
