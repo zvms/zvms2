@@ -2,8 +2,8 @@ import pathsData from "zvms-apis-data/paths";
 import { structs as structsData, enums as enumsData } from "zvms-apis-data/types";
 import { authData, userCatagories } from "zvms-apis-data/users";
 import { ImplFiles, implsInitRaw, pathsGen, viewsInitRaw } from "zvms-apis-paths-gen";
-import { enumsDefGenPy, enumsDefGenTs, structsDefGenCk, structsDefGenPy, structsDefGenTs, typesIndexRaw } from "zvms-apis-types-gen";
-import { authGenPy, authGenTs, catagoriesGenPy, catagoriesGenTs, usersIndexRaw } from "zvms-apis-users-gen";
+import { enumsDefGenPy, enumsDefGenTs, structsDefGenCk, structsDefGenPy, structsDefGenTs } from "zvms-apis-types-gen";
+import { authGenPy, authGenTs, catagoriesGenPy, catagoriesGenTs } from "zvms-apis-users-gen";
 import zvmsConfig from "zvms-config";
 
 import * as fs from "./fs.js";
@@ -52,29 +52,25 @@ function generate(): (() => void)[] {
     const catagoriesTsOpt = prettierTs(catagoriesGenTs(userCatagories)),
         catagoriesPyOpt = catagoriesGenPy(userCatagories),
         authTsOpt = prettierTs(authGenTs(authData)),
-        authPyOpt = authGenPy(authData),
-        usersIndexOpt = usersIndexRaw;
+        authPyOpt = authGenPy(authData);
     todos.push(() => {
         fs.writeFileSync(join(paths.f.users, "catagories.ts"), catagoriesTsOpt);
         fs.writeFileSync(join(paths.b.users, "catagories.py"), catagoriesPyOpt);
         fs.writeFileSync(join(paths.f.users, "auth.ts"), authTsOpt);
         fs.writeFileSync(join(paths.b.users, "auth.py"), authPyOpt);
-        fs.writeFileSync(join(paths.f.users, "index.ts"), usersIndexOpt);
     })
 
     const enumsTsOpt = prettierTs(enumsDefGenTs(enumsData)),
         enumsPyOpt = enumsDefGenPy(enumsData),
         structsTsOpt = prettierTs(structsDefGenTs(structsData)),
         structsPyOpt = structsDefGenPy(structsData),
-        structsCkOpt = structsDefGenCk(structsData),
-        typesIndexOpt = typesIndexRaw;
+        structsCkOpt = structsDefGenCk(structsData);
     todos.push(() => {
         fs.writeFileSync(join(paths.f.types, "enums.ts"), enumsTsOpt);
         fs.writeFileSync(join(paths.b.types, "enums.py"), enumsPyOpt);
         fs.writeFileSync(join(paths.f.types, "structs.ts"), structsTsOpt);
         fs.writeFileSync(join(paths.b.types, "structs.py"), structsPyOpt);
         fs.writeFileSync(join(paths.b.types, "structs_ck.py"), structsCkOpt);
-        fs.writeFileSync(join(paths.f.types, "index.ts"), typesIndexOpt);
     })
 
     return todos;
