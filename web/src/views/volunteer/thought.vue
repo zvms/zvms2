@@ -3,19 +3,32 @@
     <v-card>
       <v-card-title>
         未提交感想列表
-        <v-text-field v-model="search" append-icon="mdi-magnify" label="搜索" single-line hide-details></v-text-field>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="搜索"
+          single-line
+          hide-details
+        ></v-text-field>
       </v-card-title>
       <v-card-text>
-        <v-data-table fixed-header :headers="headers" :items="thoughts" :search="search"
-          @click:row="rowClick" loading-text="加载中..." no-data-text="没有数据哦"
-          no-results-text="没有结果">
+        <v-data-table
+          fixed-header
+          :headers="headers"
+          :items="thoughts"
+          :search="search"
+          @click:row="rowClick"
+          loading-text="加载中..."
+          no-data-text="没有数据哦"
+          no-results-text="没有结果"
+        >
         </v-data-table>
       </v-card-text>
     </v-card>
     <v-dialog v-model="dialog1" max-width="80%">
       <v-card>
         <v-card-title>详细信息</v-card-title>
-        <v-simple-table style="margin:20px;">
+        <v-simple-table style="margin: 20px">
           <tbody>
             <tr>
               <td>义工编号</td>
@@ -64,17 +77,25 @@
               <ul v-for="img in pictures" :key="img.id">
                 <td>
                   <li>
-                    <img :src="'data:image/png;base64,' + img.src" class="pic">
+                    <img
+                      :src="'data:image/png;base64,' + img.src"
+                      class="pic"
+                    />
                   </li>
                 </td>
                 <td>
-                  <v-icon @click="deletePicture(img.id)" color="grey" style="
+                  <v-icon
+                    @click="deletePicture(img.id)"
+                    color="grey"
+                    style="
                       -webkit-app-region: no-drag;
                       margin-right: 0;
                       cursor: pointer;
                       top: -55px;
                       left: 30px;
-                    ">mdi-close</v-icon>
+                    "
+                    >mdi-close</v-icon
+                  >
                 </td>
               </ul>
             </tr>
@@ -82,8 +103,7 @@
         </v-simple-table>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" block @click="submit">提交
-          </v-btn>
+          <v-btn color="primary" block @click="submit">提交 </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -117,32 +137,29 @@ export default {
 
     pictures: [],
     count: 0,
-    opening: false
+    opening: false,
   }),
 
-  mounted () {
+  mounted() {
     this.pageload();
   },
 
   methods: {
-    timeToHint (a) {
+    timeToHint(a) {
       let hr = parseInt(a / 60);
       let mi = parseInt(a % 60);
       if (hr != 0)
-        if (mi != 0)
-          return hr + " 小时 " + mi + " 分钟";
-        else
-          return hr + " 小时 ";
-      else
-        return mi + "分钟";
+        if (mi != 0) return hr + " 小时 " + mi + " 分钟";
+        else return hr + " 小时 ";
+      else return mi + "分钟";
     },
 
     async pageload() {
       await checkToken();
-      this.thoughts = await fApi.fetchNothoughtList(this.infoStore.class)
+      this.thoughts = await fApi.fetchNothoughtList(this.infoStore.class);
     },
 
-    granted () {
+    granted() {
       return this.infoStore.permission < permissionTypes.teacher;
     },
 
@@ -153,38 +170,39 @@ export default {
       this.thought = item.thought;
 
       let vol = await fApi.fetchOneVolunteer(this.volid);
-      toasts.success(vol.message);//TODO
+      toasts.success(vol.message); //TODO
       this.volDate = vol.date;
       this.volTime = vol.time;
       this.volDesc = vol.description;
       this.volTI = vol.inside;
       this.volTO = vol.outside;
       this.volTL = vol.large;
-      this.pictures = []
-
+      this.pictures = [];
     },
 
-    submit () {
+    submit() {
       this.dialog1 = false;
       if (!this.thought) {
         toasts.error("没写感想就想交？在想桃子？");
-        return
+        return;
       }
-      
+
       axios
         .post("/volunteer/thought/" + this.volid, {
-          "thought": [{
-            "stuId": this.stuid,
-            "content": this.thought,
-            "pictures": this.pictures.map(o => o.src)
-          }],
+          thought: [
+            {
+              stuId: this.stuid,
+              content: this.thought,
+              pictures: this.pictures.map((o) => o.src),
+            },
+          ],
         })
         .then((response) => {
           // console.log(response.data);
           if (response.data.type == "SUCCESS") {
             toasts.success(response.data.message);
             // location.reload();
-            this.pageload()
+            this.pageload();
           } else {
             toasts.error(response.data.message);
           }
@@ -192,10 +210,7 @@ export default {
         .catch((err) => {
           toasts.error(err);
         })
-        .finally(() => {
-          
-        });
-      
+        .finally(() => {});
     },
 
     async uploadPicture() {
@@ -206,20 +221,20 @@ export default {
           if (data) {
             this.pictures.push({
               id: this.count,
-              src: data
+              src: data,
             });
             this.count++;
           }
 
           this.opening = false;
-        })
+        });
       }
     },
 
     deletePicture(id) {
-      this.pictures = this.pictures.filter(img => img.id != id);
-    }
-  }
+      this.pictures = this.pictures.filter((img) => img.id != id);
+    },
+  },
 };
 </script>
 

@@ -21,7 +21,11 @@
           <v-icon left>mdi-clipboard-text</v-icon>
           查看已报名
         </v-btn>
-        <v-btn v-if="granted()" color="primary" @click="thoughtSubmitDialog(vol.id)">
+        <v-btn
+          v-if="granted()"
+          color="primary"
+          @click="thoughtSubmitDialog(vol.id)"
+        >
           <v-icon left>mdi-upload</v-icon>
           感想提交
         </v-btn>
@@ -44,19 +48,28 @@
       <v-card>
         <v-card-title>报名列表</v-card-title>
         <v-card-text>
-          <v-data-table fixed-header :headers="headers" :items="participantsLst" :search="search" loading-text="加载中..."
-            no-data-text="没有数据哦" no-results-text="没有结果">
+          <v-data-table
+            fixed-header
+            :headers="headers"
+            :items="participantsLst"
+            :search="search"
+            loading-text="加载中..."
+            no-data-text="没有数据哦"
+            no-results-text="没有结果"
+          >
           </v-data-table>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red darken-1" text @click="dialog_participant = false">关闭</v-btn>
+          <v-btn color="red darken-1" text @click="dialog_participant = false"
+            >关闭</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
     <v-dialog v-model="dialog1" max-width="80%">
       <v-card>
-        <v-simple-table style="margin:20px;">
+        <v-simple-table style="margin: 20px">
           <thead>
             <td>学号</td>
             <td>删除</td>
@@ -65,33 +78,55 @@
             <tr v-for="(stuid, i) in stulstSelected" :key="i">
               <td>{{ mp[stuid] }}</td>
               <td>
-                <v-btn class="mx-2" fab dark x-small color="primary" @click="delFromList(i)">
-                  <v-icon dark>
-                    mdi-minus
-                  </v-icon>
+                <v-btn
+                  class="mx-2"
+                  fab
+                  dark
+                  x-small
+                  color="primary"
+                  @click="delFromList(i)"
+                >
+                  <v-icon dark> mdi-minus </v-icon>
                 </v-btn>
               </td>
             </tr>
             <tr>
               <td>
-                <v-select prepend-icon="mdi-switch" v-model="stu_new" label="选定学生" :items="stulst" item-text="name"
-                  item-value="id">
+                <v-select
+                  prepend-icon="mdi-switch"
+                  v-model="stu_new"
+                  label="选定学生"
+                  :items="stulst"
+                  item-text="name"
+                  item-value="id"
+                >
                 </v-select>
               </td>
               <td>
-                <v-btn class="mx-2" fab dark x-small color="primary" @click="addToList">
-                  <v-icon dark>
-                    mdi-plus
-                  </v-icon>
+                <v-btn
+                  class="mx-2"
+                  fab
+                  dark
+                  x-small
+                  color="primary"
+                  @click="addToList"
+                >
+                  <v-icon dark> mdi-plus </v-icon>
                 </v-btn>
               </td>
             </tr>
           </tbody>
         </v-simple-table>
-        <p>当前选中了{{ stulstSelected.length }}个学生哦，你可以点击加号添加一个学生</p>
+        <p>
+          当前选中了{{
+            stulstSelected.length
+          }}个学生哦，你可以点击加号添加一个学生
+        </p>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red darken-1" text @click="signupVolunteer(volid)">确定</v-btn>
+          <v-btn color="red darken-1" text @click="signupVolunteer(volid)"
+            >确定</v-btn
+          >
           <v-btn color="red darken-1" text @click="dialog1 = false">关闭</v-btn>
         </v-card-actions>
       </v-card>
@@ -101,18 +136,23 @@
       <v-card>
         <v-card-title>感想提交（班级）</v-card-title>
 
-        <div v-if="pictures.length > 0" style="left: 50px; position: relative;">
+        <div v-if="pictures.length > 0" style="left: 50px; position: relative">
           <v-card-text>图片（点击图片以删除）</v-card-text>
           <ul v-for="(pic, i) in pictures" :key="i">
             <li>
-              <img :src="'data:image/png;base64,' + pic" class="pic" @click="removePic(i)" style="cursor: pointer">
+              <img
+                :src="'data:image/png;base64,' + pic"
+                class="pic"
+                @click="removePic(i)"
+                style="cursor: pointer"
+              />
             </li>
           </ul>
         </div>
 
         <v-divider></v-divider>
 
-        <v-simple-table style="margin:20px;" v-if="thoughts.length > 0">
+        <v-simple-table style="margin: 20px" v-if="thoughts.length > 0">
           <thead>
             <td>学号</td>
             <td>感想</td>
@@ -126,8 +166,12 @@
         </v-simple-table>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="red darken-1" text @click="choosePictures()">选择义工图片</v-btn>
-          <v-btn color="red darken-1" text @click="chooseCSV()">选择义工感想csv</v-btn>
+          <v-btn color="red darken-1" text @click="choosePictures()"
+            >选择义工图片</v-btn
+          >
+          <v-btn color="red darken-1" text @click="chooseCSV()"
+            >选择义工感想csv</v-btn
+          >
           <v-btn color="red darken-1" text @click="submitThought()">提交</v-btn>
         </v-card-actions>
       </v-card>
@@ -138,14 +182,14 @@
 <script lang="ts">
 import { toasts } from "@/utils/dialogs.js";
 import { permissionTypes } from "@/utils/permissions";
-import volinfo from "@/components/volinfo.vue";
+import volinfo from "@/components/vol-info.vue";
 import { fApi, checkToken } from "@/apis";
 import axios from "axios";
 import { useInfoStore, useLastseenvolStore } from "@/stores";
 import { mapStores } from "pinia";
 
-interface Volwork{
-  id:number
+interface Volwork {
+  id: number;
 }
 
 export default {
@@ -174,22 +218,22 @@ export default {
     participantsLst: [],
     stu: undefined,
     thought: undefined,
-    mp: {}
+    mp: {},
   }),
   components: {
     volinfo,
   },
-  mounted () {
+  mounted() {
     this.pageload();
   },
   methods: {
     async pageload() {
       await checkToken();
-      let volworks:Volwork[] = await this.fetchVol();
+      let volworks: Volwork[] = await this.fetchVol();
       this.volworks = volworks.sort((a, b) => b.id - a.id);
       this.lastseenvolStore.lastseenvol = this.volworks;
     },
-    granted () {
+    granted() {
       return this.infoStore.permission < permissionTypes.teacher;
     },
     async volSignUp(volid) {
@@ -199,85 +243,84 @@ export default {
       this.stulst = undefined;
       this.stulstSelected = [];
       let stulst = await fApi.fetchStudentList(this.infoStore.class);
-      stulst
-        ? (this.stulst = stulst)
-        : toasts.error("获取学生列表失败");
+      stulst ? (this.stulst = stulst) : toasts.error("获取学生列表失败");
       this.volid = volid;
       for (const i in this.stulst)
         this.mp[this.stulst[i].id] = this.stulst[i].name;
     },
-    thoughtSubmitDialog (volId) {
+    thoughtSubmitDialog(volId) {
       this.dialog2 = true;
       this.curVolId = volId;
     },
     removePic(i) {
-      this.pictures.splice(i, 1)
+      this.pictures.splice(i, 1);
     },
     choosePictures: async function () {
       await fApi.openPictures((data) => {
         if (data === null) return;
 
-        this.pictures.push(data)
-      })
+        this.pictures.push(data);
+      });
     },
     chooseCSV: async function () {
       await fApi.openCSV((data) => {
         if (data === null) return;
 
-        this.thoughts = []
+        this.thoughts = [];
 
-        data = data.split('\n')
-        data.shift()
+        data = data.split("\n");
+        data.shift();
 
         let error = false;
-        data.forEach(e => {
-          if (error) return
+        data.forEach((e) => {
+          if (error) return;
 
-          let v = e.split(',')
+          let v = e.split(",");
           if (v.length < 2) {
             if (!(v.length == 1 && v[0] == "")) {
-              toasts.error(`${e}格式有问题`)
-              error = true
+              toasts.error(`${e}格式有问题`);
+              error = true;
             }
-            return
+            return;
           }
 
-          v = [v[0]].concat(v.slice(1).join(','))
+          v = [v[0]].concat(v.slice(1).join(","));
 
           if (isNaN(parseInt(v[0]))) {
-            toasts.error(`学号${v[0]}不合法（必须是纯数字）`)
-            error = true
-            return
+            toasts.error(`学号${v[0]}不合法（必须是纯数字）`);
+            error = true;
+            return;
           }
           this.thoughts.push({
             stuId: v[0],
-            thought: v[1]
-          })
+            thought: v[1],
+          });
         });
 
-        console.log(this.thoughts)
-
-      })
+        console.log(this.thoughts);
+      });
     },
     submitThought() {
       this.dialog2 = false;
 
       this.thoughts.forEach((e) => {
-        console.log(parseInt(e.stuId), e.stuId)
+        console.log(parseInt(e.stuId), e.stuId);
         axios
           .post("/volunteer/thought/" + this.curVolId, {
-            "thought": [{
-              "stuId": parseInt(e.stuId),
-              "content": e.thought,
-              "pictures": this.pictures
-            }],
+            thought: [
+              {
+                stuId: parseInt(e.stuId),
+                content: e.thought,
+                pictures: this.pictures,
+              },
+            ],
           })
           .then((response) => {
             // console.log(response.data);
             if (response.data.type == "SUCCESS") {
               toasts.success(response.data.message);
               // location.reload();
-              this.pageload()
+              this.pageload();
             } else {
               toasts.error(response.data.message);
             }
@@ -285,30 +328,26 @@ export default {
           .catch((err) => {
             toasts.error(err);
           })
-          .finally(() => {
-
-          });
-      })
-      this.pictures = []
-      this.thoughts = []
-      this.curVolId = null
-
+          .finally(() => {});
+      });
+      this.pictures = [];
+      this.thoughts = [];
+      this.curVolId = null;
     },
-    signupVolunteer (volid) {
+    signupVolunteer(volid) {
       if (this.stulstSelected.length == 0) {
         toasts.error("报名列表为空");
         return;
       }
       axios
         .post("/volunteer/signup/" + volid, {
-          "stulst": this.stulstSelected
+          stulst: this.stulstSelected,
         })
         .then((response) => {
           // console.log(response.data);
           if (response.data.type == "SUCCESS") {
             toasts.success(response.data.message);
-            for (let k in this.form)
-              this.form[k] = undefined
+            for (let k in this.form) this.form[k] = undefined;
           } else {
             toasts.error(response.data.message);
           }
@@ -316,9 +355,7 @@ export default {
         .catch((err) => {
           toasts.error(err);
         })
-        .finally(() => {
-
-        });
+        .finally(() => {});
       this.dialog1 = false;
     },
 
@@ -348,7 +385,7 @@ export default {
       return volworks;
     },
 
-    addToList () {
+    addToList() {
       // console.log("Ent");
       // console.log(this.stu_new);
       // console.log(this.stulstSelected);
@@ -360,19 +397,17 @@ export default {
           break;
         }
       }
-      if (!flg)
-        this.stulstSelected.push(this.stu_new);
-      else
-        toasts.error("请不要重复报名");
+      if (!flg) this.stulstSelected.push(this.stu_new);
+      else toasts.error("请不要重复报名");
       this.stu_new = undefined;
     },
-    delFromList (i) {
+    delFromList(i) {
       this.stulstSelected.splice(i, 1);
-    }
+    },
   },
   computed: {
-    ...mapStores(useLastseenvolStore, useInfoStore)
-  }
+    ...mapStores(useLastseenvolStore, useInfoStore),
+  },
 };
 </script>
 

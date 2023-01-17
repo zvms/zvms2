@@ -11,6 +11,7 @@ export default {
   name: "logout",
   async mounted() {
     await logout();
-  }
+  },
 };
-</script>>
+</script>
+>

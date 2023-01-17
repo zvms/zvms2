@@ -4,7 +4,7 @@ import { UserCatagoryList } from "./catagories.js";
 export type AuthData = Record<string, UserCatagoryList>;
 
 export function authGenTs(data: AuthData) {
-    let str = `export const auth = {\n`;
+    let str = `export const authData = {\n`;
     for (const name in data) {
         str += `    ${name}: ${data[name].reduce((p, c) => p | c.id, 0)},\n`
     }

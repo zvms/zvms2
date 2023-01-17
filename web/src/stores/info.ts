@@ -1,17 +1,17 @@
-import { permissionTypes } from '@/utils/permissions'
-import { defineStore } from 'pinia'
+import { permissionTypes } from "@/utils/permissions";
+import { defineStore } from "pinia";
 
-export const useInfoStore = defineStore('info', {
+export const useInfoStore = defineStore("info", {
   state: () => {
     return {
       username: "",
       permission: permissionTypes.none,
       class: "",
       classname: "",
-      token: ""
-    }
+      token: "",
+    };
   },
   persist: {
     enabled: true,
-  }
-})
+  },
+});

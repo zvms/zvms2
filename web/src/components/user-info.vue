@@ -4,11 +4,9 @@
 
 <script lang="ts">
 export default {
-  name: 'userinfo',
-  props: ['userid'],
-  data: () => ({
-  }),
-  watch: {
-  }
-}
+  name: "user-info",
+  props: ["userid"],
+  data: () => ({}),
+  watch: {},
+};
 </script>

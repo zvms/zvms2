@@ -5,7 +5,7 @@ export * from "../commonUtils.js";
 
 export function pyReq2paramsDecl(req?: Params): string {
     if (!req) return "";
-    let ks: string[] = [];
+    const ks: string[] = [];
     for (const k in req) {
         ks.push(paramName(k) + ": " + req[k].py);
     }
@@ -14,7 +14,7 @@ export function pyReq2paramsDecl(req?: Params): string {
 
 export function pyParamsTypeCheck(req?: Params): string {
     if (!req) return "Object()";
-    let result: string[] = [];
+    const result: string[] = [];
     for (const k in req) {
         result.push(`${k}=${req[k].ck}`);
     }

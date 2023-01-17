@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export const useLastseenvolStore = defineStore('lastseenvol', {
+export const useLastseenvolStore = defineStore("lastseenvol", {
   state: () => {
     return {
-      lastseenvol: [] as any[]
-    }
-  }
-})
+      lastseenvol: [] as any[],
+    };
+  },
+});

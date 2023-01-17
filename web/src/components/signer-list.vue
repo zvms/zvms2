@@ -51,7 +51,7 @@ import { fApi } from "../apis";
 import { timeToHint } from "@/utils/calc";
 
 export default {
-  name: "volinfo",
+  name: "vol-info",
   props: ["volid"],
   data: () => ({
     vol: {
@@ -69,7 +69,7 @@ export default {
       large: undefined,
     },
   }),
-  created () {
+  created() {
     this.init();
   },
   methods: {
@@ -78,7 +78,7 @@ export default {
         this.vol = await fApi.fetchOneVolunteer(this.volid);
       }
     },
-    fetch () {
+    fetch() {
       this.vol = {
         type: undefined,
         message: undefined,
@@ -98,9 +98,9 @@ export default {
     timeToHint,
   },
   watch: {
-    volid () {
+    volid() {
       this.fetch();
     },
-  }
+  },
 };
 </script>

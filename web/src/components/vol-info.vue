@@ -49,7 +49,7 @@
 <script lang="ts">
 import { fApi } from "../apis";
 export default {
-  name: "volinfo",
+  name: "vol-info",
   props: ["volid"],
   data: () => ({
     vol: {
@@ -67,27 +67,24 @@ export default {
       large: undefined,
     },
   }),
-  created () {
+  created() {
     this.init();
   },
   methods: {
-    timeToHint (a) {
-      let hr = parseInt(a / 60);
-      let mi = parseInt(a % 60);
+    timeToHint(a: number) {
+      let hr = Math.floor(a / 60);
+      let mi = a % 60;
       if (hr != 0)
-        if (mi != 0)
-          return hr + " 小时 " + mi + " 分钟";
-        else
-          return hr + " 小时 ";
-      else
-        return mi + "分钟";
+        if (mi != 0) return hr + " 小时 " + mi + " 分钟";
+        else return hr + " 小时 ";
+      else return mi + "分钟";
     },
     init: async function () {
       if (this.volid != 0 && this.volid != undefined) {
         this.vol = await fApi.fetchOneVolunteer(this.volid);
       }
     },
-    fetch () {
+    fetch() {
       this.vol = {
         type: undefined,
         message: undefined,
@@ -106,7 +103,7 @@ export default {
     },
   },
   watch: {
-    volid () {
+    volid() {
       this.fetch();
     },
   },

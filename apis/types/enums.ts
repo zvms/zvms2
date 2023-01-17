@@ -3,6 +3,7 @@ import { createEnums, int } from "zvms-apis-types-gen";
 export const enums = createEnums({
     VolType: {
         _type: int(),
+        _pyEnumType: "IntEnum",
         INSIDE: 1,
         OUTSIDE: 2,
         LARGE: 3
@@ -14,6 +15,7 @@ export const enums = createEnums({
     },
     ThoughtStatus: {
         _type: int(),
+        _pyEnumType: "IntEnum",
         WAITING_FOR_SIGNUP_AUDIT: 1,
         UNSUBMITTED: 2,
         DRAFT: 3,
@@ -24,6 +26,7 @@ export const enums = createEnums({
     },
     NoticeType: {
         _type: int(),
+        _pyEnumType: "IntEnum",
         USER_NOTICE: 1,
         CLASS_NOTICE: 2,
         SCHOOL_NOTICE: 3,

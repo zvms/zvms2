@@ -1,2 +1,2 @@
-export * from "./auth.ts.js";
-export * from "./index.ts.js";
+export * from "./auth.js";
+export * from "./catagories.js";
