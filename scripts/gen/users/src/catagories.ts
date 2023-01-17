@@ -75,7 +75,7 @@ export const userCatagories = {
     ${name}: {
         id: ${catagory.id},
         name: "${catagory.name}",
-    },\n`
+    },`
     }
     str += `\n}`;
     return str;
