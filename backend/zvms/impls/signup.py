@@ -1,6 +1,6 @@
 from zvms.models import *
 from zvms.res import *
-from zvms.utils import *
+from zvms.util import *
 
 
 def list_signup(**kwargs):

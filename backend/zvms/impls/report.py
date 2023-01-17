@@ -1,6 +1,6 @@
 import datetime
 
-from zvms.utils import *
+from zvms.util import *
 
 
 def report(report, token_data):

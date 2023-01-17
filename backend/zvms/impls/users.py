@@ -1,5 +1,5 @@
 from zvms.models import *
-from zvms.utils import *
+from zvms.util import *
 import zvms.tokenlib as tk
 
 

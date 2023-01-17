@@ -1,27 +1,29 @@
+from sqlalchemy import Column, Integer, String, SmallInteger, DateTime
+
 from zvms import db
 from zvms.res import *
-from zvms.utils import *
+from zvms.util import *
 
 
-class Class(db.Model):
+class Class(ModelMixIn, db.Model):
     __tablename__ = 'class'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(5))
+    id = Column(Integer, primary_key=True)
+    name = Column(String(5))
 
     @property
     def members(self):
         return User.query.filter_by(cls_id=self.id)
 
 
-class User(db.Model):
+class User(ModelMixIn, db.Model):
     __tablename__ = 'user'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(5))
-    cls_id = db.Column(db.Integer, name='class')
-    pwd = db.Column(db.String(32))
-    auth = db.Column(db.Integer)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(5))
+    cls_id = Column(Integer, name='class')
+    pwd = Column(String(32))
+    auth = Column(Integer)
 
     @property
     def notices_sent(self):
@@ -49,26 +51,27 @@ class User(db.Model):
         return self.__filter_thoughts(VolType.LARGE)
 
 
-class Notice(db.Model):
+class Notice(ModelMixIn, db.Model):
     __tablename__ = 'notice'
 
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(32))
-    content = db.Column(db.String(1024))
-    sender = db.Column(db.Integer)
-    deadtime = db.Column(db.DateTime)
+    id = Column(Integer, primary_key=True)
+    title = Column(String(32))
+    content = Column(String(1024))
+    sender = Column(Integer)
+    deadtime = Column(DateTime)
 
 
-class Volunteer(db.Model):
+class Volunteer(ModelMixIn, db.Model):
     __tablename__ = 'volunteer'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(32))
-    description = db.Column(db.String(1024))
-    holder_id = db.Column(db.Integer, name='holder')
-    time = db.Column(db.DateTime)
-    type = db.Column(db.SMALLINT)
-    reward = db.Column(db.Integer)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(32))
+    description = Column(String(1024))
+    status = Column(SmallInteger)
+    holder_id = Column(Integer, name='holder')
+    time = Column(DateTime)
+    type = Column(SmallInteger)
+    reward = Column(Integer)
 
     @property
     def joiners(self):
@@ -76,15 +79,15 @@ class Volunteer(db.Model):
                                                                       StuVol.status != Status.WAITING_FOR_SIGNUP_AUDIT).select_value('stu_id'))).select('name', 'id'))
 
 
-class StuVol(db.Model):
+class StuVol(ModelMixIn, db.Model):
     __tablename__ = 'stu_vol'
 
-    stu_id = db.Column(db.Integer, primary_key=True)
-    vol_id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.SMALLINT)
-    thought = db.Column(db.String(1024))
-    reason = db.Column(db.String(1024))
-    reward = db.Column(db.Integer)
+    stu_id = Column(Integer, primary_key=True)
+    vol_id = Column(Integer, primary_key=True)
+    status = Column(SMALLINT)
+    thought = Column(String(1024))
+    reason = Column(String(1024))
+    reward = Column(Integer)
 
     @property
     def pics(self):
@@ -103,48 +106,46 @@ class StuVol(db.Model):
         return Volunteer.query.get(self.vol_id).name
 
 
-class ClassVol(db.Model):
+class ClassVol(ModelMixIn, db.Model):
     __tablename__ = 'class_vol'
 
-    cls_id = db.Column(db.Integer, primary_key=True, name='class_id')
-    vol_id = db.Column(db.Integer, primary_key=True)
-    max = db.Column(db.Integer)
+    cls_id = Column(Integer, primary_key=True, name='class_id')
+    vol_id = Column(Integer, primary_key=True)
+    max = Column(Integer)
 
     @property
     def now(self):
         return count(StuVol.query.filter_by(vol_id=self.vol_id), lambda sv: sv.stu.cls_id == self.cls_id)
 
 
-class Picture(db.Model):
+class Picture(ModelMixIn, db.Model):
     __tablename__ = 'picture'
 
-    # 这一列其实不需要, 但sqlalchemy强制表要有主键
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    stu_id = db.Column(db.Integer)
-    vol_id = db.Column(db.Integer)
-    hash = db.Column(db.String(32))
+    stu_id = Column(Integer, primary_key=True)
+    vol_id = Column(Integer, primary_key=True)
+    hash = Column(String(32), primary_key=True)
 
 
 class UserNotice(db.Model):
     __tablename__ = 'user_notice'
 
-    user_id = db.Column(db.Integer, primary_key=True)
-    notice_id = db.Column(db.Integer, primary_key=True)
+    user_id = Column(Integer, primary_key=True)
+    notice_id = Column(Integer, primary_key=True)
 
 
 class ClassNotice(db.Model):
     __tablename__ = 'class_notice'
 
-    cls_id = db.Column(db.Integer, primary_key=True, name='class_id')
-    notice_id = db.Column(db.Integer, primary_key=True)
+    cls_id = Column(Integer, primary_key=True, name='class_id')
+    notice_id = Column(Integer, primary_key=True)
 
 
 class SchoolNotice(db.Model):
     __tablename__ = 'school_notice'
 
-    notice_id = db.Column(db.Integer, primary_key=True)
+    notice_id = Column(Integer, primary_key=True)
 
 
 class Log(db.Model):
     __tablename__ = 'log'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)

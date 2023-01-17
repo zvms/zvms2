@@ -20,6 +20,7 @@ CREATE TABLE volunteer(
     id INT PRIMARY KEY auto_increment, 
     name VARCHAR(32), 
     description VARCHAR(1024), 
+    status SMALLINT,
     holder INT, time datetime, 
     type SMALLINT, 
     reward INT
@@ -34,11 +35,10 @@ CREATE TABLE stu_vol(
     PRIMARY KEY(stu_id, vol_id)
 );
 CREATE TABLE picture(
-    id INT PRIMARY KEY auto_increment,
     stu_id INT, 
     vol_id INT, 
     hash CHAR(32), 
-    PRIMARY KEY(stu_id, vol_id)
+    PRIMARY KEY(stu_id, vol_id, hash)
 );
 CREATE TABLE class_vol(
     class_id INT, 

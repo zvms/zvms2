@@ -1,0 +1,179 @@
+from itertools import chain
+from functools import wraps
+import datetime
+import json
+
+from flask_sqlalchemy.query import Query
+from sqlalchemy.orm import Query as _Query
+
+from zvms import db
+from zvms.res import *
+
+class _QueryProperty:
+    def __get__(self, obj, cls):
+        return Query(cls.query)
+
+def foo(func):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        if hasattr(self, '__iter__'):
+            return (func(i, *args, **kwargs) for i in self)
+        return func(self, *args, **kwargs)
+    return wrapper
+
+@foo
+def select(self, *cols, **aliases):
+    return dict(zip(chain(cols, aliases.values()), map(self.__getattribute__, chain(cols, aliases.keys()))))
+
+@foo
+def update(self, **updates):
+    for k, v in updates.items():
+        if hasattr(v, '__call__'):
+            v = v(self.__getattribute__(k))
+        self.__setattribute__(k, v)
+    self.on_update()
+
+@foo
+def insert(self):
+    db.session.add(self)
+    db.session.flush()
+    self.on_insert()
+    return self
+
+def incr(amount):
+    return lambda x: x + amount
+    
+def select_value(self, col):
+    return map(lambda x: x.__getattribute__(col), self)
+
+class Query:
+    select = select
+    update = update
+    insert = insert
+    select_value = select_value
+
+    def delete(self):
+        for item in self:
+            item.on_delete()
+        self.__query.delete()
+
+    def __init__(self, query):
+        self.__query = query
+
+    def get_or_error(self, ident, message='未查询到相关信息'):
+        ret = self.__query.get(ident)
+        if not ret:
+            raise ZvmsError(message)
+        return ret
+
+    def first_or_error(self, message='未查询到相关信息'):
+        ret = self.__query.first()
+        if not ret:
+            raise ZvmsError(message)
+        return ret
+
+    def __iter__(self):
+        return self.__query.__iter__()
+
+    def __getattr__(self, *args, **kwargs):
+        return Query.__deco(self.__query.__getattribute__(*args, **kwargs))
+
+    def __deco(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            ret = func(*args, **kwargs)
+            return Query(ret) if isinstance(ret, _Query) else ret
+        return wrapper
+
+class ModelMixIn:
+    select = select
+    update = update
+    insert = insert
+
+    def on_insert(self):
+        pass
+
+    def on_update(self):
+        pass
+
+    def on_delete(self):
+        pass
+
+    query = _QueryProperty()
+
+def success(message, **kwresult):
+    ret = {'type': 'SUCCESS', 'message': message} | kwresult
+    db.session.commit()
+    return json.dumps(ret)
+
+def error(message):
+    db.session.commit()
+    return json.dumps({'type': 'ERROR', 'message': message})
+
+
+def success(message, *result, **kwresult):
+    ret = {'type': 'SUCCESS', 'message': message}
+    if result:
+        ret['result'] = result[0]
+    elif kwresult:
+        ret['result'] = kwresult
+    db.session.commit()
+    return json.dumps(ret)
+
+
+def error(message):
+    return json.dumps({'type': 'ERROR', 'message': message})
+
+
+class ZvmsError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+
+def try_parse_time(str):
+    try:
+        return datetime.datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
+    except ValueError:
+        raise ZvmsError('请求接口错误: 非法的时间字符串')
+
+
+def auth_self(id, token_data, message):
+    if id != token_data['id'] and not (token_data['auth'] & AUTH.SYSTEM):
+        raise ZvmsError(message)
+
+
+def auth_cls(cls, token_data, message='权限不足: 不能审核其他班级'):
+    if cls != token_data['cls'] and not (token_data['auth'] & AUTH.SYSTEM):
+        raise ZvmsError(message)
+
+
+def count(seq, predicate):
+    ret = 0
+    for i in seq:
+        if predicate(i):
+            ret += 1
+    return ret
+
+
+def exists(seq, predicate):
+    for i in seq:
+        if predicate(i):
+            return True
+    return False
+
+def parse(json):
+    return {
+        int: lambda: 'number(int)',
+        float: lambda: 'number(float)',
+        bool: lambda: 'boolean',
+        type(None): lambda: 'null',
+        str: lambda: 'string',
+        list: lambda: '[' + ', '.join(map(parse, json)) + ']',
+        dict: lambda: '{' +
+        ', '.join(
+            map(lambda p: f'"{p[0]}": {parse(p[1])}', json.items())) + '}'
+    }.get(type(json))()
+
+
+def interface_error(expected, found):
+    return json.dumps({'type': 'ERROR', 'message': '请求接口错误', 'expected': str(expected), 'found': parse(found)})
