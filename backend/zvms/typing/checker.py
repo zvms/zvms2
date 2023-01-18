@@ -19,6 +19,7 @@ Number = Named(lambda x: isinstance(x, (int, float)), 'number')
 Boolean = Named(lambda x: isinstance(x, bool), 'boolean')
 Null = Named(lambda x: x is None, 'null')
 
+
 class String:
     def __init__(self, max_length=None):
         self.max_length = max_length
@@ -95,6 +96,7 @@ class Intersection:
     def __str__(self):
         return '(' + ' & '.join(map(str, self.options)) + ')'
 
+
 class Literal:
     def __init__(self, *literals):
         self.literals = literals
@@ -105,6 +107,7 @@ class Literal:
     def __str__(self):
         return '(' + ', '.join(map(Literal.__literal_to_str, self.literals)) + ')'
 
+    @staticmethod
     def __literal_to_str(literal):
         if isinstance(literal, (int, float)):
             return str(literal)
