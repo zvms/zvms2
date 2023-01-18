@@ -3,7 +3,11 @@ export enum VolType {
   Outside = 2,
   Large = 3,
 }
-export enum Status {
+export enum VolStatus {
+  Unaudited = 1,
+  Audited = 2,
+}
+export enum ThoughtStatus {
   WaitingForSignupAudit = 1,
   Unsubmitted = 2,
   Draft = 3,
