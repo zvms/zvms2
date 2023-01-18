@@ -83,7 +83,7 @@ export const userCatagories = {
 
 export function catagoriesGenPy({ raw }: UserCatagories) {
     let str = `from enum import IntFlag\n\n
-class UserCatagories(IntFlag):`;
+class Categ(IntFlag):`;
     for (const name in raw) {
         const catagory = raw[name];
         str += `\n    ${camal2Snake(name).toUpperCase()} = ${number2ByteCode(catagory.id, 8)}`

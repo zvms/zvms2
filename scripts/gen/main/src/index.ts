@@ -72,9 +72,9 @@ function generate(): (() => void)[] {
     authPyOpt = authGenPy(authData);
   todos.push(() => {
     fs.writeFileSync(join(paths.f.users, "catagories.ts"), catagoriesTsOpt);
-    fs.writeFileSync(join(paths.b.users, "catagories.py"), catagoriesPyOpt);
+    fs.writeFileSync(join(paths.b.res, "catagories.py"), catagoriesPyOpt);
     fs.writeFileSync(join(paths.f.users, "auth.ts"), authTsOpt);
-    fs.writeFileSync(join(paths.b.users, "auth.py"), authPyOpt);
+    fs.writeFileSync(join(paths.b.res, "auth.py"), authPyOpt);
   });
 
   const enumsTsOpt = prettierTs(enumsDefGenTs(enumsData)),
