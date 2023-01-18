@@ -1,5 +1,5 @@
 import sys
-from . import auth, catagories
+from . import auth, catagories, enums
 
 
 class Categ(catagories.UserCatagoriesRaw):  # pylint: disable=invalid-enum-extension
@@ -18,5 +18,6 @@ elif sys.platform == 'win32':
 __all__ = [
     'Categ',
     'auth',
+    'enums',
     'STATIC_FOLDER'
 ]
