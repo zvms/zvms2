@@ -56,3 +56,17 @@ export function any(desc?: Description): Type {
         desc
     }
 }
+export interface LiteralValuedType {
+    literal: {
+        ts: string,
+        py: string,
+        ck: string,
+    }
+}
+export function literal(...values: LiteralValuedType[]) {
+    return {
+        ts: values.map(v => v.literal.ts).join(" | "),
+        py: values.map(v => v.literal.py).join(" | "),
+        ck: "Literal(" + values.map(v => v.literal.ck).join(", ") + ")",
+    }
+}

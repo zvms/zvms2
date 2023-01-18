@@ -1,4 +1,5 @@
 import { int, str, createStructs, arr, createDangerousStructRef, strMaxLength } from "zvms-apis-types-gen";
+import { enums } from "./enums";
 
 const NoticeBody = {
     title: str(),
@@ -13,7 +14,7 @@ export const structs = createStructs({
     NoticeBody,
     Notice: {
         ...NoticeBody,
-        type: int(),
+        type: enums.NoticeType,
         targets: arr(int())
     },
     Report: {
