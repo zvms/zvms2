@@ -1,6 +1,7 @@
+from functools import wraps
 import datetime
 import json
-from functools import wraps
+import traceback
 
 from flask import request
 from jwt.exceptions import InvalidSignatureError
@@ -34,7 +35,7 @@ def deco(impl, params, categ):
         token_data = {}
         if categ != None:
             try:
-                token_data = request.headers.get('categorization')
+                token_data = request.headers.get('Authorization')
                 if not token_data:
                     raise InvalidSignatureError()
                 token_data = tk.read(token_data)
@@ -55,6 +56,4 @@ def deco(impl, params, categ):
             return impl(*args, **kwargs, **json_data, token_data=token_data)
         except ZvmsError as ex:
             return error(ex.code, ex.message)
-        except:
-            return error(500, '服务器内部错误')
     return wrapper

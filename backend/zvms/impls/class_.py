@@ -5,7 +5,7 @@ from zvms.util import *
 
 def list_classes(token_data):
     '[GET] /class/list'
-    return success('获取成功', list(Class.query.select('id', 'name')))
+    return success('获取成功', list_or_error(Class.query.select('id', 'name')))
 
 
 def get_class_info(id, token_data):

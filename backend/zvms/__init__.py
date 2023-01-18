@@ -16,6 +16,14 @@ db = SQLAlchemy(app)
 db.create_all()
 migrate = Migrate(app, db)
 
+@app.errorhandler(404)
+def handle_404(e):
+    return {'type': 'ERROR', 'message': 'Not Found'}, 404
+
+@app.errorhandler(500)
+def handle_500(e):
+    return {'type': 'ERROR', 'message': 'Internal Server Error'}, 500
+
 import zvms.tokenlib as tk
 import zvms.views
 

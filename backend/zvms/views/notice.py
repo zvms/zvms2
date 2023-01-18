@@ -4,7 +4,7 @@ from zvms.typing.structs import Notice, NoticeBody
 import zvms.impls.notice
 
 route(
-    rule='/notic/search',
+    rule='/notice/search',
     method='GET',
     impl_func=zvms.impls.notice.search_notices
 )
@@ -34,14 +34,14 @@ route(
 
 route(
     rule='/notice/<int:id>/delete',
-    method='DELETE',
+    method='POST',
     impl_func=zvms.impls.notice.delete_notice,
     categ=Categ.MANAGER | Categ.TEACHER
 )
 
 route(
     rule='/notice/<int:id>/modify',
-    method='PUT',
+    method='POST',
     impl_func=zvms.impls.notice.modify_notice,
     categ=Categ.MANAGER | Categ.TEACHER,
     params=NoticeBody

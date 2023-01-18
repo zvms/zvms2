@@ -20,12 +20,12 @@ Report = Object(
 )
 
 Signup = Object(
-    stuLst=Array(Int)
+    students=Array(Int)
 )
 
 Thought = Object(
-    content=String(1024),
-    pictures=Array(String(32))
+    thought=String(1024),
+    pictures=Array(String())
 )
 
 Login = Object(
@@ -59,5 +59,9 @@ Volunteer = Object(
     description=String(1024),
     time=String(20),
     type=Literal(VolType.INSIDE, VolType.OUTSIDE, VolType.LARGE),
-    reward=Int
+    reward=Int,
+    classes=Array(Object(
+        id=Int,
+        max=Int
+    ))
 )

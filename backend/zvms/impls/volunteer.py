@@ -7,30 +7,26 @@ def search_volunteers(token_data, **kwargs):
     '[GET] /volunteer/search'
     conds = []
     try:
-        if 'h' in kwargs:
-            conds.append(Volunteer.holder_id == int(kwargs['h']))
-        if 's' in kwargs:
+        if 'holder' in kwargs:
+            conds.append(Volunteer.holder_id == int(kwargs['holder']))
+        if 'student' in kwargs:
             conds.append(Volunteer.id.in_(StuVol.query.filter_by(
-                stu_id=int(kwargs['s'])).select_value('notice_id')))
-        if 'c' in kwargs:
+                stu_id=int(kwargs['student'])).select_value('notice_id')))
+        if 'cls' in kwargs:
             conds.append(Volunteer.id.in_(ClassVol.query.filter_by(
-                cls_id=int(kwargs['c'])).select_value('notice_id')))
-        if 'n' in kwargs:
-            conds.append(Volunteer.name.like(f'%{kwargs["n"]}%'))
-        if 'a' in kwargs:
-            conds.append(Volunteer.status == int(kwargs['a']))
+                cls_id=int(kwargs['cls'])).select_value('notice_id')))
+        if 'name' in kwargs:
+            conds.append(Volunteer.name.like(f'%{kwargs["name"]}%'))
+        if 'status' in kwargs:
+            conds.append(Volunteer.status == int(kwargs['status']))
     except ValueError:
         return error(400, '请求接口错误: 非法的URL参数')
 
     def process_query(query):
-        ret = list(query.select('id', 'name', 'time'))
+        ret = list_or_error(query.select('id', 'name', 'time', 'status'))
         for i in ret:
             i['time'] = str(i['time'])
-        if not ret:
-            return error(404, '未查询到相关数据')
         return success('获取成功', ret)
-    if not conds:
-        return process_query(Volunteer.query)
     return process_query(Volunteer.query.filter(*conds))
 
 
@@ -44,6 +40,7 @@ def get_volunteer_info(id, token_data):
 
 def create_volunteer(token_data, classes, **kwargs):
     '[POST] /volunteer/create'
+    try_parse_time(kwargs['time'])
     if token_data['categ'] == Categ.STUDENT and kwargs['type'] == VolType.OUTSIDE:
         return error(403, '权限不足: 只能创建校外义工')
     id = Volunteer(
@@ -63,9 +60,9 @@ def create_volunteer(token_data, classes, **kwargs):
             ).insert()
     else:
         for cls in classes:
-            if cls != token_data['cls']:
+            if cls['id'] != token_data['cls']:
                 return error(403, '不能创建其他班级的义工')
-            if cls['max'] > Class.query.get(cls).members.count():
+            if cls['max'] > Class.query.get(cls['id']).members.count():
                 return error(400, '义工永远无法报满')
             ClassVol(
                 cls_id=cls['id'],

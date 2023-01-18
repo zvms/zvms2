@@ -22,29 +22,29 @@ def logout(token_data):
     return success('登出成功')
 
 
-def search_users(token_data, n=None, a=None):
+def search_users(token_data, n=None, c=None):
     '[GET] /user/search'
     if n:
         query = User.query.filter(User.name.like(f'%{n}%'))
     else:
         query = User.query
-    if a:
+    if c:
         try:
-            def filter_(u): return u.categ & int(a)
+            def filter_(u): return u.categ & int(c)
         except ValueError:
             return error(400, '非法URL参数')
     else:
         def filter_(_): return True
-    return success('获取成功', list(select(filter(filter_, query), 'id', 'name')))
+    return success('获取成功', list_or_error(select(filter(filter_, query), 'id', 'name')))
 
 
 def get_user_info(id, token_data):
     '[GET] /user/<int:id>'
     user = User.query.get_or_error(id)
     return success('获取成功', **user.select('name', 'categ',
-                   *(('inside', 'outside', 'large')
-                     if user.categ & Categ.STUDENT else ()),
-                   cls_id='cls'), clsName=user.cls.name)
+        *(('inside', 'outside', 'large')
+            if user.categ & Categ.STUDENT else ()),
+        cls_id='cls'), clsName=user.cls.name)
 
 
 def modify_password(old, new, token_data):
