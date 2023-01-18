@@ -13,29 +13,32 @@ class VolStatus(IntEnum):
 class ThoughtStatus(IntEnum):
     WAITING_FOR_SIGNUP_AUDIT = 1
     UNSUBMITTED = 2
-    WAITING_FOR_FIRST_AUDIT = 3
-    WAITING_FOR_FINAL_AUDIT = 4
-    ACCEPTED = 5
+    DRAFT = 3
+    WAITING_FOR_FIRST_AUDIT = 4
+    WAITING_FOR_FINAL_AUDIT = 5
+    ACCEPTED = 6
     REJECTED = 6
 
 class NoticeType(IntEnum):
     USER_NOTICE = 1
+    USER = 1
     CLASS_NOTICE = 2
+    CLS = 2
     SCHOOL_NOTICE = 3
+    SCHOOL = 3
 
 class Categ(IntFlag):
-    NONE = 0b0000001
-    STUDENT = 0b0000010
-    TEACHER = 0b0000100
-    CLASS = 0b0001000
-    MANAGER = 0b0010000
-    AUDITOR = 0b0100000
-    SYSTEM = 0b1000000
-    ANY = 0b1111111
+    NONE = 1
+    STUDENT = 2
+    TEACHER = 4
+    CLASS = 8
+    MANAGER = 16
+    AUDITOR = 32
+    SYSTEM = 64
+    ANY = 127
 
     def authorized(self, auth):
         return (Categ.SYSTEM | self) & auth
-
 if sys.platform == 'linux':
     STATIC_FOLDER = '/tmp/zvms_backend'
 elif sys.platform == 'win32':
