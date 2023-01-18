@@ -16,6 +16,14 @@ export function str(desc?: Description): Type {
         desc
     }
 }
+export function strMaxLength(max: number, desc?: Description): Type {
+    return {
+        ts: "string",
+        py: "str",
+        ck: `String(${max})`,
+        desc
+    }
+}
 export function int(desc?: Description): Type {
     return {
         ts: "number",

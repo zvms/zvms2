@@ -72,22 +72,22 @@ function generate(): (() => void)[] {
     authPyOpt = authGenPy(authData);
   todos.push(() => {
     fs.writeFileSync(join(paths.f.users, "catagories.ts"), catagoriesTsOpt);
-    fs.writeFileSync(join(paths.b.users, "catagories.py"), catagoriesPyOpt);
+    fs.writeFileSync(join(paths.b.res, "catagories.py"), catagoriesPyOpt);
     fs.writeFileSync(join(paths.f.users, "auth.ts"), authTsOpt);
-    fs.writeFileSync(join(paths.b.users, "auth.py"), authPyOpt);
+    fs.writeFileSync(join(paths.b.res, "auth.py"), authPyOpt);
   });
 
   const enumsTsOpt = prettierTs(enumsDefGenTs(enumsData)),
     enumsPyOpt = enumsDefGenPy(enumsData),
     structsTsOpt = prettierTs(structsDefGenTs(structsData)),
-    structsPyOpt = structsDefGenPy(structsData),
+    //structsPyOpt = structsDefGenPy(structsData),
     structsCkOpt = structsDefGenCk(structsData);
   todos.push(() => {
     fs.writeFileSync(join(paths.f.types, "enums.ts"), enumsTsOpt);
-    fs.writeFileSync(join(paths.b.types, "enums.py"), enumsPyOpt);
+    fs.writeFileSync(join(paths.b.res, "enums.py"), enumsPyOpt);
     fs.writeFileSync(join(paths.f.types, "structs.ts"), structsTsOpt);
-    fs.writeFileSync(join(paths.b.types, "structs.py"), structsPyOpt);
-    fs.writeFileSync(join(paths.b.types, "structs_ck.py"), structsCkOpt);
+    //fs.writeFileSync(join(paths.b.types, "structs.py"), structsPyOpt);
+    fs.writeFileSync(join(paths.b.types, "structs.py"), structsCkOpt);
   });
 
   return todos;

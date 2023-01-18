@@ -10,6 +10,7 @@ export const enums = createEnums({
     },
     VolStatus: {
         _type: int(),
+        _pyEnumType: "IntEnum",
         UNAUDITED: 1,
         AUDITED: 2
     },

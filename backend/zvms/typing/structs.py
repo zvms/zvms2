@@ -1,5 +1,5 @@
 from zvms.typing.checker import *
-from zvms.res import VolType
+from zvms.res.enums import VolType
 
 Class = Object(
     name=String(5)

@@ -1,4 +1,7 @@
 import * as enums from "./enums.js";
+export interface Class {
+  name: string;
+}
 export interface NoticeBody {
   title: string;
   content: string;
@@ -14,17 +17,27 @@ export interface Notice {
 export interface Report {
   content: string;
 }
+export interface Signup {
+  stuList: Array<number>;
+}
+export interface Thought {
+  content: string;
+  pictures: Array<string>;
+}
+export interface Login {
+  id: number;
+  pwd: string;
+}
+export interface ModPwd {
+  old: string;
+  new: string;
+}
+export interface ChangeClass {
+  cls: number;
+}
 export interface VolunteerRecordClass {
   id: number;
   max: number;
-}
-export interface VolunteerRecord {
-  name: string;
-  description: string;
-  time: string;
-  type: number;
-  reward: number;
-  classes: Array<VolunteerRecordClass>;
 }
 export interface UserOfUsers {
   id: number;
@@ -40,4 +53,12 @@ export interface User {
   name: string;
   cls: number;
   auth: number;
+}
+export interface VolunteerRecord {
+  name: string;
+  description: string;
+  time: string;
+  type: number;
+  reward: number;
+  classes: Array<VolunteerRecordClass>;
 }

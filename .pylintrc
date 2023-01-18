@@ -420,6 +420,7 @@ disable=raw-checker-failed,
         missing-class-docstring,
         missing-function-docstring,
         wildcard-import,
+        unused-wildcard-import,
         unused-argument,
         too-few-public-methods
 
