@@ -21,7 +21,7 @@ route(
     method='POST',
     impl_func=zvms.impls.notice.send_user_notice,
     params=Notice,
-    categ=Categ.MANAGER | Categ.TEACHER
+    auth=Categ.MANAGER | Categ.TEACHER
 )
 
 route(
@@ -29,20 +29,20 @@ route(
     method='POST',
     impl_func=zvms.impls.notice.send_class_notice,
     params=Notice,
-    categ=Categ.MANAGER | Categ.TEACHER
+    auth=Categ.MANAGER | Categ.TEACHER
 )
 
 route(
     rule='/notice/<int:id>/delete',
     method='POST',
     impl_func=zvms.impls.notice.delete_notice,
-    categ=Categ.MANAGER | Categ.TEACHER
+    auth=Categ.MANAGER | Categ.TEACHER
 )
 
 route(
     rule='/notice/<int:id>/modify',
     method='POST',
     impl_func=zvms.impls.notice.modify_notice,
-    categ=Categ.MANAGER | Categ.TEACHER,
+    auth=Categ.MANAGER | Categ.TEACHER,
     params=NoticeBody
 )

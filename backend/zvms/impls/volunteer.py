@@ -41,14 +41,14 @@ def get_volunteer_info(id, token_data):
 def create_volunteer(token_data, classes, **kwargs):
     '[POST] /volunteer/create'
     try_parse_time(kwargs['time'])
-    if token_data['categ'] == Categ.STUDENT and kwargs['type'] == VolType.OUTSIDE:
+    if token_data['auth'] == Categ.STUDENT and kwargs['type'] == VolType.OUTSIDE:
         return error(403, '权限不足: 只能创建校外义工')
     id = Volunteer(
         **kwargs,
         holder_id=token_data['id'],
-        status=VolStatus.UNAUDITED if token_data['categ'] == Categ.STUDENT else VolStatus.AUDITED
+        status=VolStatus.UNAUDITED if token_data['auth'] == Categ.STUDENT else VolStatus.AUDITED
     ).insert().id
-    if (Categ.CLASS | Categ.TEACHER).authorized(token_data['categ']):
+    if (Categ.CLASS | Categ.TEACHER).authorized(token_data['auth']):
         for cls in classes:
             cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
             if cls['max'] > cls_.members.count():
@@ -105,7 +105,7 @@ def delete_volunteer(token_data, id):
 def audit_volunteer(token_data, id):
     '[POST] /volunteer/<int:id>/audit'
     vol = Volunteer.query.get_or_error(id)
-    if (Categ.TEACHER | Categ.CLASS) & token_data['categ']:
+    if (Categ.TEACHER | Categ.CLASS) & token_data['auth']:
         auth_cls(vol.holder.cls_id, token_data)
     Volunteer.query.get_or_error(id).update(
         status=VolStatus.AUDITED

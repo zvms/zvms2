@@ -90,7 +90,7 @@ def _submit_thought(volId, stuId, thought, pictures, status):
 
 
 def _auth_thought(stuId, operation, token_data):
-    if (Categ.TEACHER | Categ.CLASS) & token_data['categ']:
+    if (Categ.TEACHER | Categ.CLASS) & token_data['auth']:
         auth_cls(User.query.get_or_error(stuId), token_data, f'权限不足: 不能{operation}其他班级的感想')
         return True
     else:

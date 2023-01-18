@@ -45,7 +45,7 @@ ChangeClass = Object(
 User = Object(
     name=String(5),
     cls=Int,
-    categ=Int
+    auth=Int
 )
 
 Users = Object(

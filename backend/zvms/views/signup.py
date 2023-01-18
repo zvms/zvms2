@@ -20,7 +20,7 @@ route(
     rule='/signup/<int:volId>/<int:stuId>/audit',
     method='POST',
     impl_func=zvms.impls.signup.audit_signup,
-    categ=Categ.CLASS | Categ.TEACHER
+    auth=Categ.CLASS | Categ.TEACHER
 )
 
 route(

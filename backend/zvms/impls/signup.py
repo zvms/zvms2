@@ -32,9 +32,9 @@ def signup(students, volId, token_data):
         cv = ClassVol.query.get_or_error((volId, stu.cls_id), '该班级不能报名', 403)
         if cv.now >= cv.max:
             return error(403, '名额已满')
-        if stu.categ & Categ.TEACHER:
+        if stu.auth & Categ.TEACHER:
             return error(403, '不能报名教师')
-        if (Categ.TEACHER | Categ.CLASS).authorized(token_data['categ']):
+        if (Categ.TEACHER | Categ.CLASS).authorized(token_data['auth']):
             auth_cls(User.query.get(stuId).cls_id, token_data, '不能报名其他班级')
             StuVol(
                 stu_id=stuId,
@@ -54,7 +54,7 @@ def signup(students, volId, token_data):
 def rollback(volId, stuId, token_data):
     '[POST] /signup/<int:volId>/<int:stuId>/audit'
     StuVol.query.get_or_error((volId, stuId), '未报名该义工')
-    if (Categ.TEACHER | Categ.CLASS).authorized(token_data['categ']):
+    if (Categ.TEACHER | Categ.CLASS).authorized(token_data['auth']):
         auth_cls(User.query.get(stuId).cls_id, token_data, '不能修改其他班级')
     else:
         auth_self(stuId, token_data, '不能撤回其他人的报名')

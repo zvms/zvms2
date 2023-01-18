@@ -19,7 +19,7 @@ route(
     method='POST',
     impl_func=zvms.impls.thought.save_thought,
     params=Thought,
-    categ=Categ.STUDENT
+    auth=Categ.STUDENT
 )
 
 route(
@@ -27,26 +27,26 @@ route(
     method='POST',
     impl_func=zvms.impls.thought.submit_thought,
     params=Thought,
-    categ=Categ.STUDENT
+    auth=Categ.STUDENT
 )
 
 route(
     rule='/thought/<int:volId>/<int:stuId>/audit/first',
     method='POST',
     impl_func=zvms.impls.thought.first_audit,
-    categ=(Categ.TEACHER | Categ.CLASS)
+    auth=(Categ.TEACHER | Categ.CLASS)
 )
 
 route(
     rule='/thought/<int:volId>/<int:stuId>/audit/final',
     method='POST',
     impl_func=zvms.impls.thought.final_audit,
-    categ=Categ.AUDITOR
+    auth=Categ.AUDITOR
 )
 
 route(
     rule='/thought/<int:volId>/<int:stuId>/audit/repulse',
     method='POST',
     impl_func=zvms.impls.thought.repulse,
-    categ=(Categ.TEACHER | Categ.CLASS | Categ.AUDITOR)
+    auth=(Categ.TEACHER | Categ.CLASS | Categ.AUDITOR)
 )

@@ -161,12 +161,12 @@ def try_parse_time(str):
 
 
 def auth_self(id, token_data, message):
-    if id != token_data['id'] and not (token_data['categ'] & Categ.SYSTEM):
+    if id != token_data['id'] and not (token_data['auth'] & Categ.SYSTEM):
         raise ZvmsError(403, message)
 
 
 def auth_cls(cls, token_data, message='权限不足: 不能审核其他班级'):
-    if cls != token_data['cls'] and not (token_data['categ'] & Categ.SYSTEM):
+    if cls != token_data['cls'] and not (token_data['auth'] & Categ.SYSTEM):
         raise ZvmsError(403, message)
 
 

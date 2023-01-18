@@ -39,5 +39,5 @@ route(
     rule='/volunteer/<int:id>/audit',
     method='POST',
     impl_func=zvms.impls.volunteer.audit_volunteer,
-    categ=~Categ.STUDENT
+    auth=~Categ.STUDENT
 )

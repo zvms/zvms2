@@ -7,5 +7,5 @@ route(
     method='POST',
     impl_func=zvms.impls.report.report,
     params=Report,
-    categ=None
+    auth=None
 )

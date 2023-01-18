@@ -27,7 +27,7 @@ class User(ModelMixIn, db.Model):
     name = Column(String(5))
     cls_id = Column(Integer, name='class')
     pwd = Column(String(32))
-    categ = Column(Integer)
+    auth = Column(Integer)
 
     def on_delete(self):
         UserNotice.query.filter_by(user_id=self.user_id).delete()

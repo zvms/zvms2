@@ -13,7 +13,7 @@ def login(id, pwd, token_data):
     user = User.query.get(id)
     if not user or user.pwd != pwd:
         return error(200, '用户名或密码错误')
-    return success('登录成功', token=tk.generate(**user.select('id', 'categ', cls_id='cls')))
+    return success('登录成功', token=tk.generate(**user.select('id', 'auth', cls_id='cls')))
 
 
 def logout(token_data):
@@ -30,7 +30,7 @@ def search_users(token_data, n=None, c=None):
         query = User.query
     if c:
         try:
-            def filter_(u): return u.categ & int(c)
+            def filter_(u): return u.auth & int(c)
         except ValueError:
             return error(400, '非法URL参数')
     else:
@@ -41,9 +41,9 @@ def search_users(token_data, n=None, c=None):
 def get_user_info(id, token_data):
     '[GET] /user/<int:id>'
     user = User.query.get_or_error(id)
-    return success('获取成功', **user.select('name', 'categ',
+    return success('获取成功', **user.select('name', 'auth',
         *(('inside', 'outside', 'large')
-            if user.categ & Categ.STUDENT else ()),
+            if user.auth & Categ.STUDENT else ()),
         cls_id='cls'), clsName=user.cls.name)
 
 
@@ -74,19 +74,19 @@ def create_user(users, token_data):
             id=user['id'],
             name=user['name'],
             cls_id=user['cls'],
-            categ=user['categ'],
+            auth=user['auth'],
             pwd=user['pwd']
         ).insert()
     return success('创建成功')
 
 
-def modify_user(id, name, cls, categ, token_data):
+def modify_user(id, name, cls, auth, token_data):
     '[POST] /user/<int:id>/modify'
     Class.query.get_or_error(cls, '班级不存在')
     User.query.get_or_error(id, '用户不存在').update(
         name=name,
         cls_id=cls,
-        categ=categ,
+        auth=auth,
     )
     return success('修改成功')
 

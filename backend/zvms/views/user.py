@@ -14,7 +14,7 @@ route(
     method='POST',
     impl_func=zvms.impls.user.login,
     params=Login,
-    categ=None
+    auth=None
 )
 
 route(
@@ -46,7 +46,7 @@ route(
     rule='/user/change-class',
     method='POST',
     impl_func=zvms.impls.user.change_class,
-    categ=Categ.TEACHER,
+    auth=Categ.TEACHER,
     params=ChangeClass
 )
 
@@ -54,14 +54,14 @@ route(
     rule='/user/<int:id>/delete',
     method='POST',
     impl_func=zvms.impls.user.delete_user,
-    categ=Categ.SYSTEM
+    auth=Categ.SYSTEM
 )
 
 route(
     rule='/user/create',
     method='POST',
     impl_func=zvms.impls.user.create_user,
-    categ=Categ.SYSTEM,
+    auth=Categ.SYSTEM,
     params=Users
 )
 
@@ -69,6 +69,6 @@ route(
     rule='/user/<int:id>',
     method='PUT',
     impl_func=zvms.impls.user.modify_user,
-    categ=Categ.SYSTEM,
+    auth=Categ.SYSTEM,
     params=User
 )

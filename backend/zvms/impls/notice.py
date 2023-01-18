@@ -43,7 +43,7 @@ def send_user_notice(title, content, deadtime, targets, token_data):
     '[POST] /notice/send/user'
     id = _save_notice(title, content, deadtime, token_data)
     for i in targets:
-        if User.query.get_or_error(i, '未找到目标用户').categ == Categ.STUDENT and not (token_data['categ'] & Categ.SYSTEM):
+        if User.query.get_or_error(i, '未找到目标用户').auth == Categ.STUDENT and not (token_data['auth'] & Categ.SYSTEM):
             return error(403, '不能对普通学生发通知')
         UserNotice(user_id=i, notice_id=id).insert()
     return success('发送成功')

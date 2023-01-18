@@ -13,8 +13,8 @@ def get_class_info(id, token_data):
     cls = Class.query.get_or_error(id)
     members = cls.members
 
-    def filter_(categ):
-        return list(select(filter(lambda m: (m.categ & categ), members), 'id', 'name'))
+    def filter_(auth):
+        return list(select(filter(lambda m: (m.auth & auth), members), 'id', 'name'))
     return success('获取成功',
         teachers=filter_(Categ.TEACHER),
         students=filter_(Categ.STUDENT)
