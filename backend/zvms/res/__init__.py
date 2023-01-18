@@ -1,41 +1,22 @@
-from enum import IntEnum, IntFlag
 import sys
+from . import auth, catagories
 
-class VolType(IntEnum):
-    INSIDE = 1
-    OUTSIDE = 2
-    LARGE = 3
 
-class VolStatus(IntEnum):
-    UNAUDITED = 1
-    AUDITED = 2
+class Categ(catagories.UserCatagoriesRaw):  # pylint: disable=invalid-enum-extension
 
-class ThoughtStatus(IntEnum):
-    WAITING_FOR_SIGNUP_AUDIT = 1
-    UNSUBMITTED = 2
-    DRAFT = 3
-    WAITING_FOR_FIRST_AUDIT = 4
-    WAITING_FOR_FINAL_AUDIT = 5
-    ACCEPTED = 6
-
-class NoticeType(IntEnum):
-    USER_NOTICE = 1
-    CLASS_NOTICE = 2
-
-class Categ(IntFlag):
-    NONE = 0b0000001
-    STUDENT = 0b0000010
-    TEACHER = 0b0000100
-    CLASS = 0b0001000
-    MANAGER = 0b0010000
-    AUDITOR = 0b0100000
-    SYSTEM = 0b1000000
-    ANY = 0b1111111
+    info = catagories.UserCatagoriesInfo
 
     def authorized(self, categ):
         return (Categ.SYSTEM | self) & categ
+
 
 if sys.platform == 'linux':
     STATIC_FOLDER = '/tmp/zvms_backend'
 elif sys.platform == 'win32':
     STATIC_FOLDER = 'C:\\zvms_backend'
+
+__all__ = [
+    'Categ',
+    'auth',
+    'STATIC_FOLDER'
+]
