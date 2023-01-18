@@ -4,7 +4,7 @@ from zvms.typing.structs import Signup
 import zvms.impls.signup
 
 route(
-    rule='/signup',
+    rule='/signup/list/<int:cls>',
     method='GET',
     impl_func=zvms.impls.signup.list_signup
 )

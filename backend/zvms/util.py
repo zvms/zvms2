@@ -12,7 +12,7 @@ from zvms.res import *
 
 class _QueryProperty:
     def __get__(self, obj, cls):
-        return Query(cls.query)
+        return Query(db.session().query(cls))
 
 
 def foo(func):
@@ -33,8 +33,8 @@ def select(self, *cols, **aliases):
 def update(self, **updates):
     for k, v in updates.items():
         if hasattr(v, '__call__'):
-            v = v(self.__getattribute__(k))
-        self.__setattribute__(k, v)
+            v = v(getattr(self, k))
+        setattr(self, k, v)
     self.on_update()
 
 
@@ -51,14 +51,15 @@ def incr(amount):
 
 
 def select_value(self, col):
-    return map(lambda x: x.__getattribute__(col), self)
+    return map(lambda x: getattr(x, col), self)
 
 
 
 def list_or_error(self, message='未查询到相关信息'):
     ret = list(self)
-    if not ret:
-        raise ZvmsError(404, message)
+    # 如果未查询到结果时需要404的话把注释去掉
+    # if not ret:
+    #     raise ZvmsError(404, message)
     return ret
 
 
@@ -76,23 +77,29 @@ class Query:
     def __init__(self, query):
         self.__query = query
 
-    def get_or_error(self, ident, message='未查询到相关信息'):
+    def get_or_error(self, ident, message='未查询到相关数据', code=404):
         ret = self.__query.get(ident)
         if not ret:
-            raise ZvmsError(404, message)
+            raise ZvmsError(code, message)
         return ret
 
-    def first_or_error(self, message='未查询到相关信息'):
+    def first_or_error(self, message='未查询到相关数据', code=404):
         ret = self.__query.first()
         if not ret:
-            raise ZvmsError(404, message)
+            raise ZvmsError(code, message)
+        return ret
+
+    def one_or_error(self, message='未查询到相关数据', code=404):
+        ret = self.__query.one()
+        if not ret:
+            raise ZvmsError(code, message)
         return ret
 
     def __iter__(self):
         return self.__query.__iter__()
 
     def __getattr__(self, *args, **kwargs):
-        return Query.__deco(self.__query.__getattribute__(*args, **kwargs))
+        return Query.__deco(getattr(self.__query, *args, **kwargs))
 
     def __deco(func):
         @wraps(func)
@@ -183,7 +190,7 @@ def parse(json):
         float: lambda: 'number(float)',
         bool: lambda: 'boolean',
         type(None): lambda: 'null',
-        str: lambda: 'string',
+        str: lambda: f'string({len(json)})',
         list: lambda: '[' + ', '.join(map(parse, json)) + ']',
         dict: lambda: '{' +
         ', '.join(

@@ -1,4 +1,3 @@
-
 class Named:
     def __init__(self, raw, name):
         self.raw = raw
@@ -24,27 +23,28 @@ class String:
         self.max_length = max_length
 
     def __call__(self, json):
-        return isinstance(json, (list, tuple)) and (self.max_length is None or len(json) <= self.max_length)
+        return isinstance(json, str) and (self.max_length is None or len(json) <= self.max_length)
 
     def __str__(self):
-        return 'string' + '' if self.max_length is None else f'({self.max_length})'
+        return 'string' + ('' if self.max_length is None else f'({self.max_length})')
 
 
 class Array:
-    def __init__(self, sub, allow_empty=False):
+    def __init__(self, sub, allow_empty=False, distinct=True):
         self.sub = sub
         self.allow_empty = allow_empty
+        self.distinct = distinct
 
     def __call__(self, json):
-        if not isinstance(json, list):
+        if not isinstance(json, (list, tuple)):
             return False
         for i in json:
-            if not self.sub(i):
+            if not self.sub(i) or (self.distinct and json.count(i) > 1):
                 return False
         return self.allow_empty or json
 
     def __str__(self):
-        return f'[{self.sub}, ...]{"" if self.allow_empty else "(不可为空)"}'
+        return f'[{self.sub}, ...]{"" if self.allow_empty else "(不可为空)"}{"(不可重复)" if self.distinct else ""}'
 
 
 class Object:

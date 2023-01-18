@@ -4,33 +4,28 @@ from zvms.res import *
 
 
 def search_notices(token_data, **kwargs):
-    '[GET] /notic/search'
+    '[GET] /notice/search'
     conds = []
     try:
-        if 'f' in kwargs:
-            conds.append(Notice.sender == int(kwargs['f']))
-        if 't' in kwargs:
+        if 'from' in kwargs:
+            conds.append(Notice.sender == int(kwargs['from']))
+        if 'to' in kwargs:
             conds.append(Notice.id.in_(UserNotice.query.filter_by(
-                user_id=int(kwargs['t'])).select_value('notice_id')))
-        if 'c' in kwargs:
+                user_id=int(kwargs['to'])).select_value('notice_id')))
+        if 'cls' in kwargs:
             conds.append(Notice.id.in_(ClassNotice.query.filter_by(
-                cls_id=int(kwargs['c'])).select_value('notice_id')))
-        if 's' in kwargs:
+                cls_id=int(kwargs['cls'])).select_value('notice_id')))
+        if 'school' in kwargs:
             conds.append(Notice.id.in_(
                 SchoolNotice.query.select_value('notice_id')))
     except ValueError:
         return error(400, '请求接口错误: 非法的URL参数')
 
     def process_query(query):
-        ret = list(query.select('id', 'title',
-                   'content', 'sender', 'deadtime'))
+        ret = list_or_error(query.select('id', 'title', 'content', 'sender', 'deadtime'))
         for i in ret:
             i['deadtime'] = str(i['deadtime'])
-        if not ret:
-            return error(404, '未查询到相关数据')
         return success('获取成功', ret)
-    if not conds:
-        return process_query(Notice.query)
     return process_query(Notice.query.filter(*conds))
 
 

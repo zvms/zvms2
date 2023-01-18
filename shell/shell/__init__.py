@@ -1,5 +1,6 @@
 import os.path
 import traceback
+import sys
 
 from .rule import Rule
 from .util import print_, split
@@ -26,6 +27,7 @@ class App:
             'source': ('source', ), 
             'eval': ('eval', ), 
             'exec': ('exec', ), 
+            'restart': ('restart', ),
             'vars_cfg': 'vars.cfg'
         }
         self.config.update(config)
@@ -165,6 +167,9 @@ class App:
                         exec(split(line, vars)[1],)
                     except:
                         traceback.print_exc()
+            elif cmd[0] in config['restart']:
+                __import__(sys.argv[0][:-3])
+                return
             elif cmd[0] in vars:
                 print(f'{cmd[0]}={vars[cmd[0]]}')
             else:
