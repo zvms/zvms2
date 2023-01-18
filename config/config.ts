@@ -10,7 +10,7 @@ const zvmsConfig = {
             impls: "/backend/zvms/impls/",
             res: "/backend/zvms/res/",
             users: "/backend/zvms/res/users/",
-            types: "/backend/zvms/res/types/"
+            types: "/backend/zvms/typing/"
         },
         backup: "/.backup/"
     }

@@ -80,14 +80,14 @@ function generate(): (() => void)[] {
   const enumsTsOpt = prettierTs(enumsDefGenTs(enumsData)),
     enumsPyOpt = enumsDefGenPy(enumsData),
     structsTsOpt = prettierTs(structsDefGenTs(structsData)),
-    structsPyOpt = structsDefGenPy(structsData),
+    //structsPyOpt = structsDefGenPy(structsData),
     structsCkOpt = structsDefGenCk(structsData);
   todos.push(() => {
     fs.writeFileSync(join(paths.f.types, "enums.ts"), enumsTsOpt);
     fs.writeFileSync(join(paths.b.types, "enums.py"), enumsPyOpt);
     fs.writeFileSync(join(paths.f.types, "structs.ts"), structsTsOpt);
-    fs.writeFileSync(join(paths.b.types, "structs.py"), structsPyOpt);
-    fs.writeFileSync(join(paths.b.types, "structs_ck.py"), structsCkOpt);
+    //fs.writeFileSync(join(paths.b.types, "structs.py"), structsPyOpt);
+    fs.writeFileSync(join(paths.b.types, "structs.py"), structsCkOpt);
   });
 
   return todos;
