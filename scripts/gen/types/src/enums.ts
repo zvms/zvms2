@@ -5,14 +5,14 @@ export type EnumRaw<T> = Record<string, T> & { _type: Type, _pyEnumType?: string
 
 export type EnumsRaw<T> = Record<string, EnumRaw<T>>;
 
-export type Enums<T, Raw> = Record<keyof Raw, Type & {
+export type Enums<Raw> = Record<keyof Raw, Type & {
     tsDef: string,
     pyDef: string,
-    raw: EnumRaw<T>
+    raw: EnumRaw<unknown>
 }>;
 
-export function createEnums<T, Raw extends EnumsRaw<T>>(raw: Raw): Enums<T, Raw> {
-    const result: Enums<T, Raw> = {} as any;
+export function createEnums<T, Raw extends EnumsRaw<T>>(raw: Raw): Enums<Raw> {
+    const result: Enums<Raw> = {} as any;
     for (const name in raw) {
         const enumRaw = raw[name];
         let tsDef = `export enum ${name}{\n`;
@@ -37,7 +37,7 @@ export function createEnums<T, Raw extends EnumsRaw<T>>(raw: Raw): Enums<T, Raw>
     return result;
 }
 
-export function enumsDefGenTs(data: Enums<any, any>): string {
+export function enumsDefGenTs(data: Enums<any>): string {
     let str = ``;
     for (const name in data) {
         const struct = data[name];
@@ -46,7 +46,7 @@ export function enumsDefGenTs(data: Enums<any, any>): string {
     return str;
 }
 
-export function enumsDefGenPy(data: Enums<any, any>): string {
+export function enumsDefGenPy(data: Enums<any>): string {
     let str = `from enum import *\n\n`;
     for (const name in data) {
         const struct = data[name];
