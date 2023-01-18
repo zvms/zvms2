@@ -1,48 +1,52 @@
-from zvms.routelib import *
+from zvms.typing.structs import *
+from zvms.impls.notice import *
+from zvms.routelib import route
 from zvms.res import Categ
-from zvms.typing.structs import Notice, NoticeBody
-import zvms.impls.notice
 
 route(
+    impl=search_notices,
     rule='/notice/search',
     method='GET',
-    impl_func=zvms.impls.notice.search_notices
+    params=Any,
+    auth=Categ.ANY
 )
 
 route(
-    rule='/notice/send/school',
-    method='POST',
-    impl_func=zvms.impls.notice.send_school_notice,
-    params=NoticeBody
-)
-
-route(
+    impl=send_user_notice,
     rule='/notice/send/user',
     method='POST',
-    impl_func=zvms.impls.notice.send_user_notice,
     params=Notice,
     auth=Categ.MANAGER | Categ.TEACHER
 )
 
 route(
+    impl=send_class_notice,
     rule='/notice/send/class',
     method='POST',
-    impl_func=zvms.impls.notice.send_class_notice,
     params=Notice,
     auth=Categ.MANAGER | Categ.TEACHER
 )
 
 route(
-    rule='/notice/<int:id>/delete',
+    impl=send_school_notice,
+    rule='/notice/send/school',
     method='POST',
-    impl_func=zvms.impls.notice.delete_notice,
+    params=NoticeBody,
     auth=Categ.MANAGER | Categ.TEACHER
 )
 
 route(
+    impl=delete_notice,
+    rule='/notice/<int:id>/delete',
+    method='POST',
+    params=Any,
+    auth=Categ.MANAGER | Categ.TEACHER
+)
+
+route(
+    impl=modify_notice,
     rule='/notice/<int:id>/modify',
     method='POST',
-    impl_func=zvms.impls.notice.modify_notice,
-    auth=Categ.MANAGER | Categ.TEACHER,
-    params=NoticeBody
+    params=NoticeBody,
+    auth=Categ.MANAGER | Categ.TEACHER
 )

@@ -1,37 +1,44 @@
-from zvms.routelib import *
-from zvms.typing.structs import Class
-import zvms.impls.class_
+from zvms.typing.structs import *
+from zvms.impls.class_ import *
+from zvms.routelib import route
+from zvms.res import Categ
 
 route(
+    impl=list_classes,
     rule='/class/list',
     method='GET',
-    impl_func=zvms.impls.class_.list_classes
+    params=Any,
+    auth=Categ.ANY
 )
 
 route(
+    impl=get_class_info,
     rule='/class/<int:id>',
     method='GET',
-    impl_func=zvms.impls.class_.get_class_info
+    params=Any,
+    auth=Categ.ANY
 )
 
 route(
-    rule='/class/create',
-    method='POST',
-    impl_func=zvms.impls.class_.create_class,
-    auth=Categ.SYSTEM,
-    params=Class
-)
-
-route(
+    impl=delete_class,
     rule='/class/<int:id>/delete',
     method='POST',
-    impl_func=zvms.impls.class_.delete_class,
+    params=Any,
     auth=Categ.SYSTEM
 )
 
 route(
+    impl=create_class,
+    rule='/class/create',
+    method='POST',
+    params=Class,
+    auth=Categ.SYSTEM
+)
+
+route(
+    impl=modify_class,
     rule='/class/<int:id>/modify',
     method='POST',
-    impl_func=zvms.impls.class_.modify_class,
+    params=Class,
     auth=Categ.SYSTEM
 )

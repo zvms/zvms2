@@ -1,43 +1,52 @@
-from zvms.routelib import *
-from zvms.res import *
-from zvms.typing.structs import Volunteer
-import zvms.impls.volunteer
+from zvms.typing.structs import *
+from zvms.impls.volunteer import *
+from zvms.routelib import route
+from zvms.res import Categ
 
 route(
+    impl=search_volunteers,
     rule='/volunteer/search',
     method='GET',
-    impl_func=zvms.impls.volunteer.search_volunteers
+    params=Any,
+    auth=Categ.ANY
 )
 
 route(
+    impl=get_volunteer_info,
     rule='/volunteer/<int:id>',
     method='GET',
-    impl_func=zvms.impls.volunteer.get_volunteer_info,
+    params=Any,
+    auth=Categ.ANY
 )
 
 route(
+    impl=create_volunteer,
     rule='/volunteer/create',
     method='POST',
-    impl_func=zvms.impls.volunteer.create_volunteer,
-    params=Volunteer
+    params=Volunteer,
+    auth=Categ.ANY
 )
 
 route(
+    impl=modify_volunteer,
     rule='/volunteer/<int:id>/modify',
     method='POST',
-    impl_func=zvms.impls.volunteer.modify_volunteer,
-    params=Volunteer
+    params=Volunteer,
+    auth=Categ.ANY
 )
 
 route(
-    rule='/volunteers/<int:id>',
+    impl=delete_volunteer,
+    rule='/volunteer/<int:id>/delete',
     method='POST',
-    impl_func=zvms.impls.volunteer.delete_volunteer
+    params=Any,
+    auth=Categ.ANY
 )
 
 route(
+    impl=audit_volunteer,
     rule='/volunteer/<int:id>/audit',
     method='POST',
-    impl_func=zvms.impls.volunteer.audit_volunteer,
-    auth=~Categ.STUDENT
+    params=Any,
+    auth=Categ.CLASS | Categ.TEACHER
 )

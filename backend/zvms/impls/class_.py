@@ -3,13 +3,13 @@ from zvms.res import *
 from zvms.util import *
 
 
+@api(rule='/class/list')
 def list_classes(token_data):
-    '[GET] /class/list'
     return success('获取成功', list_or_error(Class.query.select('id', 'name')))
 
 
+@api(rule='/class/<int:id>')
 def get_class_info(id, token_data):
-    '[GET] /class/<int:id>'
     cls = Class.query.get_or_error(id)
     members = cls.members
 
@@ -21,14 +21,14 @@ def get_class_info(id, token_data):
     )
 
 
+@api(rule='/class/<int:id>/delete', method='POST', auth=Categ.SYSTEM)
 def delete_class(id, token_data):
-    '[POST] /class/<int:id>/delete'
     Class.query.filter_by(id=id).delete()
     return success('删除成功')
 
 
+@api(rule='/class/create', method='POST', params='Class', auth=Categ.SYSTEM)
 def create_class(id, name, token_data):
-    '[POST] /class/create'
     Class(
         id=id,
         name=name
@@ -36,7 +36,7 @@ def create_class(id, name, token_data):
     return success('创建成功')
 
 
+@api(rule='/class/<int:id>/modify', method='POST', params='Class', auth=Categ.SYSTEM)
 def modify_class(id, name, token_data):
-    '[POST] /classes/<int:id>/modify'
     Class.query.get_or_error(id, '班级不存在').name = name
     return success('修改成功')

@@ -3,8 +3,8 @@ from zvms.res import *
 from zvms.util import *
 
 
+@api(rule='/volunteer/search')
 def search_volunteers(token_data, **kwargs):
-    '[GET] /volunteer/search'
     conds = []
     try:
         if 'holder' in kwargs:
@@ -30,16 +30,16 @@ def search_volunteers(token_data, **kwargs):
     return process_query(Volunteer.query.filter(*conds))
 
 
+@api(rule='/volunteer/<int:id>')
 def get_volunteer_info(id, token_data):
-    '[GET] /volunteer/<int:id>'
     ret = Volunteer.query.get_or_error(id).select('name', 'description',
         'time', 'type', 'reward', 'joiners', holder_id='holder')
     ret['time'] = str(ret['time'])
     return success('获取成功', **ret)
 
 
+@api(rule='/volunteer/create', method='POST', params='Volunteer')
 def create_volunteer(token_data, classes, **kwargs):
-    '[POST] /volunteer/create'
     try_parse_time(kwargs['time'])
     if token_data['auth'] == Categ.STUDENT and kwargs['type'] == VolType.OUTSIDE:
         return error(403, '权限不足: 只能创建校外义工')
@@ -72,8 +72,8 @@ def create_volunteer(token_data, classes, **kwargs):
     return success('创建成功')
 
 
+@api(rule='/volunteer/<int:id>/modify', method='POST', params='Volunteer')
 def modify_volunteer(token_data, id, classes, **kwargs):
-    '[POST] /volunteer/<int:id>/modify'
     vol = Volunteer.query.get_or_error(id)
     auth_self(vol.holder_id, token_data, '权限不足: 不能修改其他人的义工')
     for cls in classes:
@@ -95,15 +95,15 @@ def modify_volunteer(token_data, id, classes, **kwargs):
     return success('修改成功')
 
 
+@api(rule='/volunteer/<int:id>/delete', method='POST')
 def delete_volunteer(token_data, id):
-    '[POST] /volunteer/<int:id>/delete'
     auth_self(Volunteer.query.get_or_error(id).holder_id, token_data, '权限不足: 不能删除其他人的义工')
     Volunteer.query.filter_by(id=id).delete()
     return success('删除成功')
 
 
+@api(rule='/volunteer/<int:id>/audit', method='POST', auth=Categ.CLASS | Categ.TEACHER)
 def audit_volunteer(token_data, id):
-    '[POST] /volunteer/<int:id>/audit'
     vol = Volunteer.query.get_or_error(id)
     if (Categ.TEACHER | Categ.CLASS) & token_data['auth']:
         auth_cls(vol.holder.cls_id, token_data)

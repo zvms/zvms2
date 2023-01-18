@@ -1,52 +1,60 @@
-from zvms.routelib import *
-from zvms.typing.structs import Thought
-import zvms.impls.thought
+from zvms.typing.structs import *
+from zvms.impls.thought import *
+from zvms.routelib import route
+from zvms.res import Categ
 
 route(
+    impl=search_thoughts,
     rule='/thought/search',
     method='GET',
-    impl_func=zvms.impls.thought.search_thoughts,
+    params=Any,
+    auth=Categ.ANY
 )
 
 route(
+    impl=get_thought_info,
     rule='/thought/<int:volId>/<int:stuId>',
     method='GET',
-    impl_func=zvms.impls.thought.get_thought_info,
+    params=Any,
+    auth=Categ.ANY
 )
 
 route(
+    impl=save_thought,
     rule='/thought/<int:volId>/<int:stuId>/save',
     method='POST',
-    impl_func=zvms.impls.thought.save_thought,
     params=Thought,
-    auth=Categ.STUDENT
+    auth=Categ.ANY
 )
 
 route(
+    impl=submit_thought,
     rule='/thought/<int:volId>/<int:stuId>/submit',
     method='POST',
-    impl_func=zvms.impls.thought.submit_thought,
     params=Thought,
-    auth=Categ.STUDENT
+    auth=Categ.ANY
 )
 
 route(
+    impl=first_audit,
     rule='/thought/<int:volId>/<int:stuId>/audit/first',
     method='POST',
-    impl_func=zvms.impls.thought.first_audit,
-    auth=(Categ.TEACHER | Categ.CLASS)
+    params=Any,
+    auth=Categ.CLASS | Categ.TEACHER
 )
 
 route(
+    impl=final_audit,
     rule='/thought/<int:volId>/<int:stuId>/audit/final',
     method='POST',
-    impl_func=zvms.impls.thought.final_audit,
+    params=Any,
     auth=Categ.AUDITOR
 )
 
 route(
-    rule='/thought/<int:volId>/<int:stuId>/audit/repulse',
+    impl=repulse,
+    rule='/thought/<int:volId>/<int:stuId>/repulse',
     method='POST',
-    impl_func=zvms.impls.thought.repulse,
-    auth=(Categ.TEACHER | Categ.CLASS | Categ.AUDITOR)
+    params=Repulse,
+    auth=Categ.ANY
 )

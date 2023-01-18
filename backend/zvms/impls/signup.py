@@ -3,13 +3,13 @@ from zvms.res import *
 from zvms.util import *
 
 
+@api(rule='/signup/list/<int:cls>')
 def list_signup(cls, token_data):
-    '[GET] /signup/list/<int:cls>'
     return success('获取成功', list_or_error((sv.select(stu_id='stuId', vol_id='volId', stu_name='stuName', vol_name='volName') for sv in StuVol.query if sv.stu.cls_id == cls)))
 
 
+@api(rule='/signup/<int:volId>/<int:stuId>/audit', method='POST', auth=Categ.CLASS | Categ.TEACHER)
 def audit_signup(volId, stuId, token_data):
-    '[POST] /signup/<int:volId>/<int:stuId>'
     stu_vol = StuVol.query.get((volId, stuId))
     if not stu_vol:
         return error(403, '学生未报名该义工')
@@ -18,8 +18,8 @@ def audit_signup(volId, stuId, token_data):
     return success('审核成功')
 
 
+@api(rule='/signup/<int:volId>', method='POST', params='Signup')
 def signup(students, volId, token_data):
-    '[POST] /signup/<int:volId>'
     vol = Volunteer.query.get_or_error(volId, '该义工不存在')
     if vol.status == VolStatus.UNAUDITED:
         return error(403, '该义工未过审')
@@ -51,6 +51,8 @@ def signup(students, volId, token_data):
     return success('报名成功')
 
 
+
+@api(rule='/signup/<int:volId>/<int:stuId>/rollback', method='POST')
 def rollback(volId, stuId, token_data):
     '[POST] /signup/<int:volId>/<int:stuId>/audit'
     StuVol.query.get_or_error((volId, stuId), '未报名该义工')

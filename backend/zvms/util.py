@@ -200,3 +200,6 @@ def parse(json):
 
 def interface_error(expected, found):
     return json.dumps({'type': 'ERROR', 'message': '请求接口错误', 'expected': str(expected), 'found': parse(found)})
+
+def api(*, rule, method=None, params=None, auth=None):
+    return lambda func: func

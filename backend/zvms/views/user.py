@@ -1,74 +1,84 @@
+from zvms.typing.structs import *
+from zvms.impls.user import *
 from zvms.routelib import route
-from zvms.typing.structs import Login, ModPwd, ChangeClass, User, Users
 from zvms.res import Categ
-import zvms.impls.user
 
 route(
+    impl=check,
     rule='/user/check',
     method='GET',
-    impl_func=zvms.impls.user.check
+    params=Any,
+    auth=Categ.ANY
 )
 
 route(
+    impl=login,
     rule='/user/login',
     method='POST',
-    impl_func=zvms.impls.user.login,
     params=Login,
-    auth=None
+    auth=Categ.ANY
 )
 
 route(
+    impl=logout,
     rule='/user/logout',
     method='POST',
-    impl_func=zvms.impls.user.logout
+    params=Any,
+    auth=Categ.ANY
 )
 
 route(
+    impl=search_users,
     rule='/user/search',
     method='GET',
-    impl_func=zvms.impls.user.search_users
+    params=Any,
+    auth=Categ.ANY
 )
 
 route(
+    impl=get_user_info,
     rule='/user/<int:id>',
     method='GET',
-    impl_func=zvms.impls.user.get_user_info
+    params=Any,
+    auth=Categ.ANY
 )
 
 route(
+    impl=modify_password,
     rule='/user/mod-pwd',
     method='POST',
-    impl_func=zvms.impls.user.modify_password,
     params=ModPwd,
+    auth=Categ.ANY
 )
 
 route(
+    impl=change_class,
     rule='/user/change-class',
     method='POST',
-    impl_func=zvms.impls.user.change_class,
-    auth=Categ.TEACHER,
-    params=ChangeClass
+    params=ChangeClass,
+    auth=Categ.ANY
 )
 
 route(
-    rule='/user/<int:id>/delete',
+    impl=create_user,
+    rule='/user/create',
     method='POST',
-    impl_func=zvms.impls.user.delete_user,
+    params=Users,
     auth=Categ.SYSTEM
 )
 
 route(
-    rule='/user/create',
+    impl=modify_user,
+    rule='/user/<int:id>/modify',
     method='POST',
-    impl_func=zvms.impls.user.create_user,
-    auth=Categ.SYSTEM,
-    params=Users
+    params=User,
+    auth=Categ.SYSTEM
 )
 
 route(
-    rule='/user/<int:id>',
-    method='PUT',
-    impl_func=zvms.impls.user.modify_user,
-    auth=Categ.SYSTEM,
-    params=User
+    impl=delete_user,
+    rule='/user/<int:id>/delete',
+    method='POST',
+    params=Any,
+    auth=Categ.SYSTEM
 )

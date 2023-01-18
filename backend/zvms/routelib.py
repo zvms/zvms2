@@ -13,8 +13,8 @@ from zvms.util import *
 from zvms import app
 
 
-def route(*, rule, method='GET', impl_func, params=Any, auth=Categ.ANY):
-    app.add_url_rule(rule, methods=[method], view_func=deco(impl_func, params, auth))
+def route(*, rule, method='GET', impl, params=Any, auth=Categ.ANY):
+    app.add_url_rule(rule, methods=[method], view_func=deco(impl, params, auth))
 
 # 不要听下面的注释, 现在已经没有装饰器了
 # 以后把调试的代码写在这边，把一些公用的功能也可以移到这边

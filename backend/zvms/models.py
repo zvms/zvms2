@@ -32,6 +32,7 @@ class User(ModelMixIn, db.Model):
     def on_delete(self):
         UserNotice.query.filter_by(user_id=self.user_id).delete()
         StuVol.query.filter_by(stu_id=self.user_id).delete()
+        Volunteer.query.filter_by(holder_id=self.id).delete()
 
     @property
     def notices_sent(self):

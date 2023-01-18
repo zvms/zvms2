@@ -1,5 +1,5 @@
 from zvms.typing.checker import *
-from zvms.res.enums import VolType
+from zvms.res import VolType
 
 Class = Object(
     name=String(5)
@@ -64,4 +64,8 @@ Volunteer = Object(
         id=Int,
         max=Int
     ))
+)
+
+Repulse = Object(
+    reason=String(1024)
 )

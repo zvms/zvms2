@@ -8,8 +8,8 @@ from zvms.util import *
 from zvms.res import *
 
 
+@api(rule='/thought/search')
 def search_thoughts(**kwargs):
-    '[GET] /thought/search'
     conds = [StuVol.status != ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT]
     def filter_(_): return True
 
@@ -33,8 +33,8 @@ def search_thoughts(**kwargs):
     return process_query(filter(filter_, StuVol.query.filter(*conds)))
 
 
+@api(rule='/thought/<int:volId>/<int:stuId>')
 def get_thought_info(volId, stuId, token_data):
-    '[GET] /thought/<int:volId>/<int:stuId>'
     thought = StuVol.query.get_or_error((volId, stuId))
     if thought.status == ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
         return error(404, '未查询到相关数据')
@@ -98,6 +98,7 @@ def _auth_thought(stuId, operation, token_data):
         return False
     
 
+@api(rule='/thought/<int:volId>/<int:stuId>/save', method='POST', params='Thought')
 def save_thought(token_data, volId, stuId, thought, pictures):
     '[POST] /thought/<int:volId>/<int:stuId>/save'
     _auth_thought(stuId, '修改', token_data)
@@ -105,15 +106,15 @@ def save_thought(token_data, volId, stuId, thought, pictures):
     return success('保存成功')
 
 
+@api(rule='/thought/<int:volId>/<int:stuId>/submit', method='POST', params='Thought')
 def submit_thought(token_data, volId, stuId, thought, pictures):
-    '[POST] /thought/<int:volId>/<int:stuId>/submit'
     is_common = not _auth_thought(stuId, '提交', token_data)
     _submit_thought(volId, stuId, thought, pictures, ThoughtStatus.WAITING_FOR_FIRST_AUDIT if is_common else ThoughtStatus.WAITING_FOR_FINAL_AUDIT)
     return success('提交成功')
 
 
+@api(rule='/thought/<int:volId>/<int:stuId>/audit/first', method='POST', auth=Categ.CLASS | Categ.TEACHER)
 def first_audit(token_data, volId, stuId):
-    '[POST] /thought/<int:volId>/<int:stuId>/audit/first'
     auth_cls(User.query.get(stuId), token_data)
     thought = StuVol.query.get((volId, stuId))
     if thought.status != ThoughtStatus.WAITING_FOR_FIRST_AUDIT:
@@ -124,8 +125,8 @@ def first_audit(token_data, volId, stuId):
     return success('审核成功')
 
 
+@api(rule='/thought/<int:volId>/<int:stuId>/audit/final', method='POST', auth=Categ.AUDITOR)
 def final_audit(token_data, volId, stuId):
-    '[POST] /thought/<int:volId>/<int:stuId>/audit/final'
     thought = StuVol.query.get((volId, stuId))
     if thought.status != ThoughtStatus.WAITING_FOR_FINAL_AUDIT:
         return error(403, '该感想不可终审')
@@ -134,7 +135,8 @@ def final_audit(token_data, volId, stuId):
     )
     return success('审核成功')
 
-    
+
+@api(rule='/thought/<int:volId>/<int:stuId>/repulse', method='POST', params='Repulse')
 def repulse(token_data, volId, stuId, reason):
     '[POST] /thought/<int:volId>/<int:stuId>/audit/repulse'
     auth_cls(User.query.get(stuId), token_data)

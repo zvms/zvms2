@@ -1,11 +1,12 @@
+from zvms.typing.structs import *
+from zvms.impls.report import *
 from zvms.routelib import route
-from zvms.typing.structs import Report
-import zvms.impls.report
+from zvms.res import Categ
 
 route(
+    impl=report,
     rule='/report',
     method='POST',
-    impl_func=zvms.impls.report.report,
     params=Report,
-    auth=None
+    auth=Categ.ANY
 )

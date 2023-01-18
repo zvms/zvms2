@@ -6,7 +6,11 @@ class VolType(IntEnum):
     OUTSIDE = 2
     LARGE = 3
 
-class Status(IntEnum):
+class VolStatus(IntEnum):
+    UNAUDITED = 1
+    AUDITED = 2
+
+class ThoughtStatus(IntEnum):
     WAITING_FOR_SIGNUP_AUDIT = 1
     UNSUBMITTED = 2
     WAITING_FOR_FIRST_AUDIT = 3
