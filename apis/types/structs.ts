@@ -1,5 +1,5 @@
-import { int, str, createStructs, arr, createDangerousStructRef, strMaxLength } from "zvms-apis-types-gen";
-import { enums } from "./enums";
+import { int, str, createStructs, arr, createDangerousStructRef, strMaxLength, literal } from "zvms-apis-types-gen";
+import { enums } from "./enums.js";
 
 const NoticeBody = {
     title: str(),
