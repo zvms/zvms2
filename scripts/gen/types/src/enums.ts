@@ -2,22 +2,32 @@ import { snake2Camal } from "zvms-scripts-utils";
 import { LiteralValuedType } from "./common";
 import { Type } from "./types";
 
-export type EnumRaw<T> = Record<string, T> & { _type: Type, _pyEnumType?: string };
+export type EnumRaw<K extends {}, T> = Record<keyof K, T> & { _type: Type, _pyEnumType?: string };
 
-export type EnumsRaw<T> = Record<string, EnumRaw<T>>;
+type EnumKeys<E extends EnumRaw<any, any>> =
+    E extends EnumRaw<infer K, any> ? Exclude<keyof K, "_type" | "_pyEnumType"> : never;
 
-export type Enums<Raw> = Record<keyof Raw, Type & {
-    tsDef: string,
-    pyDef: string,
-    raw: EnumRaw<unknown>,
-    literal: Record<string, LiteralValuedType>,
-}>;
+export type EnumsRaw<ES extends Record<string, EnumRaw<any, any>>> = {
+    [Name in keyof ES]: ES[Name];
+};
 
-export function createEnums<T, Raw extends EnumsRaw<T>>(raw: Raw): Enums<Raw> {
-    const result: Enums<Raw> = {} as any;
+export type Enums<
+    ES extends Record<string, EnumRaw<any, any>>> =
+    { [Name in keyof ES]: Type & {
+        tsDef: string,
+        pyDef: string,
+        raw: ES[Name],
+        literal: Record<EnumKeys<ES[Name]>, LiteralValuedType>,
+    }
+    };
+
+export function createEnums<ES extends Record<string, EnumRaw<any, any>>>(raw: EnumsRaw<ES>): Enums<ES> {
+    const result: Enums<ES> = {} as any;
     for (const name in raw) {
         const enumRaw = raw[name];
-        let literal: Record<string, LiteralValuedType> = {};
+        let literal: {
+            [Key in keyof ES[typeof name]]: LiteralValuedType;
+        } = {} as any;
         let tsDef = `export enum ${name}{\n`;
         let pyDef = `class ${name}(${enumRaw._pyEnumType || "Enum"}):\n`;
         for (const key in enumRaw) {

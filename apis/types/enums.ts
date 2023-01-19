@@ -32,4 +32,4 @@ export const enums = createEnums({
         CLASS_NOTICE: 2,
         SCHOOL_NOTICE: 3,
     }
-})
+});
