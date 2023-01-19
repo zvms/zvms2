@@ -2,9 +2,9 @@ import { int, str, createStructs, arr, createDangerousStructRef, strMaxLength, l
 import { enums } from "./enums.js";
 
 const NoticeBody = {
-    title: str(),
-    content: str(),
-    deadtime: str()
+    title: strMaxLength(32),
+    content: strMaxLength(1024),
+    deadtime: strMaxLength(19)
 }
 
 export const structs = createStructs({
@@ -25,22 +25,18 @@ export const structs = createStructs({
     },
     Thought: {
         content: strMaxLength(1024),
-        pictures: arr(strMaxLength(32))
+        pictures: arr(str())
     },
     Login: {
-        id:int(),
-        pwd:strMaxLength(32)
-    },
-    ModPwd:{
-        old:strMaxLength(32),
-        new:strMaxLength(32)
-    },
-    ChangeClass:{
-        cls:int()
-    },
-    VolunteerRecordClass: {
         id: int(),
-        max: int()
+        pwd: strMaxLength(32)
+    },
+    ModPwd: {
+        old: strMaxLength(32),
+        new: strMaxLength(32)
+    },
+    ChangeClass: {
+        cls: int()
     },
     UserOfUsers: {
         id: int(),
@@ -49,20 +45,29 @@ export const structs = createStructs({
         auth: int(),
         pwd: str()
     },
-    Users: {
-        users: arr(createDangerousStructRef("UserOfUsers"))
-    },
     User: {
-        name: str(),
+        name: strMaxLength(5),
         cls: int(),
         auth: int()
     },
-    VolunteerRecord: {
-        name: str(),
-        description: str(),
-        time: str(),
-        type: int(),
+    Users: {
+        users: arr(createDangerousStructRef("UserOfUsers"))
+    },
+    VolunteerRecordClass: {
+        id: int(),
+        max: int()
+    },
+    Volunteer: {
+        name: strMaxLength(32),
+        description: strMaxLength(1024),
+        time: strMaxLength(20),
+        type: literal(enums.VolType.literal.INSIDE,
+            enums.VolType.literal.OUTSIDE,
+            enums.VolType.literal.LARGE),
         reward: int(),
         classes: arr(createDangerousStructRef("VolunteerRecordClass")),
+    },
+    Repulse: {
+        reason: strMaxLength(1024)
     }
 });
