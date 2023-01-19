@@ -21,33 +21,53 @@ if not module.body or not isinstance(module.body[0], ast.ImportFrom) or (module.
         module='enum',
         names=[ast.alias(name='IntEnum')]
     ))
-for enum in enums.items():
-    pep_name = Convertor(enum[0], 'camel').export('pascal')
-    existing_enum = find(module.body, lambda cd: isinstance(cd, ast.ClassDef) and cd.name == pep_name)
-    if existing_enum:
+with open('web/src/apis/types/enums.ts', 'w', encoding='utf-8') as ts_output:
+    for enum in enums.items():
+        pep_name = Convertor(enum[0], 'camel').export('pascal')
+        ts_output.write(f'export class {pep_name} {{')
+        comma = False
         for value in enum[1].items():
-            pep_field_name = Convertor(value[0], 'camel').export('upper_snake')
-            existing_value = find(existing_enum.body, lambda ass: isinstance(ass, ast.Assign) and 
-                find(ass.targets, lambda name: name.id == pep_field_name))
-            if existing_value:
-                existing_value.value = ast.Constant(value=value[1]['id'])
-            else:
-                existing_enum.body.append(item_assign(value))
-    else:
-        existing_enum = ast.ClassDef(
-            decorator_list=[],
-            name=pep_name,
-            bases=[ast.Name(id='IntEnum')],
-            keywords=[],
-            body=list(map(item_assign, enum[1].items()))
-        )
-        module.body.append(existing_enum)
-    existing_enum.body.sort(key=lambda item: (isinstance(item, ast.Assign) and item.value.value) or float('inf'))
+            ts_output.write(f'\n    {Convertor(value[0], "camel").export("pascal")} = new {pep_name}({value[1]["id"]});')
+        ts_output.write('''
+    private constructor(public id: Number) { }
+    get name(): string {
+        switch (this.id) {
+''')
+        for value in enum[1].items():
+            ts_output.write(f'''            case {value[1]["id"]}:
+                return "{value[1]["name"]}";
+''')
+        ts_output.write('''            default:
+                throw new Error("Invalid enum id");
+        }
+    }
+}
+''')
+        print('web/src/apis/types/enums.ts 生成完成!')
+        existing_enum = find(module.body, lambda cd: isinstance(cd, ast.ClassDef) and cd.name == pep_name)
+        if existing_enum:
+            for value in enum[1].items():
+                pep_field_name = Convertor(value[0], 'camel').export('upper_snake')
+                existing_value = find(existing_enum.body, lambda ass: isinstance(ass, ast.Assign) and 
+                    find(ass.targets, lambda name: name.id == pep_field_name))
+                if existing_value:
+                    existing_value.value = ast.Constant(value=value[1]['id'])
+                else:
+                    existing_enum.body.append(item_assign(value))
+        else:
+            existing_enum = ast.ClassDef(
+                decorator_list=[],
+                name=pep_name,
+                bases=[ast.Name(id='IntEnum')],
+                keywords=[],
+                body=list(map(item_assign, enum[1].items()))
+            )
+            module.body.append(existing_enum)
+        existing_enum.body.sort(key=lambda item: (isinstance(item, ast.Assign) and item.value.value) or float('inf'))
 
 with open('backend/zvms/res.py', 'w', encoding='utf-8') as output:
     output.write(ast.unparse(module))
     print('backend/zvms/res.py', '生成完成!')
-
 
 parent = ast.Module(
     body=[],
