@@ -5,11 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from zvms.res import STATIC_FOLDER
 
 app = Flask(__name__)
-with open('app.cfg') as f:
-    app.config['SQLALCHEMY_DATABASE_URI'], \
-        app.config['SECRET_KEY'] = map(lambda s: s[:-1], f)
 CORS(app, supports_credentials=True, resources={r"/*", "*"})
 app.static_folder = STATIC_FOLDER
+app.config.from_pyfile('config.py')
 
 app.test_request_context().push()
 db = SQLAlchemy(app)
@@ -25,6 +23,13 @@ def handle_500(e):
     return {'type': 'ERROR', 'message': 'Internal Server Error'}, 500
 
 import zvms.tokenlib as tk
-import zvms.views
+# import zvms.views
+import zvms.impls.class_
+import zvms.impls.notice
+import zvms.impls.report
+import zvms.impls.signup
+import zvms.impls.thought
+import zvms.impls.user
+import zvms.impls.volunteer
 
 tk.init_app(app)

@@ -53,7 +53,9 @@ def deco(impl, params, auth):
                     f.write(f'({token_data["id"]}) ')
                 f.write(
                     f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
-            return impl(*args, **kwargs, **json_data, token_data=token_data)
+            if isinstance(json_data, dict):
+                return impl(*args, **kwargs, **json_data, token_data=token_data)
+            return impl(*args, **kwargs, json_data, token_data=token_data)
         except ZvmsError as ex:
             return error(ex.code, ex.message)
     return wrapper
