@@ -6,15 +6,22 @@ import traceback
 from flask import request
 from jwt.exceptions import InvalidSignatureError
 
-import zvms.tokenlib as tk
 from zvms.typing.checker import Any
 from zvms.res import Categ
 from zvms.util import *
 from zvms import app
+import zvms.tokenlib as tk
+import zvms.typing.structs as structs
 
 
-def route(*, rule, method='GET', impl, params=Any, auth=Categ.ANY):
-    app.add_url_rule(rule, methods=[method], view_func=deco(impl, params, auth))
+def api(*, rule, method='GET', params=Any, auth=Categ.ANY):
+    def wrapper(func):
+        nonlocal params
+        if isinstance(params, str):
+            params = getattr(structs, params)
+        app.add_url_rule(rule, methods=[method], view_func=deco(func, params, auth))
+        return func
+    return wrapper
 
 # 不要听下面的注释, 现在已经没有装饰器了
 # 以后把调试的代码写在这边，把一些公用的功能也可以移到这边
@@ -33,7 +40,7 @@ def deco(impl, params, auth):
             except:
                 json_data = {}
         token_data = {}
-        if auth != None:
+        if auth != Categ.NONE:
             try:
                 token_data = request.headers.get('Authorization')
                 if not token_data:
@@ -49,13 +56,11 @@ def deco(impl, params, auth):
             return interface_error(params, json_data)
         try:
             with open('log.txt', 'a', encoding='utf-8') as f:
-                if auth:
+                if auth != Categ.NONE:
                     f.write(f'({token_data["id"]}) ')
                 f.write(
                     f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
-            if isinstance(json_data, dict):
-                return impl(*args, **kwargs, **json_data, token_data=token_data)
-            return impl(*args, **kwargs, json_data, token_data=token_data)
+            return impl(*args, **kwargs, **json_data, token_data=token_data)
         except ZvmsError as ex:
             return error(ex.code, ex.message)
     return wrapper

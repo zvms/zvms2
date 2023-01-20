@@ -47,16 +47,16 @@ def get_user_info(id):
     if res:
         print('''姓名: {name}
 班级: {cls}({clsName})
-权限: {auth_str}'''.format(**res, auth_str=auth2str(res['categ'])))
-        if res['categ'] & 0b10:
+权限: {auth_str}'''.format(**res, auth_str=auth2str(res['auth'])))
+        if res['auth'] & 0b10:
             print('''校内时间: {inside}
 校外时间: {outside}
 大型时间: {large}'''.format(**res))
 
-@user.route('user mod-pwd <old> <new>')
-def modify_password(old, new):
+@user.route('user mod-pwd <old> <neo>')
+def modify_password(old, neo):
     '''修改自己的密码'''
-    req.post('/user/mod-pwd', old=md5ify(old), new=md5ify(new))
+    req.post('/user/mod-pwd', old=md5ify(old), new=md5ify(neo))
 
 @user.route('user change-class <cls>')
 def change_class(cls):

@@ -1,4 +1,3 @@
-impls: backend/zvms/impls
 views: backend/zvms/views
 template: web/src/apis/fApi-template.ts
 apis: web/src/apis/fApi.ts
@@ -18,9 +17,10 @@ methods-flag:
   end: //--METHODS END----
 
 # yaml跨行字符串的空格会没掉, 只能这么写
-api-formatter: '\n  /**{}\n   * ### [{}] {}\n   * #### Authorization: {}{}\n   */\n  {}({}): ForegroundApiRunner<[]> {{\n    return createForegroundApiRunner({});\n  }}'
+api-formatter: '\n  /**{}\n   * ### [{}] {}\n   * #### 权限: {}{}\n   */\n  {}({}): ForegroundApiRunner<[]> {{\n    return createForegroundApiRunner({});\n  }}'
 empty-formatter: "this, {}, {}{}"
 object-formatter: '\n        this,\n        {},\n        {},\n        {}'
+auth-needless: '不需要'
 
 api-defaults:
   rule: /

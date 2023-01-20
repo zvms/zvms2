@@ -1,12 +1,11 @@
-from zvms.typing.structs import *
-from zvms.impls.report import *
-from zvms.routelib import route
-from zvms.res import Categ
+import datetime
 
-route(
-    impl=report,
-    rule='/report',
-    method='POST',
-    params=Report,
-    auth=Categ.ANY
-)
+from zvms.apilib import api
+from zvms.util import *
+
+
+@api(rule='/report', method='POST', params='Report')
+def report(report, token_data):
+    with open('report.txt', 'a', encoding='utf-8') as f:
+        f.write(f'[{datetime.datetime.now()}] {report}\n')
+    return success('反馈成功')

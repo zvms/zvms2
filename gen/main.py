@@ -133,20 +133,11 @@ def traversal_op(op):
         return get_attr(op)
     return chain(traversal_op(op.left), get_attr(op.right))
 
-for impl in os.scandir(config['impls']):
-    if impl.is_dir() or impl.name == '__init__.py':
+for view in os.scandir(config['views']):
+    if view.is_dir() or view.name == '__init__.py':
         continue
-    with open(impl.path, encoding='utf-8') as input_file, open(f'{config["views"]}/{impl.name}', 'w') as output_file:
+    with open(view.path, encoding='utf-8') as input_file:
         input = ast.parse(input_file.read())
-        output = ast.Module(
-            body=[
-                ast.ImportFrom(
-                    module=module,
-                    names=[ast.alias(name=names)]
-                ) for module, names in (('zvms.typing.structs', '*'), (f'zvms.impls.{impl.name[:-3]}', '*'), ('zvms.routelib', 'route'), ('zvms.res', 'Categ'))
-            ],
-            type_ignores=[]
-        )
         for api in input.body:
             if not isinstance(api, ast.FunctionDef):
                 continue
@@ -185,26 +176,8 @@ for impl in os.scandir(config['impls']):
                 params.unwrap_full_args(),
                 config[params.formatter].format(f'"{args["method"].value}"', f'"{args["rule"].value}"', params.unwrap_call())
             ))
-            output.body.append(
-                ast.Expr(ast.Call(
-                    func=ast.Name(id='route'),
-                    args=[],
-                    keywords=[
-                        ast.keyword(
-                            arg='impl',
-                            value=ast.Name(id=api.name)
-                        ),
-                        *(ast.keyword(
-                            arg=k,
-                            value=v
-                        ) for k, v in args.items())
-                    ]
-                ))
-            )
-        output_file.write(route_unparser.visit(output))
-        complete(impl.path.replace('impls', 'views'))
         parent.body.append(ast.Import(
-            names=[ast.alias(name=f'zvms.views.{impl.name[:-3]}')]
+            names=[ast.alias(name=f'zvms.views.{view.name[:-3]}')]
         ))
 with open(os.path.join(config["views"], '__init__.py'), 'w', encoding='utf-8') as parent_file:
     parent_file.write(ast.unparse(parent))

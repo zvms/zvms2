@@ -70,7 +70,7 @@ class Extends(Object):
 
 
 class Optional:
-    def __init__(self, *options):
+    def __init__(self, **options):
         self.options = options
 
     def __call__(self, json):

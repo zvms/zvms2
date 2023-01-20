@@ -23,13 +23,6 @@ def handle_500(e):
     return {'type': 'ERROR', 'message': 'Internal Server Error'}, 500
 
 import zvms.tokenlib as tk
-# import zvms.views
-import zvms.impls.class_
-import zvms.impls.notice
-import zvms.impls.report
-import zvms.impls.signup
-import zvms.impls.thought
-import zvms.impls.user
-import zvms.impls.volunteer
+import zvms.views
 
 tk.init_app(app)
