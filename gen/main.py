@@ -19,6 +19,8 @@ if len(sys.argv) > 1:
 with open('config/genconfig.yaml', encoding='utf-8') as f:
     config = yaml.full_load(f)
 
+alias = config.get('alias', {})
+
 def complete(*paths):
     print(os.path.realpath(os.path.join(*paths)), '生成完成!')
 
@@ -124,6 +126,8 @@ parent = ast.Module(
 output_ts = io.StringIO()
 output_ts.write(f'{config["methods-flag"]["start"]}\n')
 Identifier.internal = False
+rule_to_url = re.compile(r'(.+?)\<(?:int:)?(.+?)\>')
+rule_to_url_sub = r'\1${\2}'
 
 def get_attr(attr):
     return (Convertor(attr.attr, 'upper_snake').export('pascal'), )
@@ -162,9 +166,10 @@ for view in os.scandir(config['views']):
                 else:
                     args[k] = find_result.value
             if args['params'].id == 'Any':
-                params = Empty
+                params = Empty()
             else:
-                params = checkers.get(args['params'].id).with_url(args['rule'].value) or Empty
+                params = checkers.get(args['params'].id) or Empty
+            params.with_url(args['rule'].value)
             docstring = ast.get_docstring(api)
             output_ts.write(config['api-formatter'].format(
                 f'\n   * ## {docstring}' if docstring else '',
@@ -172,9 +177,9 @@ for view in os.scandir(config['views']):
                 args['rule'].value,
                 ' | '.join(traversal_op(args['auth'])),
                 params.unwrap_docstring(),
-                Convertor(api.name, 'snake').export('camel'),
+                alias.get(api.name, Convertor(api.name, 'snake').export('camel')),
                 params.unwrap_full_args(),
-                config[params.formatter].format(f'"{args["method"].value}"', f'"{args["rule"].value}"', params.unwrap_call())
+                config[params.formatter].format(f'"{args["method"].value}"', f'`{rule_to_url.sub(rule_to_url_sub, args["rule"].value)}`', params.unwrap_call())
             ))
         parent.body.append(ast.Import(
             names=[ast.alias(name=f'zvms.views.{view.name[:-3]}')]

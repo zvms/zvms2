@@ -27,4 +27,3 @@ api-defaults:
   method: GET
   params: Any
   auth: ANY
-

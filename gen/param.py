@@ -68,7 +68,7 @@ class Array:
         return f'Array<{self.sub}>'
 
 class Object:
-    url_args = re.compile('(\<\>)')
+    url_args = re.compile(r'\<.+?\>')
     formatter = 'object-formatter'
 
     def __init__(self, keywords):
@@ -82,7 +82,6 @@ class Object:
                 self.url_args[arg[5:-1]] = 'number'
             else:
                 self.url_args[arg[1:-1]] = 'string'
-        return self
 
     def copy_extend(self, keywords):
         obj = object.__new__(type(self))
@@ -104,29 +103,38 @@ class Object:
         return ',\n    '.join(f'{key}{colon} {value}' for key, value in mapping.items())
 
     def unwrap_full_args(self):
-        return ',\n    '.join(map(Object.unwrap_args, filter(lambda x: x, (self.url_args, self.members)))) + '\n  '
+        return '\n    ' + ',\n    '.join(map(Object.unwrap_args, filter(lambda x: x, (self.url_args, self.members)))) + '\n  '
 
-    def unwrap_docstring(self):
-        return '\n   * @param ' + '\n   * @param '.join(self.members.keys())
+    def unwrap_docstring(self, mapping=None):
+        if mapping is None:
+            mapping = self.members | self.url_args
+        return '\n   * @param ' + '\n   * @param '.join(mapping.keys())
 
-    def unwrap_call(self):
-        return ',\n        '.join(self.members.keys())
+    def unwrap_call(self, mapping=None):
+        if mapping is None:
+            mapping = self.members
+        return ',\n      '.join(mapping.keys())
 
 class Optional(Object):
     def unwrap_full_args(self):
-        return ',\n    '.join(Object.unwrap_args(m, c) for m, c in ((self.url_args, ':'), (self.members, '?:')) if m) + '\n  '
+        return '\n    ' + ',\n    '.join(Object.unwrap_args(m, c) for m, c in ((self.url_args, ':'), (self.members, '?:')) if m) + '\n  '
 
     def unwrap_call(self):
-        return '...Array<any>(' + ',\n        '.join(self.members.keys()) + ').filter((value: any) => value != undefined)'
+        return '...Array<any>(\n          ' + ',\n          '.join(self.members.keys()) + '\n        ).filter((value: any) => value != undefined)'
 
-class Empty:
+class Empty(Object):
     formatter = 'empty-formatter'
 
-    def unwrap_full_args():
-        return ''
-    
-    def unwrap_docstring():
+    def __init__(self):
+        pass
+
+    def unwrap_docstring(self):
+        if self.url_args:
+            return Object.unwrap_docstring(None, self.url_args)
         return ''
 
-    def unwrap_call():
+    def unwrap_full_args(self):
+        return Object.unwrap_args(self.url_args, ':')
+
+    def unwrap_call(self):
         return ''

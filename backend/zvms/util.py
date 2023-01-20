@@ -1,5 +1,6 @@
 from itertools import chain
 from functools import wraps
+from typing import Callable, Iterable
 import datetime
 import json
 
@@ -18,7 +19,7 @@ class _QueryProperty:
 def foo(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
-        if hasattr(self, '__iter__'):
+        if isinstance(self, Iterable):
             return (func(i, *args, **kwargs) for i in self)
         return func(self, *args, **kwargs)
     return wrapper
@@ -32,7 +33,7 @@ def select(self, *cols, **aliases):
 @foo
 def update(self, **updates):
     for k, v in updates.items():
-        if hasattr(v, '__call__'):
+        if isinstance(v, Iterable):
             v = v(getattr(self, k))
         setattr(self, k, v)
     self.on_update()
