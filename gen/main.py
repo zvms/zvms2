@@ -1,8 +1,12 @@
-import yaml
+import time
+
+begin = time.perf_counter()
+
 import ast
-import sys
 import os
 import io
+
+import yaml
 
 from util import *
 from param import *
@@ -111,6 +115,14 @@ output_ts = io.StringIO()
 output_ts.write('  //--METHODS START----\n\n')
 Identifier.internal = False
 
+def get_attr(attr):
+    return (Convertor(attr.attr, 'upper_snake').export('pascal'), )
+
+def traversal_op(op):
+    if isinstance(op, ast.Attribute):
+        return get_attr(op)
+    return chain(traversal_op(op.left), get_attr(op.right))
+
 for impl in os.scandir('backend/zvms/impls'):
     if impl.is_dir() or impl.name == '__init__.py':
         continue
@@ -156,7 +168,7 @@ for impl in os.scandir('backend/zvms/impls'):
             output_ts.write(f'''/**{f"""
    * ## {docstring}""" if docstring else ''}
    * ### [{args['method'].value}] {args['rule'].value}
-   * {params.unwrap_docstring()}
+   * #### Authorization: {' | '.join(traversal_op(args['auth']))}{params.unwrap_docstring()}
    */
   {Convertor(api.name, 'snake').export('camel')}({params.unwrap_full_args()}): ForegroundApiRunner<[]> {{
     return createForegroundApiRunner({params.formatter.format('this', f'"{args["method"].value}"', f'"{args["rule"].value}"', params.unwrap_call())});
@@ -196,3 +208,5 @@ with open('web/src/apis/fApi.ts', 'w', encoding='utf-8') as f:
     output_ts.seek(0)
     f.write(methods_block.sub(output_ts.read(), origin))
 print('web/src/apis/fApi.ts 生成完成!')
+
+print(f'用时{time.perf_counter() - begin}秒')

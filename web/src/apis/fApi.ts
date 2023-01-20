@@ -132,27 +132,28 @@ export class ForegroundApi {
 
 /**
    * ### [GET] /class/list
-   * 
+   * #### Authorization: Any
    */
   listClasses(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/class/list");
   }
 /**
    * ### [GET] /class/<int:id>
-   * 
+   * #### Authorization: Any
    */
   getClassInfo(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/class/<int:id>");
   }
 /**
    * ### [POST] /class/<int:id>/delete
-   * 
+   * #### Authorization: System
    */
   deleteClass(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/class/<int:id>/delete");
   }
 /**
    * ### [POST] /class/create
+   * #### Authorization: System
    * @param name
    */
   createClass(name: string
@@ -166,6 +167,7 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /class/<int:id>/modify
+   * #### Authorization: System
    * @param name
    */
   modifyClass(name: string
@@ -179,6 +181,7 @@ export class ForegroundApi {
   }
 /**
    * ### [GET] /notice/search
+   * #### Authorization: Any
    * @param sender
    * @param user
    * @param cls
@@ -201,6 +204,7 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /notice/send/user
+   * #### Authorization: Manager | Teacher
    * @param title
    * @param content
    * @param deadtime
@@ -223,6 +227,7 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /notice/send/class
+   * #### Authorization: Manager | Teacher
    * @param title
    * @param content
    * @param deadtime
@@ -246,6 +251,7 @@ export class ForegroundApi {
 /**
    * ## [POST] /notice/send/school
    * ### [POST] /notice/send/school
+   * #### Authorization: Manager | Teacher
    * @param title
    * @param content
    * @param deadtime
@@ -265,13 +271,14 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /notice/<int:id>/delete
-   * 
+   * #### Authorization: Manager | Teacher
    */
   deleteNotice(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/notice/<int:id>/delete");
   }
 /**
    * ### [POST] /notice/<int:id>/modify
+   * #### Authorization: Manager | Teacher
    * @param title
    * @param content
    * @param deadtime
@@ -291,6 +298,7 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /report
+   * #### Authorization: Any
    * @param report
    */
   report(report: string
@@ -304,20 +312,21 @@ export class ForegroundApi {
   }
 /**
    * ### [GET] /signup/list/<int:cls>
-   * 
+   * #### Authorization: Any
    */
   listSignup(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/signup/list/<int:cls>");
   }
 /**
    * ### [POST] /signup/<int:volId>/<int:stuId>/audit
-   * 
+   * #### Authorization: Class | Teacher
    */
   auditSignup(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/signup/<int:volId>/<int:stuId>/audit");
   }
 /**
    * ### [POST] /signup/<int:volId>
+   * #### Authorization: Any
    * @param students
    */
   signup(students: Array<number>
@@ -332,13 +341,14 @@ export class ForegroundApi {
 /**
    * ## [POST] /signup/<int:volId>/<int:stuId>/audit
    * ### [POST] /signup/<int:volId>/<int:stuId>/rollback
-   * 
+   * #### Authorization: Any
    */
   rollback(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/signup/<int:volId>/<int:stuId>/rollback");
   }
 /**
    * ### [GET] /thought/search
+   * #### Authorization: Any
    * @param cls
    * @param status
    * @param student
@@ -361,7 +371,7 @@ export class ForegroundApi {
   }
 /**
    * ### [GET] /thought/<int:volId>/<int:stuId>
-   * 
+   * #### Authorization: Any
    */
   getThoughtInfo(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/thought/<int:volId>/<int:stuId>");
@@ -369,6 +379,7 @@ export class ForegroundApi {
 /**
    * ## [POST] /thought/<int:volId>/<int:stuId>/save
    * ### [POST] /thought/<int:volId>/<int:stuId>/save
+   * #### Authorization: Any
    * @param thought
    * @param pictures
    */
@@ -385,6 +396,7 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /thought/<int:volId>/<int:stuId>/submit
+   * #### Authorization: Any
    * @param thought
    * @param pictures
    */
@@ -401,14 +413,14 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /thought/<int:volId>/<int:stuId>/audit/first
-   * 
+   * #### Authorization: Class | Teacher
    */
   firstAudit(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/thought/<int:volId>/<int:stuId>/audit/first");
   }
 /**
    * ### [POST] /thought/<int:volId>/<int:stuId>/audit/final
-   * 
+   * #### Authorization: Auditor
    */
   finalAudit(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/thought/<int:volId>/<int:stuId>/audit/final");
@@ -416,6 +428,7 @@ export class ForegroundApi {
 /**
    * ## [POST] /thought/<int:volId>/<int:stuId>/audit/repulse
    * ### [POST] /thought/<int:volId>/<int:stuId>/repulse
+   * #### Authorization: Any
    * @param reason
    */
   repulse(reason: string
@@ -429,13 +442,14 @@ export class ForegroundApi {
   }
 /**
    * ### [GET] /user/check
-   * 
+   * #### Authorization: Any
    */
   check(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/user/check");
   }
 /**
    * ### [POST] /user/login
+   * #### Authorization: Any
    * @param id
    * @param pwd
    */
@@ -452,13 +466,14 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /user/logout
-   * 
+   * #### Authorization: Any
    */
   logout(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/user/logout");
   }
 /**
    * ### [GET] /user/search
+   * #### Authorization: Any
    * @param name
    * @param cls
    */
@@ -475,13 +490,14 @@ export class ForegroundApi {
   }
 /**
    * ### [GET] /user/<int:id>
-   * 
+   * #### Authorization: Any
    */
   getUserInfo(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/user/<int:id>");
   }
 /**
    * ### [POST] /user/mod-pwd
+   * #### Authorization: Any
    * @param old
    * @param neo
    */
@@ -498,6 +514,7 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /user/change-class
+   * #### Authorization: Any
    * @param cls
    */
   changeClass(cls: number
@@ -511,6 +528,7 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /user/create
+   * #### Authorization: System
    * @param users
    */
   createUser(users: Array<structs.OneUser>
@@ -524,6 +542,7 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /user/<int:id>/modify
+   * #### Authorization: System
    * @param name
    * @param cls
    * @param auth
@@ -543,13 +562,14 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /user/<int:id>/delete
-   * 
+   * #### Authorization: System
    */
   deleteUser(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/user/<int:id>/delete");
   }
 /**
    * ### [GET] /volunteer/search
+   * #### Authorization: Any
    * @param holder
    * @param student
    * @param cls
@@ -575,13 +595,14 @@ export class ForegroundApi {
   }
 /**
    * ### [GET] /volunteer/<int:id>
-   * 
+   * #### Authorization: Any
    */
   getVolunteerInfo(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/volunteer/<int:id>");
   }
 /**
    * ### [POST] /volunteer/create
+   * #### Authorization: Any
    * @param name
    * @param description
    * @param time
@@ -610,6 +631,7 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /volunteer/<int:id>/modify
+   * #### Authorization: Any
    * @param name
    * @param description
    * @param time
@@ -638,14 +660,14 @@ export class ForegroundApi {
   }
 /**
    * ### [POST] /volunteer/<int:id>/delete
-   * 
+   * #### Authorization: Any
    */
   deleteVolunteer(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/volunteer/<int:id>/delete");
   }
 /**
    * ### [POST] /volunteer/<int:id>/audit
-   * 
+   * #### Authorization: Class | Teacher
    */
   auditVolunteer(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/volunteer/<int:id>/audit");

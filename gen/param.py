@@ -112,7 +112,7 @@ class Object:
         return ',\n    '.join(map(Object.unwrap_args, filter(lambda x: x, (self.url_args, self.members)))) + '\n  '
 
     def unwrap_docstring(self):
-        return '@param ' + '\n   * @param '.join(self.members.keys())
+        return '\n   * @param ' + '\n   * @param '.join(self.members.keys())
 
     def unwrap_call(self):
         return ',\n        '.join(self.members.keys())
