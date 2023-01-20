@@ -1,3 +1,1 @@
-import { fApi } from "./fApi.js";
-
-export const fApi = fApi;
+export { fApi } from "./fApi.js";

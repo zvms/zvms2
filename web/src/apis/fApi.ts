@@ -130,28 +130,28 @@ export class ForegroundApi {
 
   //--METHODS START----
 
-/**
+  /**
    * ### [GET] /class/list
    * #### Authorization: Any
    */
   listClasses(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/class/list");
   }
-/**
+  /**
    * ### [GET] /class/<int:id>
    * #### Authorization: Any
    */
   getClassInfo(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/class/<int:id>");
   }
-/**
+  /**
    * ### [POST] /class/<int:id>/delete
    * #### Authorization: System
    */
   deleteClass(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/class/<int:id>/delete");
   }
-/**
+  /**
    * ### [POST] /class/create
    * #### Authorization: System
    * @param name
@@ -162,10 +162,9 @@ export class ForegroundApi {
         this,
         "POST",
         "/class/create",
-        name
-    );
+        name);
   }
-/**
+  /**
    * ### [POST] /class/<int:id>/modify
    * #### Authorization: System
    * @param name
@@ -176,10 +175,9 @@ export class ForegroundApi {
         this,
         "POST",
         "/class/<int:id>/modify",
-        name
-    );
+        name);
   }
-/**
+  /**
    * ### [GET] /notice/search
    * #### Authorization: Any
    * @param sender
@@ -199,10 +197,9 @@ export class ForegroundApi {
         ...Array<any>(sender,
         user,
         cls,
-        school).filter((value: any) => value != undefined)
-    );
+        school).filter((value: any) => value != undefined));
   }
-/**
+  /**
    * ### [POST] /notice/send/user
    * #### Authorization: Manager | Teacher
    * @param title
@@ -222,10 +219,9 @@ export class ForegroundApi {
         title,
         content,
         deadtime,
-        targets
-    );
+        targets);
   }
-/**
+  /**
    * ### [POST] /notice/send/class
    * #### Authorization: Manager | Teacher
    * @param title
@@ -245,10 +241,9 @@ export class ForegroundApi {
         title,
         content,
         deadtime,
-        targets
-    );
+        targets);
   }
-/**
+  /**
    * ## [POST] /notice/send/school
    * ### [POST] /notice/send/school
    * #### Authorization: Manager | Teacher
@@ -266,17 +261,16 @@ export class ForegroundApi {
         "/notice/send/school",
         title,
         content,
-        deadtime
-    );
+        deadtime);
   }
-/**
+  /**
    * ### [POST] /notice/<int:id>/delete
    * #### Authorization: Manager | Teacher
    */
   deleteNotice(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/notice/<int:id>/delete");
   }
-/**
+  /**
    * ### [POST] /notice/<int:id>/modify
    * #### Authorization: Manager | Teacher
    * @param title
@@ -293,10 +287,9 @@ export class ForegroundApi {
         "/notice/<int:id>/modify",
         title,
         content,
-        deadtime
-    );
+        deadtime);
   }
-/**
+  /**
    * ### [POST] /report
    * #### Authorization: Any
    * @param report
@@ -307,24 +300,23 @@ export class ForegroundApi {
         this,
         "POST",
         "/report",
-        report
-    );
+        report);
   }
-/**
+  /**
    * ### [GET] /signup/list/<int:cls>
    * #### Authorization: Any
    */
   listSignup(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/signup/list/<int:cls>");
   }
-/**
+  /**
    * ### [POST] /signup/<int:volId>/<int:stuId>/audit
    * #### Authorization: Class | Teacher
    */
   auditSignup(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/signup/<int:volId>/<int:stuId>/audit");
   }
-/**
+  /**
    * ### [POST] /signup/<int:volId>
    * #### Authorization: Any
    * @param students
@@ -335,10 +327,9 @@ export class ForegroundApi {
         this,
         "POST",
         "/signup/<int:volId>",
-        students
-    );
+        students);
   }
-/**
+  /**
    * ## [POST] /signup/<int:volId>/<int:stuId>/audit
    * ### [POST] /signup/<int:volId>/<int:stuId>/rollback
    * #### Authorization: Any
@@ -346,7 +337,7 @@ export class ForegroundApi {
   rollback(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/signup/<int:volId>/<int:stuId>/rollback");
   }
-/**
+  /**
    * ### [GET] /thought/search
    * #### Authorization: Any
    * @param cls
@@ -366,17 +357,16 @@ export class ForegroundApi {
         ...Array<any>(cls,
         status,
         student,
-        Volunteer).filter((value: any) => value != undefined)
-    );
+        Volunteer).filter((value: any) => value != undefined));
   }
-/**
+  /**
    * ### [GET] /thought/<int:volId>/<int:stuId>
    * #### Authorization: Any
    */
   getThoughtInfo(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/thought/<int:volId>/<int:stuId>");
   }
-/**
+  /**
    * ## [POST] /thought/<int:volId>/<int:stuId>/save
    * ### [POST] /thought/<int:volId>/<int:stuId>/save
    * #### Authorization: Any
@@ -391,10 +381,9 @@ export class ForegroundApi {
         "POST",
         "/thought/<int:volId>/<int:stuId>/save",
         thought,
-        pictures
-    );
+        pictures);
   }
-/**
+  /**
    * ### [POST] /thought/<int:volId>/<int:stuId>/submit
    * #### Authorization: Any
    * @param thought
@@ -408,24 +397,23 @@ export class ForegroundApi {
         "POST",
         "/thought/<int:volId>/<int:stuId>/submit",
         thought,
-        pictures
-    );
+        pictures);
   }
-/**
+  /**
    * ### [POST] /thought/<int:volId>/<int:stuId>/audit/first
    * #### Authorization: Class | Teacher
    */
   firstAudit(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/thought/<int:volId>/<int:stuId>/audit/first");
   }
-/**
+  /**
    * ### [POST] /thought/<int:volId>/<int:stuId>/audit/final
    * #### Authorization: Auditor
    */
   finalAudit(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/thought/<int:volId>/<int:stuId>/audit/final");
   }
-/**
+  /**
    * ## [POST] /thought/<int:volId>/<int:stuId>/audit/repulse
    * ### [POST] /thought/<int:volId>/<int:stuId>/repulse
    * #### Authorization: Any
@@ -437,17 +425,16 @@ export class ForegroundApi {
         this,
         "POST",
         "/thought/<int:volId>/<int:stuId>/repulse",
-        reason
-    );
+        reason);
   }
-/**
+  /**
    * ### [GET] /user/check
    * #### Authorization: Any
    */
   check(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/user/check");
   }
-/**
+  /**
    * ### [POST] /user/login
    * #### Authorization: Any
    * @param id
@@ -461,17 +448,16 @@ export class ForegroundApi {
         "POST",
         "/user/login",
         id,
-        pwd
-    );
+        pwd);
   }
-/**
+  /**
    * ### [POST] /user/logout
    * #### Authorization: Any
    */
   logout(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/user/logout");
   }
-/**
+  /**
    * ### [GET] /user/search
    * #### Authorization: Any
    * @param name
@@ -485,17 +471,16 @@ export class ForegroundApi {
         "GET",
         "/user/search",
         ...Array<any>(name,
-        cls).filter((value: any) => value != undefined)
-    );
+        cls).filter((value: any) => value != undefined));
   }
-/**
+  /**
    * ### [GET] /user/<int:id>
    * #### Authorization: Any
    */
   getUserInfo(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/user/<int:id>");
   }
-/**
+  /**
    * ### [POST] /user/mod-pwd
    * #### Authorization: Any
    * @param old
@@ -509,10 +494,9 @@ export class ForegroundApi {
         "POST",
         "/user/mod-pwd",
         old,
-        neo
-    );
+        neo);
   }
-/**
+  /**
    * ### [POST] /user/change-class
    * #### Authorization: Any
    * @param cls
@@ -523,10 +507,9 @@ export class ForegroundApi {
         this,
         "POST",
         "/user/change-class",
-        cls
-    );
+        cls);
   }
-/**
+  /**
    * ### [POST] /user/create
    * #### Authorization: System
    * @param users
@@ -537,10 +520,9 @@ export class ForegroundApi {
         this,
         "POST",
         "/user/create",
-        users
-    );
+        users);
   }
-/**
+  /**
    * ### [POST] /user/<int:id>/modify
    * #### Authorization: System
    * @param name
@@ -557,17 +539,16 @@ export class ForegroundApi {
         "/user/<int:id>/modify",
         name,
         cls,
-        auth
-    );
+        auth);
   }
-/**
+  /**
    * ### [POST] /user/<int:id>/delete
    * #### Authorization: System
    */
   deleteUser(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/user/<int:id>/delete");
   }
-/**
+  /**
    * ### [GET] /volunteer/search
    * #### Authorization: Any
    * @param holder
@@ -590,17 +571,16 @@ export class ForegroundApi {
         student,
         cls,
         name,
-        status).filter((value: any) => value != undefined)
-    );
+        status).filter((value: any) => value != undefined));
   }
-/**
+  /**
    * ### [GET] /volunteer/<int:id>
    * #### Authorization: Any
    */
   getVolunteerInfo(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", "/volunteer/<int:id>");
   }
-/**
+  /**
    * ### [POST] /volunteer/create
    * #### Authorization: Any
    * @param name
@@ -626,10 +606,9 @@ export class ForegroundApi {
         time,
         type,
         reward,
-        classes
-    );
+        classes);
   }
-/**
+  /**
    * ### [POST] /volunteer/<int:id>/modify
    * #### Authorization: Any
    * @param name
@@ -655,24 +634,25 @@ export class ForegroundApi {
         time,
         type,
         reward,
-        classes
-    );
+        classes);
   }
-/**
+  /**
    * ### [POST] /volunteer/<int:id>/delete
    * #### Authorization: Any
    */
   deleteVolunteer(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/volunteer/<int:id>/delete");
   }
-/**
+  /**
    * ### [POST] /volunteer/<int:id>/audit
    * #### Authorization: Class | Teacher
    */
   auditVolunteer(): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "POST", "/volunteer/<int:id>/audit");
   }
-  //--METHODS END----
+
+//--METHODS END----
+
 }
 
 export const fApi = new ForegroundApi({

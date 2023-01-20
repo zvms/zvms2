@@ -69,12 +69,7 @@ class Array:
 
 class Object:
     url_args = re.compile('(\<\>)')
-    formatter = '''
-        {},
-        {},
-        {},
-        {}
-    '''
+    formatter = 'object-formatter'
 
     def __init__(self, keywords):
         self.members = {}
@@ -125,7 +120,7 @@ class Optional(Object):
         return '...Array<any>(' + ',\n        '.join(self.members.keys()) + ').filter((value: any) => value != undefined)'
 
 class Empty:
-    formatter = '{}, {}, {}{}'
+    formatter = 'empty-formatter'
 
     def unwrap_full_args():
         return ''

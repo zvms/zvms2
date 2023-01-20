@@ -2,7 +2,9 @@ import time
 
 begin = time.perf_counter()
 
+import os.path
 import ast
+import sys
 import os
 import io
 
@@ -11,6 +13,15 @@ import yaml
 from util import *
 from param import *
 
+if len(sys.argv) > 1:
+    os.chdir(sys.argv[1])
+
+with open('config/genconfig.yaml', encoding='utf-8') as f:
+    config = yaml.full_load(f)
+
+def complete(*paths):
+    print(os.path.realpath(os.path.join(*paths)), '生成完成!')
+
 def item_assign(value):
     return ast.Assign(
         lineno=1,
@@ -18,8 +29,8 @@ def item_assign(value):
         value=ast.Constant(value=value[1]['id'])
     )
 
-def genpyres(module, enum, pep_name):
-    existing_enum = find(module.body, lambda cd: isinstance(cd, ast.ClassDef) and cd.name == pep_name)
+def genpyres(module, enum, name):
+    existing_enum = find(module.body, lambda cd: isinstance(cd, ast.ClassDef) and cd.name == name)
     if existing_enum:
         for value in enum[1].items():
             if value[0].startswith('_'):
@@ -34,7 +45,7 @@ def genpyres(module, enum, pep_name):
     else:
         existing_enum = ast.ClassDef(
             decorator_list=[],
-            name=pep_name,
+            name=name,
             bases=[ast.Name(id='IntEnum')],
             keywords=[],
             body=list(map(item_assign, enum[1].items()))
@@ -42,8 +53,8 @@ def genpyres(module, enum, pep_name):
         module.body.append(existing_enum)
     existing_enum.body.sort(key=lambda item: (isinstance(item, ast.Assign) and item.value.value) or float('inf'))
 
-def gentsres(enum, ts_output):
-    ts_output.write(f'export enum {pep_name} {{')
+def gentsres(enum, ts_output, name):
+    ts_output.write(f'export enum {name} {{')
     comma = False
     items = sorted(enum[1].items(), key=lambda x: x[1]['id'])
     for field, value in items:
@@ -56,7 +67,7 @@ def gentsres(enum, ts_output):
             comma = True
         ts_output.write(f'    {Convertor(field, "camel").export("pascal")} = {value["id"]}')
     ts_output.write('\n}\n')
-    ts_output.write(f'''export function get{pep_name}Name(id: number) {{
+    ts_output.write(f'''export function get{name}Name(id: number) {{
     switch (id) {{
 ''')
     for field, value in items:
@@ -71,7 +82,7 @@ def gentsres(enum, ts_output):
 }
 ''')
 
-with open('apis/res.yaml', encoding='utf-8') as yaml_file, open('backend/zvms/res.py', encoding='utf-8') as py_file:
+with open(config['res']['yaml'], encoding='utf-8') as yaml_file, open(config['res']['py'], encoding='utf-8') as py_file:
     enums = yaml.full_load(yaml_file)
     module = ast.parse(py_file.read())
 
@@ -80,39 +91,38 @@ if not module.body or not isinstance(module.body[0], ast.ImportFrom) or (module.
         module='enum',
         names=[ast.alias(name='IntEnum')]
     ))
-with open('web/src/apis/types/enums.ts', 'w', encoding='utf-8') as ts_output:
+with open(config['res']['ts'], 'w', encoding='utf-8') as ts_output:
     for enum in enums.items():
         pep_name = Convertor(enum[0], 'camel').export('pascal')
-        comma = False
-        py_config = enum[1].get('_py')
-        ts_config = enum[1].get('_ts')
-        if not py_config or 'ignore' not in py_config:
-            genpyres(module, enum, pep_name)
-        if not ts_config or 'ignore' not in ts_config:
-            gentsres(enum, ts_output)
-    print('web/src/apis/types/enums.ts 生成完成!')
+        py_config = enum[1].get('_py', {})
+        ts_config = enum[1].get('_ts', {})
+        if 'ignore' not in py_config:
+            genpyres(module, enum, py_config.get('name', pep_name))
+        if 'ignore' not in ts_config:
+            gentsres(enum, ts_output, ts_config.get('name', pep_name))
+    complete(config['res']['ts'])
 
-with open('backend/zvms/res.py', 'w', encoding='utf-8') as output:
+with open(config['res']['py'], 'w', encoding='utf-8') as output:
     output.write(ast.unparse(module))
-    print('backend/zvms/res.py', '生成完成!')
+    complete(config['res']['py'])
 
-with open('backend/zvms/typing/structs.py', encoding='utf-8') as input_file, open('web/src/apis/types/structs.ts', 'w', encoding='utf-8') as output_file:
+with open(config['structs']['py'], encoding='utf-8') as input_file, open(config['structs']['ts'], 'w', encoding='utf-8') as output_file:
     input = ast.parse(input_file.read())
-    output_file.write('import * as enums from "./enums.js";\n')
+    output_file.write(f'import * as enums from "{config["rel-enums"]}";\n')
     for struct in input.body:
         if not isinstance(struct, ast.Assign):
             continue
         if struct.value.func.id not in ('Object', 'Optional', 'Extends'):
             continue
         output_file.write(assign(struct).unwrap_struct(struct.targets[0].id))
-    print('web/src/apis/types/structs.ts 生成完成!')
+    complete(config['structs']['ts'])
 
 parent = ast.Module(
     body=[],
     type_ignores=[]
 )
 output_ts = io.StringIO()
-output_ts.write('  //--METHODS START----\n\n')
+output_ts.write(f'{config["methods-flag"]["start"]}\n')
 Identifier.internal = False
 
 def get_attr(attr):
@@ -123,10 +133,10 @@ def traversal_op(op):
         return get_attr(op)
     return chain(traversal_op(op.left), get_attr(op.right))
 
-for impl in os.scandir('backend/zvms/impls'):
+for impl in os.scandir(config['impls']):
     if impl.is_dir() or impl.name == '__init__.py':
         continue
-    with open(impl.path, encoding='utf-8') as input_file, open(f'backend/zvms/views/{impl.name}', 'w') as output_file:
+    with open(impl.path, encoding='utf-8') as input_file, open(f'{config["views"]}/{impl.name}', 'w') as output_file:
         input = ast.parse(input_file.read())
         output = ast.Module(
             body=[
@@ -144,12 +154,12 @@ for impl in os.scandir('backend/zvms/impls'):
             if not api_info:
                 continue
             args = {
-                'rule': ast.Constant(value='/'),
-                'method': ast.Constant(value='GET'),
-                'params': ast.Name(id='Any'),
+                'rule': ast.Constant(value=config['api-defaults']['rule']),
+                'method': ast.Constant(value=config['api-defaults']['method']),
+                'params': ast.Name(id=config['api-defaults']['params']),
                 'auth': ast.Attribute(
                     value=ast.Name(id='Categ'),
-                    attr='ANY'
+                    attr=config['api-defaults']['auth']
                 ),
             }
             for k in args:
@@ -165,15 +175,16 @@ for impl in os.scandir('backend/zvms/impls'):
             else:
                 params = checkers.get(args['params'].id).with_url(args['rule'].value) or Empty
             docstring = ast.get_docstring(api)
-            output_ts.write(f'''/**{f"""
-   * ## {docstring}""" if docstring else ''}
-   * ### [{args['method'].value}] {args['rule'].value}
-   * #### Authorization: {' | '.join(traversal_op(args['auth']))}{params.unwrap_docstring()}
-   */
-  {Convertor(api.name, 'snake').export('camel')}({params.unwrap_full_args()}): ForegroundApiRunner<[]> {{
-    return createForegroundApiRunner({params.formatter.format('this', f'"{args["method"].value}"', f'"{args["rule"].value}"', params.unwrap_call())});
-  }}
-''')
+            output_ts.write(config['api-formatter'].format(
+                f'\n   * ## {docstring}' if docstring else '',
+                args['method'].value,
+                args['rule'].value,
+                ' | '.join(traversal_op(args['auth'])),
+                params.unwrap_docstring(),
+                Convertor(api.name, 'snake').export('camel'),
+                params.unwrap_full_args(),
+                config[params.formatter].format(f'"{args["method"].value}"', f'"{args["rule"].value}"', params.unwrap_call())
+            ))
             output.body.append(
                 ast.Expr(ast.Call(
                     func=ast.Name(id='route'),
@@ -191,22 +202,22 @@ for impl in os.scandir('backend/zvms/impls'):
                 ))
             )
         output_file.write(route_unparser.visit(output))
-        print(impl.path.replace('impls', 'views'), '生成完成!')
+        complete(impl.path.replace('impls', 'views'))
         parent.body.append(ast.Import(
             names=[ast.alias(name=f'zvms.views.{impl.name[:-3]}')]
         ))
-with open('backend/zvms/views/__init__.py', 'w', encoding='utf-8') as parent_file:
+with open(os.path.join(config["views"], '__init__.py'), 'w', encoding='utf-8') as parent_file:
     parent_file.write(ast.unparse(parent))
-print('backend/zvms/views/__init__.py 生成完成!')
-output_ts.write('  //--METHODS END----')
+complete(config["views"], '__init__.py')
+output_ts.write(f'\n\n{config["methods-flag"]["end"]}\n')
 
-methods_block = re.compile(r'  //--METHODS START----.+  //--METHODS END----', re.S)
+methods_block = re.compile(rf'{config["methods-flag"]["start"]}.+{config["methods-flag"]["end"]}', re.S)
 
-with open('web/src/apis/fApi-template.ts', encoding='utf-8') as f:
+with open(config['template'], encoding='utf-8') as f:
     origin = f.read()
-with open('web/src/apis/fApi.ts', 'w', encoding='utf-8') as f:
+with open(config['apis'], 'w', encoding='utf-8') as f:
     output_ts.seek(0)
     f.write(methods_block.sub(output_ts.read(), origin))
-print('web/src/apis/fApi.ts 生成完成!')
+complete(config['apis'])
 
 print(f'用时{time.perf_counter() - begin}秒')
