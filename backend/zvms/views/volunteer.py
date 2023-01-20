@@ -7,7 +7,7 @@ route(
     impl=search_volunteers,
     rule='/volunteer/search',
     method='GET',
-    params=Any,
+    params=SearchVolunteers,
     auth=Categ.ANY
 )
 

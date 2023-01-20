@@ -22,17 +22,14 @@ def logout(token_data):
     return success('登出成功')
 
 
-@api(rule='/user/search')
-def search_users(token_data, n=None, c=None):
-    if n:
-        query = User.query.filter(User.name.like(f'%{n}%'))
+@api(rule='/user/search', params='SearchUsers')
+def search_users(token_data, name=None, cls=None):
+    if name:
+        query = User.query.filter(User.name.like(f'%{name}%'))
     else:
         query = User.query
-    if c:
-        try:
-            def filter_(u): return u.auth & int(c)
-        except ValueError:
-            return error(400, '非法URL参数')
+    if cls:
+        def filter_(u): return u.auth & int(cls)
     else:
         def filter_(_): return True
     return success('获取成功', list_or_error(select(filter(filter_, query), 'id', 'name')))
@@ -48,13 +45,13 @@ def get_user_info(id, token_data):
 
 
 @api(rule='/user/mod-pwd', method='POST', params='ModPwd')
-def modify_password(old, new, token_data):
-    if len(new) != 32:
+def modify_password(old, neo, token_data):
+    if len(neo) != 32:
         return error(400, '密码格式错误')
     user = User.query.get(token_data['id'])
     if user.pwd != old:
         return error(400, '旧密码错误')
-    user.pwd = new
+    user.pwd = neo
     return success('修改成功')
 
 

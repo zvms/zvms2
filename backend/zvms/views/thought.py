@@ -7,7 +7,7 @@ route(
     impl=search_thoughts,
     rule='/thought/search',
     method='GET',
-    params=Any,
+    params=SearchThoughts,
     auth=Categ.ANY
 )
 

@@ -7,7 +7,7 @@ route(
     impl=search_notices,
     rule='/notice/search',
     method='GET',
-    params=Any,
+    params=SearchNotices,
     auth=Categ.ANY
 )
 

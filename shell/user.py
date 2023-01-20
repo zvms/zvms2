@@ -32,7 +32,7 @@ def logout():
     headers['Authorization'] = ''
     App.config['prompt'] = '(未登录)> '
 
-@user.route('user search -n <name> -c <int:categ>')
+@user.route('user search -name <name> -cls <int:categ>')
 def search_users(**kwargs):
     '''搜索用户'''
     res = req.get(f'/user/search?{search(kwargs)}')

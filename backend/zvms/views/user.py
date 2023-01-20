@@ -31,7 +31,7 @@ route(
     impl=search_users,
     rule='/user/search',
     method='GET',
-    params=Any,
+    params=SearchUsers,
     auth=Categ.ANY
 )
 

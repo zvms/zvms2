@@ -8,7 +8,7 @@ from zvms.util import *
 from zvms.res import *
 
 
-@api(rule='/thought/search')
+@api(rule='/thought/search', params='SearchThoughts')
 def search_thoughts(**kwargs):
     conds = [StuVol.status != ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT]
     def filter_(_): return True

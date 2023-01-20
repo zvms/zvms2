@@ -130,330 +130,525 @@ export class ForegroundApi {
 
   //--METHODS START----
 
-  /**
-   * ## [GET] /classes
+/**
+   * ### [GET] /class/list
+   * 
    */
   listClasses(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/classes");
+    return createForegroundApiRunner(this, "GET", "/class/list");
   }
-
-  /**
-   * ## [POST] /classes * @param name
-   */
-  createClass(name: string): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "POST", "/classes", name);
-  }
-  /**
-   * ## [GET] /classes/<int:id>
+/**
+   * ### [GET] /class/<int:id>
+   * 
    */
   getClassInfo(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/classes/<int:id>");
+    return createForegroundApiRunner(this, "GET", "/class/<int:id>");
   }
-
-  /**
-   * ## [DELETE] /classes/<int:id>
+/**
+   * ### [POST] /class/<int:id>/delete
+   * 
    */
   deleteClass(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "DELETE", "/classes/<int:id>");
+    return createForegroundApiRunner(this, "POST", "/class/<int:id>/delete");
   }
-
-  /**
-   * ## [PUT] /classes/<int:id>
+/**
+   * ### [POST] /class/create
+   * @param name
    */
-  modifyClass(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "PUT", "/classes/<int:id>");
+  createClass(name: string
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/class/create",
+        name
+    );
   }
-  /**
-   * ## [GET] /notices
+/**
+   * ### [POST] /class/<int:id>/modify
+   * @param name
    */
-  searchNotices(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/notices");
+  modifyClass(name: string
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/class/<int:id>/modify",
+        name
+    );
   }
-
-  /**
-   * ## [POST] /notices * @param title
+/**
+   * ### [GET] /notice/search
+   * @param sender
+   * @param user
+   * @param cls
+   * @param school
+   */
+  searchNotices(sender?: number,
+    user?: number,
+    cls?: number,
+    school?: any
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "GET",
+        "/notice/search",
+        ...Array<any>(sender,
+        user,
+        cls,
+        school).filter((value: any) => value != undefined)
+    );
+  }
+/**
+   * ### [POST] /notice/send/user
+   * @param title
    * @param content
    * @param deadtime
-   * @param type
    * @param targets
    */
-  sendNotice(
-    title: string,
+  sendUserNotice(title: string,
     content: string,
     deadtime: string,
-    type: number,
     targets: Array<number>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "POST",
-      "/notices",
-      title,
-      content,
-      deadtime,
-      type,
-      targets
+        this,
+        "POST",
+        "/notice/send/user",
+        title,
+        content,
+        deadtime,
+        targets
     );
   }
-  /**
-   * ## [GET] /notices/<int:id>
+/**
+   * ### [POST] /notice/send/class
+   * @param title
+   * @param content
+   * @param deadtime
+   * @param targets
    */
-  getNotice(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/notices/<int:id>");
+  sendClassNotice(title: string,
+    content: string,
+    deadtime: string,
+    targets: Array<number>
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/notice/send/class",
+        title,
+        content,
+        deadtime,
+        targets
+    );
   }
-
-  /**
-   * ## [DELETE] /notices/<int:id>
+/**
+   * ## [POST] /notice/send/school
+   * ### [POST] /notice/send/school
+   * @param title
+   * @param content
+   * @param deadtime
+   */
+  sendSchoolNotice(title: string,
+    content: string,
+    deadtime: string
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/notice/send/school",
+        title,
+        content,
+        deadtime
+    );
+  }
+/**
+   * ### [POST] /notice/<int:id>/delete
+   * 
    */
   deleteNotice(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "DELETE", "/notices/<int:id>");
+    return createForegroundApiRunner(this, "POST", "/notice/<int:id>/delete");
   }
-
-  /**
-   * ## [PUT] /notices/<int:id>
+/**
+   * ### [POST] /notice/<int:id>/modify
+   * @param title
+   * @param content
+   * @param deadtime
    */
-  updateNotice(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "PUT", "/notices/<int:id>");
+  modifyNotice(title: string,
+    content: string,
+    deadtime: string
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/notice/<int:id>/modify",
+        title,
+        content,
+        deadtime
+    );
   }
-  /**
-   * ## [POST] /report * @param content
+/**
+   * ### [POST] /report
+   * @param report
    */
-  report(content: string): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "POST", "/report", content);
+  report(report: string
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/report",
+        report
+    );
   }
-  /**
-   * ## [GET] /signup
+/**
+   * ### [GET] /signup/list/<int:cls>
+   * 
    */
   listSignup(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/signup");
+    return createForegroundApiRunner(this, "GET", "/signup/list/<int:cls>");
   }
-  /**
-   * ## [POST] /signup/<int:stuId> * @param volId
-   */
-  signup(volId: number): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      "/signup/<int:stuId>",
-      volId
-    );
-  }
-  /**
-   * ## [PATCH] /signup/<int:stuId>/<int:volId>
+/**
+   * ### [POST] /signup/<int:volId>/<int:stuId>/audit
+   * 
    */
   auditSignup(): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", "/signup/<int:volId>/<int:stuId>/audit");
+  }
+/**
+   * ### [POST] /signup/<int:volId>
+   * @param students
+   */
+  signup(students: Array<number>
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "PATCH",
-      "/signup/<int:stuId>/<int:volId>"
+        this,
+        "POST",
+        "/signup/<int:volId>",
+        students
     );
   }
-
-  /**
-   * ## [DELETE] /signup/<int:stuId>/<int:volId>
+/**
+   * ## [POST] /signup/<int:volId>/<int:stuId>/audit
+   * ### [POST] /signup/<int:volId>/<int:stuId>/rollback
+   * 
    */
   rollback(): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", "/signup/<int:volId>/<int:stuId>/rollback");
+  }
+/**
+   * ### [GET] /thought/search
+   * @param cls
+   * @param status
+   * @param student
+   * @param Volunteer
+   */
+  searchThoughts(cls?: number,
+    status?: enums.ThoughtStatus,
+    student?: number,
+    Volunteer?: number
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "DELETE",
-      "/signup/<int:stuId>/<int:volId>"
+        this,
+        "GET",
+        "/thought/search",
+        ...Array<any>(cls,
+        status,
+        student,
+        Volunteer).filter((value: any) => value != undefined)
     );
   }
-  /**
-   * ## [GET] /thoughts
-   */
-  searchThoughts(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/thoughts");
-  }
-  /**
-   * ## [GET] /thoughts/<int:stuId> * @param volid
-   */
-  signup(volid: number): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(
-      this,
-      "GET",
-      "/thoughts/<int:stuId>",
-      volid
-    );
-  }
-  /**
-   * ## [GET] /thoughts/<int:stuId>/<int:volId>
+/**
+   * ### [GET] /thought/<int:volId>/<int:stuId>
+   * 
    */
   getThoughtInfo(): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "GET", "/thought/<int:volId>/<int:stuId>");
+  }
+/**
+   * ## [POST] /thought/<int:volId>/<int:stuId>/save
+   * ### [POST] /thought/<int:volId>/<int:stuId>/save
+   * @param thought
+   * @param pictures
+   */
+  saveThought(thought: string,
+    pictures: Array<string>
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "GET",
-      "/thoughts/<int:stuId>/<int:volId>"
+        this,
+        "POST",
+        "/thought/<int:volId>/<int:stuId>/save",
+        thought,
+        pictures
     );
   }
-
-  /**
-   * ## [PATCH] /thoughts/<int:stuId>/<int:volId>
+/**
+   * ### [POST] /thought/<int:volId>/<int:stuId>/submit
+   * @param thought
+   * @param pictures
    */
-  updateThought(): ForegroundApiRunner<[]> {
+  submitThought(thought: string,
+    pictures: Array<string>
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "PATCH",
-      "/thoughts/<int:stuId>/<int:volId>"
+        this,
+        "POST",
+        "/thought/<int:volId>/<int:stuId>/submit",
+        thought,
+        pictures
     );
   }
-  /**
-   * ## [GET] /users
+/**
+   * ### [POST] /thought/<int:volId>/<int:stuId>/audit/first
+   * 
    */
-  searchUsers(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/users");
+  firstAudit(): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", "/thought/<int:volId>/<int:stuId>/audit/first");
   }
-  /**
-   * ## [GET] /users/check
+/**
+   * ### [POST] /thought/<int:volId>/<int:stuId>/audit/final
+   * 
+   */
+  finalAudit(): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", "/thought/<int:volId>/<int:stuId>/audit/final");
+  }
+/**
+   * ## [POST] /thought/<int:volId>/<int:stuId>/audit/repulse
+   * ### [POST] /thought/<int:volId>/<int:stuId>/repulse
+   * @param reason
+   */
+  repulse(reason: string
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/thought/<int:volId>/<int:stuId>/repulse",
+        reason
+    );
+  }
+/**
+   * ### [GET] /user/check
+   * 
    */
   check(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/users/check");
+    return createForegroundApiRunner(this, "GET", "/user/check");
   }
-
-  /**
-   * ## [POST] /users/login * @param id
+/**
+   * ### [POST] /user/login
+   * @param id
    * @param pwd
    */
-  login(id: number, pwd: string): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "POST", "/users/login", id, pwd);
+  login(id: number,
+    pwd: string
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/user/login",
+        id,
+        pwd
+    );
   }
-
-  /**
-   * ## [POST] /users/logout
+/**
+   * ### [POST] /user/logout
+   * 
    */
   logout(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "POST", "/users/logout");
+    return createForegroundApiRunner(this, "POST", "/user/logout");
   }
-
-  /**
-   * ## [POST] /users/create * @param users
+/**
+   * ### [GET] /user/search
+   * @param name
+   * @param cls
    */
-  createUsers(users: Array<structs.UserOfUsers>): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "POST", "/users/create", users);
-  }
-
-  /**
-   * ## [PATCH] /users/mod-pwd * @param oldMD5
-   * @param newMD5
-   */
-  modifyPassword(oldMD5: string, newMD5: string): ForegroundApiRunner<[]> {
+  searchUsers(name?: string,
+    cls?: number
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "PATCH",
-      "/users/mod-pwd",
-      oldMD5,
-      newMD5
+        this,
+        "GET",
+        "/user/search",
+        ...Array<any>(name,
+        cls).filter((value: any) => value != undefined)
     );
   }
-
-  /**
-   * ## [PATCH] /users/change-class * @param newClsId
-   */
-  changeClass(newClsId: number): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(
-      this,
-      "PATCH",
-      "/users/change-class",
-      newClsId
-    );
-  }
-
-  /**
-   * ## [GET] /users/<int:id>
+/**
+   * ### [GET] /user/<int:id>
+   * 
    */
   getUserInfo(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/users/<int:id>");
+    return createForegroundApiRunner(this, "GET", "/user/<int:id>");
   }
-
-  /**
-   * ## [DELETE] /users/<int:id>
+/**
+   * ### [POST] /user/mod-pwd
+   * @param old
+   * @param neo
+   */
+  modifyPassword(old: string,
+    neo: string
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/user/mod-pwd",
+        old,
+        neo
+    );
+  }
+/**
+   * ### [POST] /user/change-class
+   * @param cls
+   */
+  changeClass(cls: number
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/user/change-class",
+        cls
+    );
+  }
+/**
+   * ### [POST] /user/create
+   * @param users
+   */
+  createUser(users: Array<structs.OneUser>
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/user/create",
+        users
+    );
+  }
+/**
+   * ### [POST] /user/<int:id>/modify
+   * @param name
+   * @param cls
+   * @param auth
+   */
+  modifyUser(name: string,
+    cls: number,
+    auth: number
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/user/<int:id>/modify",
+        name,
+        cls,
+        auth
+    );
+  }
+/**
+   * ### [POST] /user/<int:id>/delete
+   * 
    */
   deleteUser(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "DELETE", "/users/<int:id>");
+    return createForegroundApiRunner(this, "POST", "/user/<int:id>/delete");
   }
-
-  /**
-   * ## [PUT] /users/<int:id>
+/**
+   * ### [GET] /volunteer/search
+   * @param holder
+   * @param student
+   * @param cls
+   * @param name
+   * @param status
    */
-  modifyUser(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "PUT", "/users/<int:id>");
-  }
-  /**
-   * ## [GET] /volunteers
-   */
-  searchVolunteers(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/volunteers");
-  }
-
-  /**
-   * ## [POST] /volunteers * @param name
-   * @param description
-   * @param time
-   * @param type
-   * @param reward
-   * @param classes
-   */
-  createVolunteer(
-    name: string,
-    description: string,
-    time: string,
-    type: number,
-    reward: number,
-    classes: Array<structs.VolunteerRecordClass>
+  searchVolunteers(holder?: number,
+    student?: number,
+    cls?: number,
+    name?: string,
+    status?: enums.VolStatus
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "POST",
-      "/volunteers",
-      name,
-      description,
-      time,
-      type,
-      reward,
-      classes
+        this,
+        "GET",
+        "/volunteer/search",
+        ...Array<any>(holder,
+        student,
+        cls,
+        name,
+        status).filter((value: any) => value != undefined)
     );
   }
-  /**
-   * ## [GET] /volunteers/<int:id>
+/**
+   * ### [GET] /volunteer/<int:id>
+   * 
    */
   getVolunteerInfo(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/volunteers/<int:id>");
+    return createForegroundApiRunner(this, "GET", "/volunteer/<int:id>");
   }
-
-  /**
-   * ## [PUT] /volunteers/<int:id> * @param name
+/**
+   * ### [POST] /volunteer/create
+   * @param name
    * @param description
    * @param time
    * @param type
    * @param reward
    * @param classes
    */
-  updateVolunteer(
-    name: string,
+  createVolunteer(name: string,
     description: string,
     time: string,
-    type: number,
+    type: enums.VolType,
     reward: number,
-    classes: Array<structs.VolunteerRecordClass>
+    classes: Array<structs.ClassVol>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "PUT",
-      "/volunteers/<int:id>",
-      name,
-      description,
-      time,
-      type,
-      reward,
-      classes
+        this,
+        "POST",
+        "/volunteer/create",
+        name,
+        description,
+        time,
+        type,
+        reward,
+        classes
     );
   }
-
-  /**
-   * ## [DELETE] /volunteers/<int:id>
+/**
+   * ### [POST] /volunteer/<int:id>/modify
+   * @param name
+   * @param description
+   * @param time
+   * @param type
+   * @param reward
+   * @param classes
+   */
+  modifyVolunteer(name: string,
+    description: string,
+    time: string,
+    type: enums.VolType,
+    reward: number,
+    classes: Array<structs.ClassVol>
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        "/volunteer/<int:id>/modify",
+        name,
+        description,
+        time,
+        type,
+        reward,
+        classes
+    );
+  }
+/**
+   * ### [POST] /volunteer/<int:id>/delete
+   * 
    */
   deleteVolunteer(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "DELETE", "/volunteers/<int:id>");
+    return createForegroundApiRunner(this, "POST", "/volunteer/<int:id>/delete");
+  }
+/**
+   * ### [POST] /volunteer/<int:id>/audit
+   * 
+   */
+  auditVolunteer(): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", "/volunteer/<int:id>/audit");
   }
   //--METHODS END----
 }

@@ -3,7 +3,7 @@ from zvms.res import *
 from zvms.util import *
 
 
-@api(rule='/volunteer/search')
+@api(rule='/volunteer/search', params='SearchVolunteers')
 def search_volunteers(token_data, **kwargs):
     conds = []
     try:

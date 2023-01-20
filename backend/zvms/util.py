@@ -202,10 +202,4 @@ def interface_error(expected, found):
     return json.dumps({'type': 'ERROR', 'message': '请求接口错误', 'expected': str(expected), 'found': parse(found)})
 
 def api(*, rule, method=None, params=None, auth=None):
-    def wrapper(func):
-        func.__rule__ = rule
-        func.__method__ = method
-        func.__params__ = params
-        func.__auth__ = auth
-        return func
-    return wrapper
+    return lambda func: func

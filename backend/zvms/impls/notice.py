@@ -3,7 +3,7 @@ from zvms.util import *
 from zvms.res import *
 
 
-@api(rule='/notice/search')
+@api(rule='/notice/search', params='SearchNotices')
 def search_notices(token_data, **kwargs):
     conds = []
     try:
