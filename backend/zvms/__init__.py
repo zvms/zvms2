@@ -5,11 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from zvms.res import STATIC_FOLDER
 
 app = Flask(__name__)
-with open('app.cfg') as f:
-    app.config['SQLALCHEMY_DATABASE_URI'], \
-        app.config['SECRET_KEY'] = map(lambda s: s[:-1], f)
 CORS(app, supports_credentials=True, resources={r"/*", "*"})
 app.static_folder = STATIC_FOLDER
+app.config.from_pyfile('config.py')
 
 app.test_request_context().push()
 db = SQLAlchemy(app)

@@ -1,0 +1,29 @@
+views: backend/zvms/views
+template: web/src/apis/fApi-template.ts
+apis: web/src/apis/fApi.ts
+
+res:
+  yaml: apis/res.yaml
+  py: backend/zvms/res.py
+  ts: web/src/apis/types/enums.ts
+
+structs:
+  py: backend/zvms/typing/structs.py
+  ts: web/src/apis/types/structs.ts
+
+rel-enums: ./enums
+methods-flag:
+  start: //--METHODS START----
+  end: //--METHODS END----
+
+# yaml跨行字符串的空格会没掉, 只能这么写
+api-formatter: '\n  /**{}\n   * ### [{}] {}\n   * #### 权限: {}{}\n   */\n  {}({}): ForegroundApiRunner<[]> {{\n    return createForegroundApiRunner({});\n  }}'
+empty-formatter: "this, {}, {}{}"
+object-formatter: '\n        this,\n        {},\n        {},\n        {}'
+auth-needless: '不需要'
+
+api-defaults:
+  rule: /
+  method: GET
+  params: Any
+  auth: ANY

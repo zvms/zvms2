@@ -69,6 +69,22 @@ class Extends(Object):
         self.members = super.members | members
 
 
+class Optional:
+    def __init__(self, **options):
+        self.options = options
+
+    def __call__(self, json):
+        if not isinstance(json, dict):
+            return False
+        for k, v in json.items():
+            if k in self.options and not self.options[k](v):
+                return False
+        return True
+
+    def __str__(self):
+        return '{*, ' + ', '.join(map(lambda p: f'"{p[0]}": {p[1]}', self.members.items())) + '}'
+
+
 class Union:
     def __init__(self, *options):
         self.options = options

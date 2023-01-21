@@ -25,4 +25,5 @@ yarn-error.log*
 report.txt
 log.txt
 tmp.*
-app.cfg
+config.py
+statitic.py

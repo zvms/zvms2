@@ -131,262 +131,529 @@ export class ForegroundApi {
   //--METHODS START----
 
   /**
-   * ## [GET] /classes
+   * ### [GET] /class/list
+   * #### 权限: Any
    */
   listClasses(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/classes");
+    return createForegroundApiRunner(this, "GET", `/class/list`);
   }
-
   /**
-   * ## [POST] /classes * @param name
+   * ### [GET] /class/<int:id>
+   * #### 权限: Any
+   * @param id
    */
-  createClass(name: string): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "POST", "/classes", name);
+  getClassInfo(id: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "GET", `/class/${id}`);
   }
   /**
-   * ## [GET] /classes/<int:id>
+   * ### [POST] /class/<int:id>/delete
+   * #### 权限: System
+   * @param id
    */
-  getClassInfo(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/classes/<int:id>");
+  deleteClass(id: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", `/class/${id}/delete`);
   }
-
   /**
-   * ## [DELETE] /classes/<int:id>
+   * ### [POST] /class/create
+   * #### 权限: System
+   * @param name
    */
-  deleteClass(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "DELETE", "/classes/<int:id>");
+  createClass(
+    name: string
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        `/class/create`,
+        name);
   }
-
   /**
-   * ## [PUT] /classes/<int:id>
+   * ### [POST] /class/<int:id>/modify
+   * #### 权限: System
+   * @param name
+   * @param id
    */
-  modifyClass(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "PUT", "/classes/<int:id>");
+  modifyClass(
+    id: number,
+    name: string
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        `/class/${id}/modify`,
+        name);
   }
   /**
-   * ## [GET] /notices
+   * ### [GET] /notice/search
+   * #### 权限: Any
+   * @param sender
+   * @param user
+   * @param cls
+   * @param school
    */
-  searchNotices(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/notices");
+  searchNotices(
+    sender?: number,
+    user?: number,
+    cls?: number,
+    school?: any
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "GET",
+        `/notice/search`,
+        ...Array<any>(
+          sender,
+          user,
+          cls,
+          school
+        ).filter((value: any) => value != undefined));
   }
-
   /**
-   * ## [POST] /notices * @param title
+   * ### [POST] /notice/send/user
+   * #### 权限: Manager | Teacher
+   * @param title
    * @param content
    * @param deadtime
-   * @param type
    * @param targets
    */
-  sendNotice(
+  sendUserNotice(
     title: string,
     content: string,
     deadtime: string,
-    type: number,
     targets: Array<number>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "POST",
-      "/notices",
-      title,
+        this,
+        "POST",
+        `/notice/send/user`,
+        title,
       content,
       deadtime,
-      type,
-      targets
-    );
+      targets);
   }
   /**
-   * ## [GET] /notices/<int:id>
+   * ### [POST] /notice/send/class
+   * #### 权限: Manager | Teacher
+   * @param title
+   * @param content
+   * @param deadtime
+   * @param targets
    */
-  getNotice(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/notices/<int:id>");
-  }
-
-  /**
-   * ## [DELETE] /notices/<int:id>
-   */
-  deleteNotice(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "DELETE", "/notices/<int:id>");
-  }
-
-  /**
-   * ## [PUT] /notices/<int:id>
-   */
-  updateNotice(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "PUT", "/notices/<int:id>");
-  }
-  /**
-   * ## [POST] /report * @param content
-   */
-  report(content: string): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "POST", "/report", content);
-  }
-  /**
-   * ## [GET] /signup
-   */
-  listSignup(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/signup");
-  }
-  /**
-   * ## [POST] /signup/<int:stuId> * @param volId
-   */
-  signup(volId: number): ForegroundApiRunner<[]> {
+  sendClassNotice(
+    title: string,
+    content: string,
+    deadtime: string,
+    targets: Array<number>
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "POST",
-      "/signup/<int:stuId>",
-      volId
-    );
+        this,
+        "POST",
+        `/notice/send/class`,
+        title,
+      content,
+      deadtime,
+      targets);
   }
   /**
-   * ## [PATCH] /signup/<int:stuId>/<int:volId>
+   * ## [POST] /notice/send/school
+   * ### [POST] /notice/send/school
+   * #### 权限: Manager | Teacher
+   * @param title
+   * @param content
+   * @param deadtime
    */
-  auditSignup(): ForegroundApiRunner<[]> {
+  sendSchoolNotice(
+    title: string,
+    content: string,
+    deadtime: string
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "PATCH",
-      "/signup/<int:stuId>/<int:volId>"
-    );
+        this,
+        "POST",
+        `/notice/send/school`,
+        title,
+      content,
+      deadtime);
   }
-
   /**
-   * ## [DELETE] /signup/<int:stuId>/<int:volId>
+   * ### [POST] /notice/<int:id>/delete
+   * #### 权限: Manager | Teacher
+   * @param id
    */
-  rollback(): ForegroundApiRunner<[]> {
+  deleteNotice(id: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", `/notice/${id}/delete`);
+  }
+  /**
+   * ### [POST] /notice/<int:id>/modify
+   * #### 权限: Manager | Teacher
+   * @param title
+   * @param content
+   * @param deadtime
+   * @param id
+   */
+  modifyNotice(
+    id: number,
+    title: string,
+    content: string,
+    deadtime: string
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "DELETE",
-      "/signup/<int:stuId>/<int:volId>"
-    );
+        this,
+        "POST",
+        `/notice/${id}/modify`,
+        title,
+      content,
+      deadtime);
   }
   /**
-   * ## [GET] /thoughts
+   * ### [POST] /report
+   * #### 权限: Any
+   * @param report
    */
-  searchThoughts(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/thoughts");
-  }
-  /**
-   * ## [GET] /thoughts/<int:stuId> * @param volid
-   */
-  signup(volid: number): ForegroundApiRunner<[]> {
+  report(
+    report: string
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "GET",
-      "/thoughts/<int:stuId>",
-      volid
-    );
+        this,
+        "POST",
+        `/report`,
+        report);
   }
   /**
-   * ## [GET] /thoughts/<int:stuId>/<int:volId>
+   * ### [GET] /signup/list/<int:cls>
+   * #### 权限: Any
+   * @param cls
    */
-  getThoughtInfo(): ForegroundApiRunner<[]> {
+  listSignup(cls: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "GET", `/signup/list/${cls}`);
+  }
+  /**
+   * ### [POST] /signup/<int:volId>/<int:stuId>/audit
+   * #### 权限: Class | Teacher
+   * @param volId
+   * @param stuId
+   */
+  auditSignup(volId: number,
+    stuId: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", `/signup/${volId}/${stuId}/audit`);
+  }
+  /**
+   * ### [POST] /signup/<int:volId>
+   * #### 权限: Any
+   * @param students
+   * @param volId
+   */
+  signup(
+    volId: number,
+    students: Array<number>
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "GET",
-      "/thoughts/<int:stuId>/<int:volId>"
-    );
+        this,
+        "POST",
+        `/signup/${volId}`,
+        students);
   }
-
   /**
-   * ## [PATCH] /thoughts/<int:stuId>/<int:volId>
+   * ## [POST] /signup/<int:volId>/<int:stuId>/audit
+   * ### [POST] /signup/<int:volId>/<int:stuId>/rollback
+   * #### 权限: Any
+   * @param volId
+   * @param stuId
    */
-  updateThought(): ForegroundApiRunner<[]> {
+  rollback(volId: number,
+    stuId: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", `/signup/${volId}/${stuId}/rollback`);
+  }
+  /**
+   * ### [GET] /thought/search
+   * #### 权限: Any
+   * @param cls
+   * @param status
+   * @param student
+   * @param Volunteer
+   */
+  searchThoughts(
+    cls?: number,
+    status?: enums.ThoughtStatus,
+    student?: number,
+    Volunteer?: number
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "PATCH",
-      "/thoughts/<int:stuId>/<int:volId>"
-    );
+        this,
+        "GET",
+        `/thought/search`,
+        ...Array<any>(
+          cls,
+          status,
+          student,
+          Volunteer
+        ).filter((value: any) => value != undefined));
   }
   /**
-   * ## [GET] /users
+   * ### [GET] /thought/<int:volId>/<int:stuId>
+   * #### 权限: Any
+   * @param volId
+   * @param stuId
    */
-  searchUsers(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/users");
+  getThoughtInfo(volId: number,
+    stuId: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "GET", `/thought/${volId}/${stuId}`);
   }
   /**
-   * ## [GET] /users/check
+   * ## [POST] /thought/<int:volId>/<int:stuId>/save
+   * ### [POST] /thought/<int:volId>/<int:stuId>/save
+   * #### 权限: Any
+   * @param thought
+   * @param pictures
+   * @param volId
+   * @param stuId
+   */
+  saveThought(
+    volId: number,
+    stuId: number,
+    thought: string,
+    pictures: Array<string>
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        `/thought/${volId}/${stuId}/save`,
+        thought,
+      pictures);
+  }
+  /**
+   * ### [POST] /thought/<int:volId>/<int:stuId>/submit
+   * #### 权限: Any
+   * @param thought
+   * @param pictures
+   * @param volId
+   * @param stuId
+   */
+  submitThought(
+    volId: number,
+    stuId: number,
+    thought: string,
+    pictures: Array<string>
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        `/thought/${volId}/${stuId}/submit`,
+        thought,
+      pictures);
+  }
+  /**
+   * ### [POST] /thought/<int:volId>/<int:stuId>/audit/first
+   * #### 权限: Class | Teacher
+   * @param volId
+   * @param stuId
+   */
+  firstAudit(volId: number,
+    stuId: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", `/thought/${volId}/${stuId}/audit/first`);
+  }
+  /**
+   * ### [POST] /thought/<int:volId>/<int:stuId>/audit/final
+   * #### 权限: Auditor
+   * @param volId
+   * @param stuId
+   */
+  finalAudit(volId: number,
+    stuId: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", `/thought/${volId}/${stuId}/audit/final`);
+  }
+  /**
+   * ## [POST] /thought/<int:volId>/<int:stuId>/audit/repulse
+   * ### [POST] /thought/<int:volId>/<int:stuId>/repulse
+   * #### 权限: Any
+   * @param reason
+   * @param volId
+   * @param stuId
+   */
+  repulse(
+    volId: number,
+    stuId: number,
+    reason: string
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        `/thought/${volId}/${stuId}/repulse`,
+        reason);
+  }
+  /**
+   * ### [GET] /user/check
+   * #### 权限: Any
    */
   check(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/users/check");
+    return createForegroundApiRunner(this, "GET", `/user/check`);
   }
-
   /**
-   * ## [POST] /users/login * @param id
+   * ### [POST] /user/login
+   * #### 权限: None
+   * @param id
    * @param pwd
    */
-  login(id: number, pwd: string): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "POST", "/users/login", id, pwd);
+  login(
+    id: number,
+    pwd: string
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        `/user/login`,
+        id,
+      pwd);
   }
-
   /**
-   * ## [POST] /users/logout
+   * ### [POST] /user/logout
+   * #### 权限: Any
    */
   logout(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "POST", "/users/logout");
+    return createForegroundApiRunner(this, "POST", `/user/logout`);
   }
-
   /**
-   * ## [POST] /users/create * @param users
+   * ### [GET] /user/search
+   * #### 权限: Any
+   * @param name
+   * @param cls
    */
-  createUsers(users: Array<structs.UserOfUsers>): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "POST", "/users/create", users);
-  }
-
-  /**
-   * ## [PATCH] /users/mod-pwd * @param oldMD5
-   * @param newMD5
-   */
-  modifyPassword(oldMD5: string, newMD5: string): ForegroundApiRunner<[]> {
+  searchUsers(
+    name?: string,
+    cls?: number
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "PATCH",
-      "/users/mod-pwd",
-      oldMD5,
-      newMD5
-    );
+        this,
+        "GET",
+        `/user/search`,
+        ...Array<any>(
+          name,
+          cls
+        ).filter((value: any) => value != undefined));
   }
-
   /**
-   * ## [PATCH] /users/change-class * @param newClsId
+   * ### [GET] /user/<int:id>
+   * #### 权限: Any
+   * @param id
    */
-  changeClass(newClsId: number): ForegroundApiRunner<[]> {
+  getUserInfo(id: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "GET", `/user/${id}`);
+  }
+  /**
+   * ### [POST] /user/mod-pwd
+   * #### 权限: Any
+   * @param old
+   * @param neo
+   */
+  modifyPassword(
+    old: string,
+    neo: string
+  ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "PATCH",
-      "/users/change-class",
-      newClsId
-    );
+        this,
+        "POST",
+        `/user/mod-pwd`,
+        old,
+      neo);
   }
-
   /**
-   * ## [GET] /users/<int:id>
+   * ### [POST] /user/change-class
+   * #### 权限: Any
+   * @param cls
    */
-  getUserInfo(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/users/<int:id>");
+  changeClass(
+    cls: number
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        `/user/change-class`,
+        cls);
   }
-
   /**
-   * ## [DELETE] /users/<int:id>
+   * ### [POST] /user/create
+   * #### 权限: System
+   * @param users
    */
-  deleteUser(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "DELETE", "/users/<int:id>");
+  createUser(
+    users: Array<structs.OneUser>
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        `/user/create`,
+        users);
   }
-
   /**
-   * ## [PUT] /users/<int:id>
+   * ### [POST] /user/<int:id>/modify
+   * #### 权限: System
+   * @param name
+   * @param cls
+   * @param auth
+   * @param id
    */
-  modifyUser(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "PUT", "/users/<int:id>");
+  modifyUser(
+    id: number,
+    name: string,
+    cls: number,
+    auth: number
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "POST",
+        `/user/${id}/modify`,
+        name,
+      cls,
+      auth);
   }
   /**
-   * ## [GET] /volunteers
+   * ### [POST] /user/<int:id>/delete
+   * #### 权限: System
+   * @param id
    */
-  searchVolunteers(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/volunteers");
+  deleteUser(id: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", `/user/${id}/delete`);
   }
-
   /**
-   * ## [POST] /volunteers * @param name
+   * ### [GET] /volunteer/search
+   * #### 权限: Any
+   * @param holder
+   * @param student
+   * @param cls
+   * @param name
+   * @param status
+   */
+  searchVolunteers(
+    holder?: number,
+    student?: number,
+    cls?: number,
+    name?: string,
+    status?: enums.VolStatus
+  ): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(
+        this,
+        "GET",
+        `/volunteer/search`,
+        ...Array<any>(
+          holder,
+          student,
+          cls,
+          name,
+          status
+        ).filter((value: any) => value != undefined));
+  }
+  /**
+   * ### [GET] /volunteer/<int:id>
+   * #### 权限: Any
+   * @param id
+   */
+  getVolunteerInfo(id: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "GET", `/volunteer/${id}`);
+  }
+  /**
+   * ### [POST] /volunteer/create
+   * #### 权限: Any
+   * @param name
    * @param description
    * @param time
    * @param type
@@ -397,65 +664,71 @@ export class ForegroundApi {
     name: string,
     description: string,
     time: string,
-    type: number,
+    type: enums.VolType,
     reward: number,
-    classes: Array<structs.VolunteerRecordClass>
+    classes: Array<structs.ClassVol>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "POST",
-      "/volunteers",
-      name,
+        this,
+        "POST",
+        `/volunteer/create`,
+        name,
       description,
       time,
       type,
       reward,
-      classes
-    );
+      classes);
   }
   /**
-   * ## [GET] /volunteers/<int:id>
-   */
-  getVolunteerInfo(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "GET", "/volunteers/<int:id>");
-  }
-
-  /**
-   * ## [PUT] /volunteers/<int:id> * @param name
+   * ### [POST] /volunteer/<int:id>/modify
+   * #### 权限: Any
+   * @param name
    * @param description
    * @param time
    * @param type
    * @param reward
    * @param classes
+   * @param id
    */
-  updateVolunteer(
+  modifyVolunteer(
+    id: number,
     name: string,
     description: string,
     time: string,
-    type: number,
+    type: enums.VolType,
     reward: number,
-    classes: Array<structs.VolunteerRecordClass>
+    classes: Array<structs.ClassVol>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-      this,
-      "PUT",
-      "/volunteers/<int:id>",
-      name,
+        this,
+        "POST",
+        `/volunteer/${id}/modify`,
+        name,
       description,
       time,
       type,
       reward,
-      classes
-    );
+      classes);
+  }
+  /**
+   * ### [POST] /volunteer/<int:id>/delete
+   * #### 权限: Any
+   * @param id
+   */
+  deleteVolunteer(id: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", `/volunteer/${id}/delete`);
+  }
+  /**
+   * ### [POST] /volunteer/<int:id>/audit
+   * #### 权限: Class | Teacher
+   * @param id
+   */
+  auditVolunteer(id: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "POST", `/volunteer/${id}/audit`);
   }
 
-  /**
-   * ## [DELETE] /volunteers/<int:id>
-   */
-  deleteVolunteer(): ForegroundApiRunner<[]> {
-    return createForegroundApiRunner(this, "DELETE", "/volunteers/<int:id>");
-  }
-  //--METHODS END----
+//--METHODS END----
+
 }
 
 export const fApi = new ForegroundApi({
