@@ -69,7 +69,7 @@ def gentsres(enum, ts_output, name):
             comma = True
         ts_output.write(f'    {Convertor(field, "camel").export("pascal")} = {value["id"]}')
     ts_output.write('\n}\n')
-    ts_output.write(f'''export function get{name}Name(id: number) {{
+    ts_output.write(f'''export function get{name}Name(id: number): string {{
     switch (id) {{
 ''')
     for field, value in items:
@@ -110,7 +110,7 @@ with open(config['res']['py'], 'w', encoding='utf-8') as output:
 
 with open(config['structs']['py'], encoding='utf-8') as input_file, open(config['structs']['ts'], 'w', encoding='utf-8') as output_file:
     input = ast.parse(input_file.read())
-    output_file.write(f'import * as enums from "{config["rel-enums"]}";\n')
+    output_file.write(f'import * as enums from "./{config["rel-enums"]}";\n')
     for struct in input.body:
         if not isinstance(struct, ast.Assign):
             continue

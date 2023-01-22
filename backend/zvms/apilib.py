@@ -39,6 +39,8 @@ def deco(impl, params, auth):
                 json_data = json.loads(request.get_data().decode("utf-8"))
             except:
                 json_data = {}
+        if 'csrf_token' in json_data:
+            del json_data['csrf_token']
         token_data = {}
         if auth != Categ.NONE:
             try:
@@ -52,14 +54,14 @@ def deco(impl, params, auth):
                     return json.dumps({'type': 'ERROR', 'message': '权限不足'}), 403
             except InvalidSignatureError as ex:
                 return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"}), 401
-        if not params(json_data):
-            return interface_error(params, json_data)
         try:
             with open('log.txt', 'a', encoding='utf-8') as f:
                 if auth != Categ.NONE:
                     f.write(f'({token_data["id"]}) ')
                 f.write(
                     f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
+            if not params(json_data):
+                return interface_error(params, json_data)
             return impl(*args, **kwargs, **json_data, token_data=token_data)
         except ZvmsError as ex:
             return error(ex.code, ex.message)

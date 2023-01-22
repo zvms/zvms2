@@ -7,7 +7,7 @@ export enum Categ {
     Auditor = 32,
     System = 64
 }
-export function getCategName(id: number) {
+export function getCategName(id: number): string {
     switch (id) {
         case 1:
             return "未登录";
@@ -32,7 +32,7 @@ export enum NoticeType {
     Cls = 2,
     School = 3
 }
-export function getNoticeTypeName(id: number) {
+export function getNoticeTypeName(id: number): string {
     switch (id) {
         case 1:
             return "用户通知";
@@ -52,7 +52,7 @@ export enum ThoughtStatus {
     WaitingForFinalAudit = 5,
     Accepted = 6
 }
-export function getThoughtStatusName(id: number) {
+export function getThoughtStatusName(id: number): string {
     switch (id) {
         case 1:
             return "等待报名审核";
@@ -74,7 +74,7 @@ export enum VolStatus {
     Unaudited = 1,
     Audited = 2
 }
-export function getVolStatusName(id: number) {
+export function getVolStatusName(id: number): string {
     switch (id) {
         case 1:
             return "未过审";
@@ -89,7 +89,7 @@ export enum VolType {
     Outside = 2,
     Large = 3
 }
-export function getVolTypeName(id: number) {
+export function getVolTypeName(id: number): string {
     switch (id) {
         case 1:
             return "校内义工";
