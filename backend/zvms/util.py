@@ -186,18 +186,22 @@ def exists(seq, predicate):
     return False
 
 def parse(json):
-    return {
-        int: lambda: 'number(int)',
-        float: lambda: 'number(float)',
-        bool: lambda: 'boolean',
-        type(None): lambda: 'null',
-        str: lambda: f'string({len(json)})',
-        list: lambda: '[' + ', '.join(map(parse, json)) + ']',
-        dict: lambda: '{' +
-        ', '.join(
-            map(lambda p: f'"{p[0]}": {parse(p[1])}', json.items())) + '}'
-    }.get(type(json))()
+    if isinstance(json, int):
+        return 'number(int)'
+    if isinstance(json, float):
+        return 'number(float)'
+    if isinstance(json, bool):
+        return 'boolean'
+    if isinstance(json, type(None)):
+        return 'null'
+    if isinstance(json, str):
+        return f'string({len(json)})'
+    if isinstance(json, (list, tuple)):
+        return '[' + ', '.join(map(parse, json)) + ']'
+    if isinstance(json, dict):
+        return '{' + ', '.join(map(lambda p: f'"{p[0]}": {parse(p[1])}', json.items())) + '}'
 
 
 def interface_error(expected, found):
+    print(expected, found)
     return json.dumps({'type': 'ERROR', 'message': '请求接口错误', 'expected': str(expected), 'found': parse(found)})

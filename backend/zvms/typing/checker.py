@@ -9,12 +9,19 @@ class Named:
     def __str__(self):
         return self.name
 
+def parsable(type, value):
+    try:
+        type(value)
+        return True
+    except (TypeError, ValueError):
+        return False
+
 
 # 下面的谓词开头大写是因为它们有"类型"的含义(虽然实际上不是), 同时还避免了与内置函数重名
 Any = Named(lambda _: True, 'any')
-Int = Named(lambda x: isinstance(x, int), 'number(int)')
-Float = Named(lambda x: isinstance(x, float), 'number(float)')
-Number = Named(lambda x: isinstance(x, (int, float)), 'number')
+Int = Named(lambda x: isinstance(x, int) or parsable(int, x), 'number(int)')
+Float = Named(lambda x: isinstance(x, float) or parsable(float, x), 'number(float)')
+Number = Named(lambda x: isinstance(x, (int, float)) or parsable(int, x) or parsable(float, x), 'number')
 Boolean = Named(lambda x: isinstance(x, bool), 'boolean')
 Null = Named(lambda x: x is None, 'null')
 
@@ -82,7 +89,7 @@ class Optional:
         return True
 
     def __str__(self):
-        return '{*, ' + ', '.join(map(lambda p: f'"{p[0]}": {p[1]}', self.members.items())) + '}'
+        return '{*, ' + ', '.join(map(lambda p: f'"{p[0]}": {p[1]}', self.options.items())) + '}'
 
 
 class Union:
@@ -118,7 +125,10 @@ class Literal:
         self.literals = literals
 
     def __call__(self, json):
-        return json in self.literals
+        try:
+            return json in self.literals or int(json) in self.literals
+        except (ValueError, TypeError):
+            return False
 
     def __str__(self):
         return '(' + ', '.join(map(Literal.__literal_to_str, self.literals)) + ')'

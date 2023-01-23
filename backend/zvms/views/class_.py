@@ -17,6 +17,7 @@ def get_class_info(id, token_data):
     def filter_(auth):
         return list(select(filter(lambda m: (m.auth & auth), members), 'id', 'name'))
     return success('获取成功',
+        name=cls.name,
         teachers=filter_(Categ.TEACHER),
         students=filter_(Categ.STUDENT)
     )

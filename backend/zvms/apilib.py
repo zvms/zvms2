@@ -61,6 +61,8 @@ def deco(impl, params, auth):
                 f.write(
                     f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
             if not params(json_data):
+                print(json.loads(interface_error(params, json_data)))
+                print(json_data)
                 return interface_error(params, json_data)
             return impl(*args, **kwargs, **json_data, token_data=token_data)
         except ZvmsError as ex:
