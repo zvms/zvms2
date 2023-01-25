@@ -55,7 +55,8 @@ Login = Object(
 
 SearchUsers = Optional(
     name=String(),
-    cls=Int
+    cls=Int,
+    auth=Int
 )
 
 ModPwd = Object(

@@ -74,6 +74,10 @@ class Notice(ModelMixIn, db.Model):
     sender = Column(Integer)
     deadtime = Column(DateTime)
 
+    @property
+    def sender_name(self):
+        return User.query.get(self.sender).name
+
 
 class Volunteer(ModelMixIn, db.Model):
     __tablename__ = 'volunteer'

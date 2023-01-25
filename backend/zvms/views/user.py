@@ -24,13 +24,17 @@ def logout(token_data):
 
 
 @api(rule='/user/search', params='SearchUsers')
-def search_users(token_data, name=None, cls=None):
+def search_users(token_data, name=None, cls=None, auth=None):
     if name:
         query = User.query.filter(User.name.like(f'%{name}%'))
     else:
         query = User.query
     if cls:
-        def filter_(u): return u.auth & int(cls)
+        if auth:
+            def filter_(u): return u.cls_id == int(cls) or u.auth & int(auth)
+        def filter_(u): return u.cls_id == int(cls)
+    elif auth:
+        def filter_(u): return u.auth & int(auth)
     else:
         def filter_(_): return True
     return success('获取成功', list_or_error(select(filter(filter_, query), 'id', 'name')))

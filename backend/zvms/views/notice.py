@@ -23,7 +23,7 @@ def search_notices(token_data, **kwargs):
         return error(400, '请求接口错误: 非法的URL参数')
 
     def process_query(query):
-        ret = list_or_error(query.select('id', 'title', 'content', 'sender', 'deadtime'))
+        ret = list_or_error(query.select('id', 'title', 'content', 'sender', 'deadtime', sender_name='senderName'))
         for i in ret:
             i['deadtime'] = str(i['deadtime'])
         return success('获取成功', ret)
