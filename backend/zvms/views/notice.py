@@ -20,7 +20,7 @@ def search_notices(token_data, **kwargs):
             conds.append(Notice.id.in_(
                 SchoolNotice.query.select_value('notice_id')))
     except ValueError:
-        return error(400, '请求接口错误: 非法的URL参数')
+        return error('请求接口错误: 非法的URL参数')
 
     def process_query(query):
         ret = list_or_error(query.select('id', 'title', 'content', 'sender', 'deadtime', sender_name='senderName'))
@@ -45,7 +45,7 @@ def send_user_notice(title, content, deadtime, targets, token_data):
     id = _save_notice(title, content, deadtime, token_data)
     for i in targets:
         if User.query.get_or_error(i, '未找到目标用户').auth == Categ.STUDENT and not (token_data['auth'] & Categ.SYSTEM):
-            return error(403, '不能对普通学生发通知')
+            return error('不能对普通学生发通知')
         UserNotice(user_id=i, notice_id=id).insert()
     return success('发送成功')
 

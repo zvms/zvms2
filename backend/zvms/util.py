@@ -60,7 +60,7 @@ def list_or_error(self, message='未查询到相关信息'):
     ret = list(self)
     # 如果未查询到结果时需要404的话把注释去掉
     # if not ret:
-    #     raise ZvmsError(404, message)
+    #     raise ZvmsError(message)
     return ret
 
 
@@ -78,22 +78,22 @@ class Query:
     def __init__(self, query):
         self.__query = query
 
-    def get_or_error(self, ident, message='未查询到相关数据', code=404):
+    def get_or_error(self, ident, message='未查询到相关数据'):
         ret = self.__query.get(ident)
         if not ret:
-            raise ZvmsError(code, message)
+            raise ZvmsError(message)
         return ret
 
-    def first_or_error(self, message='未查询到相关数据', code=404):
+    def first_or_error(self, message='未查询到相关数据'):
         ret = self.__query.first()
         if not ret:
-            raise ZvmsError(code, message)
+            raise ZvmsError(message)
         return ret
 
-    def one_or_error(self, message='未查询到相关数据', code=404):
+    def one_or_error(self, message='未查询到相关数据'):
         ret = self.__query.one()
         if not ret:
-            raise ZvmsError(code, message)
+            raise ZvmsError(message)
         return ret
 
     def __iter__(self):
@@ -158,17 +158,17 @@ def try_parse_time(str):
     try:
         return datetime.datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
     except ValueError:
-        raise ZvmsError(400, '请求接口错误: 非法的时间字符串')
+        raise ZvmsError('请求接口错误: 非法的时间字符串')
 
 
 def auth_self(id, token_data, message):
     if id != token_data['id'] and not (token_data['auth'] & Categ.SYSTEM):
-        raise ZvmsError(403, message)
+        raise ZvmsError(message)
 
 
 def auth_cls(cls, token_data, message='权限不足: 不能审核其他班级'):
     if cls != token_data['cls'] and not (token_data['auth'] & Categ.SYSTEM):
-        raise ZvmsError(403, message)
+        raise ZvmsError(message)
 
 
 def count(seq, predicate):

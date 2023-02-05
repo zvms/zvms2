@@ -42,6 +42,7 @@ export interface Login {
 export interface SearchUsers {
   name: string;
   cls: number;
+  auth: number;
 }
 export interface ModPwd {
   old: string;

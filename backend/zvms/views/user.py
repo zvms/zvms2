@@ -13,7 +13,7 @@ def check(token_data):
 def login(id, pwd, token_data):
     user = User.query.get(id)
     if not user or user.pwd != pwd:
-        return error(200, '用户名或密码错误')
+        return error('用户名或密码错误')
     return success('登录成功', token=tk.generate(**user.select('id', 'auth', cls_id='cls')))
 
 
@@ -43,19 +43,20 @@ def search_users(token_data, name=None, cls=None, auth=None):
 @api(rule='/user/<int:id>')
 def get_user_info(id, token_data):
     user = User.query.get_or_error(id)
-    return success('获取成功', **user.select('name', 'auth',
-        *(('inside', 'outside', 'large')
-            if user.auth & Categ.STUDENT else ()),
-        cls_id='cls'), clsName=user.cls.name)
+    return success('获取成功', **user.select('name', 'auth', cls_id='cls'), clsName=user.cls.name)
+
+@api(rule='/user/<int:id>/time')
+def get_volunteer_time(id, token_data):
+    return success('获取成功', User.query.get_or_error(id).select('inside', 'outside', 'large'))
 
 
 @api(rule='/user/mod-pwd', method='POST', params='ModPwd')
 def modify_password(old, neo, token_data):
     if len(neo) != 32:
-        return error(400, '密码格式错误')
+        return error('密码格式错误')
     user = User.query.get(token_data['id'])
     if user.pwd != old:
-        return error(400, '旧密码错误')
+        return error('旧密码错误')
     user.pwd = neo
     return success('修改成功')
 
@@ -71,7 +72,7 @@ def create_user(users, token_data):
     for user in users:
         Class.query.get_or_error(user['cls'], '班级不存在')
         if len(user['pwd']) != 32:
-            return error(400, '密码格式错误')
+            return error('密码格式错误')
         User(
             id=user['id'],
             name=user['name'],

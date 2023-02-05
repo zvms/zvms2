@@ -21,7 +21,7 @@ def search_volunteers(token_data, **kwargs):
         if 'status' in kwargs:
             conds.append(Volunteer.status == int(kwargs['status']))
     except ValueError:
-        return error(400, '请求接口错误: 非法的URL参数')
+        return error('请求接口错误: 非法的URL参数')
 
     def process_query(query):
         ret = list_or_error(query.select('id', 'name', 'time', 'status'))
@@ -43,7 +43,7 @@ def get_volunteer_info(id, token_data):
 def create_volunteer(token_data, classes, **kwargs):
     try_parse_time(kwargs['time'])
     if token_data['auth'] == Categ.STUDENT and kwargs['type'] == VolType.OUTSIDE:
-        return error(403, '权限不足: 只能创建校外义工')
+        return error('权限不足: 只能创建校外义工')
     id = Volunteer(
         **kwargs,
         holder_id=token_data['id'],
@@ -53,7 +53,7 @@ def create_volunteer(token_data, classes, **kwargs):
         for cls in classes:
             cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
             if cls['max'] > cls_.members.count():
-                return error(400, '义工永远无法报满')
+                return error('义工永远无法报满')
             ClassVol(
                 cls_id=cls['id'],
                 vol_id=id,
@@ -62,9 +62,9 @@ def create_volunteer(token_data, classes, **kwargs):
     else:
         for cls in classes:
             if cls['id'] != token_data['cls']:
-                return error(403, '不能创建其他班级的义工')
+                return error('不能创建其他班级的义工')
             if cls['max'] > Class.query.get(cls['id']).members.count():
-                return error(400, '义工永远无法报满')
+                return error('义工永远无法报满')
             ClassVol(
                 cls_id=cls['id'],
                 vol_id=id,
@@ -80,7 +80,7 @@ def modify_volunteer(token_data, id, classes, **kwargs):
     for cls in classes:
         cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
         if cls['max'] > cls_.members.count():
-            return error(403, '义工永远无法报满')
+            return error('义工永远无法报满')
         cv = ClassVol.query.get((cls['id'], id))
         if cv:
             ClassVol(
@@ -91,7 +91,7 @@ def modify_volunteer(token_data, id, classes, **kwargs):
         else:
             cv.max = cls['max']
         if cv.now > cls['max']:
-            return error(403, '义工报名溢出')
+            return error('义工报名溢出')
     vol.update(**kwargs)
     return success('修改成功')
 

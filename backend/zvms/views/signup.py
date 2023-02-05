@@ -13,7 +13,7 @@ def list_signup(cls, token_data):
 def audit_signup(volId, stuId, token_data):
     stu_vol = StuVol.query.get((volId, stuId))
     if not stu_vol:
-        return error(403, '学生未报名该义工')
+        return error('学生未报名该义工')
     auth_cls(User.query.get(stuId).cls_id, token_data)
     stu_vol.status = ThoughtStatus.UNSUBMITTED
     return success('审核成功')
@@ -23,18 +23,18 @@ def audit_signup(volId, stuId, token_data):
 def signup(students, volId, token_data):
     vol = Volunteer.query.get_or_error(volId, '该义工不存在')
     if vol.status == VolStatus.UNAUDITED:
-        return error(403, '该义工未过审')
+        return error('该义工未过审')
     if vol.time < datetime.datetime.now():
-        return error(403, '该义工报名已截至')
+        return error('该义工报名已截至')
     for stuId in students:
         if StuVol.query.get((volId, stuId)):
-            return error(403, '学生已报名该义工')
+            return error('学生已报名该义工')
         stu = User.query.get_or_error(stuId, '该学生不存在')
-        cv = ClassVol.query.get_or_error((volId, stu.cls_id), '该班级不能报名', 403)
+        cv = ClassVol.query.get_or_error((volId, stu.cls_id), '该班级不能报名')
         if cv.now >= cv.max:
-            return error(403, '名额已满')
+            return error('名额已满')
         if stu.auth & Categ.TEACHER:
-            return error(403, '不能报名教师')
+            return error('不能报名教师')
         if (Categ.TEACHER | Categ.CLASS).authorized(token_data['auth']):
             auth_cls(User.query.get(stuId).cls_id, token_data, '不能报名其他班级')
             StuVol(

@@ -517,10 +517,12 @@ export class ForegroundApi {
    * #### 权限: Any
    * @param name
    * @param cls
+   * @param auth
    */
   searchUsers(
     name?: string,
-    cls?: number
+    cls?: number,
+    auth?: number
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
         this,
@@ -528,7 +530,8 @@ export class ForegroundApi {
         `/user/search`,
         ...Array<any>(
           name,
-          cls
+          cls,
+          auth
         ).filter((value: any) => value != undefined));
   }
   /**
@@ -538,6 +541,14 @@ export class ForegroundApi {
    */
   getUserInfo(id: number): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(this, "GET", `/user/${id}`);
+  }
+  /**
+   * ### [GET] /user/<int:id>/time
+   * #### 权限: Any
+   * @param id
+   */
+  getVolunteerTime(id: number): ForegroundApiRunner<[]> {
+    return createForegroundApiRunner(this, "GET", `/user/${id}/time`);
   }
   /**
    * ### [POST] /user/mod-pwd

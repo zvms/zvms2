@@ -49,11 +49,11 @@ def deco(impl, params, auth):
                     raise InvalidSignatureError()
                 token_data = tk.read(token_data)
                 if not tk.exists(token_data):
-                    return json.dumps({'type': 'ERROR', 'message': "Token失效, 请重新登陆"}), 401
+                    return json.dumps({'type': 'ERROR', 'message': "Token失效, 请重新登陆"})
                 if not auth.authorized(token_data['auth']):
-                    return json.dumps({'type': 'ERROR', 'message': '权限不足'}), 403
+                    return json.dumps({'type': 'ERROR', 'message': '权限不足'})
             except InvalidSignatureError as ex:
-                return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"}), 401
+                return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"})
         try:
             with open('log.txt', 'a', encoding='utf-8') as f:
                 if auth != Categ.NONE:

@@ -27,7 +27,7 @@ def search_thoughts(**kwargs):
         if 'volunteer' in kwargs:
             conds.append(StuVol.vol_id == int(kwargs['volunteer']))
     except ValueError:
-        return error(400, '请求接口错误: 非法的URL参数')
+        return error('请求接口错误: 非法的URL参数')
 
     def process_query(query):
         return success('获取成功', list_or_error(select(query, 'status', stu_id='stuId', vol_id='volId', stu_name='stuName', vol_name='volName')))
@@ -38,7 +38,7 @@ def search_thoughts(**kwargs):
 def get_thought_info(volId, stuId, token_data):
     thought = StuVol.query.get_or_error((volId, stuId))
     if thought.status == ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
-        return error(404, '未查询到相关数据')
+        return error('未查询到相关数据')
     ret = {}
     if thought.reason is not None:
         ret['reason'] = thought.reason
@@ -70,9 +70,9 @@ def _submit_thought(volId, stuId, thought, pictures, status):
             case ThoughtStatus.UNSUBMITTED | ThoughtStatus.DRAFT:
                 pass
             case ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
-                raise ZvmsError(403, '该感想不可提交')
+                raise ZvmsError('该感想不可提交')
             case _:
-                raise ZvmsError(403, '不可重复提交')
+                raise ZvmsError('不可重复提交')
         _thought.update(
             status=status,
             thought=thought
@@ -119,7 +119,7 @@ def first_audit(token_data, volId, stuId):
     auth_cls(User.query.get(stuId), token_data)
     thought = StuVol.query.get((volId, stuId))
     if thought.status != ThoughtStatus.WAITING_FOR_FIRST_AUDIT:
-        return error(403, '该感想不可初审')
+        return error('该感想不可初审')
     thought.update(
         status=ThoughtStatus.WAITING_FOR_FINAL_AUDIT
     )
@@ -130,7 +130,7 @@ def first_audit(token_data, volId, stuId):
 def final_audit(token_data, volId, stuId):
     thought = StuVol.query.get((volId, stuId))
     if thought.status != ThoughtStatus.WAITING_FOR_FINAL_AUDIT:
-        return error(403, '该感想不可终审')
+        return error('该感想不可终审')
     thought.update(
         status=ThoughtStatus.ACCEPTED
     )
@@ -143,7 +143,7 @@ def repulse(token_data, volId, stuId, reason):
     auth_cls(User.query.get(stuId), token_data)
     thought = StuVol.query.get_or_error((volId, stuId))
     if thought.status not in (ThoughtStatus.WAITING_FOR_FINAL_AUDIT, ThoughtStatus.WAITING_FOR_FIRST_AUDIT):
-        return error(403, '该感想不可打回')
+        return error('该感想不可打回')
     thought.update(
         status=ThoughtStatus.UNSUBMITTED,
         reason=reason
