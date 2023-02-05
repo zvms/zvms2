@@ -78,7 +78,9 @@ def create_user(users, token_data):
             name=user['name'],
             cls_id=user['cls'],
             auth=user['auth'],
-            pwd=user['pwd']
+            pwd=user['pwd'],
+            exp=0,
+            last_sign_date=datetime.date.today()
         ).insert()
     return success('创建成功')
 

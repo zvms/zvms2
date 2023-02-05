@@ -7,7 +7,9 @@ CREATE TABLE user(
     name VARCHAR(5),
     class INT, 
     pwd CHAR(32), 
-    auth INT
+    auth INT,
+    exp INT,
+    last_sign_date DATE
 );
 CREATE TABLE notice(
     id INT PRIMARY KEY auto_increment, 
@@ -61,6 +63,18 @@ CREATE TABLE school_notice(
 );
 CREATE TABLE log(
     id INT PRIMARY KEY auto_increment
+);
+CREATE TABLE tie(
+    id INT PRIMARY KEY auto_increment,
+    title TEXT,
+    content TEXT,
+    sender INT,
+    parent INT
+);
+CREATE TABLE user_tie(
+    user_id INT,
+    tie_id INT,
+    attitude INT
 );
 -- 各个用户的权限, 用+组合
 -- 按照计划, zvms不会有管理员接口, 所以用户都必须通过数据库操作直接添加

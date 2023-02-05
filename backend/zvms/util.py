@@ -1,6 +1,7 @@
 from itertools import chain
 from functools import wraps
 from typing import Callable, Iterable
+import hashlib
 import datetime
 import json
 
@@ -9,6 +10,11 @@ from sqlalchemy.orm import Query as _Query
 
 from zvms import db
 from zvms.res import *
+
+def md5ify(str):
+    md5 = hashlib.md5()
+    md5.update(str.encode())
+    return md5.hexdigest()
 
 
 class _QueryProperty:
@@ -33,7 +39,7 @@ def select(self, *cols, **aliases):
 @foo
 def update(self, **updates):
     for k, v in updates.items():
-        if isinstance(v, Iterable):
+        if isinstance(v, Callable):
             v = v(getattr(self, k))
         setattr(self, k, v)
     self.on_update()

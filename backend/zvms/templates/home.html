@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block container %}
+<div id="perspective" class="perspective effect-airbnb modalview ">
+    <div class="main-wrapper">
+        <div class="main-content"  >
+            <header class="bg-white style2 pt-3 pb-0 bg-home">
+                <div class="row">
+                    <div class="col-sm-4 text-left pos-top">
+                        <a href="#" class="menu-btn mt-0" id="sidebar-right"><span></span></a>
+                    </div>
+                    <div class="col-sm-4 text-center pos-top">
+                        <a href="#" class="logo d-block mt-1"><img src="/static/image/logo.png" alt=""></a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="preloader-wrap p-3">
+                <div class="box shimmer">
+                    <div class="lines">
+                        <div class="line s_shimmer"></div>
+                        <div class="line s_shimmer"></div>
+                        <div class="line s_shimmer"></div>
+                        <div class="line s_shimmer"></div>
+                    </div>
+                </div>
+                <div class="box shimmer mb-3">
+                    <div class="lines">
+                        <div class="line s_shimmer"></div>
+                        <div class="line s_shimmer"></div>
+                        <div class="line s_shimmer"></div>
+                        <div class="line s_shimmer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-body p-4" id="alert-container">
+                {% if error %}
+                <div class="alert alert-dismissible alert-danger" id="alert" role="alert">
+                    <p class="mb-0">{{ error }}</p>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                {% endif %}
+                {% block main %}
+                {% for tie in enumerate(ties) %}
+                <div class="col-sm-6 col-md-4">
+                    <div class="thumbnail">
+                        <div class="caption">
+                            <h3>{{ tie['title'] }}</h3>
+                            <h6>来自 <a href="/tieba/user/{{tie['sender']}}">{{ tie['sender_name'] }}</a></h6>
+                            <i>{{ tie['likes'] }}点赞 {{ tie['seen'] }}看过</i>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination mb-3">
+                        <li class="page-item"><a class="page-link" href="#">上一页</a></li>
+                        {% for i in range(total) %}
+                        <li class="page-item {{'active' if i == page else ''}"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">下一页</a></li>
+                    </ul>
+                </nav>
+                <div id="floating-button">
+                    <p class="plus">+</p>
+                </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    <nav class="outer-nav left vertical ">
+        <header class="bg-tranparent style2 mt-3 pb-0 bg-home">
+            <div class="row">
+                <div class="col-sm-4 text-left pos-top">
+                    <a href="#" class="menu-btn mt-0" id="close-sidebar"></a>
+                </div>
+            </div>
+        </header>
+        <ul class="nav-item"> 
+            <li class="menu-text text-left">
+                <h4>{{ username }}</h4>
+                <h4><small>{{ userexp|title|safe }}</small></h4>
+                <i>{{ usercls }}</i>
+            </li>
+            <li><a href="/tieba/logout"><i class="ti-lock"></i>登出</a></li>
+        </ul>
+    </nav>
+</div>
+{% endblock %}

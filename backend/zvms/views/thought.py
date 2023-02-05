@@ -81,7 +81,7 @@ def _submit_thought(volId, stuId, thought, pictures, status):
     Picture.query.filter_by(stu_id=stuId, vol_id=volId).filter(Picture.hash.in_(hashes)).delete()
     for i, pic in enumerate(pictures):
         if not Picture.query.get((volId, stuId, hashes[i])):
-            with open(os.path.join(STATIC_FOLDER, 'pics', f'{hashes[i]}.jpg'), 'wb') as f:
+            with open(os.path.join('static/pics', f'{hashes[i]}.jpg'), 'wb') as f:
                 f.write(b64decode(pic))
             Picture(
                 vol_id=volId,

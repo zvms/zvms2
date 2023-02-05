@@ -39,7 +39,3 @@ class Categ(IntFlag):
 
     def authorized(self, auth):
         return (Categ.SYSTEM | self) & auth
-if sys.platform == 'linux':
-    STATIC_FOLDER = '/tmp/zvms_backend'
-elif sys.platform == 'win32':
-    STATIC_FOLDER = 'C:\\zvms_backend'
