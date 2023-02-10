@@ -45,14 +45,11 @@
 </template>
 
 <script lang="ts">
-import { fApi, checkToken } from "../apis";
+import { fApi } from "../apis";
 import { NOTEMPTY } from "../utils/validation.js"; //校验表单完整性
 import { applyNavItems } from "../utils/nav";
-import { useInfoStore, useLoadingStore, useNoticesStore } from "@/stores";
-
-var md5 = require("md5-node");
-var current_version = "51141167bd8394d8da590fddaeb3d91e";
-// 版本号的加盐的MD5，记得改
+import { useLoadingStore, useNoticesStore } from "@/stores";
+import { md5 } from "@/utils/md5";
 
 export default {
   name: "login",
@@ -76,27 +73,25 @@ export default {
       if (this.$refs.form.validate()) {
         let data = await fApi.login(
           this.form.userid,
-          md5(this.form.password),
-          current_version
-        );
+          md5(this.form.password)
+        )(() => {
+          this.form.password = undefined;
 
-        //将一切保存到$store
-        useNoticesStore().notices = await fApi.fetchNotices();
-        this.infoStore.$state = {
-          username: data.username,
-          permission: data.permission,
-          class: data.class,
-          classname: data.classname,
-          token: data.token,
-        };
+          //将一切保存到$store
+          useNoticesStore().notices = await fApi.fetchNotices();
+          this.infoStore.$state = {
+            username: data.username,
+            permission: data.permission,
+            class: data.class,
+            classname: data.classname,
+            token: data.token,
+          };
 
-        console.log("---", this.infoStore.$state);
-        //更新抽屉导航栏
-        applyNavItems();
+          //更新抽屉导航栏
+          applyNavItems();
 
-        this.form.password = undefined;
-
-        this.$router.push("/me");
+          this.$router.push("/me");
+        });
       }
     },
   },

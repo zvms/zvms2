@@ -113,6 +113,10 @@ export class ForegroundApi {
     });
   }
 
+  okToast(msg: string): ForegroundApi {
+    return undefined as any;//UNFINISHED
+  }
+
   get loadingState(): ForegroundApi {
     const oldConfig: ForegroundApiConfig = this.config;
     return new ForegroundApi({
@@ -162,10 +166,10 @@ export class ForegroundApi {
     name: string
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/class/create`,
-        name);
+      this,
+      "POST",
+      `/class/create`,
+      name);
   }
   /**
    * ### [POST] /class/<int:id>/modify
@@ -178,10 +182,10 @@ export class ForegroundApi {
     name: string
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/class/${id}/modify`,
-        name);
+      this,
+      "POST",
+      `/class/${id}/modify`,
+      name);
   }
   /**
    * ### [GET] /notice/search
@@ -198,15 +202,15 @@ export class ForegroundApi {
     school?: any
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "GET",
-        `/notice/search`,
-        ...Array<any>(
-          sender,
-          user,
-          cls,
-          school
-        ).filter((value: any) => value != undefined));
+      this,
+      "GET",
+      `/notice/search`,
+      ...Array<any>(
+        sender,
+        user,
+        cls,
+        school
+      ).filter((value: any) => value != undefined));
   }
   /**
    * ### [POST] /notice/send/user
@@ -223,10 +227,10 @@ export class ForegroundApi {
     targets: Array<number>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/notice/send/user`,
-        title,
+      this,
+      "POST",
+      `/notice/send/user`,
+      title,
       content,
       deadtime,
       targets);
@@ -246,10 +250,10 @@ export class ForegroundApi {
     targets: Array<number>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/notice/send/class`,
-        title,
+      this,
+      "POST",
+      `/notice/send/class`,
+      title,
       content,
       deadtime,
       targets);
@@ -268,10 +272,10 @@ export class ForegroundApi {
     deadtime: string
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/notice/send/school`,
-        title,
+      this,
+      "POST",
+      `/notice/send/school`,
+      title,
       content,
       deadtime);
   }
@@ -298,10 +302,10 @@ export class ForegroundApi {
     deadtime: string
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/notice/${id}/modify`,
-        title,
+      this,
+      "POST",
+      `/notice/${id}/modify`,
+      title,
       content,
       deadtime);
   }
@@ -314,10 +318,10 @@ export class ForegroundApi {
     report: string
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/report`,
-        report);
+      this,
+      "POST",
+      `/report`,
+      report);
   }
   /**
    * ### [GET] /signup/list/<int:cls>
@@ -348,10 +352,10 @@ export class ForegroundApi {
     students: Array<number>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/signup/${volId}`,
-        students);
+      this,
+      "POST",
+      `/signup/${volId}`,
+      students);
   }
   /**
    * ## [POST] /signup/<int:volId>/<int:stuId>/audit
@@ -379,15 +383,15 @@ export class ForegroundApi {
     Volunteer?: number
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "GET",
-        `/thought/search`,
-        ...Array<any>(
-          cls,
-          status,
-          student,
-          Volunteer
-        ).filter((value: any) => value != undefined));
+      this,
+      "GET",
+      `/thought/search`,
+      ...Array<any>(
+        cls,
+        status,
+        student,
+        Volunteer
+      ).filter((value: any) => value != undefined));
   }
   /**
    * ### [GET] /thought/<int:volId>/<int:stuId>
@@ -415,10 +419,10 @@ export class ForegroundApi {
     pictures: Array<string>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/thought/${volId}/${stuId}/save`,
-        thought,
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/save`,
+      thought,
       pictures);
   }
   /**
@@ -436,10 +440,10 @@ export class ForegroundApi {
     pictures: Array<string>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/thought/${volId}/${stuId}/submit`,
-        thought,
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/submit`,
+      thought,
       pictures);
   }
   /**
@@ -476,10 +480,10 @@ export class ForegroundApi {
     reason: string
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/thought/${volId}/${stuId}/repulse`,
-        reason);
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/repulse`,
+      reason);
   }
   /**
    * ### [GET] /user/check
@@ -499,10 +503,10 @@ export class ForegroundApi {
     pwd: string
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/user/login`,
-        id,
+      this,
+      "POST",
+      `/user/login`,
+      id,
       pwd);
   }
   /**
@@ -525,14 +529,14 @@ export class ForegroundApi {
     auth?: number
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "GET",
-        `/user/search`,
-        ...Array<any>(
-          name,
-          cls,
-          auth
-        ).filter((value: any) => value != undefined));
+      this,
+      "GET",
+      `/user/search`,
+      ...Array<any>(
+        name,
+        cls,
+        auth
+      ).filter((value: any) => value != undefined));
   }
   /**
    * ### [GET] /user/<int:id>
@@ -561,10 +565,10 @@ export class ForegroundApi {
     neo: string
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/user/mod-pwd`,
-        old,
+      this,
+      "POST",
+      `/user/mod-pwd`,
+      old,
       neo);
   }
   /**
@@ -576,10 +580,10 @@ export class ForegroundApi {
     cls: number
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/user/change-class`,
-        cls);
+      this,
+      "POST",
+      `/user/change-class`,
+      cls);
   }
   /**
    * ### [POST] /user/create
@@ -590,10 +594,10 @@ export class ForegroundApi {
     users: Array<structs.OneUser>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/user/create`,
-        users);
+      this,
+      "POST",
+      `/user/create`,
+      users);
   }
   /**
    * ### [POST] /user/<int:id>/modify
@@ -610,10 +614,10 @@ export class ForegroundApi {
     auth: number
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/user/${id}/modify`,
-        name,
+      this,
+      "POST",
+      `/user/${id}/modify`,
+      name,
       cls,
       auth);
   }
@@ -642,16 +646,16 @@ export class ForegroundApi {
     status?: enums.VolStatus
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "GET",
-        `/volunteer/search`,
-        ...Array<any>(
-          holder,
-          student,
-          cls,
-          name,
-          status
-        ).filter((value: any) => value != undefined));
+      this,
+      "GET",
+      `/volunteer/search`,
+      ...Array<any>(
+        holder,
+        student,
+        cls,
+        name,
+        status
+      ).filter((value: any) => value != undefined));
   }
   /**
    * ### [GET] /volunteer/<int:id>
@@ -680,10 +684,10 @@ export class ForegroundApi {
     classes: Array<structs.ClassVol>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/volunteer/create`,
-        name,
+      this,
+      "POST",
+      `/volunteer/create`,
+      name,
       description,
       time,
       type,
@@ -711,10 +715,10 @@ export class ForegroundApi {
     classes: Array<structs.ClassVol>
   ): ForegroundApiRunner<[]> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/volunteer/${id}/modify`,
-        name,
+      this,
+      "POST",
+      `/volunteer/${id}/modify`,
+      name,
       description,
       time,
       type,
@@ -738,21 +742,21 @@ export class ForegroundApi {
     return createForegroundApiRunner(this, "POST", `/volunteer/${id}/audit`);
   }
 
-//--METHODS END----
+  //--METHODS END----
 
 }
 
 export const fApi = new ForegroundApi({
-  beforeRequest(info: ReqInfo) {},
-  afterRequest(info: ReqInfo) {},
-  errorRequest(e: Error, info: ReqInfo) {},
+  beforeRequest(info: ReqInfo) { },
+  afterRequest(info: ReqInfo) { },
+  errorRequest(e: Error, info: ReqInfo) { },
 
-  notSuccessed(res: AxiosResponse<any>, info: ReqInfo) {},
-  successed(res: AxiosResponse<any>, info: ReqInfo) {},
+  notSuccessed(res: AxiosResponse<any>, info: ReqInfo) { },
+  successed(res: AxiosResponse<any>, info: ReqInfo) { },
 
-  beforeProcess(info: ReqInfo) {},
-  afterProcess(info: ReqInfo) {},
-  errorProcess(e: Error, info: ReqInfo) {},
+  beforeProcess(info: ReqInfo) { },
+  afterProcess(info: ReqInfo) { },
+  errorProcess(e: Error, info: ReqInfo) { },
 
-  cleanup(info: ReqInfo) {},
+  cleanup(info: ReqInfo) { },
 });

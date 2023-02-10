@@ -113,6 +113,10 @@ export class ForegroundApi {
     });
   }
 
+  get okToast():ForegroundApi {
+    return undefined as any;//UNFINISHED
+  }
+
   get loadingState(): ForegroundApi {
     const oldConfig: ForegroundApiConfig = this.config;
     return new ForegroundApi({

@@ -45,7 +45,7 @@
       <v-list shaped>
         <v-list-item-group color="primary">
           <v-list-item
-            v-for="(notice, i) in $store.state.notices"
+            v-for="(notice, i) in noticeStore.notices"
             :key="i"
             @click="showNotice(notice)"
           >
@@ -72,45 +72,35 @@
 
 <script lang="ts">
 import { useInfoStore } from "@/stores";
-import {
-  VContainer,
-  VCard,
-  VCardTitle,
-  VCardText,
-  VChip,
-  VIcon,
-  VList,
-  VListItem,
-  VListItemTitle,
-  VListItemSubtitle,
-  VDialog,
-} from "vuetify/lib/components";
-import { fApi, checkToken } from "../apis";
-import { permissionNames } from "../utils/permissions";
+import { fApi } from "@/apis";
+import { permissionNames } from "@/utils/permissions";
+import { mapStores } from "pinia";
+import type { Notice } from "@/apis/types";
 
 export default {
   name: "me",
-  data: () => ({
-    chips: [] as any[],
-    thought: {
-      stuName: undefined,
-      stuId: undefined,
-      content: undefined,
-    },
-    notices: [],
-    dialog: false,
-    curNoticeTitle: "",
-    curNoticeText: "",
-    timer: undefined,
-  }),
+  data() {
+    return {
+      chips: [] as any[],
+      thought: {
+        stuName: undefined,
+        stuId: undefined,
+        content: undefined,
+      },
+      notices: [],
+      dialog: false,
+      curNoticeTitle: "",
+      curNoticeText: "",
+      timer: undefined,
+    };
+  },
+  computed: {
+    ...mapStores(useInfoStore),
+  },
   mounted() {
     this.initChips();
-    // this.randomThought();
   },
   methods: {
-    pageload: async function () {
-      await checkToken();
-    },
     initChips() {
       this.chips = [
         {
@@ -122,14 +112,11 @@ export default {
         { id: 3, icon: "mdi-label", content: this.infoStore.class },
       ];
     },
-    randomThought: async function () {
-      this.thought = await fApi.fetchRandomThought();
-    },
-    showNotice(notice) {
+    showNotice(notice:Notice) {
       this.dialog = true;
       this.curNoticeTitle = notice.title;
       let s = "";
-      for (const c of notice.text) {
+      for (const c of notice.content) {
         if (c == "\n") {
           s += "<br />";
         } else {
