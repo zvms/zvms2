@@ -5,4 +5,3 @@ import zvms.views.signup
 import zvms.views.thought
 import zvms.views.user
 import zvms.views.volunteer
-import zvms.views.foo

@@ -4,13 +4,15 @@ from zvms.util import *
 from zvms.apilib import api
 
 
-@api(rule='/signup/list/<int:cls>')
+@api(rule='/signup/list/<int:cls>', response='ListSignupResponse')
 def list_signup(cls, token_data):
+    '''列出一个班级的报名'''
     return success('获取成功', list_or_error((sv.select(stu_id='stuId', vol_id='volId', stu_name='stuName', vol_name='volName') for sv in StuVol.query if sv.stu.cls_id == cls)))
 
 
 @api(rule='/signup/<int:volId>/<int:stuId>/audit', method='POST', auth=Categ.CLASS | Categ.TEACHER)
 def audit_signup(volId, stuId, token_data):
+    '''审核一个报名'''
     stu_vol = StuVol.query.get((volId, stuId))
     if not stu_vol:
         return error('学生未报名该义工')
@@ -21,6 +23,7 @@ def audit_signup(volId, stuId, token_data):
 
 @api(rule='/signup/<int:volId>', method='POST', params='Signup')
 def signup(students, volId, token_data):
+    '''报名一个义工'''
     vol = Volunteer.query.get_or_error(volId, '该义工不存在')
     if vol.status == VolStatus.UNAUDITED:
         return error('该义工未过审')
@@ -55,7 +58,7 @@ def signup(students, volId, token_data):
 
 @api(rule='/signup/<int:volId>/<int:stuId>/rollback', method='POST')
 def rollback(volId, stuId, token_data):
-    '[POST] /signup/<int:volId>/<int:stuId>/audit'
+    '''撤回一个报名'''
     StuVol.query.get_or_error((volId, stuId), '未报名该义工')
     if (Categ.TEACHER | Categ.CLASS).authorized(token_data['auth']):
         auth_cls(User.query.get(stuId).cls_id, token_data, '不能修改其他班级')

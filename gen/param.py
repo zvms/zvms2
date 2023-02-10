@@ -1,14 +1,12 @@
 import ast
 import re
 
-from util import Convertor
-
 def parse(node):
     if isinstance(node, ast.Name):
         match node.id:
             case 'Any':
                 return 'any'
-            case 'Int' | 'Float' | 'Number':
+            case 'Int' | 'Float' | 'Number' | 'UrlInt':
                 return 'number'
             case 'Null':
                 return 'null'
@@ -64,6 +62,12 @@ class Array:
     def __init__(self, sub):
         self.sub = sub
 
+    def unwrap_struct(self, name):
+        return f'export type {name} = Array<{self.sub}>;\n'
+
+    def unwrap_full_args(self):
+        return f'Array<{self.sub}>'
+
     def __str__(self):
         return f'Array<{self.sub}>'
 
@@ -73,6 +77,7 @@ class Object:
 
     def __init__(self, keywords):
         self.members = {}
+        self.url_args = {}
         self.extend(keywords)
 
     def with_url(self, url):
@@ -126,7 +131,7 @@ class Empty(Object):
     formatter = 'empty-formatter'
 
     def __init__(self):
-        pass
+        self.url_args = {}
 
     def unwrap_docstring(self):
         if self.url_args:

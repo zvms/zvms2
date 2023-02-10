@@ -3,9 +3,12 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
+from zvms.res import STATIC_FOLDER
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True, resources={r"/*", "*"})
 app.config.from_pyfile('config.py')
+app.static_folder = STATIC_FOLDER
 
 app.test_request_context().push()
 db = SQLAlchemy(app)
@@ -22,7 +25,5 @@ def handle_500(e):
 
 import zvms.tokenlib as tk
 import zvms.views
-
-app.register_blueprint(zvms.views.foo.Foo)
 
 tk.init_app(app)

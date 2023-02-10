@@ -4,6 +4,8 @@ views: backend/zvms/views
 template: web/src/apis/fApi-template.ts
 # 前端API生成的路径
 apis: web/src/apis/fApi.ts
+# 文档的路径
+doc: apis.md
 
 # 资源文件(常量)的路径
 res:
@@ -22,13 +24,20 @@ methods-flag:
   end: //--METHODS END----
 
 # yaml跨行字符串的空格会没掉, 只能这么写
-api-formatter: '\n  /**{}\n   * ### [{}] {}\n   * #### 权限: {}{}\n   */\n  {}({}): ForegroundApiRunner<[]> {{\n    return createForegroundApiRunner({});\n  }}'
+api-formatter: "\n  /**{}\n   * ### [{}] {}\n   * #### 权限: {}{}\n   */\n  {}({}): ForegroundApiRunner<[]> {{\n    return createForegroundApiRunner({});\n  }}"
+doc-overall-header: "# 镇海中学义工管理系统文档\n"
+doc-apis-header: "## API\n"
+doc-struct-formatter: "### {}\n```json{}```\n"
+doc-header-formatter: "### {}. {}\n"
+doc-formatter: "#### {}.{} {} `{}`\n{}  \n权限: {}  \n请求方法: `{}`  \n参数: `{}`  \n返回值: `{}`  \n"
 empty-formatter: "this, {}, {}{}"
-object-formatter: '\n        this,\n        {},\n        {},\n        {}'
-auth-needless: '不需要'
+object-formatter: "\n        this,\n        {},\n        {},\n        {}"
+auth-needless: "不需要"
 
+# 默认值
 api-defaults:
   rule: /
   method: GET
   params: Any
+  response: Any
   auth: ANY

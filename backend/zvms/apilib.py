@@ -1,7 +1,6 @@
 from functools import wraps
 import datetime
 import json
-import traceback
 
 from flask import request
 from jwt.exceptions import InvalidSignatureError
@@ -14,12 +13,14 @@ import zvms.tokenlib as tk
 import zvms.typing.structs as structs
 
 
-def api(*, rule, method='GET', params=Any, auth=Categ.ANY):
+def api(*, rule, method='GET', params=Any, response=Any, auth=Categ.ANY):
     def wrapper(func):
-        nonlocal params
+        nonlocal params, response
         if isinstance(params, str):
             params = getattr(structs, params)
-        app.add_url_rule(rule, methods=[method], view_func=deco(func, params, auth))
+        if isinstance(response, str):
+            response = getattr(structs, response)
+        app.add_url_rule(rule, methods=[method], view_func=deco(func, params, response, auth))
         return func
     return wrapper
 
@@ -27,7 +28,7 @@ def api(*, rule, method='GET', params=Any, auth=Categ.ANY):
 # 以后把调试的代码写在这边，把一些公用的功能也可以移到这边
 # 在所有函数名前面加上@Deco()
 # 这样路由的函数直接返回一个字典就好了
-def deco(impl, params, auth):
+def deco(impl, params, response, auth):
     @wraps(impl)
     def wrapper(*args, **kwargs):
         if request.method in ('GET', 'DELETE'):
@@ -64,7 +65,10 @@ def deco(impl, params, auth):
                 print(json.loads(interface_error(params, json_data)))
                 print(json_data)
                 return interface_error(params, json_data)
-            return impl(*args, **kwargs, **json_data, token_data=token_data)
+            ret = impl(*args, **kwargs, **json_data, token_data=token_data)
+            if not response(ret.get('result')):
+                return {'type': 'ERROR', 'message': '响应返回错误', 'expected': str(response), 'found': parse(ret)}
+            return ret
         except ZvmsError as ex:
             return error(ex.code, ex.message)
     return wrapper

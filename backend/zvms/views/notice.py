@@ -4,8 +4,9 @@ from zvms.res import *
 from zvms.apilib import api
 
 
-@api(rule='/notice/search', params='SearchNotices')
+@api(rule='/notice/search', params='SearchNotices', response='SearchNoticesResponse')
 def search_notices(token_data, **kwargs):
+    '''搜索通知'''
     conds = []
     try:
         if 'from' in kwargs:
@@ -42,6 +43,7 @@ def _save_notice(title, content, deadtime, token_data):
 
 @api(rule='/notice/send/user', method='POST', params='Notice', auth=Categ.MANAGER | Categ.TEACHER)
 def send_user_notice(title, content, deadtime, targets, token_data):
+    '''发送用户通知'''
     id = _save_notice(title, content, deadtime, token_data)
     for i in targets:
         if User.query.get_or_error(i, '未找到目标用户').auth == Categ.STUDENT and not (token_data['auth'] & Categ.SYSTEM):
@@ -52,6 +54,7 @@ def send_user_notice(title, content, deadtime, targets, token_data):
 
 @api(rule='/notice/send/class', method='POST', params='Notice', auth=Categ.MANAGER | Categ.TEACHER)
 def send_class_notice(title, content, deadtime, targets, token_data):
+    '''发送班级通知'''
     id = _save_notice(title, content, deadtime, token_data)
     for i in targets:
         Class.query.get_or_error(i, '未找到目标班级')
@@ -61,6 +64,7 @@ def send_class_notice(title, content, deadtime, targets, token_data):
 
 @api(rule='/notice/send/school', method='POST', params='NoticeBody', auth=Categ.MANAGER | Categ.TEACHER)
 def send_school_notice(title, content, deadtime, token_data):
+    '''发送学校通知'''
     '[POST] /notice/send/school'
     SchoolNotice(
         notice_id=_save_notice(title, content, deadtime, token_data)
@@ -70,6 +74,7 @@ def send_school_notice(title, content, deadtime, token_data):
 
 @api(rule='/notice/<int:id>/delete', method='POST', auth=Categ.MANAGER | Categ.TEACHER)
 def delete_notice(id, token_data):
+    '''删除一个通知'''
     notice = Notice.query.get_or_error(id)
     auth_self(notice.sender, token_data, '权限不足: 不能删除其他人的通知')
     Notice.query.filter_by(id=id).delete()
@@ -78,6 +83,7 @@ def delete_notice(id, token_data):
 
 @api(rule='/notice/<int:id>/modify', method='POST', params='NoticeBody', auth=Categ.MANAGER | Categ.TEACHER)
 def modify_notice(id, title, content, deadtime, token_data):
+    '''修改一个通知'''
     notice = Notice.query.get_or_error(id)
     auth_self(notice.sender, token_data, '权限不足: 不能修改其他人的通知')
     try_parse_time(deadtime)

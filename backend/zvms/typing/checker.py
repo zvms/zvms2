@@ -19,9 +19,11 @@ def parsable(type, value):
 
 # 下面的谓词开头大写是因为它们有"类型"的含义(虽然实际上不是), 同时还避免了与内置函数重名
 Any = Named(lambda _: True, 'any')
-Int = Named(lambda x: isinstance(x, int) or parsable(int, x), 'number(int)')
-Float = Named(lambda x: isinstance(x, float) or parsable(float, x), 'number(float)')
-Number = Named(lambda x: isinstance(x, (int, float)) or parsable(int, x) or parsable(float, x), 'number')
+Int = Named(lambda x: isinstance(x, int), 'number(int)')
+Float = Named(lambda x: isinstance(x, float), 'number(float)')
+Number = Named(lambda x: isinstance(x, (int, float)), 'number')
+UrlInt = Named(lambda x: parsable(int, x), 'int')
+UrlFloat = Named(lambda x: parsable(float, x), 'float')
 Boolean = Named(lambda x: isinstance(x, bool), 'boolean')
 Null = Named(lambda x: x is None, 'null')
 

@@ -4,8 +4,9 @@ from zvms.util import *
 from zvms.apilib import api
 
 
-@api(rule='/volunteer/search', params='SearchVolunteers')
+@api(rule='/volunteer/search', params='SearchVolunteers', response='SearchVolunteersResponse')
 def search_volunteers(token_data, **kwargs):
+    '''搜索义工'''
     conds = []
     try:
         if 'holder' in kwargs:
@@ -33,14 +34,16 @@ def search_volunteers(token_data, **kwargs):
 
 @api(rule='/volunteer/<int:id>')
 def get_volunteer_info(id, token_data):
+    '''获取一个义工的详细信息'''
     ret = Volunteer.query.get_or_error(id).select('name', 'description',
-        'time', 'type', 'reward', 'joiners', holder_id='holder')
+        'time', 'type', 'reward', 'joiners', holder_id='holder', holder_name='holderName')
     ret['time'] = str(ret['time'])
     return success('获取成功', **ret)
 
 
-@api(rule='/volunteer/create', method='POST', params='Volunteer')
+@api(rule='/volunteer/create', method='POST', params='Volunteer', response='VolunteerInfoResponse')
 def create_volunteer(token_data, classes, **kwargs):
+    '''创建一个义工'''
     try_parse_time(kwargs['time'])
     if token_data['auth'] == Categ.STUDENT and kwargs['type'] == VolType.OUTSIDE:
         return error('权限不足: 只能创建校外义工')
@@ -75,6 +78,7 @@ def create_volunteer(token_data, classes, **kwargs):
 
 @api(rule='/volunteer/<int:id>/modify', method='POST', params='Volunteer')
 def modify_volunteer(token_data, id, classes, **kwargs):
+    '''修改义工'''
     vol = Volunteer.query.get_or_error(id)
     auth_self(vol.holder_id, token_data, '权限不足: 不能修改其他人的义工')
     for cls in classes:
@@ -98,6 +102,7 @@ def modify_volunteer(token_data, id, classes, **kwargs):
 
 @api(rule='/volunteer/<int:id>/delete', method='POST')
 def delete_volunteer(token_data, id):
+    '''删除义工'''
     auth_self(Volunteer.query.get_or_error(id).holder_id, token_data, '权限不足: 不能删除其他人的义工')
     Volunteer.query.filter_by(id=id).delete()
     return success('删除成功')
@@ -105,6 +110,7 @@ def delete_volunteer(token_data, id):
 
 @api(rule='/volunteer/<int:id>/audit', method='POST', auth=Categ.CLASS | Categ.TEACHER)
 def audit_volunteer(token_data, id):
+    '''审核义工(班内)'''
     vol = Volunteer.query.get_or_error(id)
     if (Categ.TEACHER | Categ.CLASS) & token_data['auth']:
         auth_cls(vol.holder.cls_id, token_data)

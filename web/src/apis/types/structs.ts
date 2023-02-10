@@ -2,6 +2,73 @@ import * as enums from "././enums";
 export interface Class {
   name: string;
 }
+export interface SingleClass {
+  id: number;
+  name: string;
+}
+export interface SingleUserWithoutAuth {
+  id: number;
+  name: string;
+}
+export interface SingleUser {
+  id: number;
+  name: string;
+  auth: number;
+}
+export type ListClassesResponse = Array<SingleClass>;
+export interface ClassInfoResponse {
+  name: string;
+  students: Array<SingleUser>;
+  teachers: Array<SingleUser>;
+}
+export interface UserLoginResponse {
+  token: string;
+}
+export type SearchUsersResponse = Array<SingleUser>;
+export interface UserInfoResponse {
+  name: string;
+  cls: number;
+  auth: number;
+  clsName: string;
+}
+export interface VolunteerTimeResponse {
+  inside: number;
+  outside: number;
+  large: number;
+}
+export interface SingleNotice {
+  id: number;
+  title: string;
+  content: string;
+  sender: number;
+  deadtime: string;
+  senderName: string;
+}
+export type SearchNoticesResponse = Array<SingleNotice>;
+export interface SingleSignup {
+  volId: number;
+  volName: string;
+  stuId: number;
+  stuName: string;
+}
+export type ListSignupResponse = Array<SingleSignup>;
+export interface SingleVolunteer {
+  id: number;
+  name: string;
+  time: string;
+  status: number;
+}
+export type SearchVolunteersResponse = Array<SingleVolunteer>;
+export interface VolunteerInfoResponse {
+  name: string;
+  description: string;
+  time: string;
+  type: number;
+  reward: number;
+  joiners: Array<SingleUserWithoutAuth>;
+  holder: number;
+  holderName: string;
+}
 export interface SearchNotices {
   sender: number;
   user: number;

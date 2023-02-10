@@ -2,24 +2,6 @@ from itertools import chain
 import ast
 import re
 
-class RouteUnparser(ast._Unparser):
-    def visit_Call(self, node):
-        self.write('\n')
-        self.set_precedence(ast._Precedence.ATOM, node.func)
-        self.traverse(node.func)
-        with self.delimit("(", ")"):
-            comma = False
-            for e in node.keywords:
-                if comma:
-                    self.write(",")
-                else:
-                    comma = True
-                self.write('\n    ')
-                self.traverse(e)
-            self.write('\n')
-
-route_unparser = RouteUnparser()
-
 class Convertor:
     def __init__(self, ident, style):
         match style:

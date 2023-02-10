@@ -21,6 +21,9 @@ with open('config/genconfig.yaml', encoding='utf-8') as f:
 
 alias = config.get('alias', {})
 
+doc_output = io.StringIO()
+doc_output.write(config['doc-overall-header'])
+
 def complete(*paths):
     print(os.path.realpath(os.path.join(*paths)), '生成完成!')
 
@@ -114,7 +117,7 @@ with open(config['structs']['py'], encoding='utf-8') as input_file, open(config[
     for struct in input.body:
         if not isinstance(struct, ast.Assign):
             continue
-        if struct.value.func.id not in ('Object', 'Optional', 'Extends'):
+        if struct.value.func.id not in ('Object', 'Optional', 'Extends', 'Array'):
             continue
         output_file.write(assign(struct).unwrap_struct(struct.targets[0].id))
     complete(config['structs']['ts'])
@@ -137,12 +140,16 @@ def traversal_op(op):
         return get_attr(op)
     return chain(traversal_op(op.left), get_attr(op.right))
 
+doc_output.write(config['doc-apis-header'])
+i = 0
 for view in os.scandir(config['views']):
     if view.is_dir() or view.name == '__init__.py':
         continue
-    with open(view.path, encoding='utf-8') as input_file:
+    i += 1
+    doc_output.write(config['doc-header-formatter'].format(i, view.name[:-3]))
+    with open(view.path, encoding='utf-8') as input_file, open(config['doc'], 'w', encoding='utf-8') as doc_file:
         input = ast.parse(input_file.read())
-        for api in input.body:
+        for j, api in enumerate(input.body):
             if not isinstance(api, ast.FunctionDef):
                 continue
             api_info = find(api.decorator_list, lambda deco: isinstance(deco, ast.Call) and isinstance(deco.func, ast.Name) and deco.func.id == 'api')
@@ -152,6 +159,7 @@ for view in os.scandir(config['views']):
                 'rule': ast.Constant(value=config['api-defaults']['rule']),
                 'method': ast.Constant(value=config['api-defaults']['method']),
                 'params': ast.Name(id=config['api-defaults']['params']),
+                'response': ast.Name(id=config['api-defaults']['response']),
                 'auth': ast.Attribute(
                     value=ast.Name(id='Categ'),
                     attr=config['api-defaults']['auth']
@@ -161,7 +169,7 @@ for view in os.scandir(config['views']):
                 find_result = find(api_info.keywords, lambda kw: kw.arg == k)
                 if find_result is None:
                     continue
-                if k == 'params' and isinstance(find_result.value, ast.Constant):
+                if k in ('params', 'response') and isinstance(find_result.value, ast.Constant):
                     args[k] = ast.Name(id=find_result.value.value)
                 else:
                     args[k] = find_result.value
@@ -169,24 +177,43 @@ for view in os.scandir(config['views']):
                 params = Empty()
             else:
                 params = checkers.get(args['params'].id) or Empty
+            if args['response'].id == 'Any':
+                response = Empty()
+            else:
+                response = checkers.get(args['response'].id)
             params.with_url(args['rule'].value)
             docstring = ast.get_docstring(api)
+            ts_name = alias.get(api.name, Convertor(api.name, 'snake').export('camel'))
             output_ts.write(config['api-formatter'].format(
                 f'\n   * ## {docstring}' if docstring else '',
                 args['method'].value,
                 args['rule'].value,
                 ' | '.join(traversal_op(args['auth'])),
                 params.unwrap_docstring(),
-                alias.get(api.name, Convertor(api.name, 'snake').export('camel')),
+                ts_name,
                 params.unwrap_full_args(),
                 config[params.formatter].format(f'"{args["method"].value}"', f'`{rule_to_url.sub(rule_to_url_sub, args["rule"].value)}`', params.unwrap_call())
             ))
+            doc_output.write(config['doc-formatter'].format(
+                i,
+                j,
+                ts_name,
+                args['rule'].value,
+                docstring or '',
+                ' | '.join(traversal_op(args['auth'])),
+                args['method'].value,
+                params.unwrap_full_args() or 'any',
+                response.unwrap_full_args() or 'any'))
         parent.body.append(ast.Import(
             names=[ast.alias(name=f'zvms.views.{view.name[:-3]}')]
         ))
 with open(os.path.join(config["views"], '__init__.py'), 'w', encoding='utf-8') as parent_file:
     parent_file.write(ast.unparse(parent))
 complete(config["views"], '__init__.py')
+with open(config['doc'], 'w', encoding='utf-8') as f:
+    doc_output.seek(0)
+    f.write(doc_output.read())
+complete(config['doc'])
 output_ts.write(f'\n\n{config["methods-flag"]["end"]}\n')
 
 methods_block = re.compile(rf'{config["methods-flag"]["start"]}.+{config["methods-flag"]["end"]}', re.S)

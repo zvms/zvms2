@@ -1,5 +1,4 @@
 from base64 import b64decode
-import sys
 import hashlib
 import os.path
 
@@ -11,6 +10,7 @@ from zvms.apilib import api
 
 @api(rule='/thought/search', params='SearchThoughts')
 def search_thoughts(**kwargs):
+    '''搜索感想'''
     conds = [StuVol.status != ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT]
     def filter_(_): return True
 
@@ -36,6 +36,7 @@ def search_thoughts(**kwargs):
 
 @api(rule='/thought/<int:volId>/<int:stuId>')
 def get_thought_info(volId, stuId, token_data):
+    '''获取一个感想的详细信息'''
     thought = StuVol.query.get_or_error((volId, stuId))
     if thought.status == ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
         return error('未查询到相关数据')
@@ -81,7 +82,7 @@ def _submit_thought(volId, stuId, thought, pictures, status):
     Picture.query.filter_by(stu_id=stuId, vol_id=volId).filter(Picture.hash.in_(hashes)).delete()
     for i, pic in enumerate(pictures):
         if not Picture.query.get((volId, stuId, hashes[i])):
-            with open(os.path.join('static/pics', f'{hashes[i]}.jpg'), 'wb') as f:
+            with open(os.path.join(STATIC_FOLDER, 'pics', f'{hashes[i]}.jpg'), 'wb') as f:
                 f.write(b64decode(pic))
             Picture(
                 vol_id=volId,
@@ -101,7 +102,7 @@ def _auth_thought(stuId, operation, token_data):
 
 @api(rule='/thought/<int:volId>/<int:stuId>/save', method='POST', params='Thought')
 def save_thought(token_data, volId, stuId, thought, pictures):
-    '[POST] /thought/<int:volId>/<int:stuId>/save'
+    '''保存感想草稿'''
     _auth_thought(stuId, '修改', token_data)
     _submit_thought(volId, stuId, thought, pictures, ThoughtStatus.DRAFT)
     return success('保存成功')
@@ -109,6 +110,7 @@ def save_thought(token_data, volId, stuId, thought, pictures):
 
 @api(rule='/thought/<int:volId>/<int:stuId>/submit', method='POST', params='Thought')
 def submit_thought(token_data, volId, stuId, thought, pictures):
+    '''提交感想'''
     is_common = not _auth_thought(stuId, '提交', token_data)
     _submit_thought(volId, stuId, thought, pictures, ThoughtStatus.WAITING_FOR_FIRST_AUDIT if is_common else ThoughtStatus.WAITING_FOR_FINAL_AUDIT)
     return success('提交成功')
@@ -116,6 +118,7 @@ def submit_thought(token_data, volId, stuId, thought, pictures):
 
 @api(rule='/thought/<int:volId>/<int:stuId>/audit/first', method='POST', auth=Categ.CLASS | Categ.TEACHER)
 def first_audit(token_data, volId, stuId):
+    '''初审感想(班内)'''
     auth_cls(User.query.get(stuId), token_data)
     thought = StuVol.query.get((volId, stuId))
     if thought.status != ThoughtStatus.WAITING_FOR_FIRST_AUDIT:
@@ -128,6 +131,7 @@ def first_audit(token_data, volId, stuId):
 
 @api(rule='/thought/<int:volId>/<int:stuId>/audit/final', method='POST', auth=Categ.AUDITOR)
 def final_audit(token_data, volId, stuId):
+    '''终审感想(义管会)'''
     thought = StuVol.query.get((volId, stuId))
     if thought.status != ThoughtStatus.WAITING_FOR_FINAL_AUDIT:
         return error('该感想不可终审')
@@ -139,7 +143,7 @@ def final_audit(token_data, volId, stuId):
 
 @api(rule='/thought/<int:volId>/<int:stuId>/repulse', method='POST', params='Repulse')
 def repulse(token_data, volId, stuId, reason):
-    '[POST] /thought/<int:volId>/<int:stuId>/audit/repulse'
+    '''打回感想'''
     auth_cls(User.query.get(stuId), token_data)
     thought = StuVol.query.get_or_error((volId, stuId))
     if thought.status not in (ThoughtStatus.WAITING_FOR_FINAL_AUDIT, ThoughtStatus.WAITING_FOR_FIRST_AUDIT):

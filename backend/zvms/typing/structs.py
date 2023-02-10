@@ -5,6 +5,87 @@ Class = Object(
     name=String(5)
 )
 
+SingleClass = Object(
+    id=Int,
+    name=String()
+)
+
+SingleUserWithoutAuth = Object(
+    id=Int,
+    name=String()
+)
+
+SingleUser = Extends(SingleUserWithoutAuth,
+    auth=Int
+)
+
+ListClassesResponse = Array(SingleClass)
+
+ClassInfoResponse = Object(
+    name=String(),
+    students=Array(SingleUser),
+    teachers=Array(SingleUser)
+)
+
+UserLoginResponse = Object(
+    token=String()
+)
+
+SearchUsersResponse = Array(SingleUser)
+
+UserInfoResponse = Object(
+    name=String(),
+    cls=Int,
+    auth=Int,
+    clsName=String()
+)
+
+VolunteerTimeResponse = Object(
+    inside=Int,
+    outside=Int,
+    large=Int
+)
+
+SingleNotice = Object(
+    id=Int,
+    title=String(),
+    content=String(),
+    sender=Int,
+    deadtime=String(),
+    senderName=String()
+)
+
+SearchNoticesResponse = Array(SingleNotice)
+
+SingleSignup = Object(
+    volId=Int,
+    volName=String(),
+    stuId=Int,
+    stuName=String(),
+)
+
+ListSignupResponse = Array(SingleSignup)
+
+SingleVolunteer = Object(
+    id=Int,
+    name=String(),
+    time=String(),
+    status=Int
+)
+
+SearchVolunteersResponse = Array(SingleVolunteer)
+
+VolunteerInfoResponse = Object(
+    name=String(),
+    description=String(),
+    time=String(),
+    type=Int,
+    reward=Int,
+    joiners=Array(SingleUserWithoutAuth),
+    holder=Int,
+    holderName=String()
+)
+
 SearchNotices = Optional(
     sender=Int,
     user=Int,
