@@ -96,10 +96,11 @@
 </template>
 
 <script lang="ts">
-import { toasts } from "../utils/dialogs";
-import { fApi, checkToken } from "../apis";
-import { NOTEMPTY } from "../utils/validation";
-import { mapIsLoading } from "@/stores";
+import { toasts } from "@/utils/dialogs";
+import { fApi } from "@/apis";
+import { NOTEMPTY } from "@/utils/validation";
+import {  } from "@/stores";
+import { mapStores } from "pinia";
 
 export default {
   data() {
@@ -109,7 +110,7 @@ export default {
         message: undefined,
         date: undefined,
       },
-      users: undefined,
+      users,
       target_new: undefined,
       userSelected: [],
       mp: {},
@@ -117,15 +118,15 @@ export default {
       rules: [NOTEMPTY()],
     };
   },
+  computed: {
+    ...mapStores(),
+  },
   mounted() {
     this.pageload();
   },
   methods: {
     async pageload() {
-      await checkToken();
       let users = await fApi.fetchClassList();
-      users ? (this.users = users) : toasts.error("获取班级列表失败");
-
       for (const cls of this.users) this.mp[cls.id] = cls.name;
     },
     addToList() {
@@ -169,9 +170,6 @@ export default {
         toasts.error(data.message);
       }
     },
-  },
-  computed: {
-    ...mapIsLoading(),
-  },
+  }
 };
 </script>

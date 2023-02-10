@@ -5,8 +5,8 @@ export const useInfoStore = defineStore("info", {
   state: () => {
     return {
       username: "",
-      permission: permissionTypes.none,
-      class: "",
+      permission: permissionTypes.none as permissionTypes,
+      class: 0,
       classname: "",
       token: "",
     };

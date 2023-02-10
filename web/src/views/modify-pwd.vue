@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { toasts } from "../utils/dialogs";
-import { checkToken, fApi } from "../apis";
+import { fApi } from "../apis";
 
 var md5 = require("md5-node");
 export default {
@@ -38,25 +38,16 @@ export default {
     pwd_new: undefined,
     pwd_conf: undefined,
   }),
-  mounted() {
-    this.pageload();
-  },
   methods: {
-    pageload: async function () {
-      await checkToken();
-    },
-    modifyPwd: async function () {
+    async modifyPwd() {
       if (this.pwd_new != this.pwd_conf) {
         toasts.error("两次密码不一致");
         return;
       }
-
-      let data = await fApi.modifyPwd(md5(this.pwd_old), md5(this.pwd_new));
-      if (data.type == "SUCCESS") {
-        toasts.success(data.message);
-      } else {
-        toasts.error(data.message);
-      }
+      let data = await fApi.modifyPassword(
+        md5(this.pwd_old),
+        md5(this.pwd_new)
+      );
     },
   },
 };
