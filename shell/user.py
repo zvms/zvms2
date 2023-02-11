@@ -49,7 +49,14 @@ def get_user_info(id):
 班级: {cls}({clsName})
 权限: {auth_str}'''.format(**res, auth_str=auth2str(res['auth'])))
         if res['auth'] & 0b10:
-            print('''校内时间: {inside}
+            get_volunteer_time(id)
+
+@user.route('user time <int:id>')
+def get_volunteer_time(id):
+    '''获取用户的义工时间'''
+    res = req.get(f'/user/{id}/time')
+    if res:
+        print('''校内时间: {inside}
 校外时间: {outside}
 大型时间: {large}'''.format(**res))
 

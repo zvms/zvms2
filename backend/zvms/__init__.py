@@ -1,3 +1,5 @@
+from threading import Thread
+
 from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -25,5 +27,7 @@ def handle_500(e):
 
 import zvms.tokenlib as tk
 import zvms.views
+from zvms.apilib import process_queue
 
 tk.init_app(app)
+Thread(target=process_queue).start()

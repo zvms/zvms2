@@ -133,15 +133,9 @@ class ModelMixIn:
     query = _QueryProperty()
 
 
-def success(message, **kwresult):
-    ret = {'type': 'SUCCESS', 'message': message} | kwresult
-    db.session.commit()
-    return json.dumps(ret)
-
-
-def error(code, message):
+def error(message):
     db.session.rollback()
-    return json.dumps({'type': 'ERROR', 'message': message}), code
+    return {'type': 'ERROR', 'message': message}
 
 
 def success(message, *result, **kwresult):
@@ -151,12 +145,11 @@ def success(message, *result, **kwresult):
     elif kwresult:
         ret['result'] = kwresult
     db.session.commit()
-    return json.dumps(ret)
+    return ret
 
 
 class ZvmsError(Exception):
-    def __init__(self, code, message):
-        self.code = code
+    def __init__(self, message):
         self.message = message
 
 
@@ -209,5 +202,4 @@ def parse(json):
 
 
 def interface_error(expected, found):
-    print(expected, found)
     return json.dumps({'type': 'ERROR', 'message': '请求接口错误', 'expected': str(expected), 'found': parse(found)})
