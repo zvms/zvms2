@@ -106,17 +106,29 @@ export default {
   data() {
     return {
       form: {
-        title: undefined,
-        message: undefined,
-        date: undefined,
+        title: "",
+        message: "",
+        date: "",
       },
-      users,
+      users:[],
       target_new: undefined,
       userSelected: [],
       mp: {},
       modalDate: false,
       rules: [NOTEMPTY()],
-    };
+    } as {
+      form:{
+        title:string,
+        message:string,
+        date:string,
+      },
+      users:string[],
+      target_new: string,
+      userSelected: string[],
+      mp: Record<string,string>,
+      modalDate: boolean,
+      rules: any[],
+    },
   },
   computed: {
     ...mapStores(),
