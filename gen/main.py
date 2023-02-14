@@ -192,6 +192,7 @@ for view in os.scandir(config['views']):
                 params.unwrap_docstring(),
                 ts_name,
                 params.unwrap_full_args(),
+                '{}' if isinstance(response, Empty) else 'structs.' + args['response'].id,
                 config[params.formatter].format(f'"{args["method"].value}"', f'`{rule_to_url.sub(rule_to_url_sub, args["rule"].value)}`', params.unwrap_call())
             ))
             doc_output.write(config['doc-formatter'].format(

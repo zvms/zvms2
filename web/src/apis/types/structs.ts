@@ -15,16 +15,16 @@ export interface SingleUser {
   name: string;
   auth: number;
 }
-export type ListClassesResponse = Array<SingleClass>;
+export type ListClassesResponse = SingleClass[];
 export interface ClassInfoResponse {
   name: string;
-  students: Array<SingleUser>;
-  teachers: Array<SingleUser>;
+  students: SingleUser[];
+  teachers: SingleUser[];
 }
 export interface UserLoginResponse {
   token: string;
 }
-export type SearchUsersResponse = Array<SingleUser>;
+export type SearchUsersResponse = SingleUser[];
 export interface UserInfoResponse {
   name: string;
   cls: number;
@@ -44,28 +44,28 @@ export interface SingleNotice {
   deadtime: string;
   senderName: string;
 }
-export type SearchNoticesResponse = Array<SingleNotice>;
+export type SearchNoticesResponse = SingleNotice[];
 export interface SingleSignup {
   volId: number;
   volName: string;
   stuId: number;
   stuName: string;
 }
-export type ListSignupResponse = Array<SingleSignup>;
+export type ListSignupResponse = SingleSignup[];
 export interface SingleVolunteer {
   id: number;
   name: string;
   time: string;
   status: number;
 }
-export type SearchVolunteersResponse = Array<SingleVolunteer>;
+export type SearchVolunteersResponse = SingleVolunteer[];
 export interface VolunteerInfoResponse {
   name: string;
   description: string;
   time: string;
   type: number;
   reward: number;
-  joiners: Array<SingleUserWithoutAuth>;
+  joiners: SingleUserWithoutAuth[];
   holder: number;
   holderName: string;
 }
@@ -84,13 +84,13 @@ export interface Notice {
   title: string;
   content: string;
   deadtime: string;
-  targets: Array<number>;
+  targets: number[];
 }
 export interface Report {
   report: string;
 }
 export interface Signup {
-  students: Array<number>;
+  students: number[];
 }
 export interface SearchThoughts {
   cls: number;
@@ -100,7 +100,7 @@ export interface SearchThoughts {
 }
 export interface Thought {
   thought: string;
-  pictures: Array<string>;
+  pictures: string[];
 }
 export interface Login {
   id: number;
@@ -130,7 +130,7 @@ export interface OneUser {
   id: number;
 }
 export interface Users {
-  users: Array<OneUser>;
+  users: OneUser[];
 }
 export interface ClassVol {
   id: number;
@@ -149,7 +149,7 @@ export interface Volunteer {
   time: string;
   type: enums.VolType;
   reward: number;
-  classes: Array<ClassVol>;
+  classes: ClassVol[];
 }
 export interface Repulse {
   reason: string;
