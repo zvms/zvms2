@@ -63,13 +63,13 @@ class Array:
         self.sub = sub
 
     def unwrap_struct(self, name):
-        return f'export type {name} = Array<{self.sub}>;\n'
+        return f'export type {name} = {self.sub}[];\n'
 
     def unwrap_full_args(self):
-        return f'Array<{self.sub}>'
+        return f'{self.sub}[]'
 
     def __str__(self):
-        return f'Array<{self.sub}>'
+        return f'{self.sub}[]'
 
 class Object:
     url_args = re.compile(r'\<.+?\>')
@@ -125,7 +125,7 @@ class Optional(Object):
         return '\n    ' + ',\n    '.join(Object.unwrap_args(m, c) for m, c in ((self.url_args, ':'), (self.members, '?:')) if m) + '\n  '
 
     def unwrap_call(self):
-        return '...Array<any>(\n          ' + ',\n          '.join(self.members.keys()) + '\n        ).filter((value: any) => value != undefined)'
+        return '...[\n          ' + ',\n          '.join(self.members.keys()) + '\n        ].filter((value: any) => value != undefined)'
 
 class Empty(Object):
     formatter = 'empty-formatter'

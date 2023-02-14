@@ -47,7 +47,7 @@ def get_thought_info(volId, stuId, token_data):
         ret['reward'] = thought.reward
     if thought.thought is not None:
         ret['pics'] = list(thought.pics)
-        ret['thought'] = thought.thought
+        ret['thought'] = thought.markdown
     return success('获取成功', ret)
 
 

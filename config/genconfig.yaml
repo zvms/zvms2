@@ -24,7 +24,7 @@ methods-flag:
   end: //--METHODS END----
 
 # yaml跨行字符串的空格会没掉, 只能这么写
-api-formatter: "\n  /**{}\n   * ### [{}] {}\n   * #### 权限: {}{}\n   */\n  {}({}): ForegroundApiRunner<[]> {{\n    return createForegroundApiRunner({});\n  }}"
+api-formatter: "\n  /**{}\n   * ### [{}] {}\n   * #### 权限: {}{}\n   */\n  {}({}): ForegroundApiRunner<{}> {{\n    return createForegroundApiRunner({});\n  }}"
 doc-overall-header: "# 镇海中学义工管理系统文档\n"
 doc-apis-header: "## API\n"
 doc-struct-formatter: "### {}\n```json{}```\n"

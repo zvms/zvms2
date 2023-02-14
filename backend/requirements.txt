@@ -5,3 +5,5 @@ flask_migrate
 pymysql
 cryptography
 pyjwt
+tornado
+mistune

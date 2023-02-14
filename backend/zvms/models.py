@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, SmallInteger, DateTime, Date
 
 from zvms import db
 from zvms.res import *
-from zvms.util import ModelMixIn, select_value, count
+from zvms.util import ModelMixIn, render_markdown, select_value, count
 
 class Class(ModelMixIn, db.Model):
     __tablename__ = 'class'
@@ -80,6 +80,10 @@ class Notice(ModelMixIn, db.Model):
     def sender_name(self):
         return User.query.get(self.sender).name
 
+    @property
+    def markdown(self):
+        return render_markdown(self.content)
+
 
 class Volunteer(ModelMixIn, db.Model):
     __tablename__ = 'volunteer'
@@ -106,8 +110,8 @@ class Volunteer(ModelMixIn, db.Model):
         return User.query.get(self.holder_id)
 
     @property
-    def holder_name(self):
-        return self.holder.name
+    def markdown(self):
+        return render_markdown(self.description)
 
 
 class StuVol(ModelMixIn, db.Model):
@@ -117,7 +121,7 @@ class StuVol(ModelMixIn, db.Model):
     stu_id = Column(Integer, primary_key=True)
     status = Column(SmallInteger)
     thought = Column(String(1024))
-    reason = Column(String(1024))
+    reason = Column(String(64))
     reward = Column(Integer)
 
     @property
@@ -135,6 +139,10 @@ class StuVol(ModelMixIn, db.Model):
     @property
     def vol_name(self):
         return Volunteer.query.get(self.vol_id).name
+
+    @property
+    def markdown(self):
+        return render_markdown(self.thought)
 
 
 class ClassVol(ModelMixIn, db.Model):

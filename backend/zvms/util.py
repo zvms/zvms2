@@ -4,12 +4,20 @@ from typing import Callable, Iterable
 import hashlib
 import datetime
 import json
+import re
 
 from flask_sqlalchemy.query import Query
 from sqlalchemy.orm import Query as _Query
+from mistune import Markdown, HTMLRenderer
 
 from zvms import db
 from zvms.res import *
+
+markdown = Markdown(HTMLRenderer())
+rule_remove_links = re.compile(r'<a.*?>(.*?)</a>', re.S)
+
+def render_markdown(md):
+    return rule_remove_links.sub(r'<a>\1</a>', markdown.parse(md))
 
 def md5ify(str):
     md5 = hashlib.md5()

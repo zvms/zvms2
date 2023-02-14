@@ -35,8 +35,8 @@ def search_volunteers(token_data, **kwargs):
 @api(rule='/volunteer/<int:id>')
 def get_volunteer_info(id, token_data):
     '''获取一个义工的详细信息'''
-    ret = Volunteer.query.get_or_error(id).select('name', 'description',
-        'time', 'type', 'reward', 'joiners', holder_id='holder', holder_name='holderName')
+    ret = Volunteer.query.get_or_error(id).select('name',
+        'time', 'type', 'reward', 'joiners', markdown='description', holder_id='holder', holder_name='holderName')
     ret['time'] = str(ret['time'])
     return success('获取成功', **ret)
 
