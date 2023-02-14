@@ -19,7 +19,8 @@ export function initAxios() {
         ...config.params,
         timestamp: Date.now(),
       };
-      config.headers.Authorization = this.infoStore.$state.token || "";
+      config.headers = config.headers ?? {};
+      config.headers.Authorization = useInfoStore().token || "";
       return config;
     },
     (error) => Promise.reject(error)

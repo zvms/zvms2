@@ -75,7 +75,9 @@ export default {
   methods: {
     init: async function () {
       if (this.volid != 0 && this.volid != undefined) {
-        this.vol = await fApi.fetchOneVolunteer(this.volid);
+        fApi.getVolunteerInfo(this.volid)((vol) => {
+          this.vol = vol;
+        });
       }
     },
     fetch() {
