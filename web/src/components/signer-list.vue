@@ -67,7 +67,7 @@ export default {
       inside: undefined,
       outside: undefined,
       large: undefined,
-    },
+    } as 
   }),
   created() {
     this.init();

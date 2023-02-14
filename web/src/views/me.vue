@@ -81,17 +81,28 @@ export default {
   name: "me",
   data() {
     return {
-      chips: [] as any[],
+      chips: [],
       thought: {
-        stuName: undefined,
-        stuId: undefined,
-        content: undefined,
+        stuName: "",
+        stuId: "",
+        content: "",
       },
       notices: [],
       dialog: false,
       curNoticeTitle: "",
       curNoticeText: "",
-      timer: undefined,
+      timer: "",
+    } as {
+      chips:any[],
+      thought:{
+        stuName:string,
+        stuId:string,
+        content:string,
+      },
+      dialog:boolean,
+      curNoticeTitle:string,
+      curNoticeText:string,
+      timer:string,
     };
   },
   computed: {
