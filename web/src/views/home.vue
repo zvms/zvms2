@@ -8,15 +8,13 @@
 </template>
 
 <script lang="ts">
-import { checkToken } from "../apis";
 export default {
   name: "home",
   mounted() {
     this.pageload();
   },
   methods: {
-    pageload: async function () {
-      await checkToken();
+    async pageload() {
       this.$router.push("/me");
     },
   },

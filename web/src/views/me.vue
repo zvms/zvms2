@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { useInfoStore } from "@/stores";
+import { useInfoStore ,useNoticesStore} from "@/stores";
 import { fApi } from "@/apis";
 import { permissionNames } from "@/utils/permissions";
 import { mapStores } from "pinia";
@@ -95,7 +95,7 @@ export default {
     };
   },
   computed: {
-    ...mapStores(useInfoStore),
+    ...mapStores(useInfoStore,useNoticesStore),
   },
   mounted() {
     this.initChips();

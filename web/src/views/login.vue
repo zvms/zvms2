@@ -32,11 +32,7 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn
-          color="primary"
-          block
-          :disabled="useLoadingStore().isLoading"
-          @click="login"
+        <v-btn color="primary" block :disabled="isLoading" @click="login"
           >登录</v-btn
         >
       </v-card-actions>
@@ -53,20 +49,21 @@ import { md5 } from "@/utils/md5";
 
 export default {
   name: "login",
-  data: () => ({
-    //储存表单数据
-    form: {
-      userid: undefined,
-      password: undefined,
-    },
-    rules: [NOTEMPTY()], //表单校验规则
-    winheight: document.documentElement.clientHeight - 100, //一个比较失败的自动调整大小
-  }),
-  mounted: async function () {
-    // await storeSaver.loadState(this, (t) => {
-    //   t.$router.push("/me");
-    //   checkToken(this);
-    // });
+  data() {
+    return {
+      //储存表单数据
+      form: {
+        userid: "",
+        password: "",
+      },
+      rules: [NOTEMPTY()], //表单校验规则
+    } satisfies {
+      form: {
+        userid: string;
+        password: string;
+      };
+      rules: any[];
+    };
   },
   methods: {
     async login() {
@@ -95,5 +92,6 @@ export default {
       }
     },
   },
+  computed: {},
 };
 </script>
