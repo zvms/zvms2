@@ -17,6 +17,8 @@ interface ForegroundApiConfig {
   errorProcess(e: Error, info: ReqInfo): void;
 
   cleanup(info: ReqInfo): void;
+
+  defaultOkToast: boolean;
 }
 
 interface ReqInfo {
@@ -29,13 +31,13 @@ let _reqId = 0;
 
 export type MethodType = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-export type ForegroundApiProcessor<R extends any[]> = (
-  ...args: R
+export type ForegroundApiProcessor<R extends any> = (
+  result: R
 ) => Promise<void> | void;
-export type ForegroundApiRunner<R extends any[]> = (
+export type ForegroundApiRunner<R extends any> = (
   processor: ForegroundApiProcessor<R>
 ) => Promise<void>;
-export function createForegroundApiRunner<T extends any[], R extends any[]>(
+export function createForegroundApiRunner<T extends any[], R extends any>(
   fApi: ForegroundApi,
   method: MethodType,
   url: string,
@@ -82,9 +84,13 @@ export function createForegroundApiRunner<T extends any[], R extends any[]>(
       config.afterRequest(info);
 
       if (toProcess) {
+        const { message, result } = res?.data;
         config.beforeProcess(info);
         try {
-          await processor(...(res as unknown as R));
+          await processor(result);
+          if (config.defaultOkToast) {
+            toasts.success(message);
+          }
         } catch (e) {
           config.errorProcess(e as Error, info);
         }
@@ -103,18 +109,11 @@ export class ForegroundApi {
     this.config = config;
   }
 
-  get errorToast(): ForegroundApi {
+  get skipOkToast(): ForegroundApi {
     return new ForegroundApi({
       ...this.config,
-      errorRequest(e, info) {
-        this.errorRequest(e, info);
-        toasts.error(e.message);
-      },
+      defaultOkToast: false,
     });
-  }
-
-  get okToast():ForegroundApi {
-    return undefined as any;//UNFINISHED
   }
 
   get loadingState(): ForegroundApi {
@@ -150,4 +149,6 @@ export const fApi = new ForegroundApi({
   errorProcess(e: Error, info: ReqInfo) {},
 
   cleanup(info: ReqInfo) {},
+
+  defaultOkToast: true,
 });
