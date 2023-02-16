@@ -48,7 +48,16 @@
 权限: Any  
 请求方法: `GET`  
 参数: `id: number`  
-返回值: `any`  
+返回值: `
+    name: string,
+    description: string,
+    time: string,
+    type: number,
+    reward: number,
+    joiners: structs.SingleUserWithoutAuth[],
+    holder: number,
+    holderName: string
+  `  
 #### 2.6 createVolunteer `/volunteer/create`
 创建一个义工  
 权限: Any  

@@ -47,31 +47,26 @@ export default {
     volcert,
   },
   data: () => ({
-    volworks: undefined,
+    stuid: NaN,
+    volid: NaN,
     dialog: false,
     search: "",
-    volid: undefined,
-    stuid: undefined,
-    stuname: undefined,
-    headers: [
-      { text: "义工ID", value: "volId", align: "start", sortable: true },
-      { text: "义工名称", value: "name" },
-      { text: "校内时长（单位：分钟）", value: "inside" },
-      { text: "校外时长（单位：分钟）", value: "outside" },
-      { text: "大型时长（单位：分钟）", value: "large" },
-      { text: "完成状态", value: "status" },
-    ],
+    headers: undefined as any,
   }),
-  created() {
-    this.init();
-  },
   methods: {
-    init: async function () {
-      this.volworks = undefined;
-      this.stuid = this.userid;
-      if (this.userid != 0 && this.userid != undefined) {
-        this.volworks = await fApi.fetchVolbook(this.userid);
-        console.log(this.volworks);
+    async updateVol() {
+      if (Number.isFinite(this.userid) && Number.isFinite(this.userid)) {
+        fApi.searchVolunteers(
+          undefined,
+          this.userid
+        )((result) => {
+          this.headers = [
+            { text: "义工ID", value: "volId", align: "start", sortable: true },
+            { text: "义工名称", value: "name" },
+            { text: "大型时长（单位：分钟）", value: "reward" },
+            { text: "完成状态", value: "status" },
+          ];
+        });
       }
     },
     rowClick(item) {
@@ -82,8 +77,11 @@ export default {
     },
   },
   watch: {
-    userid() {
-      this.init();
+    userid: {
+      immediate: true,
+      handler() {
+        this.updateVol();
+      },
     },
   },
 };

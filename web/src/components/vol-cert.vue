@@ -124,22 +124,15 @@ p.cert {
 <script lang="ts">
 import { fApi } from "../apis";
 import { toasts } from "../utils/dialogs";
+import { timeToHint } from "@/utils/calc";
 
 export default {
   name: "vol-cert",
   props: ["volid", "stuid", "stuname"],
   data: () => ({
+    timeToHint,
     toggled: false,
-    vol: {
-      id: undefined,
-      name: "加载中...",
-      date: undefined,
-      time: undefined,
-      description: undefined,
-      inside: undefined,
-      outside: undefined,
-      large: undefined,
-    },
+    vol: null,
     stu: {
       id: undefined,
       status: undefined,

@@ -99,7 +99,7 @@
 import { toasts } from "@/utils/dialogs";
 import { fApi } from "@/apis";
 import { NOTEMPTY } from "@/utils/validation";
-import {  } from "@/stores";
+import {} from "@/stores";
 import { mapStores } from "pinia";
 
 export default {
@@ -110,25 +110,13 @@ export default {
         message: "",
         date: "",
       },
-      users:[],
-      target_new: undefined,
-      userSelected: [],
-      mp: {},
+      users: [] as string[],
+      target_new: "",
+      userSelected: [] as { id: string }[],
+      mp: {} as Record<string, string>,
       modalDate: false,
       rules: [NOTEMPTY()],
-    } as {
-      form:{
-        title:string,
-        message:string,
-        date:string,
-      },
-      users:string[],
-      target_new: string,
-      userSelected: string[],
-      mp: Record<string,string>,
-      modalDate: boolean,
-      rules: any[],
-    },
+    };
   },
   computed: {
     ...mapStores(),
@@ -138,8 +126,10 @@ export default {
   },
   methods: {
     async pageload() {
-      let users = await fApi.fetchClassList();
-      for (const cls of this.users) this.mp[cls.id] = cls.name;
+      fApi.listClasses()((users) => {
+        this.users = users;
+        for (const cls of this.users) this.mp[cls.id] = cls.name;
+      });
     },
     addToList() {
       let flg = false;
@@ -182,6 +172,6 @@ export default {
         toasts.error(data.message);
       }
     },
-  }
+  },
 };
 </script>

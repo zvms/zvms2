@@ -44,8 +44,9 @@
 import { fApi } from "../apis";
 import { NOTEMPTY } from "../utils/validation.js"; //校验表单完整性
 import { applyNavItems } from "../utils/nav";
-import { useLoadingStore, useNoticesStore } from "@/stores";
+import { useLoadingStore, useNoticesStore, useInfoStore } from "@/stores";
 import { md5 } from "@/utils/md5";
+import { mapStores } from "pinia";
 
 export default {
   name: "login",
@@ -75,14 +76,16 @@ export default {
           this.form.password = undefined;
 
           //将一切保存到$store
-          useNoticesStore().notices = await fApi.fetchNotices();
-          this.infoStore.$state = {
-            username: data.username,
-            permission: data.permission,
-            class: data.class,
-            classname: data.classname,
-            token: data.token,
-          };
+          fApi.fetchNotices()(() => {
+            this.noticesStore.notices;
+            this.infoStore.$patch({
+              username: data.username,
+              permission: data.permission,
+              class: data.class,
+              classname: data.classname,
+              token: data.token,
+            });
+          });
 
           //更新抽屉导航栏
           applyNavItems();
@@ -92,6 +95,8 @@ export default {
       }
     },
   },
-  computed: {},
+  computed: {
+    ...mapStores(useInfoStore, useNoticesStore),
+  },
 };
 </script>

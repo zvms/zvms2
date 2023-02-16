@@ -13,7 +13,7 @@ import { applyNavItems } from "@/utils/nav";
 export default {
   name: "logout",
   async mounted() {
-    fApi.okToast("登陆成功").logout()(() => {
+    fApi.logout()(() => {
       useInfoStore().$reset();
       useLastseenvolStore().$reset();
       applyNavItems();

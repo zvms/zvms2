@@ -210,7 +210,7 @@ export default {
     thoughts: [],
 
     submitThoughtDialog: false,
-    volid: undefined,
+    volid: number,
     onlyDisplayCurrentClass: true,
     stulst: undefined,
     stulstSelected: [],

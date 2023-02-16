@@ -7,39 +7,33 @@
       <tbody>
         <tr>
           <td>学号</td>
-          <td>{{ vol.stuid }}</td>
+          <td>{{ vol.holder }}</td>
         </tr>
         <tr>
           <td>姓名</td>
-          <td>{{ vol.date }}</td>
+          <td>{{ vol.holderName }}</td>
         </tr>
         <tr>
           <td>时间</td>
           <td>{{ vol.time }}</td>
         </tr>
         <tr>
-          <td>校内时长</td>
-          <td>{{ timeToHint(vol.inside) }}</td>
+          <td>
+            {{ getVolTypeName(vol.type) }}
+          </td>
+          <td>{{ timeToHint(vol.reward) }}</td>
         </tr>
         <tr>
-          <td>校外时长</td>
-          <td>{{ timeToHint(vol.outside) }}</td>
+          <td>最多人数</td>
+          <td>{{ vol.joiners.length }}人</td>
         </tr>
         <tr>
-          <td>大型时长</td>
-          <td>{{ timeToHint(vol.large) }}</td>
-        </tr>
-        <tr>
-          <td>人数</td>
-          <td>{{ vol.stuMax }}</td>
-        </tr>
-        <tr>
-          <td>已报名</td>
-          <td>{{ vol.stuNow }}</td>
+          <td>已报名人数</td>
+          <td>{{ vol }}</td>
         </tr>
         <tr>
           <td>状态</td>
-          <td>{{ vol.status }}</td>
+          <td>{{ vol. }}</td>
         </tr>
       </tbody>
     </v-simple-table>
@@ -47,61 +41,35 @@
 </template>
 
 <script lang="ts">
-import { fApi } from "../apis";
+import { fApi, type VolunteerInfoResponse, getVolTypeName } from "../apis";
 import { timeToHint } from "@/utils/calc";
 
 export default {
   name: "vol-info",
   props: ["volid"],
-  data: () => ({
-    vol: {
-      type: undefined,
-      message: undefined,
-      name: "加载中...",
-      date: undefined,
-      time: undefined,
-      stuMax: undefined,
-      stuNow: undefined,
-      description: undefined,
-      status: undefined,
-      inside: undefined,
-      outside: undefined,
-      large: undefined,
-    } as 
-  }),
-  created() {
-    this.init();
+  data() {
+    return {
+      getVolTypeName,
+      volid: NaN,
+      vol: 1 as VolunteerInfoResponse,
+    };
   },
   methods: {
-    init: async function () {
-      if (this.volid != 0 && this.volid != undefined) {
+    async updateVol() {
+      if (Number.isFinite(this.volid)) {
         fApi.getVolunteerInfo(this.volid)((vol) => {
           this.vol = vol;
         });
       }
     },
-    fetch() {
-      this.vol = {
-        type: undefined,
-        message: undefined,
-        name: "加载中...",
-        date: undefined,
-        time: undefined,
-        stuMax: undefined,
-        stuNow: undefined,
-        description: undefined,
-        status: undefined,
-        inside: undefined,
-        outside: undefined,
-        large: undefined,
-      };
-      this.init();
-    },
     timeToHint,
   },
   watch: {
-    volid() {
-      this.fetch();
+    volid: {
+      immediate: true,
+      handler() {
+        this.updateVol();
+      },
     },
   },
 };
