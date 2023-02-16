@@ -32,7 +32,7 @@ def search_volunteers(token_data, **kwargs):
     return process_query(Volunteer.query.filter(*conds))
 
 
-@api(rule='/volunteer/<int:id>')
+@api(rule='/volunteer/<int:id>', response='VolunteerInfoResponse')
 def get_volunteer_info(id, token_data):
     '''获取一个义工的详细信息'''
     ret = Volunteer.query.get_or_error(id).select('name',
