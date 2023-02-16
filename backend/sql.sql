@@ -32,7 +32,7 @@ CREATE TABLE stu_vol(
     vol_id INT, 
     status SMALLINT, 
     thought VARCHAR(1024), 
-    reason VARCHAR(1024), 
+    reason VARCHAR(64), 
     reward INT, 
     PRIMARY KEY(stu_id, vol_id)
 );
