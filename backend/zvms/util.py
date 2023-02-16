@@ -1,6 +1,6 @@
-from itertools import chain
-from functools import wraps
+from functools import wraps, partial
 from typing import Callable, Iterable
+import itertools
 import hashlib
 import datetime
 import json
@@ -29,36 +29,71 @@ class _QueryProperty:
     def __get__(self, obj, cls):
         return Query(db.session().query(cls))
 
-
 def foo(func):
-    @wraps(func)
-    def wrapper(self, *args, **kwargs):
-        if isinstance(self, Iterable):
-            return (func(i, *args, **kwargs) for i in self)
-        return func(self, *args, **kwargs)
-    return wrapper
+    return wraps(func)(lambda self, *args, **kwargs: 
+        map(self, lambda t: func(t, *args, **kwargs)) if isinstance(self, Iterable) else
+        func(self, *args, **kwargs))
+
+def foreach(iterable, func):
+    ret = None
+    for item in iterable:
+        ret = func(item)
+    return ret
+
+def bar(func):
+    return wraps(func)(lambda self, *args, **kwargs: 
+        foreach(self, lambda t: func(t, *args, **kwargs)) if isinstance(self, Iterable) else
+        func(self, *args, **kwargs))
 
 
 @foo
 def select(self, *cols, **aliases):
     return dict(zip(chain(cols, aliases.values()), map(self.__getattribute__, chain(cols, aliases.keys()))))
 
-
 @foo
+def select(self, *cols, **aliases):
+    return dict(chain(zip(cols, map(partial(getattr, self), cols)), 
+        ((((k, v(getattr(self, k)) if isinstance(v, Callable) else
+        (v, getattr(self, k)) if isinstance(v, str) else
+        (v[1], v[0](getattr(self, k))) if isinstance(v, tuple) else
+        (k, v)) for k, v in aliases.items())))))
+
+@bar
 def update(self, **updates):
     for k, v in updates.items():
         if isinstance(v, Callable):
             v = v(getattr(self, k))
         setattr(self, k, v)
     self.on_update()
+    return self
 
 
-@foo
 def insert(self):
     db.session.add(self)
     db.session.flush()
     self.on_insert()
     return self
+
+class map(__builtins__.map):
+    def __init__(self, iterable, func):
+        super().__init__(func, iterable)
+
+    select = select
+    select_value = select_value
+    update = update
+
+class filter(__builtins__.filter):
+    def __init__(self, iterable, match):
+        super().__init__(match, iterable)
+
+    select = select
+    select_value = select_value
+    update = update
+
+class chain(itertools.chain):
+    select = select
+    select_value = select_value
+    update = update
 
 
 def incr(amount):
@@ -77,52 +112,52 @@ def list_or_error(self, message='未查询到相关信息'):
     #     raise ZvmsError(message)
     return ret
 
+class Wrapper:
+    def __init__(self, raw):
+        self.raw = raw
 
-class Query:
+    def __getattr__(self, name):
+        return (lambda t: type(self)(t) if isinstance(t, type(self).T) else self.__deco(t))(getattr(self.raw, name))
+
+    def __iter__(self):
+        return iter(self.raw)
+
+    def __deco(self, func):
+        return wraps(lambda *args, **kwargs: (lambda t: type(self)(t) if isinstance(t, type(self).T) else t)(func(*args, **kwargs)))
+
+class ZvmsWrapper:
     select = select
     update = update
-    insert = insert
     select_value = select_value
+
+class Query(ZvmsWrapper):
+    T = _Query
 
     def delete(self):
         for item in self:
             item.on_delete()
-        self.__query.delete()
-
-    def __init__(self, query):
-        self.__query = query
+        self.raw.delete()
 
     def get_or_error(self, ident, message='未查询到相关数据'):
-        ret = self.__query.get(ident)
+        ret = self.raw.get(ident)
         if not ret:
             raise ZvmsError(message)
         return ret
 
     def first_or_error(self, message='未查询到相关数据'):
-        ret = self.__query.first()
+        ret = self.raw.first()
         if not ret:
             raise ZvmsError(message)
         return ret
 
     def one_or_error(self, message='未查询到相关数据'):
-        ret = self.__query.one()
+        ret = self.raw.one()
         if not ret:
             raise ZvmsError(message)
         return ret
 
-    def __iter__(self):
-        return self.__query.__iter__()
-
-    def __getattr__(self, *args, **kwargs):
-        return Query.__deco(getattr(self.__query, *args, **kwargs))
-
-    def __deco(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            ret = func(*args, **kwargs)
-            return Query(ret) if isinstance(ret, _Query) else ret
-        return wrapper
-
+    # def paginate(self, **kwargs):
+    #     return Pagination(self.raw.paginate(**kwargs))
 
 class ModelMixIn:
     select = select
