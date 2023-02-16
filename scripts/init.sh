@@ -2,29 +2,29 @@
 cd ..
 cd ./apis
 cd ./paths
-pnpm i
+npx pnpm i
 cd ../types
-pnpm i
+npx pnpm i
 cd ../users
-pnpm i
+npx pnpm i
 cd ../../
 cd ./config
-pnpm i
+npx pnpm i
 cd ../scripts
 cd ./main
-pnpm i
+npx pnpm i
 cd ../gen
 cd ./main
-pnpm i
+npx pnpm i
 cd ../paths
-pnpm i
+npx pnpm i
 cd ../types
-pnpm i
+npx pnpm i
 cd ../users
-pnpm i
+npx pnpm i
 cd ../../
 cd utils
-pnpm i
+npx pnpm i
 cd ../../
 cd ./web
-pnpm i
+npx pnpm i
