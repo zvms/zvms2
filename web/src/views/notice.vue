@@ -146,7 +146,7 @@ export default {
     delFromList(i) {
       this.userSelected.splice(i, 1);
     },
-    send: async function () {
+    send () {
       if (!this.userSelected || this.userSelected.length == 0) {
         toasts.error("请选择发送目标");
         return;
@@ -158,19 +158,15 @@ export default {
           d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + (d.getDate() + 2);
       }
 
-      let data = await fApi.sendNotice(
+      fApi.sendNotice(
         this.userSelected,
         this.form.title,
         this.form.date,
         this.form.message
-      );
-      if (data.type == "SUCCESS") {
-        toasts.success(data.message);
+      )((result)=>{
         for (let k in this.form) this.form[k] = undefined;
         this.userSelected = [];
-      } else {
-        toasts.error(data.message);
-      }
+      })
     },
   },
 };

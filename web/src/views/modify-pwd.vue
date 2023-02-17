@@ -16,7 +16,7 @@
           prepend-icon="mdi-view-list"
         />
         <v-text-field
-          v-model="pwd_conf"
+          v-model="pwd_confirm"
           label="确认密码"
           type="password"
           prepend-icon="mdi-view-list"
@@ -28,26 +28,27 @@
 </template>
 
 <script lang="ts">
-import { toasts } from "../utils/dialogs";
-import { fApi } from "../apis";
+import { toasts } from "@/utils/dialogs";
+import { fApi } from "@/apis";
+import { md5 } from "@/utils/md5";
 
-var md5 = require("md5-node");
 export default {
-  data: () => ({
-    pwd_old: undefined,
-    pwd_new: undefined,
-    pwd_conf: undefined,
-  }),
+  data() {
+    return {
+      md5,
+      pwd_old: "",
+      pwd_new: "",
+      pwd_confirm: "",
+    };
+  },
   methods: {
     async modifyPwd() {
-      if (this.pwd_new != this.pwd_conf) {
+      if (this.pwd_new != this.pwd_confirm) {
         toasts.error("两次密码不一致");
+        this.pwd_confirm = "";
         return;
       }
-      let data = await fApi.modifyPassword(
-        md5(this.pwd_old),
-        md5(this.pwd_new)
-      );
+      fApi.modifyPassword(md5(this.pwd_old), md5(this.pwd_new))(() => {});
     },
   },
 };

@@ -4,7 +4,6 @@
     class="d-flex mb-6 align-center justify-center"
     outlined
     color="rgba(255, 255, 255, 0)"
-    :height="winheight"
   >
     <v-card class="mx-auto" width="50%" max-width="500" min-width="250">
       <v-card-title
@@ -44,7 +43,7 @@
 import { fApi } from "../apis";
 import { NOTEMPTY } from "../utils/validation.js"; //校验表单完整性
 import { applyNavItems } from "../utils/nav";
-import { useLoadingStore, useNoticesStore, useInfoStore } from "@/stores";
+import { useNoticesStore, useInfoStore } from "@/stores";
 import { md5 } from "@/utils/md5";
 import { mapStores } from "pinia";
 
@@ -52,12 +51,11 @@ export default {
   name: "login",
   data() {
     return {
-      //储存表单数据
       form: {
         userid: "",
         password: "",
       },
-      rules: [NOTEMPTY()], //表单校验规则
+      rules: [NOTEMPTY()],
     } satisfies {
       form: {
         userid: string;
@@ -67,29 +65,30 @@ export default {
     };
   },
   methods: {
-    async login() {
+    login() {
       if (this.$refs.form.validate()) {
-        let data = await fApi.login(
-          this.form.userid,
+        this.form.password = "";
+        const id = parseInt(this.form.userid);
+        fApi.login(
+          id,
           md5(this.form.password)
-        )(() => {
-          this.form.password = undefined;
-
-          //将一切保存到$store
-          fApi.fetchNotices()(() => {
-            this.noticesStore.notices;
+        )(({ token }) => {
+          fApi.getUserInfo(id)(({ name, cls, auth, clsName }) => {
             this.infoStore.$patch({
-              username: data.username,
-              permission: data.permission,
-              class: data.class,
-              classname: data.classname,
-              token: data.token,
+              username: name,
+              permission: auth,
+              class: cls,
+              classname: clsName,
+              token: token,
             });
           });
-
-          //更新抽屉导航栏
+          fApi.searchNotices(
+            undefined,
+            id
+          )((result) => {
+            this.noticesStore.notices = result;
+          });
           applyNavItems();
-
           this.$router.push("/me");
         });
       }

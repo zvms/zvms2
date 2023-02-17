@@ -131,43 +131,47 @@ import {
   validateNotNAN,
   validateNotLargerThan,
   validateNotNegative,
-} from "../../utils/validation";
-import { fApi, checkToken } from "../../apis";
+} from "@/utils/validation";
+import { VolStatus, fApi } from "@/apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
 import { mapStores } from "pinia";
 
 export default {
-  data: () => ({
-    search: "",
-    headers: [
-      { text: "义工编号", value: "volId", align: "start", sortable: true },
-      { text: "学号", value: "stuId" },
-    ],
-    thoughts: undefined,
-    dialog1: false,
-    stuid: undefined,
-    volid: undefined,
-    thought: undefined,
-    volTime: undefined,
-    volDate: undefined,
-    volDesc: undefined,
-    volTI: undefined,
-    volTO: undefined,
-    volTL: undefined,
-    inside: undefined,
-    outside: undefined,
-    large: undefined,
+  data() {
+    return {
+      timeToHint,
+      search: "",
+      headers: [
+        { text: "义工编号", value: "volId", align: "start", sortable: true },
+        { text: "学号", value: "stuId" },
+      ],
+      thoughts: undefined,
+      dialog1: false,
+      stuid: undefined,
+      volid: undefined,
+      thought: undefined,
+      volTime: undefined,
+      volDate: undefined,
+      volDesc: undefined,
+      volTI: undefined,
+      volTO: undefined,
+      volTL: undefined,
+      inside: undefined,
+      outside: undefined,
+      large: undefined,
 
-    pictures: [],
-  }),
+      pictures: [],
+    };
+  },
   mounted() {
     this.pageload();
   },
   methods: {
     async pageload() {
-      await checkToken();
-      this.thoughts = await fApi.fetchUnauditedVolunteers();
+       fApi.searchVolunteers(undefined,undefined,undefined,undefined,VolStatus.Unaudited)(result=>{
+        this.thoughts 
+       });
     },
     granted() {
       return this.infoStore.permission < permissionTypes.teacher;
