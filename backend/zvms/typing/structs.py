@@ -40,7 +40,21 @@ UserInfoResponse = Object(
     clsName=String()
 )
 
-VolunteerTimeResponse = Object(
+ThoughtInfoResponse = Object(
+    reason=String(),
+    thought=String(),
+    reward=Int,
+    pics=Array(String())
+)
+
+StudentThoughtsResponse = Object(
+    accepted=Array(ThoughtInfoResponse),
+    unsubmitted=Array(ThoughtInfoResponse),
+    draft=Array(ThoughtInfoResponse),
+    unaudited=Array(ThoughtInfoResponse)
+)
+
+StudentStatResponse = Object(
     inside=Int,
     outside=Int,
     large=Int
@@ -79,6 +93,7 @@ VolunteerInfoResponse = Object(
     name=String(),
     description=String(),
     time=String(),
+    status=Int,
     type=Int,
     reward=Int,
     joiners=Array(SingleUserWithoutAuth),

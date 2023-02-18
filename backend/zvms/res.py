@@ -17,7 +17,6 @@ class ThoughtStatus(IntEnum):
     WAITING_FOR_FIRST_AUDIT = 4
     WAITING_FOR_FINAL_AUDIT = 5
     ACCEPTED = 6
-    REJECTED = 6
 
 class NoticeType(IntEnum):
     USER_NOTICE = 1

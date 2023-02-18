@@ -50,8 +50,8 @@ def get_user_info(id, token_data):
     user = User.query.get_or_error(id)
     return success('获取成功', **user.select('name', 'auth', cls_id='cls'), clsName=user.cls.name)
 
-@api(rule='/user/<int:id>/time', response='VolunteerTimeResponse')
-def get_volunteer_time(id, token_data):
+@api(rule='/user/<int:id>/time', response='StudentStatResponse')
+def get_student_stat(id, token_data):
     '''获取一个用户(学生)的义工分'''
     return success('获取成功', User.query.get_or_error(id).select('inside', 'outside', 'large'))
 

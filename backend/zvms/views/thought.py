@@ -8,6 +8,11 @@ from zvms.res import *
 from zvms.apilib import api
 
 
+@api(rule='/thought/student/<int:id>', response='StudentThoughtsResponse')
+def get_student_thoughts():
+    '''获取某个学生的感想'''
+
+
 @api(rule='/thought/search', params='SearchThoughts')
 def search_thoughts(**kwargs):
     '''搜索感想'''
@@ -34,21 +39,13 @@ def search_thoughts(**kwargs):
     return process_query(filter(filter_, StuVol.query.filter(*conds)))
 
 
-@api(rule='/thought/<int:volId>/<int:stuId>')
+@api(rule='/thought/<int:volId>/<int:stuId>', response='ThoughtInfoResponse')
 def get_thought_info(volId, stuId, token_data):
     '''获取一个感想的详细信息'''
     thought = StuVol.query.get_or_error((volId, stuId))
     if thought.status == ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
         return error('未查询到相关数据')
-    ret = {}
-    if thought.reason is not None:
-        ret['reason'] = thought.reason
-    if thought.reward is not None:
-        ret['reward'] = thought.reward
-    if thought.thought is not None:
-        ret['pics'] = list(thought.pics)
-        ret['thought'] = thought.markdown
-    return success('获取成功', ret)
+    return success('获取成功', thought.select('reason', 'reward', 'pics', 'thought'))
 
 
 def md5ify(raw):
