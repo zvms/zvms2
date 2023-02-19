@@ -1,31 +1,31 @@
 Categ:
-  AUDITOR: 审计部
-  CLASS: 班级
-  MANAGER: 管理员
-  NONE: 未登录
-  STUDENT: 学生
-  SYSTEM: 系统
-  TEACHER: 教师
-  ANY: 任意
+  Auditor: 审计部
+  Class: 班级
+  Manager: 管理员
+  None: 未登录
+  Student: 学生
+  System: 系统
+  Teacher: 教师
+  Any: 任意
 
 NoticeType:
-  CLASS_NOTICE: 班级通知
-  SCHOOL_NOTICE: 学校通知
-  USER_NOTICE: 用户通知
+  ClassNotice: 班级通知
+  SchoolNotice: 学校通知
+  UserNotice: 用户通知
 
 ThoughtStatus:
-  ACCEPTED: 已通过
-  DRAFT: 草稿
-  UNSUBMITTED: 未填写
-  WAITING_FOR_FINAL_AUDIT: 等待终审
-  WAITING_FOR_FIRST_AUDIT: 等待初审
-  WAITING_FOR_SIGNUP_AUDIT: 等待报名审核
+  Accepted: 已通过
+  Draft: 草稿
+  Unsubmitted: 未填写
+  WaitingForFinalAudit: 等待终审
+  WaitingForFirstAudit: 等待初审
+  WaitingForSignupAudit: 等待报名审核
 
 VolStatus:
-  AUDITED: 已过审
-  UNAUDITED: 未过审
+  Audited: 已过审
+  Unaudited: 未过审
 
 VolType:
-  INSIDE: 校内义工
-  LARGE: 大型实践
-  OUTSIDE: 校外义工
+  Inside: 校内义工
+  Large: 大型实践
+  Outside: 校外义工

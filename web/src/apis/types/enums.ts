@@ -1,111 +1,116 @@
 export enum VolType {
-    INSIDE = 1,
-    OUTSIDE = 2,
-    LARGE = 3
+    Inside = 1,
+    Outside = 2,
+    Large = 3
 }
+
 export function getVolTypeName(id: VolType): string {
     switch (id) {
-        case VolType.INSIDE:
+        case VolType.Inside:
             return "校内义工";
-        case VolType.OUTSIDE:
+        case VolType.Outside:
             return "校外义工";
-        case VolType.LARGE:
+        case VolType.Large:
             return "大型实践";
-
-    default:
-        throw Error("Invalid enum value");
+        default:
+            throw Error("Invalid enum value");
     }
 }
+
 export enum VolStatus {
-    UNAUDITED = 1,
-    AUDITED = 2
+    Unaudited = 1,
+    Audited = 2
 }
+
 export function getVolStatusName(id: VolStatus): string {
     switch (id) {
-        case VolStatus.UNAUDITED:
+        case VolStatus.Unaudited:
             return "未过审";
-        case VolStatus.AUDITED:
+        case VolStatus.Audited:
             return "已过审";
-
-    default:
-        throw Error("Invalid enum value");
+        default:
+            throw Error("Invalid enum value");
     }
 }
+
 export enum ThoughtStatus {
-    WAITING_FOR_SIGNUP_AUDIT = 1,
-    UNSUBMITTED = 2,
-    DRAFT = 3,
-    WAITING_FOR_FIRST_AUDIT = 4,
-    WAITING_FOR_FINAL_AUDIT = 5,
-    ACCEPTED = 6
+    WaitingForSignupAudit = 1,
+    Unsubmitted = 2,
+    Draft = 3,
+    WaitingForFirstAudit = 4,
+    WaitingForFinalAudit = 5,
+    Accepted = 6
 }
+
 export function getThoughtStatusName(id: ThoughtStatus): string {
     switch (id) {
-        case ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
+        case ThoughtStatus.WaitingForSignupAudit:
             return "等待报名审核";
-        case ThoughtStatus.UNSUBMITTED:
+        case ThoughtStatus.Unsubmitted:
             return "未填写";
-        case ThoughtStatus.DRAFT:
+        case ThoughtStatus.Draft:
             return "草稿";
-        case ThoughtStatus.WAITING_FOR_FIRST_AUDIT:
+        case ThoughtStatus.WaitingForFirstAudit:
             return "等待初审";
-        case ThoughtStatus.WAITING_FOR_FINAL_AUDIT:
+        case ThoughtStatus.WaitingForFinalAudit:
             return "等待终审";
-        case ThoughtStatus.ACCEPTED:
+        case ThoughtStatus.Accepted:
             return "已通过";
-
-    default:
-        throw Error("Invalid enum value");
+        default:
+            throw Error("Invalid enum value");
     }
 }
+
 export enum NoticeType {
-    USER_NOTICE = 1,
-    CLASS_NOTICE = 2,
-    SCHOOL_NOTICE = 3
+    UserNotice = 1,
+    ClassNotice = 2,
+    SchoolNotice = 3
 }
+
 export function getNoticeTypeName(id: NoticeType): string {
     switch (id) {
-        case NoticeType.USER_NOTICE:
+        case NoticeType.UserNotice:
             return "用户通知";
-        case NoticeType.CLASS_NOTICE:
+        case NoticeType.ClassNotice:
             return "班级通知";
-        case NoticeType.SCHOOL_NOTICE:
+        case NoticeType.SchoolNotice:
             return "学校通知";
-
-    default:
-        throw Error("Invalid enum value");
+        default:
+            throw Error("Invalid enum value");
     }
 }
+
 export enum Categ {
-    NONE = 1,
-    STUDENT = 2,
-    TEACHER = 4,
-    CLASS = 8,
-    MANAGER = 16,
-    AUDITOR = 32,
-    SYSTEM = 64,
-    ANY = 127
+    None = 1,
+    Student = 2,
+    Teacher = 4,
+    Class = 8,
+    Manager = 16,
+    Auditor = 32,
+    System = 64,
+    Any = 127
 }
+
 export function getCategName(id: Categ): string {
     switch (id) {
-        case Categ.NONE:
+        case Categ.None:
             return "未登录";
-        case Categ.STUDENT:
+        case Categ.Student:
             return "学生";
-        case Categ.TEACHER:
+        case Categ.Teacher:
             return "教师";
-        case Categ.CLASS:
+        case Categ.Class:
             return "班级";
-        case Categ.MANAGER:
+        case Categ.Manager:
             return "管理员";
-        case Categ.AUDITOR:
+        case Categ.Auditor:
             return "审计部";
-        case Categ.SYSTEM:
+        case Categ.System:
             return "系统";
-        case Categ.ANY:
+        case Categ.Any:
             return "任意";
-
-    default:
-        throw Error("Invalid enum value");
+        default:
+            throw Error("Invalid enum value");
     }
 }
+
