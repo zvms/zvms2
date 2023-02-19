@@ -5,15 +5,15 @@ import os.path
 from zvms.models import *
 from zvms.util import *
 from zvms.res import *
-from zvms.apilib import api
+from zvms.apilib import Api
 
 
-@api(rule='/thought/student/<int:id>', response='StudentThoughtsResponse')
+@Api(rule='/thought/student/<int:id>', response='StudentThoughtsResponse')
 def get_student_thoughts():
     '''获取某个学生的感想'''
 
 
-@api(rule='/thought/search', params='SearchThoughts')
+@Api(rule='/thought/search', params='SearchThoughts')
 def search_thoughts(**kwargs):
     '''搜索感想'''
     conds = [StuVol.status != ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT]
@@ -39,7 +39,7 @@ def search_thoughts(**kwargs):
     return process_query(filter(filter_, StuVol.query.filter(*conds)))
 
 
-@api(rule='/thought/<int:volId>/<int:stuId>', response='ThoughtInfoResponse')
+@Api(rule='/thought/<int:volId>/<int:stuId>', response='ThoughtInfoResponse')
 def get_thought_info(volId, stuId, token_data):
     '''获取一个感想的详细信息'''
     thought = StuVol.query.get_or_error((volId, stuId))
@@ -97,7 +97,7 @@ def _auth_thought(stuId, operation, token_data):
         return False
     
 
-@api(rule='/thought/<int:volId>/<int:stuId>/save', method='POST', params='Thought')
+@Api(rule='/thought/<int:volId>/<int:stuId>/save', method='POST', params='Thought')
 def save_thought(token_data, volId, stuId, thought, pictures):
     '''保存感想草稿'''
     _auth_thought(stuId, '修改', token_data)
@@ -105,7 +105,7 @@ def save_thought(token_data, volId, stuId, thought, pictures):
     return success('保存成功')
 
 
-@api(rule='/thought/<int:volId>/<int:stuId>/submit', method='POST', params='Thought')
+@Api(rule='/thought/<int:volId>/<int:stuId>/submit', method='POST', params='Thought')
 def submit_thought(token_data, volId, stuId, thought, pictures):
     '''提交感想'''
     is_common = not _auth_thought(stuId, '提交', token_data)
@@ -113,7 +113,7 @@ def submit_thought(token_data, volId, stuId, thought, pictures):
     return success('提交成功')
 
 
-@api(rule='/thought/<int:volId>/<int:stuId>/audit/first', method='POST', auth=Categ.CLASS | Categ.TEACHER)
+@Api(rule='/thought/<int:volId>/<int:stuId>/audit/first', method='POST', auth=Categ.CLASS | Categ.TEACHER)
 def first_audit(token_data, volId, stuId):
     '''初审感想(班内)'''
     auth_cls(User.query.get(stuId), token_data)
@@ -126,7 +126,7 @@ def first_audit(token_data, volId, stuId):
     return success('审核成功')
 
 
-@api(rule='/thought/<int:volId>/<int:stuId>/audit/final', method='POST', auth=Categ.AUDITOR)
+@Api(rule='/thought/<int:volId>/<int:stuId>/audit/final', method='POST', auth=Categ.AUDITOR)
 def final_audit(token_data, volId, stuId):
     '''终审感想(义管会)'''
     thought = StuVol.query.get((volId, stuId))
@@ -138,7 +138,7 @@ def final_audit(token_data, volId, stuId):
     return success('审核成功')
 
 
-@api(rule='/thought/<int:volId>/<int:stuId>/repulse', method='POST', params='Repulse')
+@Api(rule='/thought/<int:volId>/<int:stuId>/repulse', method='POST', params='Repulse')
 def repulse(token_data, volId, stuId, reason):
     '''打回感想'''
     auth_cls(User.query.get(stuId), token_data)

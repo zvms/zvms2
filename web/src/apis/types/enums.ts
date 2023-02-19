@@ -1,103 +1,111 @@
-export enum Categ {
-    None = 1,
-    Student = 2,
-    Teacher = 4,
-    Class = 8,
-    Manager = 16,
-    Auditor = 32,
-    System = 64
+export enum VolType {
+    INSIDE = 1,
+    OUTSIDE = 2,
+    LARGE = 3
 }
-export function getCategName(id: number): string {
+export function getVolTypeName(id: VolType): string {
     switch (id) {
-        case 1:
-            return "未登录";
-        case 2:
-            return "学生";
-        case 4:
-            return "教师";
-        case 8:
-            return "班级";
-        case 16:
-            return "管理";
-        case 32:
-            return "审计部";
-        case 64:
-            return "系统";
-        default:
-            throw Error("Invalid enum value");
-    }
-}
-export enum NoticeType {
-    User = 1,
-    Cls = 2,
-    School = 3
-}
-export function getNoticeTypeName(id: number): string {
-    switch (id) {
-        case 1:
-            return "用户通知";
-        case 2:
-            return "班级通知";
-        case 3:
-            return "学校通知";
-        default:
-            throw Error("Invalid enum value");
-    }
-}
-export enum ThoughtStatus {
-    WaitingForSignupAudit = 1,
-    Unsubmitted = 2,
-    Draft = 3,
-    WaitingForFirstAudit = 4,
-    WaitingForFinalAudit = 5,
-    Accepted = 6
-}
-export function getThoughtStatusName(id: number): string {
-    switch (id) {
-        case 1:
-            return "等待报名审核";
-        case 2:
-            return "未填写";
-        case 3:
-            return "草稿";
-        case 4:
-            return "等待初审";
-        case 5:
-            return "等待终审";
-        case 6:
-            return "已通过";
-        default:
-            throw Error("Invalid enum value");
+        case VolType.INSIDE:
+            return "校内义工";
+        case VolType.OUTSIDE:
+            return "校外义工";
+        case VolType.LARGE:
+            return "大型实践";
+
+    default:
+        throw Error("Invalid enum value");
     }
 }
 export enum VolStatus {
-    Unaudited = 1,
-    Audited = 2
+    UNAUDITED = 1,
+    AUDITED = 2
 }
-export function getVolStatusName(id: number): string {
+export function getVolStatusName(id: VolStatus): string {
     switch (id) {
-        case 1:
+        case VolStatus.UNAUDITED:
             return "未过审";
-        case 2:
+        case VolStatus.AUDITED:
             return "已过审";
-        default:
-            throw Error("Invalid enum value");
+
+    default:
+        throw Error("Invalid enum value");
     }
 }
-export enum VolType {
-    Inside = 1,
-    Outside = 2,
-    Large = 3
+export enum ThoughtStatus {
+    WAITING_FOR_SIGNUP_AUDIT = 1,
+    UNSUBMITTED = 2,
+    DRAFT = 3,
+    WAITING_FOR_FIRST_AUDIT = 4,
+    WAITING_FOR_FINAL_AUDIT = 5,
+    ACCEPTED = 6
 }
-export function getVolTypeName(id: number): string {
+export function getThoughtStatusName(id: ThoughtStatus): string {
     switch (id) {
-        case 1:
-            return "校内义工";
-        case 2:
-            return "校外义工";
-        case 3:
-            return "大型实践";
-        default:
-            throw Error("Invalid enum value");
+        case ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
+            return "等待报名审核";
+        case ThoughtStatus.UNSUBMITTED:
+            return "未填写";
+        case ThoughtStatus.DRAFT:
+            return "草稿";
+        case ThoughtStatus.WAITING_FOR_FIRST_AUDIT:
+            return "等待初审";
+        case ThoughtStatus.WAITING_FOR_FINAL_AUDIT:
+            return "等待终审";
+        case ThoughtStatus.ACCEPTED:
+            return "已通过";
+
+    default:
+        throw Error("Invalid enum value");
+    }
+}
+export enum NoticeType {
+    USER_NOTICE = 1,
+    CLASS_NOTICE = 2,
+    SCHOOL_NOTICE = 3
+}
+export function getNoticeTypeName(id: NoticeType): string {
+    switch (id) {
+        case NoticeType.USER_NOTICE:
+            return "用户通知";
+        case NoticeType.CLASS_NOTICE:
+            return "班级通知";
+        case NoticeType.SCHOOL_NOTICE:
+            return "学校通知";
+
+    default:
+        throw Error("Invalid enum value");
+    }
+}
+export enum Categ {
+    NONE = 1,
+    STUDENT = 2,
+    TEACHER = 4,
+    CLASS = 8,
+    MANAGER = 16,
+    AUDITOR = 32,
+    SYSTEM = 64,
+    ANY = 127
+}
+export function getCategName(id: Categ): string {
+    switch (id) {
+        case Categ.NONE:
+            return "未登录";
+        case Categ.STUDENT:
+            return "学生";
+        case Categ.TEACHER:
+            return "教师";
+        case Categ.CLASS:
+            return "班级";
+        case Categ.MANAGER:
+            return "管理员";
+        case Categ.AUDITOR:
+            return "审计部";
+        case Categ.SYSTEM:
+            return "系统";
+        case Categ.ANY:
+            return "任意";
+
+    default:
+        throw Error("Invalid enum value");
     }
 }

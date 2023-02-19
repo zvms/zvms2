@@ -2,9 +2,9 @@ from tornado.ioloop import IOLoop
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 
-from zvms import app
+from zvms import create_app
 
-wsgi = WSGIContainer(app)
+wsgi = WSGIContainer(create_app())
 server = HTTPServer(wsgi)
 
 if __name__ == '__main__':

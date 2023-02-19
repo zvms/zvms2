@@ -1,8 +1,12 @@
 from sqlalchemy import Column, Integer, String, SmallInteger, DateTime, Date
+from flask_sqlalchemy import SQLAlchemy
 
-from zvms import db
 from zvms.res import *
-from zvms.util import ModelMixIn, render_markdown, select_value, count
+from zvms.util import ModelMixIn, render_markdown, select_value, count, init_util
+
+db = SQLAlchemy()
+
+init_util(db)
 
 class Class(ModelMixIn, db.Model):
     __tablename__ = 'class'

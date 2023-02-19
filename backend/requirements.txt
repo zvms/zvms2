@@ -1,9 +1,9 @@
 flask
 flask_sqlalchemy
 flask_cors
-flask_migrate
 pymysql
 cryptography
 pyjwt
 tornado
 mistune
+yaml

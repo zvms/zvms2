@@ -20,11 +20,8 @@ class ThoughtStatus(IntEnum):
 
 class NoticeType(IntEnum):
     USER_NOTICE = 1
-    USER = 1
     CLASS_NOTICE = 2
-    CLS = 2
     SCHOOL_NOTICE = 3
-    SCHOOL = 3
 
 class Categ(IntFlag):
     NONE = 1
