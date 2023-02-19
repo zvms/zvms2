@@ -28,9 +28,9 @@
               <td>
                 <v-select
                   prepend-icon="mdi-switch"
-                  v-model="target_new"
+                  v-model="newTargetUser"
                   label="发送目标"
-                  :items="users"
+                  :items="targetUsers"
                   item-text="name"
                   item-value="id"
                 >
@@ -110,8 +110,8 @@ export default {
         message: "",
         date: "",
       },
-      users: [] as string[],
-      target_new: "",
+      targetUsers: [] as string[],
+      newTargetUser: "",
       userSelected: [] as { id: string }[],
       mp: {} as Record<string, string>,
       modalDate: false,
@@ -127,21 +127,21 @@ export default {
   methods: {
     async pageload() {
       fApi.listClasses()((users) => {
-        this.users = users;
-        for (const cls of this.users) this.mp[cls.id] = cls.name;
+        this.targetUsers = users;
+        for (const cls of this.targetUsers) this.mp[cls.id] = cls.name;
       });
     },
     addToList() {
       let flg = false;
-      if (this.target_new == "") flg = true;
+      if (this.newTargetUser == "") flg = true;
       for (const user of this.userSelected) {
-        if (user["id"] == this.target_new) {
+        if (user["id"] == this.newTargetUser) {
           flg = true;
           break;
         }
       }
-      if (!flg) this.userSelected.push(this.target_new);
-      this.target_new = "";
+      if (!flg) this.userSelected.push(this.newTargetUser);
+      this.newTargetUser = "";
     },
     delFromList(i) {
       this.userSelected.splice(i, 1);

@@ -87,6 +87,8 @@ SingleVolunteer = Object(
     status=Int
 )
 
+SearchVolunteersResponse = Array(SingleVolunteer)
+
 VolunteerInfoResponse = Object(
     name=String(),
     description=String(),
@@ -138,7 +140,6 @@ SearchThoughts = Optional(
 )
 
 Thought = Object(
-    volunteer=SingleVolunteer,
     thought=String(1024),
     pictures=Array(String())
 )

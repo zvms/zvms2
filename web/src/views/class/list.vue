@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { toasts } from "../../utils/dialogs";
-import { fApi, checkToken } from "../../apis";
+import { fApi} from "../../apis";
 import { permissionTypes } from "../../utils/permissions";
 import { useInfoStore } from "@/stores";
 import { mapStores } from "pinia";

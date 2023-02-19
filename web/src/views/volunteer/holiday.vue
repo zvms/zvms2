@@ -164,7 +164,7 @@
 
 <script lang="ts">
 import { toasts } from "@/utils/dialogs.js";
-import { fApi, checkToken } from "@/apis";
+import { fApi} from "@/apis";
 import { NOTEMPTY } from "@/utils/validation.js";
 import { useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
@@ -194,7 +194,7 @@ export default {
   methods: {
     async pageload() {
       await checkToken();
-      let stulst = await fApi.fetchStudentList(this.infoStore.class);
+      let stulst = await fApi.fetchStudentList(this.infoStore.classId);
       stulst ? (this.stulst = stulst) : toasts.error("获取学生列表失败");
       for (let i = 0; i < this.stulst.length; i++)
         this.mp[this.stulst[i].id] = this.stulst[i].name;

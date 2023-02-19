@@ -112,6 +112,7 @@ export interface SearchThoughts {
   Volunteer: number;
 }
 export interface Thought {
+  volunteer: SingleVolunteer;
   thought: string;
   pictures: string[];
 }

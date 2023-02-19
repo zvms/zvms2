@@ -4,19 +4,19 @@
       <v-card-title>修改密码</v-card-title>
       <v-card-text>
         <v-text-field
-          v-model="pwd_old"
+          v-model="oldPwd"
           label="旧密码"
           type="password"
           prepend-icon="mdi-view-list"
         />
         <v-text-field
-          v-model="pwd_new"
+          v-model="newPwd"
           label="新密码"
           type="password"
           prepend-icon="mdi-view-list"
         />
         <v-text-field
-          v-model="pwd_confirm"
+          v-model="confirmPwd"
           label="确认密码"
           type="password"
           prepend-icon="mdi-view-list"
@@ -36,19 +36,19 @@ export default {
   data() {
     return {
       md5,
-      pwd_old: "",
-      pwd_new: "",
-      pwd_confirm: "",
+      oldPwd: "",
+      newPwd: "",
+      confirmPwd: "",
     };
   },
   methods: {
     async modifyPwd() {
-      if (this.pwd_new != this.pwd_confirm) {
+      if (this.newPwd != this.confirmPwd) {
         toasts.error("两次密码不一致");
-        this.pwd_confirm = "";
+        this.confirmPwd = "";
         return;
       }
-      fApi.modifyPassword(md5(this.pwd_old), md5(this.pwd_new))(() => {});
+      fApi.modifyPassword(md5(this.oldPwd), md5(this.newPwd))(() => {});
     },
   },
 };

@@ -183,7 +183,7 @@
 import { toasts } from "@/utils/dialogs.js";
 import { permissionTypes } from "@/utils/permissions";
 import volinfo from "@/components/vol-info.vue";
-import { fApi, checkToken } from "@/apis";
+import { fApi } from "@/apis";
 import axios from "axios";
 import { useInfoStore, useLastseenvolStore } from "@/stores";
 import { mapStores } from "pinia";
@@ -242,7 +242,7 @@ export default {
 
       this.stulst = undefined;
       this.stulstSelected = [];
-      let stulst = await fApi.fetchStudentList(this.infoStore.class);
+      let stulst = await fApi.fetchStudentList(this.infoStore.classId);
       stulst ? (this.stulst = stulst) : toasts.error("获取学生列表失败");
       this.volid = volid;
       for (const i in this.stulst)
@@ -375,7 +375,7 @@ export default {
       else return await this.fetchAllVol();
     },
     async fetchCurrentClassVol() {
-      let volworks = await fApi.fetchClassVolunter(this.infoStore.class);
+      let volworks = await fApi.fetchClassVolunter(this.infoStore.classId);
       if (!volworks) toasts.error("获取义工列表失败");
       return volworks;
     },

@@ -114,7 +114,7 @@
 import { toasts } from "../../utils/dialogs.js";
 import { permissionTypes } from "../../utils/permissions";
 import axios from "axios";
-import { fApi, checkToken } from "../../apis";
+import { fApi} from "../../apis";
 
 export default {
   data: () => ({
