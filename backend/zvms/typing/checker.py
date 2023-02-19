@@ -11,6 +11,9 @@ class Checker:
 
     def check(self, json): pass
 
+    def as_json(self):
+        return self.stringify()
+
 class Any(Checker):
     def render(self):
         return '{}'
@@ -50,6 +53,9 @@ class Object(Checker):
 
     def as_params(self):
         return {k: v.render() for k, v in self.fields()}
+
+    def as_json(self):
+        return dict(((k, v.as_json()) for k, v in self.fields()))
 
 class Simple(Checker):
     def __init__(self, type, tsname, name=None):
@@ -103,6 +109,9 @@ class Array(Checker):
                 return False
         return True
 
+    def as_json(self):
+        return [self.item.as_json()]
+
 class Union(Checker):
     def __init__(self, *elems):
         self.elems = elems
@@ -118,6 +127,9 @@ class Union(Checker):
             if elem.check(json):
                 return True
         return False
+
+    def as_json(self):
+        return [i.as_json() for i in self.elems]
 
 number = Union(Int, Float)
 
@@ -136,6 +148,9 @@ class Range(Checker):
     def check(self, json):
         return self.simple.check(json) and (self.min == '' or json >= self.min) and (self.max == '' or json < self.max)
 
+    def as_json(self):
+        return self.simple.as_json()
+
 class Len(Checker):
     def __init__(self, simple, min='', max=''):
         self.simple = simple
@@ -150,6 +165,9 @@ class Len(Checker):
 
     def check(self, json):
         return self.simple.check(json) and (self.min == '' or len(json) >= self.min) and (self.max == '' or len(json) < self.max)
+
+    def as_json(self):
+        return self.simple.as_json()
 
 class Enum(Checker):
     def __init__(self, enum):

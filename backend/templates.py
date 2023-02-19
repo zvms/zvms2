@@ -60,5 +60,27 @@ CREATE = '''
 ARG = '''      {arg}'''
 
 DOC = '''# 镇海中学义工管理系统API文档
+{modules}
+'''
 
+MODULE = '''## {i}.{name}
+### **{summary}**
+{apis}
+
+---
+
+'''
+
+API_DOC = '''
+#### {i}.{j} {name}
+[{method}] {rule}  
+**{docstring}**  
+参数: 
+```json
+{params}
+```
+响应:  
+```json
+{response}
+```
 '''

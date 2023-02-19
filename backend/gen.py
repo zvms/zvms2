@@ -3,8 +3,11 @@ from time import perf_counter
 begin = perf_counter()
 
 from enum import IntEnum, IntFlag, EnumType
+from collections import defaultdict
 from itertools import chain
 from operator import itemgetter
+import json
+import sys
 import re
 import os
 
@@ -14,7 +17,7 @@ import templates as tpl
 import zvms.res as res
 import zvms.typing.structs as structs
 import zvms.typing.checker as checker
-import zvms.views
+import zvms.views as views
 from zvms.typing.checker import *
 from zvms.apilib import Api
 
@@ -158,8 +161,25 @@ with open(config['apis'], 'w', encoding='utf-8') as apis_output,\
     complete(config['apis'])
 
 with open(config['doc'], 'w', encoding='utf-8') as doc_output:
+    modules = defaultdict(list)
+    for api in Api.apis:
+        modules[api.func.__module__].append(api)
     doc_output.write(tpl.DOC.format(
-        
+        modules=''.join((tpl.MODULE.format(
+            i=i,
+            name=module,
+            summary=sys.modules[module].__dict__.get('SUMMARY', '...'),
+            apis=''.join((tpl.API_DOC.format(
+                i=i,
+                j=j,
+                name=convert(api.func.__name__, 'snake', 'camel'),
+                method=api.method,
+                rule=api.rule,
+                docstring=api.func.__doc__ or '...',
+                params=json.dumps(api.params.as_json(), indent=4),
+                response=json.dumps(api.response.as_json(), indent=4)
+            ) for j, api in enumerate(apis, 1)))
+        ) for i, (module, apis) in enumerate(modules.items(), 1)))
     ))
     complete(config['doc'])
     
