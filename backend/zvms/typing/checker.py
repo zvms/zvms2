@@ -1,3 +1,112 @@
+class Checker:
+    def render(self): pass
+
+    def stringify(self):
+        return self.render()
+
+    def check(self, json): pass
+
+class Any(Checker):
+    def render(self):
+        return '{}'
+
+    def stringify(self):
+        return 'any'
+
+    def check(self, json):
+        return True
+        
+class Object(Checker):
+    def fields(self):
+        return ((k, v) for k, v in self.__dict__ if isinstance(v, Checker))
+
+    def render(self):
+        return f'structs.{self.__name__}'
+
+    def stringify(self):
+        return '{' + ', '.join((f'"{k}": {v.render()}' for k, v in self.fields())) + '}'
+
+    def check(self, json):
+        if not isinstance(json, dict):
+            return False
+        for k, v in self.fields():
+            if k not in json or not(v(json[k])):
+                return False
+        return True
+
+class Simple(Checker):
+    def __init__(self, type, name):
+        self.type = type
+        self.name = name
+
+    def render(self):
+        return self.name
+
+    def check(self, json):
+        return isinstance(json, self.type)
+
+class Parsable(Checker):
+    def __init__(self, simple):
+        self.simple = simple
+
+    def render(self):
+        return self.simple.render()
+
+    def check(self, json):
+        try:
+            self.simple.type(json)
+            return True
+        except (ValueError, TypeError):
+            return False
+
+class Array(Checker):
+    def __init__(self, item):
+        self.item = item
+
+    def render(self):
+        return f'{self.item.render()}[]'
+
+    def check(self, json):
+        if not isinstance(json, (list, tuple)):
+            return False
+        for item in json:
+            if not self.item.check(item):
+                return False
+        return True
+
+class Union(Checker):
+    def __init__(self, *elems):
+        self.elems = elems
+
+    def render(self):
+        return ' | '.join((i.render() for i in self.elems))
+
+    def stringify(self):
+        return f'({self.render()})'
+
+    def check(self, json):
+        for elem in self.elems:
+            if elem.check(json):
+                return True
+        return False
+
+class Range(Checker):
+    def __init__(self, simple, min='', max=''):
+        self.simple = simple
+        self.min = min
+        self.max = max
+
+    def render(self):
+        return self.simple.render()
+
+    def stringify(self):
+        return self.simple.stringify()
+
+    def check(self, json):
+        return self.simple.check(json) and json >= self.min and json < self.max
+
+def Len(Checker)
+
 class Named:
     def __init__(self, raw, name):
         self.raw = raw
