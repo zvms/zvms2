@@ -1,10 +1,10 @@
 from zvms.models import *
 from zvms.util import *
 from zvms.res import *
-from zvms.apilib import api
+from zvms.apilib import Api
 
 
-@api(rule='/notice/search', params='SearchNotices', response='SearchNoticesResponse')
+@Api(rule='/notice/search', params='SearchNotices', response='SearchNoticesResponse')
 def search_notices(token_data, **kwargs):
     '''搜索通知'''
     conds = []
@@ -41,7 +41,7 @@ def _save_notice(title, content, deadtime, token_data):
     ).insert().id
 
 
-@api(rule='/notice/send/user', method='POST', params='Notice', auth=Categ.MANAGER | Categ.TEACHER)
+@Api(rule='/notice/send/user', method='POST', params='Notice', auth=Categ.MANAGER | Categ.TEACHER)
 def send_user_notice(title, content, deadtime, targets, token_data):
     '''发送用户通知'''
     id = _save_notice(title, content, deadtime, token_data)
@@ -52,7 +52,7 @@ def send_user_notice(title, content, deadtime, targets, token_data):
     return success('发送成功')
 
 
-@api(rule='/notice/send/class', method='POST', params='Notice', auth=Categ.MANAGER | Categ.TEACHER)
+@Api(rule='/notice/send/class', method='POST', params='Notice', auth=Categ.MANAGER | Categ.TEACHER)
 def send_class_notice(title, content, deadtime, targets, token_data):
     '''发送班级通知'''
     id = _save_notice(title, content, deadtime, token_data)
@@ -62,7 +62,7 @@ def send_class_notice(title, content, deadtime, targets, token_data):
     return success('发送成功')
 
 
-@api(rule='/notice/send/school', method='POST', params='NoticeBody', auth=Categ.MANAGER | Categ.TEACHER)
+@Api(rule='/notice/send/school', method='POST', params='NoticeBody', auth=Categ.MANAGER | Categ.TEACHER)
 def send_school_notice(title, content, deadtime, token_data):
     '''发送学校通知'''
     '[POST] /notice/send/school'
@@ -72,7 +72,7 @@ def send_school_notice(title, content, deadtime, token_data):
     return success('发送成功')
 
 
-@api(rule='/notice/<int:id>/delete', method='POST', auth=Categ.MANAGER | Categ.TEACHER)
+@Api(rule='/notice/<int:id>/delete', method='POST', auth=Categ.MANAGER | Categ.TEACHER)
 def delete_notice(id, token_data):
     '''删除一个通知'''
     notice = Notice.query.get_or_error(id)
@@ -81,7 +81,7 @@ def delete_notice(id, token_data):
     return success('删除成功')
 
 
-@api(rule='/notice/<int:id>/modify', method='POST', params='NoticeBody', auth=Categ.MANAGER | Categ.TEACHER)
+@Api(rule='/notice/<int:id>/modify', method='POST', params='NoticeBody', auth=Categ.MANAGER | Categ.TEACHER)
 def modify_notice(id, title, content, deadtime, token_data):
     '''修改一个通知'''
     notice = Notice.query.get_or_error(id)

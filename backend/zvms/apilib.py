@@ -1,6 +1,4 @@
 from functools import wraps
-from queue import Queue
-from threading import Barrier
 import datetime
 import json
 
@@ -10,44 +8,26 @@ from jwt.exceptions import InvalidSignatureError
 from zvms.typing.checker import Any
 from zvms.res import Categ
 from zvms.util import *
-from zvms import app
 import zvms.tokenlib as tk
 import zvms.typing.structs as structs
 
-def process_queue():
-    with app.app_context():
-        while True:
-            while not queue.empty():
-                task = queue.get()
-                task.run()
-                task.bar.wait()
+class Api:
+    apis = []
 
-queue = Queue()
+    def __init__(self, rule, method='GET', params=Any, response=Any, auth=Categ.ANY):
+        self.rule = rule
+        self.method = method
+        self.params = params
+        self.response = response
+        self.auth = auth
 
-class Task:
-    def __init__(self, bar, func, args, kwargs, json_data, token_data):
-        self.bar = bar
+    def __call__(self, func):
         self.func = func
-        self.args = args
-        self.kwargs = kwargs
-        self.json_data = json_data
-        self.token_data = token_data
+        Api.apis.append(self)
 
-
-    def run(self):
-        self.result = self.func(*self.args, **self.kwargs, **self.json_data, token_data=self.token_data)
-
-
-def api(*, rule, method='GET', params=Any, response=Any, auth=Categ.ANY):
-    def wrapper(func):
-        nonlocal params, response
-        if isinstance(params, str):
-            params = getattr(structs, params)
-        if isinstance(response, str):
-            response = getattr(structs, response)
-        app.add_url_rule(rule, methods=[method], view_func=deco(func, params, response, auth))
-        return func
-    return wrapper
+    def init_app(app):
+        for api in Api.apis:
+            app.add_url_rule(api.rule, methods=[api.method], view_func=deco(api.func, api.params, api.response, api.auth))
 
 # 不要听下面的注释, 现在已经没有装饰器了
 # 以后把调试的代码写在这边，把一些公用的功能也可以移到这边
@@ -90,13 +70,6 @@ def deco(impl, params, response, auth):
                 print(json.loads(interface_error(params, json_data)))
                 print(json_data)
                 return interface_error(params, json_data)
-            bar = Barrier(2)
-            task = Task(bar, impl, args, kwargs, json_data, token_data)
-            queue.put(task)
-            bar.wait()
-            if not response(task.result.get('result')):
-                return {'type': 'ERROR', 'message': '响应返回错误', 'expected': str(response), 'found': parse(task.result)}
-            return json.dumps(task.result)
             ret = impl(*args, **kwargs, **json_data, token_data=token_data)
             if not response(ret.get('result')):
                 return {'type': 'ERROR', 'message': '响应返回错误', 'expected': str(response), 'found': parse(ret)}

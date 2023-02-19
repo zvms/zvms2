@@ -1,10 +1,10 @@
 from zvms.models import *
 from zvms.res import *
 from zvms.util import *
-from zvms.apilib import api
+from zvms.apilib import Api
 
 
-@api(rule='/volunteer/search', params='SearchVolunteers', response='SearchVolunteersResponse')
+@Api(rule='/volunteer/search', params='SearchVolunteers', response='SearchVolunteersResponse')
 def search_volunteers(token_data, **kwargs):
     '''搜索义工'''
     conds = []
@@ -32,7 +32,7 @@ def search_volunteers(token_data, **kwargs):
     return process_query(Volunteer.query.filter(*conds))
 
 
-@api(rule='/volunteer/<int:id>', response='VolunteerInfoResponse')
+@Api(rule='/volunteer/<int:id>', response='VolunteerInfoResponse')
 def get_volunteer_info(id, token_data):
     '''获取一个义工的详细信息'''
     ret = Volunteer.query.get_or_error(id).select('name',
@@ -41,7 +41,7 @@ def get_volunteer_info(id, token_data):
     return success('获取成功', **ret)
 
 
-@api(rule='/volunteer/create', method='POST', params='Volunteer', response='VolunteerInfoResponse')
+@Api(rule='/volunteer/create', method='POST', params='Volunteer', response='VolunteerInfoResponse')
 def create_volunteer(token_data, classes, **kwargs):
     '''创建一个义工'''
     try_parse_time(kwargs['time'])
@@ -76,7 +76,7 @@ def create_volunteer(token_data, classes, **kwargs):
     return success('创建成功')
 
 
-@api(rule='/volunteer/<int:id>/modify', method='POST', params='Volunteer')
+@Api(rule='/volunteer/<int:id>/modify', method='POST', params='Volunteer')
 def modify_volunteer(token_data, id, classes, **kwargs):
     '''修改义工'''
     vol = Volunteer.query.get_or_error(id)
@@ -100,7 +100,7 @@ def modify_volunteer(token_data, id, classes, **kwargs):
     return success('修改成功')
 
 
-@api(rule='/volunteer/<int:id>/delete', method='POST')
+@Api(rule='/volunteer/<int:id>/delete', method='POST')
 def delete_volunteer(token_data, id):
     '''删除义工'''
     auth_self(Volunteer.query.get_or_error(id).holder_id, token_data, '权限不足: 不能删除其他人的义工')
@@ -108,7 +108,7 @@ def delete_volunteer(token_data, id):
     return success('删除成功')
 
 
-@api(rule='/volunteer/<int:id>/audit', method='POST', auth=Categ.CLASS | Categ.TEACHER)
+@Api(rule='/volunteer/<int:id>/audit', method='POST', auth=Categ.CLASS | Categ.TEACHER)
 def audit_volunteer(token_data, id):
     '''审核义工(班内)'''
     vol = Volunteer.query.get_or_error(id)

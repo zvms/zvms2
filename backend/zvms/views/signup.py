@@ -1,16 +1,16 @@
 from zvms.models import *
 from zvms.res import *
 from zvms.util import *
-from zvms.apilib import api
+from zvms.apilib import Api
 
 
-@api(rule='/signup/list/<int:cls>', response='ListSignupResponse')
+@Api(rule='/signup/list/<int:cls>', response='ListSignupResponse')
 def list_signup(cls, token_data):
     '''列出一个班级的报名'''
     return success('获取成功', list_or_error((sv.select(stu_id='stuId', vol_id='volId', stu_name='stuName', vol_name='volName') for sv in StuVol.query if sv.stu.cls_id == cls)))
 
 
-@api(rule='/signup/<int:volId>/<int:stuId>/audit', method='POST', auth=Categ.CLASS | Categ.TEACHER)
+@Api(rule='/signup/<int:volId>/<int:stuId>/audit', method='POST', auth=Categ.CLASS | Categ.TEACHER)
 def audit_signup(volId, stuId, token_data):
     '''审核一个报名'''
     stu_vol = StuVol.query.get((volId, stuId))
@@ -21,7 +21,7 @@ def audit_signup(volId, stuId, token_data):
     return success('审核成功')
 
 
-@api(rule='/signup/<int:volId>', method='POST', params='Signup')
+@Api(rule='/signup/<int:volId>', method='POST', params='Signup')
 def signup(students, volId, token_data):
     '''报名一个义工'''
     vol = Volunteer.query.get_or_error(volId, '该义工不存在')
@@ -56,7 +56,7 @@ def signup(students, volId, token_data):
 
 
 
-@api(rule='/signup/<int:volId>/<int:stuId>/rollback', method='POST')
+@Api(rule='/signup/<int:volId>/<int:stuId>/rollback', method='POST')
 def rollback(volId, stuId, token_data):
     '''撤回一个报名'''
     StuVol.query.get_or_error((volId, stuId), '未报名该义工')

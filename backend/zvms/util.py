@@ -1,6 +1,6 @@
 from functools import wraps, partial
 from typing import Callable, Iterable
-import itertools
+from itertools import chain
 import hashlib
 import datetime
 import json
@@ -10,11 +10,19 @@ from flask_sqlalchemy.query import Query
 from sqlalchemy.orm import Query as _Query
 from mistune import Markdown, HTMLRenderer
 
-from zvms import db
 from zvms.res import *
 
 markdown = Markdown(HTMLRenderer())
 rule_remove_links = re.compile(r'<a.*?>(.*?)</a>', re.S)
+
+db = None
+
+def init_util(_db):
+    global db
+    db = _db
+
+def select_value():
+    pass
 
 def render_markdown(md):
     return rule_remove_links.sub(r'<a>\1</a>', markdown.parse(md))
@@ -73,36 +81,6 @@ def insert(self):
     db.session.flush()
     self.on_insert()
     return self
-
-class map(__builtins__.map):
-    def __init__(self, iterable, func):
-        super().__init__(func, iterable)
-
-    select = select
-    select_value = select_value
-    update = update
-
-class filter(__builtins__.filter):
-    def __init__(self, iterable, match):
-        super().__init__(match, iterable)
-
-    select = select
-    select_value = select_value
-    update = update
-
-class chain(itertools.chain):
-    select = select
-    select_value = select_value
-    update = update
-
-
-def incr(amount):
-    return lambda x: x + amount
-
-
-def select_value(self, col):
-    return map(lambda x: getattr(x, col), self)
-
 
 
 def list_or_error(self, message='未查询到相关信息'):

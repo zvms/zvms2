@@ -1,0 +1,2 @@
+enums: ../web/src/apis/types/enums.ts
+enums-mapping: enums.yaml
