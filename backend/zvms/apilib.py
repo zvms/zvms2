@@ -1,6 +1,7 @@
 from functools import wraps
 import datetime
 import json
+import re
 
 from flask import request
 from jwt.exceptions import InvalidSignatureError
@@ -11,11 +12,19 @@ from zvms.util import *
 import zvms.tokenlib as tk
 import zvms.typing.structs as structs
 
+
 class Api:
     apis = []
+    rule_url_args = re.compile(r'\<.+?\>')
 
     def __init__(self, rule, method='GET', params=Any, response=Any, auth=Categ.ANY):
         self.rule = rule
+        self.url_args = {}
+        for arg in Api.rule_url_args.findall(rule):
+            if arg.startswith('<int:'):
+                self.url_args[arg[5:-1]] = 'number'
+            else:
+                self.url_args[arg[1:-1]] = 'string'
         self.method = method
         if isinstance(params, str):
             self.params = getattr(structs, params)

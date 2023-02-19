@@ -1,169 +1,189 @@
 import * as enums from "././enums";
+
 export interface Class {
-  name: string;
+    name: string
 }
+
 export interface SingleClass {
-  id: number;
-  name: string;
+    id: number,
+    name: string
 }
+
 export interface SingleUserWithoutAuth {
-  id: number;
-  name: string;
+    id: number,
+    name: string
 }
-export interface SingleUser {
-  id: number;
-  name: string;
-  auth: number;
+
+export interface SingleUser extends SingleUserWithoutAuth {
+    auth: number
 }
-export type ListClassesResponse = SingleClass[];
+
+export type ListClassesResponse = SingleClass[]
+
 export interface ClassInfoResponse {
-  name: string;
-  students: SingleUser[];
-  teachers: SingleUser[];
+    name: string,
+    students: SingleUser[],
+    teachers: SingleUser[]
 }
+
 export interface UserLoginResponse {
-  token: string;
+    token: string
 }
-export type SearchUsersResponse = SingleUser[];
-export interface UserInfoResponse {
-  name: string;
-  cls: number;
-  auth: number;
-  clsName: string;
-}
+
+export type SearchUsersResponse = SingleUser[]
+
 export interface ThoughtInfoResponse {
-  reason: string;
-  thought: string;
-  reward: number;
-  pics: string[];
+    reason: string,
+    thought: string,
+    reward: number,
+    pics: string[]
 }
+
 export interface StudentThoughtsResponse {
-  accepted: ThoughtInfoResponse[];
-  unsubmitted: ThoughtInfoResponse[];
-  draft: ThoughtInfoResponse[];
-  unaudited: ThoughtInfoResponse[];
+    accepted: ThoughtInfoResponse[],
+    unsubmitted: ThoughtInfoResponse[],
+    draft: ThoughtInfoResponse[],
+    unaudited: ThoughtInfoResponse[]
 }
+
 export interface StudentStatResponse {
-  inside: number;
-  outside: number;
-  large: number;
+    inside: number,
+    outside: number,
+    large: number
 }
+
 export interface SingleNotice {
-  id: number;
-  title: string;
-  content: string;
-  sender: number;
-  deadtime: string;
-  senderName: string;
+    id: number,
+    title: string,
+    content: string,
+    sender: number,
+    deadtime: string,
+    senderName: string
 }
-export type SearchNoticesResponse = SingleNotice[];
+
+export type SearchNoticesResponse = SingleNotice[]
+
 export interface SingleSignup {
-  volId: number;
-  volName: string;
-  stuId: number;
-  stuName: string;
+    volId: number,
+    volName: string,
+    stuId: number,
+    stuName: string
 }
-export type ListSignupResponse = SingleSignup[];
+
+export type ListSignupResponse = SingleSignup[]
+
 export interface SingleVolunteer {
-  id: number;
-  name: string;
-  time: string;
-  status: number;
+    id: number,
+    name: string,
+    time: string,
+    status: number
 }
-export type SearchVolunteersResponse = SingleVolunteer[];
+
+export type SearchVolunteersResponse = SingleVolunteer[]
+
 export interface VolunteerInfoResponse {
-  name: string;
-  description: string;
-  time: string;
-  status: number;
-  type: number;
-  reward: number;
-  joiners: SingleUserWithoutAuth[];
-  holder: number;
-  holderName: string;
+    name: string,
+    description: string,
+    time: string,
+    status: enums.VolStatus,
+    type: enums.VolType,
+    reward: number,
+    signable: boolean,
+    joiners: SingleUserWithoutAuth[],
+    holder: number,
+    holderName: string
 }
+
 export interface SearchNotices {
-  sender: number;
-  user: number;
-  cls: number;
-  school: any;
+    sender: number,
+    user: number,
+    cls: number,
+    school: number
 }
+
 export interface NoticeBody {
-  title: string;
-  content: string;
-  deadtime: string;
+    title: string,
+    content: string,
+    deadtime: string
 }
-export interface Notice {
-  title: string;
-  content: string;
-  deadtime: string;
-  targets: number[];
+
+export interface Notice extends NoticeBody {
+    targets: number[]
 }
+
 export interface Report {
-  report: string;
+    report: string
 }
+
 export interface Signup {
-  students: number[];
+    students: number[]
 }
+
 export interface SearchThoughts {
-  cls: number;
-  status: enums.ThoughtStatus;
-  student: number;
-  Volunteer: number;
+    cls: number,
+    status: enums.ThoughtStatus,
+    student: number,
+    volunteer: number
 }
+
 export interface Thought {
-  thought: string;
-  pictures: string[];
+    thought: string,
+    pictures: string[]
 }
+
 export interface Login {
-  id: number;
-  pwd: string;
+    id: number,
+    pwd: string
 }
+
 export interface SearchUsers {
-  name: string;
-  cls: number;
-  auth: number;
+    name: string,
+    cls: number,
+    auth: number
 }
+
 export interface ModPwd {
-  old: string;
-  neo: string;
+    old: string,
+    neo: string
 }
-export interface ChangeClass {
-  cls: number;
-}
+
 export interface User {
-  name: string;
-  cls: number;
-  auth: number;
+    name: string,
+    cls: number,
+    auth: number
 }
-export interface OneUser {
-  name: string;
-  cls: number;
-  auth: number;
-  id: number;
+
+export interface OneUser extends User {
+    id: number
 }
+
 export interface Users {
-  users: OneUser[];
+    users: OneUser[]
 }
+
 export interface ClassVol {
-  id: number;
-  max: number;
+    id: number,
+    max: number
 }
+
 export interface SearchVolunteers {
-  holder: number;
-  student: number;
-  cls: number;
-  name: string;
-  status: enums.VolStatus;
+    holder: number,
+    student: number,
+    cls: number,
+    name: string,
+    status: enums.VolStatus
 }
+
 export interface Volunteer {
-  name: string;
-  description: string;
-  time: string;
-  type: enums.VolType;
-  reward: number;
-  classes: ClassVol[];
+    name: string,
+    description: string,
+    time: string,
+    type: enums.VolType,
+    reward: number,
+    classes: ClassVol[]
 }
+
 export interface Repulse {
-  reason: string;
+    reason: string
 }
+

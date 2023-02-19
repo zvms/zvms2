@@ -68,13 +68,6 @@ def modify_password(old, neo, token_data):
     return success('修改成功')
 
 
-@Api(rule='/user/change-class', method='POST', params='ChangeClass')
-def change_class(cls, token_data):
-    '''修改自己(老师)的班级'''
-    User.query.get(token_data['id']).cls_id = cls
-    return success('修改成功')
-
-
 @Api(rule='/user/create', method='POST', params='Users', auth=Categ.SYSTEM)
 def create_user(users, token_data):
     '''创建用户'''

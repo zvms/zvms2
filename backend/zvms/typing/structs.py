@@ -1,205 +1,165 @@
 from zvms.typing.checker import *
 from zvms.res import VolType, VolStatus, ThoughtStatus
 
-Class = Object(
-    name=String(5)
-)
+class Class(Object):
+    name = Len(String, 1, 6)
 
-SingleClass = Object(
-    id=Int,
-    name=String()
-)
+class SingleClass(Object):
+    id = Int
+    name = String
 
-SingleUserWithoutAuth = Object(
-    id=Int,
-    name=String()
-)
+class SingleUserWithoutAuth(Object):
+    id = Int
+    name = String
 
-SingleUser = Extends(SingleUserWithoutAuth,
-    auth=Int
-)
+class SingleUser(SingleUserWithoutAuth):
+    auth = Int
 
-ListClassesResponse = Array(SingleClass)
+ListClassesResponse = Array(SingleClass())
+    
+class ClassInfoResponse(Object):
+    name = String
+    students=Array(SingleUser())
+    teachers=Array(SingleUser())
 
-ClassInfoResponse = Object(
-    name=String(),
-    students=Array(SingleUser),
-    teachers=Array(SingleUser)
-)
+class UserLoginResponse(Object):
+    token = String
 
-UserLoginResponse = Object(
-    token=String()
-)
+SearchUsersResponse = Array(SingleUser())
 
-SearchUsersResponse = Array(SingleUser)
+class UserInfoResponse:
+    name = String
+    cls = Int
+    auth = Int
+    clsName = String
 
-UserInfoResponse = Object(
-    name=String(),
-    cls=Int,
-    auth=Int,
-    clsName=String()
-)
+class ThoughtInfoResponse(Object):
+    reason = String
+    thought = String
+    reward = Int
+    pics = Array(String)
 
-ThoughtInfoResponse = Object(
-    reason=String(),
-    thought=String(),
-    reward=Int,
-    pics=Array(String())
-)
+class StudentThoughtsResponse(Object):
+    accepted = Array(ThoughtInfoResponse())
+    unsubmitted = Array(ThoughtInfoResponse())
+    draft = Array(ThoughtInfoResponse())
+    unaudited = Array(ThoughtInfoResponse())
 
-StudentThoughtsResponse = Object(
-    accepted=Array(ThoughtInfoResponse),
-    unsubmitted=Array(ThoughtInfoResponse),
-    draft=Array(ThoughtInfoResponse),
-    unaudited=Array(ThoughtInfoResponse)
-)
+class StudentStatResponse(Object):
+    inside = Int
+    outside = Int
+    large = Int
 
-StudentStatResponse = Object(
-    inside=Int,
-    outside=Int,
-    large=Int
-)
+class SingleNotice(Object):
+    id = Int
+    title = String
+    content = String
+    sender = Int
+    deadtime = DateTime
+    senderName = String
+    
+SearchNoticesResponse = Array(SingleNotice())
 
-SingleNotice = Object(
-    id=Int,
-    title=String(),
-    content=String(),
-    sender=Int,
-    deadtime=String(),
-    senderName=String()
-)
+class SingleSignup(Object):
+    volId = Int
+    volName = String
+    stuId = Int
+    stuName = String
+    
+ListSignupResponse = Array(SingleSignup())
 
-SearchNoticesResponse = Array(SingleNotice)
+class SingleVolunteer(Object):
+    id = Int
+    name = String
+    time = String
+    status = Int
+    
+SearchVolunteersResponse = Array(SingleVolunteer())
 
-SingleSignup = Object(
-    volId=Int,
-    volName=String(),
-    stuId=Int,
-    stuName=String(),
-)
+class VolunteerInfoResponse(Object):
+    name = String
+    description = String
+    time = String
+    status = Enum(VolStatus)
+    type = Enum(VolType)
+    reward = Int
+    signable = Boolean
+    joiners = Array(SingleUserWithoutAuth())
+    holder = Int
+    holderName = String
 
-ListSignupResponse = Array(SingleSignup)
+class SearchNotices(Optional):
+    sender = Int
+    user = Int
+    cls = Int
+    school = Int
 
-SingleVolunteer = Object(
-    id=Int,
-    name=String(),
-    time=String(),
-    status=Int
-)
+class NoticeBody(Object):
+    title = Len(String, 1, 33)
+    content = Len(String, 1, 1025)
+    deadtime = DateTime
+    
+class Notice(NoticeBody):
+    targets = Array(Int)
 
-SearchVolunteersResponse = Array(SingleVolunteer)
+class Report(Object):
+    report = String
+    
+class Signup(Object):
+    students = Array(Int)
+    
+class SearchThoughts(Optional):
+    cls = Int
+    status = Enum(ThoughtStatus)
+    student = Int
+    volunteer = Int
+    
+class Thought(Object):
+    thought = Len(String, 1, 1025)
+    pictures = Array(String)
 
-VolunteerInfoResponse = Object(
-    name=String(),
-    description=String(),
-    time=String(),
-    status=Int,
-    type=Int,
-    reward=Int,
-    joiners=Array(SingleUserWithoutAuth),
-    holder=Int,
-    holderName=String()
-)
+class Login(Object):
+    id = Int
+    pwd = Len(String, 32, 33)
 
-SearchNotices = Optional(
-    sender=Int,
-    user=Int,
-    cls=Int,
-    school=Any
-)
+class SearchUsers(Optional):
+    name = String
+    cls = Int
+    auth = Int
+    
+class ModPwd(Object):
+    old = Len(String, 32, 33)
+    neo = Len(String, 32, 33)
 
-NoticeBody = Object(
-    title=String(32),
-    content=String(1024),
-    deadtime=String(19)
-)
+class User(Object):
+    name = Len(String, 1, 6)
+    cls = Int
+    auth = Int
 
-Notice = Extends(NoticeBody,
-    targets=Array(Int)
-)
+class OneUser(User):
+    id = Int
 
-Report = Object(
-    report=String()
-)
+class Users(Object):
+    users = Array(OneUser())
 
-Signup = Object(
-    students=Array(Int)
-)
+class ClassVol(Object):
+    id = Int
+    max = Int
+    
+class SearchVolunteers(Optional):
+    holder = Int
+    student = Int
+    cls = Int
+    name = String
+    status = Enum(VolStatus)
+    
+class Volunteer(Object):
+    name = Len(String, 1, 33)
+    description = Len(String, 1, 1025)
+    time = DateTime
+    type = Enum(VolType)
+    reward = Int
+    classes = Array(ClassVol())
 
-SearchThoughts = Optional(
-    cls=Int,
-    status=Literal(
-        ThoughtStatus.ACCEPTED,
-        ThoughtStatus.UNSUBMITTED,
-        ThoughtStatus.DRAFT,
-        ThoughtStatus.WAITING_FOR_FINAL_AUDIT,
-        ThoughtStatus.WAITING_FOR_FINAL_AUDIT
-    ),
-    student=Int,
-    Volunteer=Int
-)
-
-Thought = Object(
-    thought=String(1024),
-    pictures=Array(String())
-)
-
-Login = Object(
-    id=Int,
-    pwd=String(32)
-)
-
-SearchUsers = Optional(
-    name=String(),
-    cls=Int,
-    auth=Int
-)
-
-ModPwd = Object(
-    old=String(32),
-    neo=String(32)
-)
-
-ChangeClass = Object(
-    cls=Int
-)
-
-User = Object(
-    name=String(5),
-    cls=Int,
-    auth=Int
-)
-
-OneUser = Extends(User,
-    id=Int
-)
-
-Users = Object(
-    users=Array(OneUser)
-)
-
-ClassVol = Object(
-    id=Int,
-    max=Int
-)
-
-SearchVolunteers = Optional(
-    holder=Int,
-    student=Int,
-    cls=Int,
-    name=String(),
-    status=Literal(VolStatus.UNAUDITED, VolStatus.AUDITED)
-)
-
-Volunteer = Object(
-    name=String(32),
-    description=String(1024),
-    time=String(20),
-    type=Literal(VolType.INSIDE, VolType.OUTSIDE, VolType.LARGE),
-    reward=Int,
-    classes=Array(ClassVol)
-)
-
-Repulse = Object(
-    reason=String(1024)
-)
+class Repulse(Object):
+    reason = Len(String, 1, 65)
