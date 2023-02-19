@@ -12,7 +12,7 @@ def list_classes(token_data):
 
 @Api(rule='/class/<int:id>', response='ClassInfoResponse')
 def get_class_info(id, token_data):
-    '''获取一个班级的详细详细'''
+    '''获取一个班级的详细信息'''
     cls = Class.query.get_or_error(id)
     members = cls.members
 

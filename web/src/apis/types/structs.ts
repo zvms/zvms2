@@ -32,6 +32,13 @@ export interface UserLoginResponse {
 
 export type SearchUsersResponse = SingleUser[]
 
+export interface UserInfoResponse {
+    name: string,
+    cls: number,
+    auth: number,
+    clsName: string
+}
+
 export interface ThoughtInfoResponse {
     reason: string,
     thought: string,
@@ -124,6 +131,14 @@ export interface SearchThoughts {
     status: enums.ThoughtStatus,
     student: number,
     volunteer: number
+}
+
+export interface SingleThought {
+    volId: number,
+    stuId: number,
+    status: enums.ThoughtStatus,
+    stuName: string,
+    volName: string
 }
 
 export interface Thought {

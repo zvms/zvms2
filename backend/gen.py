@@ -4,6 +4,7 @@ begin = perf_counter()
 
 from enum import IntEnum, IntFlag, EnumType
 from itertools import chain
+from operator import itemgetter
 import re
 import os
 
@@ -60,6 +61,15 @@ def find(seq, predicate):
             return item
     return None
 
+foo = sorted(((k, v) for k, v in res.Categ.__dict__.items() if type(v) == res.Categ), key=itemgetter(1), reverse=True)
+
+def auth_to_str(auth):
+    if not auth:
+        return ()
+    for k, v in foo:
+        if auth & v and v <= auth:
+            return chain((convert(k, 'upper_snake', 'pascal'), ), auth_to_str(auth & ~v))
+
 with open('genconfig.yaml', encoding='utf-8') as config_file:
     config = yaml.full_load(config_file.read())
     
@@ -106,10 +116,52 @@ with open(config['structs'], 'w', encoding='utf-8') as structs_output:
             ))
     complete(config['structs'])
 
+rule_methods_block = re.compile(rf'{config["methods-flag"]["start"]}.+{config["methods-flag"]["end"]}', re.S)
+rule_to_url = re.compile(r'(.+?)\<(?:int:)?(.+?)\>')
+rule_to_url_sub = r'\1${\2}'
+Object.module = 'structs.'
+
+def gen_url(api):
+    return rule_to_url.sub(rule_to_url_sub, api.rule)
+
 with open(config['apis'], 'w', encoding='utf-8') as apis_output,\
     open(config['apis-template'], encoding='utf-8') as template_input:
-    for api in Api.apis:
-        print(api.func.__name__)
+    template = template_input.read()
+    has_params = lambda api: api.url_params or not isinstance(api.params, Any)
+    apis_output.write(rule_methods_block.sub(f'{config["methods-flag"]["start"]}\n' + ''.join((tpl.API.format(
+        docstring='' if api.func.__doc__ is None else tpl.DOCSTRING.format(
+            docstring=api.func.__doc__
+        ),
+        method=api.method,
+        rule=api.rule,
+        auth=' | '.join(auth_to_str(api.auth)),
+        params_anno='' if not has_params(api) else '\n' + '\n'.join((tpl.PARAM_ANNO.format(
+            name=name
+        ) for name in chain(api.url_params, api.params.as_params()))),
+        name=convert(api.func.__name__, 'snake', 'camel'),
+        params='' if not has_params(api) else '\n' + ',\n'.join((tpl.PARAM.format(
+            name=name,
+            type=type
+        ) for name, type in chain(api.url_params.items(), api.params.as_params().items()))) + '\n  ',
+        response=api.response.render(),
+        create_args=tpl.CREATE_NO_PARAMS.format(
+            method=api.method,
+            url=gen_url(api)
+        ) if not has_params(api) else tpl.CREATE.format(
+            method=api.method,
+            url=gen_url(api),
+            args='' if isinstance(api.params, Any) else ',\n' + ',\n'.join((tpl.ARG.format(
+                arg=arg
+            ) for arg in api.params.as_params()))
+        )
+    ) for api in Api.apis)) + f'\n\n{config["methods-flag"]["end"]}\n', template))
+    complete(config['apis'])
+
+with open(config['doc'], 'w', encoding='utf-8') as doc_output:
+    doc_output.write(tpl.DOC.format(
+        
+    ))
+    complete(config['doc'])
     
 
 print(f'用时{perf_counter() - begin}秒')

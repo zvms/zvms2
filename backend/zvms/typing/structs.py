@@ -27,7 +27,7 @@ class UserLoginResponse(Object):
 
 SearchUsersResponse = Array(SingleUser())
 
-class UserInfoResponse:
+class UserInfoResponse(Object):
     name = String
     cls = Int
     auth = Int
@@ -89,10 +89,10 @@ class VolunteerInfoResponse(Object):
     holderName = String
 
 class SearchNotices(Optional):
-    sender = Int
-    user = Int
-    cls = Int
-    school = Int
+    sender = Parsable(Int)
+    user = Parsable(Int)
+    cls = Parsable(Int)
+    school = Parsable(Int)
 
 class NoticeBody(Object):
     title = Len(String, 1, 33)
@@ -109,10 +109,17 @@ class Signup(Object):
     students = Array(Int)
     
 class SearchThoughts(Optional):
-    cls = Int
+    cls = Parsable(Int)
+    status = ParsableEnum(ThoughtStatus)
+    student = Parsable(Int)
+    volunteer = Parsable(Int)
+
+class SingleThought(Object):
+    volId = Int
+    stuId = Int
     status = Enum(ThoughtStatus)
-    student = Int
-    volunteer = Int
+    stuName = String
+    volName = String
     
 class Thought(Object):
     thought = Len(String, 1, 1025)
@@ -124,8 +131,8 @@ class Login(Object):
 
 class SearchUsers(Optional):
     name = String
-    cls = Int
-    auth = Int
+    cls = Parsable(Int)
+    auth = Parsable(Int)
     
 class ModPwd(Object):
     old = Len(String, 32, 33)
@@ -147,11 +154,11 @@ class ClassVol(Object):
     max = Int
     
 class SearchVolunteers(Optional):
-    holder = Int
-    student = Int
-    cls = Int
+    holder = Parsable(Int)
+    student = Parsable(Int)
+    cls = Parsable(Int)
     name = String
-    status = Enum(VolStatus)
+    status = ParsableEnum(VolStatus)
     
 class Volunteer(Object):
     name = Len(String, 1, 33)

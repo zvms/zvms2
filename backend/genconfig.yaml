@@ -5,3 +5,9 @@ structs: ../web/src/apis/types/structs.ts
 
 apis: ../web/src/apis/fApi.ts
 apis-template: ../web/src/apis/fApi-template.ts
+
+methods-flag:
+  start: //--METHODS START----
+  end: //--METHODS END----
+
+doc: ../apis.md

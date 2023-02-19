@@ -14,24 +14,24 @@ import zvms.typing.structs as structs
 
 
 class Api:
-    apis = []
+    apis: list['Api'] = []
     rule_url_args = re.compile(r'\<.+?\>')
 
-    def __init__(self, rule, method='GET', params=Any, response=Any, auth=Categ.ANY):
+    def __init__(self, rule, method='GET', params=Any(), response=Any(), auth=Categ.ANY):
         self.rule = rule
-        self.url_args = {}
+        self.url_params = {}
         for arg in Api.rule_url_args.findall(rule):
             if arg.startswith('<int:'):
-                self.url_args[arg[5:-1]] = 'number'
+                self.url_params[arg[5:-1]] = 'number'
             else:
-                self.url_args[arg[1:-1]] = 'string'
+                self.url_params[arg[1:-1]] = 'string'
         self.method = method
         if isinstance(params, str):
-            self.params = getattr(structs, params)
+            self.params = getattr(structs, params)()
         else:
             self.params = params
         if isinstance(response, str):
-            self.response = getattr(structs, response)
+            self.response = getattr(structs, response)()
         else:
             self.response = response
         self.auth = auth

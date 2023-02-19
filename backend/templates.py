@@ -33,4 +33,32 @@ TYPE = '''export type {name} = {alias}
 
 '''
 
-API = ''''''
+API = '''  /**{docstring}
+   * ### [{method}] {rule}
+   * #### 权限: {auth}{params_anno}
+   */
+  {name}({params}): ForegroundApiRunner<{response}> {{
+    return createForegroundApiRunner({create_args});
+  }}
+'''
+
+DOCSTRING = '''
+   * ## {docstring}'''
+
+PARAM_ANNO = '''   * @param {name}'''
+
+PARAM = '''    {name}: {type}'''
+
+CREATE_NO_PARAMS = '''this, "{method}", `{url}`'''
+
+CREATE = '''
+      this,
+      "{method}",
+      `{url}`{args}
+    '''
+
+ARG = '''      {arg}'''
+
+DOC = '''# 镇海中学义工管理系统API文档
+
+'''
