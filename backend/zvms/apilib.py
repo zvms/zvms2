@@ -17,8 +17,14 @@ class Api:
     def __init__(self, rule, method='GET', params=Any, response=Any, auth=Categ.ANY):
         self.rule = rule
         self.method = method
-        self.params = params
-        self.response = response
+        if isinstance(params, str):
+            self.params = getattr(structs, params)
+        else:
+            self.params = params
+        if isinstance(response, str):
+            self.response = getattr(structs, response)
+        else:
+            self.response = response
         self.auth = auth
 
     def __call__(self, func):
