@@ -15,7 +15,6 @@ def get_class_info(id, token_data):
     '''获取一个班级的详细信息'''
     cls = Class.query.get_or_error(id)
     members = cls.members
-
     def filter_(auth):
         return list(select(filter(lambda m: (m.auth & auth), members), 'id', 'name'))
     return success('获取成功',

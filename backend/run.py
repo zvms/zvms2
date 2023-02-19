@@ -8,5 +8,6 @@ wsgi = WSGIContainer(create_app())
 server = HTTPServer(wsgi)
 
 if __name__ == '__main__':
+    print('服务开始')
     server.listen(1145)
     IOLoop.instance().start()

@@ -19,10 +19,6 @@ class Class(ModelMixIn, db.Model):
         ClassVol.query.filter_by(cls_id=self.id).delete()
         User.query.filter_by(cls_id=self.id).delete()
 
-    @property
-    def members(self):
-        return User.query.filter_by(cls_id=self.id)
-
 
 class User(ModelMixIn, db.Model):
     __tablename__ = 'user'
@@ -84,10 +80,6 @@ class Notice(ModelMixIn, db.Model):
     def sender_name(self):
         return User.query.get(self.sender).name
 
-    @property
-    def markdown(self):
-        return render_markdown(self.content)
-
 
 class Volunteer(ModelMixIn, db.Model):
     __tablename__ = 'volunteer'
@@ -112,10 +104,6 @@ class Volunteer(ModelMixIn, db.Model):
     @property
     def holder(self):
         return User.query.get(self.holder_id)
-
-    @property
-    def markdown(self):
-        return render_markdown(self.description)
 
 
 class StuVol(ModelMixIn, db.Model):

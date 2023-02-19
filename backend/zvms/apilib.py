@@ -1,4 +1,5 @@
 from functools import wraps
+import traceback
 import datetime
 import json
 import re
@@ -44,10 +45,6 @@ class Api:
         for api in Api.apis:
             app.add_url_rule(api.rule, methods=[api.method], view_func=deco(api.func, api.params, api.response, api.auth))
 
-# 不要听下面的注释, 现在已经没有装饰器了
-# 以后把调试的代码写在这边，把一些公用的功能也可以移到这边
-# 在所有函数名前面加上@Deco()
-# 这样路由的函数直接返回一个字典就好了
 def deco(impl, params, response, auth):
     @wraps(impl)
     def wrapper(*args, **kwargs):
@@ -56,7 +53,7 @@ def deco(impl, params, response, auth):
             if 'timestamp' in json_data:
                 del json_data['timestamp']
         else:
-            try:  # 为了防止空POST出锅
+            try:
                 json_data = json.loads(request.get_data().decode("utf-8"))
             except:
                 json_data = {}
@@ -70,17 +67,21 @@ def deco(impl, params, response, auth):
                     raise InvalidSignatureError()
                 token_data = tk.read(token_data)
                 if not tk.exists(token_data):
+                    print('Token失效')
                     return json.dumps({'type': 'ERROR', 'message': "Token失效, 请重新登陆"})
                 if not auth.authorized(token_data['auth']):
+                    print('权限不足')
                     return json.dumps({'type': 'ERROR', 'message': '权限不足'})
             except InvalidSignatureError as ex:
+                print('未获取到Token')
                 return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"})
         try:
             with open('log.txt', 'a', encoding='utf-8') as f:
                 if auth != Categ.NONE:
+                    print(f'({token_data["id"]})', end=' ')
                     f.write(f'({token_data["id"]}) ')
-                f.write(
-                    f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
+                print(f'[{datetime.datetime.now()}] {request.method} {request.url}')
+                f.write(f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
             if not params(json_data):
                 print(json.loads(interface_error(params, json_data)))
                 print(json_data)

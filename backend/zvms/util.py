@@ -6,7 +6,7 @@ import datetime
 import json
 import re
 
-from flask_sqlalchemy.query import Query
+from sqlalchemy import Column
 from sqlalchemy.orm import Query as _Query
 from mistune import Markdown, HTMLRenderer
 
@@ -21,8 +21,8 @@ def init_util(_db):
     global db
     db = _db
 
-def select_value():
-    pass
+def select_value(self, col=None, **kwargs):
+    return [v(getattr(self, k)) for k, v in kwargs.items()][0] if col is None else (getattr(i, col) for i in self)
 
 def render_markdown(md):
     return rule_remove_links.sub(r'<a>\1</a>', markdown.parse(md))
@@ -31,32 +31,35 @@ def md5ify(str):
     md5 = hashlib.md5()
     md5.update(str.encode())
     return md5.hexdigest()
+        
+class rpartial:
+    def __init__(self, func, *args, **kwargs):
+        self.func = func
+        self.args = args
+        self.kwargs = kwargs
 
-
-class _QueryProperty:
-    def __get__(self, obj, cls):
-        return Query(db.session().query(cls))
+    def __call__(self, *args, **kwargs):
+        return self.func(*args, *self.args, **kwargs, **self.kwargs)
 
 def foo(func):
-    return wraps(func)(lambda self, *args, **kwargs: 
-        map(self, lambda t: func(t, *args, **kwargs)) if isinstance(self, Iterable) else
-        func(self, *args, **kwargs))
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        if isinstance(self, Iterable):
+            return map(self, rpartial(func, *args, **kwargs))
+        return func(self, *args, **kwargs)
+
+def bar(func):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        if isinstance(self, Iterable):
+            foreach(self, rpartial(func, *args, **kwargs))
+        return func(self, *args, **kwargs)
 
 def foreach(iterable, func):
     ret = None
     for item in iterable:
         ret = func(item)
     return ret
-
-def bar(func):
-    return wraps(func)(lambda self, *args, **kwargs: 
-        foreach(self, lambda t: func(t, *args, **kwargs)) if isinstance(self, Iterable) else
-        func(self, *args, **kwargs))
-
-
-@foo
-def select(self, *cols, **aliases):
-    return dict(zip(chain(cols, aliases.values()), map(self.__getattribute__, chain(cols, aliases.keys()))))
 
 @foo
 def select(self, *cols, **aliases):
@@ -67,19 +70,18 @@ def select(self, *cols, **aliases):
         (k, v)) for k, v in aliases.items())))))
 
 @bar
-def update(self, **updates):
-    for k, v in updates.items():
-        if isinstance(v, Callable):
-            v = v(getattr(self, k))
-        setattr(self, k, v)
-    self.on_update()
+def update(self, /, on=True, **updates):
+    self.query_self().raw.update({getattr(type(self), k): v for k, v in updates.items()})
+    if on:
+        self.on_update()
     return self
 
 
-def insert(self):
+def insert(self, on=True):
     db.session.add(self)
     db.session.flush()
-    self.on_insert()
+    if on:
+        self.on_insert()
     return self
 
 
@@ -108,13 +110,11 @@ class ZvmsWrapper:
     update = update
     select_value = select_value
 
+class _QueryProperty:
+    def __get__(self, obj, cls):
+        return Query(db.session().query(cls))
 class Query(ZvmsWrapper):
     T = _Query
-
-    def delete(self):
-        for item in self:
-            item.on_delete()
-        self.raw.delete()
 
     def get_or_error(self, ident, message='未查询到相关数据'):
         ret = self.raw.get(ident)
@@ -134,13 +134,25 @@ class Query(ZvmsWrapper):
             raise ZvmsError(message)
         return ret
 
-    # def paginate(self, **kwargs):
-    #     return Pagination(self.raw.paginate(**kwargs))
+    def delete(self, on=True):
+        for i in self:
+            i.on_delete()
+        self.raw.delete()
+
 
 class ModelMixIn:
     select = select
     update = update
     insert = insert
+
+    def query_self(self):
+        return db.session.query.filter_by(**{k: v.__get__(self, type(self)) for k, v in self.__dict__.items() if isinstance(v, Column)})
+
+    def delete(self, on=True):
+        self.query_self().raw.delete()
+        if on:
+            self.on_delete()
+        return self
 
     def on_insert(self):
         pass
@@ -152,6 +164,46 @@ class ModelMixIn:
         pass
 
     query = _QueryProperty()
+
+class filter:
+    select = select
+    update = update
+    select_value = select_value
+
+    def __init__(self, iterable, match):
+        self.iterable = iterable
+        self.match = match
+
+    def __iter__(self):
+        for item in self.iterable:
+            if self.match(item):
+                yield item
+
+class map:
+    select = select
+    update = update
+    select_value = select_value
+
+    def __init__(self, iterable, mapper):
+        self.iterable = iterable
+        self.mapper = mapper
+
+    def __iter__(self):
+        for item in self.iterable:
+            yield self.mapper(item)
+
+class chain:
+    select = select
+    update = update
+    select_value = select_value
+
+    def __init__(self, iterables):
+        self.iterables = iterables
+
+    def __iter__(self):
+        for iterable in self.iterables:
+            for item in iterable:
+                yield item
 
 
 def error(message):
@@ -172,13 +224,6 @@ def success(message, *result, **kwresult):
 class ZvmsError(Exception):
     def __init__(self, message):
         self.message = message
-
-
-def try_parse_time(str):
-    try:
-        return datetime.datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
-    except ValueError:
-        raise ZvmsError('请求接口错误: 非法的时间字符串')
 
 
 def auth_self(id, token_data, message):
