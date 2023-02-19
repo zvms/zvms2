@@ -129,436 +129,6 @@ export class ForegroundApi {
 
   //--METHODS START----
   /**
-   * ## 列出所有班级
-   * ### [GET] /class/list
-   * #### 权限: Any
-   */
-  listClasses(): ForegroundApiRunner<structs.SingleClass[]> {
-    return createForegroundApiRunner(this, "GET", `/class/list`);
-  }
-  /**
-   * ## 获取一个班级的详细信息
-   * ### [GET] /class/<int:id>
-   * #### 权限: Any
-   * @param id
-   */
-  getClassInfo(
-    id: number
-  ): ForegroundApiRunner<structs.ClassInfoResponse> {
-    return createForegroundApiRunner(
-      this,
-      "GET",
-      `/class/${id}`
-    );
-  }
-  /**
-   * ## 删除一个班级
-   * ### [POST] /class/<int:id>/delete
-   * #### 权限: System
-   * @param id
-   */
-  deleteClass(
-    id: number
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/class/${id}/delete`
-    );
-  }
-  /**
-   * ## 创建一个班级
-   * ### [POST] /class/create
-   * #### 权限: System
-   * @param name
-   */
-  createClass(
-    name: string
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/class/create`,
-      name
-    );
-  }
-  /**
-   * ## 修改一个班级的名称
-   * ### [POST] /class/<int:id>/modify
-   * #### 权限: System
-   * @param id
-   * @param name
-   */
-  modifyClass(
-    id: number,
-    name: string
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/class/${id}/modify`,
-      name
-    );
-  }
-  /**
-   * ## 搜索通知
-   * ### [GET] /notice/search
-   * #### 权限: Any
-   * @param kwargs
-   */
-  searchNotices(
-    kwargs: structs.SearchNotices
-  ): ForegroundApiRunner<structs.SingleNotice[]> {
-    return createForegroundApiRunner(
-      this,
-      "GET",
-      `/notice/search`,
-      kwargs
-    );
-  }
-  /**
-   * ## 发送用户通知
-   * ### [POST] /notice/send/user
-   * #### 权限: Manager | Teacher
-   * @param targets
-   * @param title
-   * @param content
-   * @param deadtime
-   */
-  sendUserNotice(
-    targets: number[],
-    title: string,
-    content: string,
-    deadtime: string
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/notice/send/user`,
-      targets,
-      title,
-      content,
-      deadtime
-    );
-  }
-  /**
-   * ## 发送班级通知
-   * ### [POST] /notice/send/class
-   * #### 权限: Manager | Teacher
-   * @param targets
-   * @param title
-   * @param content
-   * @param deadtime
-   */
-  sendClassNotice(
-    targets: number[],
-    title: string,
-    content: string,
-    deadtime: string
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/notice/send/class`,
-      targets,
-      title,
-      content,
-      deadtime
-    );
-  }
-  /**
-   * ## 发送学校通知
-   * ### [POST] /notice/send/school
-   * #### 权限: Manager | Teacher
-   * @param title
-   * @param content
-   * @param deadtime
-   */
-  sendSchoolNotice(
-    title: string,
-    content: string,
-    deadtime: string
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/notice/send/school`,
-      title,
-      content,
-      deadtime
-    );
-  }
-  /**
-   * ## 删除一个通知
-   * ### [POST] /notice/<int:id>/delete
-   * #### 权限: Manager | Teacher
-   * @param id
-   */
-  deleteNotice(
-    id: number
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/notice/${id}/delete`
-    );
-  }
-  /**
-   * ## 修改一个通知
-   * ### [POST] /notice/<int:id>/modify
-   * #### 权限: Manager | Teacher
-   * @param id
-   * @param title
-   * @param content
-   * @param deadtime
-   */
-  modifyNotice(
-    id: number,
-    title: string,
-    content: string,
-    deadtime: string
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/notice/${id}/modify`,
-      title,
-      content,
-      deadtime
-    );
-  }
-  /**
-   * ## 发送反馈
-   * ### [POST] /report
-   * #### 权限: Any
-   * @param report
-   */
-  report(
-    report: string
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/report`,
-      report
-    );
-  }
-  /**
-   * ## 列出一个班级的报名
-   * ### [GET] /signup/list/<int:cls>
-   * #### 权限: Any
-   * @param cls
-   */
-  listSignup(
-    cls: number
-  ): ForegroundApiRunner<structs.SingleSignup[]> {
-    return createForegroundApiRunner(
-      this,
-      "GET",
-      `/signup/list/${cls}`
-    );
-  }
-  /**
-   * ## 审核一个报名
-   * ### [POST] /signup/<int:volId>/<int:stuId>/audit
-   * #### 权限: Class | Teacher
-   * @param volId
-   * @param stuId
-   */
-  auditSignup(
-    volId: number,
-    stuId: number
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/signup/${volId}/${stuId}/audit`
-    );
-  }
-  /**
-   * ## 报名一个义工
-   * ### [POST] /signup/<int:volId>
-   * #### 权限: Any
-   * @param volId
-   * @param students
-   */
-  signup(
-    volId: number,
-    students: number[]
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/signup/${volId}`,
-      students
-    );
-  }
-  /**
-   * ## 撤回一个报名
-   * ### [POST] /signup/<int:volId>/<int:stuId>/rollback
-   * #### 权限: Any
-   * @param volId
-   * @param stuId
-   */
-  rollback(
-    volId: number,
-    stuId: number
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/signup/${volId}/${stuId}/rollback`
-    );
-  }
-  /**
-   * ## 获取某个学生的感想
-   * ### [GET] /thought/student/<int:id>
-   * #### 权限: Any
-   * @param id
-   */
-  getStudentThoughts(
-    id: number
-  ): ForegroundApiRunner<structs.StudentThoughtsResponse> {
-    return createForegroundApiRunner(
-      this,
-      "GET",
-      `/thought/student/${id}`
-    );
-  }
-  /**
-   * ## 搜索感想
-   * ### [GET] /thought/search
-   * #### 权限: Any
-   * @param kwargs
-   */
-  searchThoughts(
-    kwargs: structs.SearchThoughts
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "GET",
-      `/thought/search`,
-      kwargs
-    );
-  }
-  /**
-   * ## 获取一个感想的详细信息
-   * ### [GET] /thought/<int:volId>/<int:stuId>
-   * #### 权限: Any
-   * @param volId
-   * @param stuId
-   */
-  getThoughtInfo(
-    volId: number,
-    stuId: number
-  ): ForegroundApiRunner<structs.ThoughtInfoResponse> {
-    return createForegroundApiRunner(
-      this,
-      "GET",
-      `/thought/${volId}/${stuId}`
-    );
-  }
-  /**
-   * ## 保存感想草稿
-   * ### [POST] /thought/<int:volId>/<int:stuId>/save
-   * #### 权限: Any
-   * @param volId
-   * @param stuId
-   * @param thought
-   * @param pictures
-   */
-  saveThought(
-    volId: number,
-    stuId: number,
-    thought: string,
-    pictures: string[]
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/thought/${volId}/${stuId}/save`,
-      thought,
-      pictures
-    );
-  }
-  /**
-   * ## 提交感想
-   * ### [POST] /thought/<int:volId>/<int:stuId>/submit
-   * #### 权限: Any
-   * @param volId
-   * @param stuId
-   * @param thought
-   * @param pictures
-   */
-  submitThought(
-    volId: number,
-    stuId: number,
-    thought: string,
-    pictures: string[]
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/thought/${volId}/${stuId}/submit`,
-      thought,
-      pictures
-    );
-  }
-  /**
-   * ## 初审感想(班内)
-   * ### [POST] /thought/<int:volId>/<int:stuId>/audit/first
-   * #### 权限: Class | Teacher
-   * @param volId
-   * @param stuId
-   */
-  firstAudit(
-    volId: number,
-    stuId: number
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/thought/${volId}/${stuId}/audit/first`
-    );
-  }
-  /**
-   * ## 终审感想(义管会)
-   * ### [POST] /thought/<int:volId>/<int:stuId>/audit/final
-   * #### 权限: Auditor
-   * @param volId
-   * @param stuId
-   */
-  finalAudit(
-    volId: number,
-    stuId: number
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/thought/${volId}/${stuId}/audit/final`
-    );
-  }
-  /**
-   * ## 打回感想
-   * ### [POST] /thought/<int:volId>/<int:stuId>/repulse
-   * #### 权限: Any
-   * @param volId
-   * @param stuId
-   * @param reason
-   */
-  repulse(
-    volId: number,
-    stuId: number,
-    reason: string
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/thought/${volId}/${stuId}/repulse`,
-      reason
-    );
-  }
-  /**
    * ## 检查登录状态
    * ### [GET] /user/check
    * #### 权限: Any
@@ -714,6 +284,216 @@ export class ForegroundApi {
     );
   }
   /**
+   * ## 发送反馈
+   * ### [POST] /report
+   * #### 权限: Any
+   * @param report
+   */
+  report(
+    report: string
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/report`,
+      report
+    );
+  }
+  /**
+   * ## 搜索通知
+   * ### [GET] /notice/search
+   * #### 权限: Any
+   * @param kwargs
+   */
+  searchNotices(
+    kwargs: structs.SearchNotices
+  ): ForegroundApiRunner<structs.SingleNotice[]> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/notice/search`,
+      kwargs
+    );
+  }
+  /**
+   * ## 发送用户通知
+   * ### [POST] /notice/send/user
+   * #### 权限: Manager | Teacher
+   * @param targets
+   * @param title
+   * @param content
+   * @param deadtime
+   */
+  sendUserNotice(
+    targets: number[],
+    title: string,
+    content: string,
+    deadtime: string
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/notice/send/user`,
+      targets,
+      title,
+      content,
+      deadtime
+    );
+  }
+  /**
+   * ## 发送班级通知
+   * ### [POST] /notice/send/class
+   * #### 权限: Manager | Teacher
+   * @param targets
+   * @param title
+   * @param content
+   * @param deadtime
+   */
+  sendClassNotice(
+    targets: number[],
+    title: string,
+    content: string,
+    deadtime: string
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/notice/send/class`,
+      targets,
+      title,
+      content,
+      deadtime
+    );
+  }
+  /**
+   * ## 发送学校通知
+   * ### [POST] /notice/send/school
+   * #### 权限: Manager | Teacher
+   * @param title
+   * @param content
+   * @param deadtime
+   */
+  sendSchoolNotice(
+    title: string,
+    content: string,
+    deadtime: string
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/notice/send/school`,
+      title,
+      content,
+      deadtime
+    );
+  }
+  /**
+   * ## 删除一个通知
+   * ### [POST] /notice/<int:id>/delete
+   * #### 权限: Manager | Teacher
+   * @param id
+   */
+  deleteNotice(
+    id: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/notice/${id}/delete`
+    );
+  }
+  /**
+   * ## 修改一个通知
+   * ### [POST] /notice/<int:id>/modify
+   * #### 权限: Manager | Teacher
+   * @param id
+   * @param title
+   * @param content
+   * @param deadtime
+   */
+  modifyNotice(
+    id: number,
+    title: string,
+    content: string,
+    deadtime: string
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/notice/${id}/modify`,
+      title,
+      content,
+      deadtime
+    );
+  }
+  /**
+   * ## 列出一个班级的报名
+   * ### [GET] /signup/list/<int:cls>
+   * #### 权限: Any
+   * @param cls
+   */
+  listSignup(
+    cls: number
+  ): ForegroundApiRunner<structs.SingleSignup[]> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/signup/list/${cls}`
+    );
+  }
+  /**
+   * ## 审核一个报名
+   * ### [POST] /signup/<int:volId>/<int:stuId>/audit
+   * #### 权限: Class | Teacher
+   * @param volId
+   * @param stuId
+   */
+  auditSignup(
+    volId: number,
+    stuId: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/signup/${volId}/${stuId}/audit`
+    );
+  }
+  /**
+   * ## 报名一个义工
+   * ### [POST] /signup/<int:volId>
+   * #### 权限: Any
+   * @param volId
+   * @param students
+   */
+  signup(
+    volId: number,
+    students: number[]
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/signup/${volId}`,
+      students
+    );
+  }
+  /**
+   * ## 撤回一个报名
+   * ### [POST] /signup/<int:volId>/<int:stuId>/rollback
+   * #### 权限: Any
+   * @param volId
+   * @param stuId
+   */
+  rollback(
+    volId: number,
+    stuId: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/signup/${volId}/${stuId}/rollback`
+    );
+  }
+  /**
    * ## 搜索义工
    * ### [GET] /volunteer/search
    * #### 权限: Any
@@ -836,6 +616,226 @@ export class ForegroundApi {
       this,
       "POST",
       `/volunteer/${id}/audit`
+    );
+  }
+  /**
+   * ## 获取某个学生的感想
+   * ### [GET] /thought/student/<int:id>
+   * #### 权限: Any
+   * @param id
+   */
+  getStudentThoughts(
+    id: number
+  ): ForegroundApiRunner<structs.StudentThoughtsResponse> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/thought/student/${id}`
+    );
+  }
+  /**
+   * ## 搜索感想
+   * ### [GET] /thought/search
+   * #### 权限: Any
+   * @param kwargs
+   */
+  searchThoughts(
+    kwargs: structs.SearchThoughts
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/thought/search`,
+      kwargs
+    );
+  }
+  /**
+   * ## 获取一个感想的详细信息
+   * ### [GET] /thought/<int:volId>/<int:stuId>
+   * #### 权限: Any
+   * @param volId
+   * @param stuId
+   */
+  getThoughtInfo(
+    volId: number,
+    stuId: number
+  ): ForegroundApiRunner<structs.ThoughtInfoResponse> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/thought/${volId}/${stuId}`
+    );
+  }
+  /**
+   * ## 保存感想草稿
+   * ### [POST] /thought/<int:volId>/<int:stuId>/save
+   * #### 权限: Any
+   * @param volId
+   * @param stuId
+   * @param thought
+   * @param pictures
+   */
+  saveThought(
+    volId: number,
+    stuId: number,
+    thought: string,
+    pictures: string[]
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/save`,
+      thought,
+      pictures
+    );
+  }
+  /**
+   * ## 提交感想
+   * ### [POST] /thought/<int:volId>/<int:stuId>/submit
+   * #### 权限: Any
+   * @param volId
+   * @param stuId
+   * @param thought
+   * @param pictures
+   */
+  submitThought(
+    volId: number,
+    stuId: number,
+    thought: string,
+    pictures: string[]
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/submit`,
+      thought,
+      pictures
+    );
+  }
+  /**
+   * ## 初审感想(班内)
+   * ### [POST] /thought/<int:volId>/<int:stuId>/audit/first
+   * #### 权限: Class | Teacher
+   * @param volId
+   * @param stuId
+   */
+  firstAudit(
+    volId: number,
+    stuId: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/audit/first`
+    );
+  }
+  /**
+   * ## 终审感想(义管会)
+   * ### [POST] /thought/<int:volId>/<int:stuId>/audit/final
+   * #### 权限: Auditor
+   * @param volId
+   * @param stuId
+   */
+  finalAudit(
+    volId: number,
+    stuId: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/audit/final`
+    );
+  }
+  /**
+   * ## 打回感想
+   * ### [POST] /thought/<int:volId>/<int:stuId>/repulse
+   * #### 权限: Any
+   * @param volId
+   * @param stuId
+   * @param reason
+   */
+  repulse(
+    volId: number,
+    stuId: number,
+    reason: string
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/repulse`,
+      reason
+    );
+  }
+  /**
+   * ## 列出所有班级
+   * ### [GET] /class/list
+   * #### 权限: Any
+   */
+  listClasses(): ForegroundApiRunner<structs.SingleClass[]> {
+    return createForegroundApiRunner(this, "GET", `/class/list`);
+  }
+  /**
+   * ## 获取一个班级的详细信息
+   * ### [GET] /class/<int:id>
+   * #### 权限: Any
+   * @param id
+   */
+  getClassInfo(
+    id: number
+  ): ForegroundApiRunner<structs.ClassInfoResponse> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/class/${id}`
+    );
+  }
+  /**
+   * ## 删除一个班级
+   * ### [POST] /class/<int:id>/delete
+   * #### 权限: System
+   * @param id
+   */
+  deleteClass(
+    id: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/class/${id}/delete`
+    );
+  }
+  /**
+   * ## 创建一个班级
+   * ### [POST] /class/create
+   * #### 权限: System
+   * @param name
+   */
+  createClass(
+    name: string
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/class/create`,
+      name
+    );
+  }
+  /**
+   * ## 修改一个班级的名称
+   * ### [POST] /class/<int:id>/modify
+   * #### 权限: System
+   * @param id
+   * @param name
+   */
+  modifyClass(
+    id: number,
+    name: string
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/class/${id}/modify`,
+      name
     );
   }
 

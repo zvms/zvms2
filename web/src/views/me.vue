@@ -21,13 +21,13 @@
             :key="i"
             @click="showNotice(notice)"
           >
-            <v-list-item-icon>
+            <v-list-item icon>
               <v-icon>mdi-message</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
+            </v-list-item>
+            <v-list-item>
               <v-list-item-title>{{ notice.title }}</v-list-item-title>
               <v-list-item-subtitle>{{ notice.content }}</v-list-item-subtitle>
-            </v-list-item-content>
+            </v-list-item>
           </v-list-item>
         </v-list-item-group>
       </v-list>
@@ -69,8 +69,8 @@ export default {
         icon: "mdi-label",
         content: permissionNames[this.infoStore.permission],
       },
-      { id: 2, icon: "mdi-label", content: this.infoStore.classname },
-      { id: 3, icon: "mdi-label", content: this.infoStore.class.toString() },
+      { id: 2, icon: "mdi-label", content: this.infoStore.className },
+      { id: 3, icon: "mdi-label", content: this.infoStore.classId.toString() },
     ];
   },
   methods: {

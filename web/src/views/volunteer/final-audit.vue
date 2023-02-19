@@ -47,20 +47,12 @@
               <td>{{ volDesc }}</td>
             </tr>
             <tr>
-              <td>校内时长</td>
-              <td>{{ timeToHint(volTI) }}</td>
+              <td>{{ getVolTypeName(vol.type) }}时长</td>
+              <td>{{ timeToHint(reward) }}</td>
             </tr>
             <tr>
-              <td>校外时长</td>
-              <td>{{ timeToHint(volTO) }}</td>
-            </tr>
-            <tr>
-              <td>大型时长</td>
-              <td>{{ timeToHint(volTL) }}</td>
-            </tr>
-            <tr>
-              <td>学号</td>
-              <td>{{ stuid }}</td>
+              <td>参与者</td>
+              <td>{{ stuid }} {{ stuname }}</td>
             </tr>
             <tr>
               <td>感想</td>
@@ -80,30 +72,10 @@
               </td>
             </tr>
             <tr>
-              <td>发放的校内时长（分钟）</td>
+              <td>发放的{{ getVolTypeName(vol.type) }}时长（分钟）</td>
               <td>
                 <v-text-field
-                  v-model="inside"
-                  label="不填为默认值"
-                  prepend-icon="mdi-view-list"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>发放的校外时长（分钟）</td>
-              <td>
-                <v-text-field
-                  v-model="outside"
-                  label="不填为默认值"
-                  prepend-icon="mdi-view-list"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>发放的大型时长（分钟）</td>
-              <td>
-                <v-text-field
-                  v-model="large"
+                  v-model="reward"
                   label="不填为默认值"
                   prepend-icon="mdi-view-list"
                 />
@@ -124,15 +96,15 @@
 </template>
 
 <script lang="ts">
-import { toasts, confirm } from "../../utils/dialogs.js";
-import { permissionTypes } from "../../utils/permissions";
+import { toasts, confirm } from "@/utils/dialogs";
+import { permissionTypes } from "@/utils/permissions";
 import {
   validate,
   validateNotNAN,
   validateNotLargerThan,
   validateNotNegative,
 } from "@/utils/validation";
-import { VolStatus, fApi } from "@/apis";
+import { VolStatus, fApi, getVolTypeName, type SingleVolunteer } from "@/apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
 import { mapStores } from "pinia";
@@ -141,52 +113,46 @@ export default {
   data() {
     return {
       timeToHint,
+      getVolTypeName,
       search: "",
       headers: [
         { text: "义工编号", value: "volId", align: "start", sortable: true },
         { text: "学号", value: "stuId" },
       ],
-      thoughts: undefined,
+      singleVols: [] as SingleVolunteer[],
       dialog1: false,
-      stuid: undefined,
-      volid: undefined,
-      thought: undefined,
-      volTime: undefined,
-      volDate: undefined,
-      volDesc: undefined,
-      volTI: undefined,
-      volTO: undefined,
-      volTL: undefined,
-      inside: undefined,
-      outside: undefined,
-      large: undefined,
+      stuid: NaN,
+      volid: NaN,
+      thought: "",
+      currentVol:undefined as SingleVolunteer|undefined,
+      reward:NaN,
 
       pictures: [],
     };
   },
   mounted() {
-    this.pageload();
+    fApi.searchVolunteers(
+        undefined,
+        undefined,
+        this.infoSt,
+        undefined,
+        VolStatus.Unaudited
+      )((result) => {
+        this.singleVols = result;
+      });
   },
   methods: {
-    async pageload() {
-       fApi.searchVolunteers(undefined,undefined,undefined,undefined,VolStatus.Unaudited)(result=>{
-        this.thoughts 
-       });
-    },
-    granted() {
-      return this.infoStore.permission < permissionTypes.teacher;
-    },
-    rowClick: async function (item) {
+    rowClick (item) {
       this.dialog1 = true;
       this.volid = item.volId;
       this.stuid = item.stuId;
       this.thought = item.thought;
       this.pictures = item.picture;
 
-      console.log(this.pictures);
+      fApi.getSingleVolunteerInfo(this.volid,this.stuid)((result)=>{
+        this.currentVol = result;
+      })
 
-      let vol = await fApi.fetchOneVolunteer(this.volid);
-      toasts.success(vol.message); //TODO
       this.volDate = vol.date;
       this.volTime = vol.time;
       this.volDesc = vol.description;
@@ -194,7 +160,7 @@ export default {
       this.volTO = vol.outside;
       this.volTL = vol.large;
     },
-    async audit(status) {
+    audit(status) {
       let value = await confirm();
       if (value) {
         this.dialog1 = false;
@@ -216,28 +182,23 @@ export default {
           [validateNotNAN(), validateNotNegative(), validateNotLargerThan(4)]
         );
 
-        let data = await fApi.audit(
+        fApi.firstAudit(
           this.stuid,
           status,
           this.inside,
           this.outside,
           this.large
-        );
-        if (data.type == "SUCCESS") {
-          toasts.success(data.message);
+        )((result)=>{
           this.volDate = data.date;
           this.volTime = data.time;
           this.volDesc = data.description;
           this.volTI = data.inside;
           this.volTO = data.outside;
           this.volTL = data.large;
-        } else {
-          toasts.error(data.message);
-        }
+        })
         this.inside = undefined;
         this.outside = undefined;
         this.large = undefined;
-        // location.reload();
         this.pageload();
       }
     },

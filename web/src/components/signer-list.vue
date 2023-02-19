@@ -19,7 +19,7 @@
         </tr>
         <tr>
           <td>
-            {{ getVolTypeName(vol.type) }}
+            {{ getVolTypeName(vol.type) }}时长
           </td>
           <td>{{ timeToHint(vol.reward) }}</td>
         </tr>

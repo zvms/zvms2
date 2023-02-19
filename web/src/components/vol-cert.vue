@@ -66,11 +66,11 @@
               :color="stColor(stu.status)"
               :text-color="stColorT(stu.status)"
             >
-              {{ statusToStr(stu.status) }}
+              {{ getVolStatusName(stu.status) }}
             </v-chip>
           </v-col>
         </v-row>
-        <fieldset v-if="haveThought()">
+        <fieldset v-if="haveThought">
           <legend>学生感想</legend>
           <pre v-for="i in stu.thought.split('\n')" v-bind:key="i">{{ i }}</pre>
         </fieldset>
@@ -80,23 +80,28 @@
 </template>
 
 <script lang="ts">
-import { fApi, VolStatus, type SingleVolunteer } from "../apis";
+import {
+  fApi,
+  getVolStatusName,
+  VolStatus,
+  type SingleVolunteer,
+} from "../apis";
 import { toasts } from "../utils/dialogs";
 import { timeToHint } from "@/utils/calc";
 
 export default {
   name: "vol-cert",
   props: ["volid", "stuid", "stuname"],
-  data: () => ({
-    timeToHint,
-    volid: NaN,
-    stuid: NaN,
-    stuName: "",
-    toggled: false,
-    vol: undefined as SingleVolunteer,
-  }),
-  created() {
-    this.update();
+  data() {
+    return {
+      timeToHint,
+      getVolStatusName,
+      volid: NaN,
+      stuid: NaN,
+      stuName: "",
+      toggled: false,
+      vol: undefined as SingleVolunteer,
+    };
   },
   methods: {
     stColor(a: VolStatus) {
@@ -112,20 +117,22 @@ export default {
     flipcard() {
       this.toggled = !this.toggled;
     },
-    haveThought() {
-      return this.vol.thought.length > 0;
-    },
     update() {
       this.toggled = false;
       if (Number.isFinite(this.volid)) {
-        let data = await fApi.volcert(this.volid, this.stuid);
-        if (data.type == "ERROR") toasts.error(data.message);
-        else if (data.type == "SUCCESS") {
-          this.vol = data.vol;
-          this.stu = data.stu;
-        } else toasts.error("未知错误");
+        fApi.getSingleVolunteerInfo(this.volid, this.stuid)
+        this.vol = data.vol;
+        this.stu = data.stu;
       }
     },
+  },
+  computed:{
+    haveThought():boolean{
+      return this.vol.thought.length > 0;
+    }
+  },
+  created() {
+    this.update();
   },
   watch: {
     volid() {

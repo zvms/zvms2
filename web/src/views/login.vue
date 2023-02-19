@@ -18,7 +18,7 @@
             type="username"
             v-model="form.userid"
             :rules="rules"
-            label="用户ID"
+            label="学号/ID"
             @keyup.native.enter="login"
           />
           <v-text-field
@@ -31,7 +31,7 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" block :disabled="isLoading" @click="login"
+        <v-btn color="primary" block @click="login"
           >登录</v-btn
         >
       </v-card-actions>
@@ -43,9 +43,10 @@
 import { fApi } from "../apis";
 import { NOTEMPTY } from "../utils/validation.js"; //校验表单完整性
 import { applyNavItems } from "../utils/nav";
-import { useNoticesStore, useInfoStore } from "@/stores";
+import { useNoticesStore, useInfoStore, useHeartbeatStore, useLastseenvolStore } from "@/stores";
 import { md5 } from "@/utils/md5";
 import { mapStores } from "pinia";
+import { permissionTypes } from "@/utils/permissions";
 
 export default {
   name: "login",
@@ -77,17 +78,46 @@ export default {
             this.infoStore.$patch({
               username: name,
               permission: auth,
-              class: cls,
-              classname: clsName,
+              classId: cls,
+              className: clsName,
               token: token,
             });
           });
+
           fApi.searchNotices(
             undefined,
             id
           )((result) => {
             this.noticesStore.notices = result;
           });
+
+          this.heartbeatStore.intervalId = setInterval(() => {
+            const infoStore = useInfoStore();
+            if (infoStore.permission >= permissionTypes.logined) {
+              console.error("!login");
+              return;
+            }
+
+            this.noticesStore.notices;
+            fApi.searchNotices(undefined, this.infoStore.userId);
+            let flag = false;
+            let last = useLastseenvolStore().lastseenvol;
+            let vol = t.currentVol;
+
+            if (
+              last != null &&
+              last != undefined &&
+              vol != null &&
+              vol != undefined
+            ) {
+              if (vol.length != last.length) flag = true;
+              else {
+                for (var i = 0; i < vol.length; i++)
+                  if (vol[i]["id"] != last[i]["id"]) flag = true;
+              }
+            }
+          }, 1000);
+
           applyNavItems();
           this.$router.push("/me");
         });
@@ -95,7 +125,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore, useNoticesStore),
+    ...mapStores(useInfoStore, useNoticesStore, useHeartbeatStore ,useLastseenvolStore),
   },
 };
 </script>

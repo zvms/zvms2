@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import { fApi } from "../apis";
+import { fApi, getVolStatusName, getVolTypeName } from "../apis";
 import volcert from "./vol-cert.vue";
 
 export default {
@@ -46,13 +46,23 @@ export default {
   components: {
     volcert,
   },
-  data: () => ({
-    stuid: NaN,
-    volid: NaN,
-    dialog: false,
-    search: "",
-    headers: undefined as any,
-  }),
+  data() {
+    return {
+      stuid: NaN,
+      volid: NaN,
+      stuname: "",
+      volworks: [] as {
+        volId: number;
+        name: string;
+        type: string;
+        reward: string;
+        status: string;
+      }[],
+      dialog: false,
+      search: "",
+      headers: undefined as any,
+    };
+  },
   methods: {
     async updateVol() {
       if (Number.isFinite(this.userid) && Number.isFinite(this.userid)) {
@@ -63,13 +73,23 @@ export default {
           this.headers = [
             { text: "义工ID", value: "volId", align: "start", sortable: true },
             { text: "义工名称", value: "name" },
-            { text: "大型时长（单位：分钟）", value: "reward" },
+            { text: "类型", value: "type" },
+            { text: "时长（单位：分钟）", value: "reward" },
             { text: "完成状态", value: "status" },
           ];
+          this.volworks = result.map((v) => {
+            return {
+              volId: v.id,
+              name: v.name,
+              type: getVolTypeName(v.type),
+              reward: v.reward,
+              status: getVolStatusName(v.status),
+            };
+          });
         });
       }
     },
-    rowClick(item) {
+    rowClick(item: { volId: number }) {
       this.volid = item.volId;
       this.stuid = this.userid;
       this.stuname = this.title;
