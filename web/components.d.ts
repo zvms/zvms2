@@ -20,6 +20,8 @@ declare module '@vue/runtime-core' {
     VCardTitle: typeof import('vuetify/components')['VCardTitle']
     VChip: typeof import('vuetify/components')['VChip']
     VContainer: typeof import('vuetify/components')['VContainer']
+    VDataTable: typeof import('vuetify/components')['VDataTable']
+    VDatePicker: typeof import('vuetify/components')['VDatePicker']
     VDialog: typeof import('vuetify/components')['VDialog']
     VDivider: typeof import('vuetify/components')['VDivider']
     VForm: typeof import('vuetify/components')['VForm']
@@ -36,6 +38,12 @@ declare module '@vue/runtime-core' {
     VolInfo: typeof import('./src/components/vol-info.vue')['default']
     VolReward: typeof import('./src/components/vol-reward.vue')['default']
     VProgressCircular: typeof import('vuetify/components')['VProgressCircular']
+    VSelect: typeof import('vuetify/components')['VSelect']
+    VSimpleTable: typeof import('vuetify/components')['VSimpleTable']
+    VSpacer: typeof import('vuetify/components')['VSpacer']
+    VTable: typeof import('vuetify/components')['VTable']
+    VTextarea: typeof import('vuetify/components')['VTextarea']
     VTextField: typeof import('vuetify/components')['VTextField']
+    VThemeProvider: typeof import('vuetify/components')['VThemeProvider']
   }
 }

@@ -69,7 +69,7 @@
     </v-dialog>
     <v-dialog v-model="dialog1" max-width="80%">
       <v-card>
-        <v-simple-table style="margin: 20px">
+        <v-table style="margin: 20px">
           <thead>
             <td>学号</td>
             <td>删除</td>
@@ -116,7 +116,7 @@
               </td>
             </tr>
           </tbody>
-        </v-simple-table>
+        </v-table>
         <p>
           当前选中了{{
             stulstSelected.length
@@ -152,7 +152,7 @@
 
         <v-divider></v-divider>
 
-        <v-simple-table style="margin: 20px" v-if="thoughts.length > 0">
+        <v-table style="margin: 20px" v-if="thoughts.length > 0">
           <thead>
             <td>学号</td>
             <td>感想</td>
@@ -163,7 +163,7 @@
               <td>{{ thought.thought }}</td>
             </tr>
           </tbody>
-        </v-simple-table>
+        </v-table>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red darken-1" text @click="choosePictures()"

@@ -3,7 +3,7 @@
     <v-card-title>
       {{ vol.name }}
     </v-card-title>
-    <v-simple-table dense>
+    <v-table dense>
       <tbody>
         <tr>
           <td>简介</td>
@@ -41,7 +41,7 @@
           <td>{{ getVolArrangedName(vol.isArranged) }}</td>
         </tr>
       </tbody>
-    </v-simple-table>
+    </v-table>
   </v-card>
 </template>
 

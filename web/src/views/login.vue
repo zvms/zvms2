@@ -1,41 +1,30 @@
 <template>
-  <v-card
-    id="bgcard"
-    class="d-flex mb-6 align-center justify-center"
-    outlined
-    color="rgba(255, 255, 255, 0)"
-  >
-    <v-card class="mx-auto" width="50%" max-width="500" min-width="250">
-      <v-card-title
-        class="headline primary white--text"
-        style="backdrop-filter: blur(2px)"
-        >登录</v-card-title
-      >
-      <br />
-      <v-card-text>
-        <v-form ref="form">
-          <v-text-field
-            type="username"
-            v-model="form.userid"
-            :rules="rules"
-            label="学号/ID"
-            @keyup.native.enter="login"
-          />
-          <v-text-field
-            type="password"
-            v-model="form.password"
-            :rules="rules"
-            label="密码"
-            @keyup.native.enter="login"
-          />
-        </v-form>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="primary" block @click="login"
-          >登录</v-btn
-        >
-      </v-card-actions>
-    </v-card>
+  <v-card>
+    <v-card-title
+      class="headline primary white--text"
+      style="backdrop-filter: blur(2px)"
+      >登录</v-card-title
+    >
+    <br />
+    <v-card-text>
+      <v-form ref="form">
+        <v-text-field
+          type="username"
+          v-model="form.userid"
+          :rules="rules"
+          label="学号/ID"
+          @keyup.native.enter="login"
+        />
+        <v-text-field
+          type="password"
+          v-model="form.password"
+          :rules="rules"
+          label="密码"
+          @keyup.native.enter="login"
+        />
+        <v-btn class="me-4" type="submit" click="login">登录 </v-btn>
+      </v-form>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -43,7 +32,12 @@
 import { fApi } from "../apis";
 import { NOTEMPTY } from "../utils/validation.js"; //校验表单完整性
 import { applyNavItems } from "../utils/nav";
-import { useNoticesStore, useInfoStore, useHeartbeatStore, useLastseenvolStore } from "@/stores";
+import {
+  useNoticesStore,
+  useInfoStore,
+  useHeartbeatStore,
+  useLastseenvolStore,
+} from "@/stores";
 import { md5 } from "@/utils/md5";
 import { mapStores } from "pinia";
 import { permissionTypes } from "@/utils/permissions";
@@ -57,13 +51,7 @@ export default {
         password: "",
       },
       rules: [NOTEMPTY()],
-    } satisfies {
-      form: {
-        userid: string;
-        password: string;
-      };
-      rules: any[];
-    };
+    }
   },
   methods: {
     login() {
@@ -125,7 +113,12 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore, useNoticesStore, useHeartbeatStore ,useLastseenvolStore),
+    ...mapStores(
+      useInfoStore,
+      useNoticesStore,
+      useHeartbeatStore,
+      useLastseenvolStore
+    ),
   },
 };
 </script>

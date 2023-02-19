@@ -76,7 +76,7 @@
             </v-time-picker>
           </v-dialog>
 
-          <v-simple-table>
+          <v-table>
             <thead>
               <td>学号</td>
               <td>删除</td>
@@ -123,7 +123,7 @@
                 </td>
               </tr>
             </tbody>
-          </v-simple-table>
+          </v-table>
 
           <v-text-field
             v-model="form.description"

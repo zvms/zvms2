@@ -3,7 +3,7 @@
     <v-card-title>
       {{ vol.name }}
     </v-card-title>
-    <v-simple-table dense>
+    <v-table dense>
       <tbody>
         <tr>
           <td>学号</td>
@@ -36,7 +36,7 @@
           <td>{{ vol. }}</td>
         </tr>
       </tbody>
-    </v-simple-table>
+    </v-table>
   </v-card>
 </template>
 

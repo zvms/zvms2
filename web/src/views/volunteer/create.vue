@@ -17,7 +17,7 @@
             prepend-icon="mdi-account"
           />
           <!---->
-          <v-simple-table>
+          <v-table>
             <thead>
               <td>班级</td>
               <td>最多报名人数</td>
@@ -70,7 +70,7 @@
                 </td>
               </tr>
             </tbody>
-          </v-simple-table>
+          </v-table>
           <!---->
           <v-dialog
             ref="dateDialog"

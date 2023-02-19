@@ -28,7 +28,7 @@
     <v-dialog v-model="dialog1" max-width="80%">
       <v-card>
         <v-card-title>详细信息</v-card-title>
-        <v-simple-table style="margin: 20px">
+        <v-table style="margin: 20px">
           <tbody>
             <tr>
               <td>义工编号</td>
@@ -82,7 +82,7 @@
               </td>
             </tr>
           </tbody>
-        </v-simple-table>
+        </v-table>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" @click="audit(1)">通过 </v-btn>

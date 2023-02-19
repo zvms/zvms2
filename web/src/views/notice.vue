@@ -3,7 +3,7 @@
     <v-card-title>创建通知</v-card-title>
     <v-card-text>
       <v-form ref="form">
-        <v-simple-table>
+        <v-table>
           <thead>
             <td>班级</td>
             <td></td>
@@ -50,7 +50,7 @@
               </td>
             </tr>
           </tbody>
-        </v-simple-table>
+        </v-table>
         <v-text-field
           v-model="form.title"
           label="标题"
