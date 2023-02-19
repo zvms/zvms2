@@ -1,10 +1,7 @@
 <template>
   <v-app
-    style="
-      background-size: cover;
-      background-attachment: fixed;
-      overflow-y: hidden;
-    "
+    class="md overflow-y-hidden"
+    full-height
   >
     <v-navigation-drawer
       app
@@ -13,7 +10,7 @@
     >
       <v-list nav dense class="py-0">
         <v-list-item line="two" class="px-0">
-          <v-list-item tile>
+          <v-list-item tile >
             <img src="./assets/logo.png" />
           </v-list-item>
           <v-list-item>
@@ -29,7 +26,7 @@
           link
         >
           <v-list-item icon>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon :icon="item.icon"></v-icon>
           </v-list-item>
           <v-list-item>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -40,7 +37,7 @@
       <template v-slot:append>
         <div class="pa-3">
           <v-progress-circular
-            color="white"
+            color="black"
             indeterminate
             v-show="loadingStore.isLoading"
           ></v-progress-circular>
@@ -55,32 +52,9 @@
   </v-app>
 </template>
 
-<style>
-::-webkit-scrollbar {
-  width: 0px;
-  height: 4px;
-}
-
-::-webkit-scrollbar-button {
-  width: 0px;
-  height: 0;
-}
-
-#drag {
-  padding: 0;
-  margin: 0;
-}
-</style>
-
 <script lang="ts">
-//import { RouterLink, RouterView } from 'vue-router'
-import { fApi } from "@/apis";
-import { permissionTypes } from "@/utils/permissions.js";
 import { applyNavItems } from "@/utils/nav";
 import {
-  useNoticesStore,
-  useInfoStore,
-  useLastseenvolStore,
   useDrawerStore,
   useLoadingStore,
 } from "@/stores";
@@ -98,18 +72,10 @@ export default {
     };
   },
   mounted() {
-    router.push("/login")
     applyNavItems();
   },
-  methods: {
-   
-  },
-
   computed: {
     ...mapStores(
-      useNoticesStore,
-      useInfoStore,
-      useLastseenvolStore,
       useDrawerStore,
       useLoadingStore
     ),

@@ -317,7 +317,6 @@
 参数: `
     volId: number,
     stuId: number,
-    volunteer: structs.SingleVolunteer,
     thought: string,
     pictures: string[]
   `  
@@ -329,7 +328,6 @@
 参数: `
     volId: number,
     stuId: number,
-    volunteer: structs.SingleVolunteer,
     thought: string,
     pictures: string[]
   `  

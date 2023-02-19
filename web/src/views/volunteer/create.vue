@@ -268,7 +268,7 @@ export default {
           );
         });
 
-        this.$router.push("/me");
+        this.$router.push("/");
       }
     },
     addToList() {

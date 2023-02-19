@@ -3,9 +3,14 @@ import { permissionTypes } from "./permissions";
 
 export function getNavItems(permission: permissionTypes) {
   const navItems = {
+    login: {
+      title: "登录",
+      to: "/login",
+      icon: "mdi-account-circle",
+    },
     me: {
       title: "我的",
-      to: "/me",
+      to: "/",
       icon: "mdi-account-circle",
     },
     modifyPwd: {
@@ -71,6 +76,9 @@ export function getNavItems(permission: permissionTypes) {
   };
 
   const items = [];
+  if(permission < permissionTypes.logined){
+    items.push(navItems.login);
+  }
   if (permission >= permissionTypes.logined) {
     items.push(navItems.me);
     items.push(navItems.modifyPwd);

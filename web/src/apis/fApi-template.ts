@@ -70,7 +70,11 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
       try {
         res = await func(url, ...args); //axios
       } catch (e) {
+        if (config.defaultFailedToast) {
+          toasts.error((e as Error).message);
+        }
         config.errorReq(e as Error, info);
+        throw e;
       }
 
       if (res?.data?.type !== "SUCCESS") {

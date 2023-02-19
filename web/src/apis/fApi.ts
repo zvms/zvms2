@@ -70,7 +70,11 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
       try {
         res = await func(url, ...args); //axios
       } catch (e) {
+        if (config.defaultFailedToast) {
+          toasts.error((e as Error).message);
+        }
         config.errorReq(e as Error, info);
+        throw e;
       }
 
       if (res?.data?.type !== "SUCCESS") {
@@ -642,7 +646,6 @@ export class ForegroundApi {
    * ## 保存感想草稿
    * ### [POST] /thought/<int:volId>/<int:stuId>/save
    * #### 权限: Any
-   * @param volunteer
    * @param thought
    * @param pictures
    * @param volId
@@ -651,7 +654,6 @@ export class ForegroundApi {
   saveThought(
     volId: number,
     stuId: number,
-    volunteer: structs.SingleVolunteer,
     thought: string,
     pictures: string[]
   ): ForegroundApiRunner<{}> {
@@ -659,15 +661,13 @@ export class ForegroundApi {
         this,
         "POST",
         `/thought/${volId}/${stuId}/save`,
-        volunteer,
-      thought,
+        thought,
       pictures);
   }
   /**
    * ## 提交感想
    * ### [POST] /thought/<int:volId>/<int:stuId>/submit
    * #### 权限: Any
-   * @param volunteer
    * @param thought
    * @param pictures
    * @param volId
@@ -676,7 +676,6 @@ export class ForegroundApi {
   submitThought(
     volId: number,
     stuId: number,
-    volunteer: structs.SingleVolunteer,
     thought: string,
     pictures: string[]
   ): ForegroundApiRunner<{}> {
@@ -684,8 +683,7 @@ export class ForegroundApi {
         this,
         "POST",
         `/thought/${volId}/${stuId}/submit`,
-        volunteer,
-      thought,
+        thought,
       pictures);
   }
   /**

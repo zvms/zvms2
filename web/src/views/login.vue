@@ -119,7 +119,7 @@ export default {
           }, 1000);
 
           applyNavItems();
-          this.$router.push("/me");
+          this.$router.push("/");
         });
       }
     },

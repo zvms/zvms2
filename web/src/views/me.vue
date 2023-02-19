@@ -15,21 +15,20 @@
     <v-card>
       <v-card-title> 通知 </v-card-title>
       <v-list shaped>
-        <v-list-item-group color="primary">
-          <v-list-item
-            v-for="(notice, i) in noticesStore.notices"
-            :key="i"
-            @click="showNotice(notice)"
-          >
-            <v-list-item icon>
-              <v-icon>mdi-message</v-icon>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-title>{{ notice.title }}</v-list-item-title>
-              <v-list-item-subtitle>{{ notice.content }}</v-list-item-subtitle>
-            </v-list-item>
+        <v-list-item
+          color="primary"
+          v-for="(notice, i) in noticesStore.notices"
+          :key="i"
+          @click="showNotice(notice)"
+        >
+          <v-list-item icon>
+            <v-icon>mdi-message</v-icon>
           </v-list-item>
-        </v-list-item-group>
+          <v-list-item>
+            <v-list-item-title>{{ notice.title }}</v-list-item-title>
+            <v-list-item-subtitle>{{ notice.content }}</v-list-item-subtitle>
+          </v-list-item>
+        </v-list-item>
       </v-list>
     </v-card>
 
@@ -90,13 +89,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.v-card {
-  margin: 1rem;
-}
-
-.v-chip {
-  margin: 2px;
-}
-</style>
