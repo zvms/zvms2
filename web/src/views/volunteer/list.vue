@@ -11,29 +11,6 @@
       <v-card-text>
         {{ vol.description }}
       </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" @click="volDetail(vol.id)">
-          <v-icon left>mdi-clipboard-text</v-icon>
-          详情
-        </v-btn>
-        <v-btn color="primary" @click="participants(vol.id)">
-          <v-icon left>mdi-clipboard-text</v-icon>
-          查看已报名
-        </v-btn>
-        <v-btn
-          v-if="granted()"
-          color="primary"
-          @click="thoughtSubmitDialog(vol.id)"
-        >
-          <v-icon left>mdi-upload</v-icon>
-          感想提交
-        </v-btn>
-        <v-btn v-if="granted()" color="primary" @click="volSignUp(vol.id)">
-          <v-icon left>mdi-account-plus</v-icon>
-          报名
-        </v-btn>
-      </v-card-actions>
     </v-card>
     <v-dialog v-model="dialog" max-width="80%">
       <v-card>
