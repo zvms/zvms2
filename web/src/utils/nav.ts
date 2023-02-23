@@ -18,46 +18,51 @@ export function getNavItems(permission: permissionTypes) {
       to: "/modifyPwd",
       icon: "mdi-lock",
     },
-    classList: {
-      title: "班级列表",
-      to: "/class/list",
-      icon: "mdi-view-list",
-    },
-    stuList: {
-      title: "学生列表",
-      to: "/class/stulist/0",
-      icon: "mdi-format-list-bulleted-square",
-    },
+    // classList: {
+    //   title: "班级列表",
+    //   to: "/class/list",
+    //   icon: "mdi-view-list",
+    // },
+    // stuList: {
+    //   title: "学生列表",
+    //   to: "/class/stulist/0",
+    //   icon: "mdi-format-list-bulleted-square",
+    // },
     volList: {
       title: "义工列表",
       to: "/volunteer/list",
       icon: "mdi-format-list-text",
     },
-    notice: {
-      title: "创建通知",
-      to: "/notice",
-      icon: "mdi-message-draw",
-    },
+    // notice: {
+    //   title: "创建通知",
+    //   to: "/sendNotice",
+    //   icon: "mdi-message-draw",
+    // },
     createVol: {
       title: "创建义工",
       to: "/volunteer/create",
       icon: "mdi-folder-multiple-plus",
     },
-    auditVol: {
-      title: "审核感想",
-      to: "/volunteer/audit",
+    firstAuditVol: {
+      title: "初审感想",
+      to: "/volunteer/firstAudit",
       icon: "mdi-check-circle",
     },
-    holidayVol: {
-      title: "义工自提交",
-      to: "/volunteer/holiday",
-      icon: "mdi-cloud-upload",
+    finalAuditVol: {
+      title: "终审感想",
+      to: "/volunteer/finalAudit",
+      icon: "mdi-check-circle",
     },
-    uploadThought: {
-      title: "感想提交",
-      to: "/volunteer/thought",
-      icon: "mdi-upload",
-    },
+    // holidayVol: {
+    //   title: "义工自提交",
+    //   to: "/volunteer/holiday",
+    //   icon: "mdi-cloud-upload",
+    // },
+    // uploadThought: {
+    //   title: "感想提交",
+    //   to: "/volunteer/thought",
+    //   icon: "mdi-upload",
+    // },
     report: {
       title: "反馈错误",
       to: "/report",

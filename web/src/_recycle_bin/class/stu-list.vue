@@ -61,7 +61,7 @@
 
 <script lang="ts">
 import { permissionTypes } from "../../utils/permissions.js";
-import stuvolist from "@/components/stu-vol-list.vue";
+import stuvolist from "@/_recycle_bin/stu-vol-list.vue.js";
 import { fApi} from "../../apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
