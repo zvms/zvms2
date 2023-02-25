@@ -1,8 +1,4 @@
 <template>
-  <v-card flat>
-    <v-card-title>
-      {{ vol.name }}
-    </v-card-title>
     <v-table dense>
       <tbody>
         <tr>
@@ -37,40 +33,24 @@
         </tr>
       </tbody>
     </v-table>
-  </v-card>
 </template>
 
 <script lang="ts">
-import { fApi, type VolunteerInfoResponse, getVolTypeName } from "../apis";
+import { type VolunteerInfoResponse, getVolTypeName } from "../apis";
 import { timeToHint } from "@/utils/calc";
 
 export default {
   name: "vol-info",
-  props: ["volid"],
+  props: {
+    vol: {
+      type: Object as PropType<VolunteerInfoResponse>,
+      required: true,
+    },
+  },
   data() {
     return {
       getVolTypeName,
-      volid: NaN,
-      vol: 1 as VolunteerInfoResponse,
     };
-  },
-  methods: {
-    async updateVol() {
-      if (Number.isFinite(this.volid)) {
-        fApi.getVolunteerInfo(this.volid)((vol) => {
-          this.vol = vol;
-        });
-      }
-    },
-    timeToHint,
-  },
-  watch: {
-    volid: {
-      immediate: true,
-      handler() {
-        this.updateVol();
-      },
-    },
   },
 };
 </script>

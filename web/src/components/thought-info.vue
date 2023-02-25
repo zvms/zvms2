@@ -22,21 +22,25 @@
 <script lang="ts">
 import { timeToHint } from "@/utils/calc";
 import {
-  fApi,
-  type VolunteerInfoResponse,
   getVolTypeName,
   getVolStatusName,
   type ThoughtInfoResponse,
 } from "@/apis";
+import type { PropType } from "vue";
+
 export default {
   name: "thought-info",
-  props: ["thought"],
+  props: {
+    thought: {
+      type: Object as PropType<ThoughtInfoResponse>,
+      required: true,
+    },
+  },
   data() {
     return {
       timeToHint,
       getVolTypeName,
       getVolStatusName,
-      thought: undefined as ThoughtInfoResponse,
     };
   },
 };

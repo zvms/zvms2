@@ -14,7 +14,7 @@
           </v-list-item>
           <v-divider></v-divider>
           <v-list-item
-            v-for="item in drawerStore.items"
+            v-for="item in navStore.items"
             :key="item.title"
             :to="item.to"
             link
@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import { applyNavItems } from "@/utils/nav";
-import { useDrawerStore, useLoadingStore } from "@/stores";
+import { useNavStore, useLoadingStore } from "@/stores";
 import { mapStores } from "pinia";
 
 export default {
@@ -57,7 +57,7 @@ export default {
     applyNavItems();
   },
   computed: {
-    ...mapStores(useDrawerStore, useLoadingStore),
+    ...mapStores(useNavStore, useLoadingStore),
   },
 };
 </script>

@@ -65,8 +65,12 @@ import stuvolist from "@/_recycle_bin/stu-vol-list.vue.js";
 import { fApi} from "../../apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
+import { VDataTable } from "vuetify/labs/VDataTable";
 
 export default {
+  components:{
+    VDataTable
+  },
   data: () => ({
     classes: undefined,
     students: undefined,

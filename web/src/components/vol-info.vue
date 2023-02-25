@@ -43,20 +43,23 @@
 <script lang="ts">
 import { timeToHint } from "@/utils/calc";
 import {
-  fApi,
   type VolunteerInfoResponse,
   getVolTypeName,
   getVolStatusName,
 } from "@/apis";
 export default {
   name: "vol-info",
-  props: ["vol"],
+   props: {
+    vol: {
+      type: Object as PropType<VolunteerInfoResponse>,
+      required: true,
+    },
+  },
   data() {
     return {
       timeToHint,
       getVolTypeName,
       getVolStatusName,
-      vol: undefined as VolunteerInfoResponse,
     };
   },
 };

@@ -1,5 +1,11 @@
-import { useDrawerStore, useInfoStore } from "@/stores";
+import { useNavStore, useInfoStore } from "@/stores";
 import { permissionTypes } from "./permissions";
+
+interface NavItem {
+  title: string;
+  to: string;
+  icon: string;
+}
 
 export function getNavItems(permission: permissionTypes) {
   const navItems = {
@@ -13,11 +19,11 @@ export function getNavItems(permission: permissionTypes) {
       to: "/",
       icon: "mdi-account-circle",
     },
-    modifyPwd: {
-      title: "修改密码",
-      to: "/modifyPwd",
-      icon: "mdi-lock",
-    },
+    // modifyPwd: {
+    //   title: "修改密码",
+    //   to: "/modifyPwd",
+    //   icon: "mdi-lock",
+    // },
     // classList: {
     //   title: "班级列表",
     //   to: "/class/list",
@@ -43,11 +49,11 @@ export function getNavItems(permission: permissionTypes) {
       to: "/volunteer/create",
       icon: "mdi-folder-multiple-plus",
     },
-    firstAuditVol: {
-      title: "初审感想",
-      to: "/volunteer/firstAudit",
-      icon: "mdi-check-circle",
-    },
+    // firstAuditVol: {
+    //   title: "初审感想",
+    //   to: "/volunteer/firstAudit",
+    //   icon: "mdi-check-circle",
+    // },
     finalAuditVol: {
       title: "终审感想",
       to: "/volunteer/finalAudit",
@@ -78,50 +84,22 @@ export function getNavItems(permission: permissionTypes) {
       to: "/logout",
       icon: "mdi-exit-to-app",
     },
-  };
+  } satisfies Record<string, NavItem>;
 
-  const items = [];
-  if(permission < permissionTypes.logined){
-    items.push(navItems.login);
-  }
-  if (permission >= permissionTypes.logined) {
-    items.push(navItems.me);
-    items.push(navItems.modifyPwd);
-  }
-  if (permission >= permissionTypes.teacher) {
-    items.push(navItems.classList);
-  }
-  if (permission >= permissionTypes.secretary) {
-    items.push(navItems.stuList);
-  }
-  if (permission >= permissionTypes.secretary) {
-    items.push(navItems.volList);
-  }
-  if (permission >= permissionTypes.teacher) {
-    items.push(navItems.notice);
-  }
-  if (
-    permission >= permissionTypes.teacher &&
-    permission != permissionTypes.admin
-  ) {
-    items.push(navItems.createVol);
-  }
-  if (permission > permissionTypes.teacher) {
-    items.push(navItems.auditVol);
-  }
-  if (permission == permissionTypes.secretary) {
-    items.push(navItems.holidayVol, navItems.uploadThought);
-  }
+  const items: NavItem[] = [];
+
+  if (!(permission & permissionTypes.logined)) items.push(navItems.login);
+  if (permission & permissionTypes.logined) items.push(navItems.volList);
+  if (permission & permissionTypes.logined) items.push(navItems.createVol);
+  if (permission & permissionTypes.system) items.push(navItems.finalAuditVol);
+  if (permission & permissionTypes.logined) items.push(navItems.logout);
   items.push(navItems.report);
   items.push(navItems.about);
-  if (permission >= permissionTypes.logined) {
-    items.push(navItems.logout);
-  }
   return items;
 }
 
 export function applyNavItems() {
-  return (useDrawerStore().items = getNavItems(
+  return (useNavStore().items = getNavItems(
     useInfoStore().permission || permissionTypes.none
   ));
 }

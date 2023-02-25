@@ -36,7 +36,6 @@ import {
   useNoticesStore,
   useInfoStore,
   useHeartbeatStore,
-  useLastseenvolStore,
 } from "@/stores";
 import { md5 } from "@/utils/md5";
 import { mapStores } from "pinia";
@@ -79,33 +78,6 @@ export default {
             this.noticesStore.notices = result;
           });
 
-          this.heartbeatStore.intervalId = setInterval(() => {
-            const infoStore = useInfoStore();
-            if (infoStore.permission >= permissionTypes.logined) {
-              console.error("!login");
-              return;
-            }
-
-            this.noticesStore.notices;
-            fApi.searchNotices(undefined, this.infoStore.userId);
-            let flag = false;
-            let last = useLastseenvolStore().lastseenvol;
-            let vol = t.currentVol;
-
-            if (
-              last != null &&
-              last != undefined &&
-              vol != null &&
-              vol != undefined
-            ) {
-              if (vol.length != last.length) flag = true;
-              else {
-                for (var i = 0; i < vol.length; i++)
-                  if (vol[i]["id"] != last[i]["id"]) flag = true;
-              }
-            }
-          }, 1000);
-
           applyNavItems();
           this.$router.push("/");
         });
@@ -116,8 +88,7 @@ export default {
     ...mapStores(
       useInfoStore,
       useNoticesStore,
-      useHeartbeatStore,
-      useLastseenvolStore
+      useHeartbeatStore
     ),
   },
 };

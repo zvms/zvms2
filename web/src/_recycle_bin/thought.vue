@@ -111,10 +111,10 @@
 </template>
 
 <script lang="ts">
-import { toasts } from "../../utils/dialogs.js";
-import { permissionTypes } from "../../utils/permissions";
+import { toasts } from "../utils/dialogs.js";
+import { permissionTypes } from "../utils/permissions.js";
 import axios from "axios";
-import { fApi} from "../../apis";
+import { fApi} from "../apis/index.js";
 
 export default {
   data: () => ({

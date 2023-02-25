@@ -49,11 +49,11 @@ const router = createRouter({
       name: "volunteerCreate",
       component: () => import("../views/volunteer/create.vue"),
     },
-    {
-      path: "/volunteer/firstAudit",
-      name: "volunteerFirstAudit",
-      component: () => import("../views/volunteer/first-audit.vue"),
-    },
+    // {
+    //   path: "/volunteer/firstAudit",
+    //   name: "volunteerFirstAudit",
+    //   component: () => import("../views/volunteer/first-audit.vue"),
+    // },
     {
       path: "/volunteer/finalAudit",
       name: "volunteerFinalAudit",
@@ -64,11 +64,11 @@ const router = createRouter({
     //   name: "volunteerHoliday",
     //   component: () => import("../views/volunteer/holiday.vue"),
     // },
-    {
-      path: "/volunteer/thought",
-      name: "volunteerThought",
-      component: () => import("../views/volunteer/thought.vue"),
-    },
+    // {
+    //   path: "/volunteer/thought",
+    //   name: "volunteerThought",
+    //   component: () => import("../views/volunteer/thought.vue"),
+    // },
     // {
     //   path: "/sendNotice",
     //   name: "sendNotice",

@@ -43,7 +43,7 @@
 <script lang="ts">
 import { useInfoStore, useNoticesStore } from "@/stores";
 import { type NoticeBody } from "@/apis";
-import { permissionNames } from "@/utils/permissions";
+import { permissionNames, permissionTypes } from "@/utils/permissions";
 import { mapStores } from "pinia";
 
 export default {
@@ -62,13 +62,16 @@ export default {
   },
   mounted() {
     this.chips = [
-      {
-        id: 1,
-        icon: "mdi-label",
-        content: permissionNames[this.infoStore.permission],
-      },
-      { id: 2, icon: "mdi-label", content: this.infoStore.className },
-      { id: 3, icon: "mdi-label", content: this.infoStore.classId.toString() },
+      ...(Number.isFinite(this.infoStore.classId)
+        ? [{ id: -1, icon: "mdi-label", content: this.infoStore.className }]
+        : []),
+      ...Object.keys(permissionNames).map((key, i) => {
+        return {
+          id: i,
+          icon: "mdi-label",
+          content: permissionNames[key],
+        };
+      }),
     ];
   },
   methods: {
