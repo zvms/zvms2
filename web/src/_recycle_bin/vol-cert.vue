@@ -120,16 +120,16 @@ export default {
     update() {
       this.toggled = false;
       if (Number.isFinite(this.volid)) {
-        fApi.getSingleVolunteerInfo(this.volid, this.stuid)
+        fApi.getSingleVolunteerInfo(this.volid, this.stuid);
         this.vol = data.vol;
         this.stu = data.stu;
       }
     },
   },
-  computed:{
-    haveThought():boolean{
+  computed: {
+    haveThought(): boolean {
       return this.vol.thought.length > 0;
-    }
+    },
   },
   created() {
     this.update();

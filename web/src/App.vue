@@ -20,7 +20,7 @@
             link
           >
             <v-list-item icon>
-              <v-icon :icon="item.icon"></v-icon>
+              <v-icon :icon="item.icon" small></v-icon>
             </v-list-item>
             <v-list-item>
               <v-list-item-title>{{ item.title }}</v-list-item-title>

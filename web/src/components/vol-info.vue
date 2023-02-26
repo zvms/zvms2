@@ -49,7 +49,7 @@ import {
 } from "@/apis";
 export default {
   name: "vol-info",
-   props: {
+  props: {
     vol: {
       type: Object as PropType<VolunteerInfoResponse>,
       required: true,

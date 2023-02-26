@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title>修改密码</v-card-title>
       <v-card-text>
-        <v-form ref="form">
+        <v-form v-bind="isFormValid">
           <v-text-field
             v-model="oldPwd"
             label="旧密码"
@@ -48,11 +48,12 @@ export default {
       newPwd: "",
       confirmPwd: "",
       rules: [NOTEMPTY()],
+      isFormValid: false,
     };
   },
   methods: {
     async modifyPwd() {
-      if (this.$refs.form.validate()) {
+      if (this.isFormValid) {
         if (this.newPwd != this.confirmPwd) {
           toasts.error("两次密码不一致");
           this.confirmPwd = "";

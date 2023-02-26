@@ -164,7 +164,7 @@
 
 <script lang="ts">
 import { toasts } from "@/utils/dialogs.js";
-import { fApi} from "@/apis";
+import { fApi } from "@/apis";
 import { NOTEMPTY } from "@/utils/validation.js";
 import { useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
@@ -187,6 +187,7 @@ export default {
       large: undefined,
     },
     rules: [NOTEMPTY()],
+    isFormValid: false,
   }),
   mounted() {
     this.pageload();

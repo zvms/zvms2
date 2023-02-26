@@ -62,14 +62,14 @@
 <script lang="ts">
 import { permissionTypes } from "../../utils/permissions.js";
 import stuvolist from "@/_recycle_bin/stu-vol-list.vue.js";
-import { fApi} from "../../apis";
+import { fApi } from "../../apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
 import { VDataTable } from "vuetify/labs/VDataTable";
 
 export default {
-  components:{
-    VDataTable
+  components: {
+    VDataTable,
   },
   data: () => ({
     classes: undefined,

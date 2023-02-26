@@ -7,7 +7,7 @@
     >
     <br />
     <v-card-text>
-      <v-form ref="form">
+      <v-form v-bind="isFormValid">
         <v-text-field
           type="username"
           v-model="form.userid"
@@ -32,11 +32,7 @@
 import { fApi } from "../apis";
 import { NOTEMPTY } from "../utils/validation.js"; //校验表单完整性
 import { applyNavItems } from "../utils/nav";
-import {
-  useNoticesStore,
-  useInfoStore,
-  useHeartbeatStore,
-} from "@/stores";
+import { useNoticesStore, useInfoStore, useHeartbeatStore } from "@/stores";
 import { md5 } from "@/utils/md5";
 import { mapStores } from "pinia";
 import { permissionTypes } from "@/utils/permissions";
@@ -50,11 +46,12 @@ export default {
         password: "",
       },
       rules: [NOTEMPTY()],
-    }
+      isFormValid: false,
+    };
   },
   methods: {
     login() {
-      if (this.$refs.form.validate()) {
+      if (this.isFormValid) {
         this.form.password = "";
         const id = parseInt(this.form.userid);
         fApi.login(
@@ -85,11 +82,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(
-      useInfoStore,
-      useNoticesStore,
-      useHeartbeatStore
-    ),
+    ...mapStores(useInfoStore, useNoticesStore, useHeartbeatStore),
   },
 };
 </script>

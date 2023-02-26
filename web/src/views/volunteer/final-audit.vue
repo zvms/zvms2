@@ -16,7 +16,6 @@
           fixed-header
           :headers="headers"
           :items="thoughts"
-          :search="search"
           @click:row="rowClick"
           loading-text="加载中..."
           no-data-text="没有数据哦"
@@ -33,15 +32,15 @@
         <v-spacer />
         发放的{{ getVolTypeName(vol.type) }}时长（分钟）
         <v-text-field
-          v-model="reward"
+          v-model="currentReward"
           label="不填为默认值"
           prepend-icon="mdi-view-list"
         />
         <v-card-actions>
           <v-spacer />
-          <v-btn color="green" @click="audit(1)">通过 </v-btn>
-          <v-btn color="yellow" @click="audit(3)">打回 </v-btn>
-          <v-btn color="primary" @click="dialog1 = false">取消 </v-btn>
+          <v-btn color="green" @click="audit(true)">通过 </v-btn>
+          <v-btn color="yellow" @click="audit(false)">打回 </v-btn>
+          <!-- <v-btn color="primary" @click="dialog1 = false">取消 </v-btn> -->
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -49,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { toasts, confirm } from "@/utils/dialogs";
+import { confirm } from "@/utils/dialogs";
 import {
   validate,
   validateNotNAN,
@@ -60,9 +59,10 @@ import {
   VolStatus,
   fApi,
   getVolTypeName,
-  type  Thought,
+  type Thought,
   type VolunteerInfoResponse,
-type ThoughtInfoResponse,
+  type ThoughtInfoResponse,
+  ThoughtStatus,
 } from "@/apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
@@ -95,21 +95,34 @@ export default {
       currentReward: NaN,
     };
   },
-  mounted() {},
+  mounted() {
+    fApi.searchThoughts(
+      undefined,
+      ThoughtStatus.WaitingForFinalAudit
+    )((result) => {
+      this.thoughts = result;
+    });
+  },
   methods: {
-    rowClick(item) {
-      fApi.getVolunteerInfo(item.volid)((vol) => {
-        fApi.getThoughtInfo(
-          item.volid,
-          item.stuid
-        )((thought) => {
-          this.currentVol = vol;
-          this.currentThought = thought;
-          this.dialog1 = true;
-        });
+    rowClick(
+      event: Event,
+      value: {
+        item: DataTableItem;
+      }
+    ) {
+      fApi.getThoughtInfo(
+        item.volid,
+        item.stuid
+      )((thought) => {
+        this.currentVol = vol;
+        this.currentThought = thought;
+        this.dialog1 = true;
       });
     },
-    audit(status) {
+    /**
+     * @param status `true` for ok.
+     */
+    async audit(status: boolean) {
       let value = await confirm();
       if (value) {
         this.dialog1 = false;
@@ -127,16 +140,13 @@ export default {
         }
 
         validate(
-          [this.inside, this.outside, this.large],
+          [this.currentReward],
           [validateNotNAN(), validateNotNegative(), validateNotLargerThan(4)]
         );
 
-        fApi.firstAudit(
-          this.stuid,
-          status,
-          this.inside,
-          this.outside,
-          this.large
+        fApi.finalAudit(
+          this.currentThought.volId,
+          this.curre
         )((result) => {
           this.volDate = data.date;
           this.volTime = data.time;

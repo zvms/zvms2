@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title> 创建义工 </v-card-title>
       <v-card-text>
-        <v-form ref="form">
+        <v-form v-bind="isFormValid">
           <v-text-field
             v-model="form.name"
             :rules="rules"
@@ -11,7 +11,7 @@
             prepend-icon="mdi-pen"
           />
           <!---->
-          <v-table v-if="this.infoStore.permission&permissionTypes.system">
+          <v-table v-if="infoStore.permission & permissionTypes.system">
             <thead>
               <td>班级</td>
               <td>最多报名人数</td>
@@ -19,8 +19,8 @@
             </thead>
             <tbody>
               <tr v-for="(cls, i) in classSelected" :key="i">
-                <td>{{ mp[cls.id] }}</td>
-                <td>{{ cls.stuMax }}</td>
+                <td>{{ classes.find((v) => v.id === cls.id)?.name }}</td>
+                <td>{{ cls.max }}</td>
                 <td>
                   <v-btn
                     class="mx-2"
@@ -72,7 +72,7 @@
             label="日期（e.g. 23-9-1）"
             prepend-icon="mdi-text"
           />
-          <v-text-field
+          <v-textarea
             v-model="form.description"
             :rules="rules"
             label="义工描述"
@@ -94,8 +94,7 @@
 </template>
 
 <script lang="ts">
-import { toasts } from "@/utils/dialogs";
-import { fApi, type ClassVol, type SingleClass } from "@/apis";
+import { fApi, type ClassVol, type SingleClass, VolType } from "@/apis";
 import { NOTEMPTY } from "@/utils/validation.js";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
@@ -106,7 +105,7 @@ export default {
     return {
       permissionTypes,
       classSelected: [] as ClassVol[],
-      count_new:5,
+      count_new: 5,
       class_new: NaN,
       classes: [] as SingleClass[],
       form: {
@@ -114,10 +113,11 @@ export default {
         date: "",
         description: "",
         reward: 0,
+        type: NaN as VolType,
         class: undefined,
       },
       rules: [NOTEMPTY()],
-      mp: {},
+      isFormValid: false,
     };
   },
   components: {},
@@ -127,25 +127,24 @@ export default {
     });
   },
   methods: {
-    createVolunteer () {
-      if (this.$refs.form.validate()) {
+    createVolunteer() {
+      if (this.isFormValid) {
         fApi.createVolunteer(
           this.form.name,
           this.form.description,
           this.form.date,
-          parseInt(this.form.stuMax),
+          this.form.type,
           this.form.reward,
           this.classSelected
-        )((result)=>{
-           this.$router.push("/");
+        )((result) => {
+          this.$router.push("/");
         });
       }
     },
     addToList() {
       let flg = false;
-      if (this.class_new == "") flg = true;
-      if (isNaN(parseInt(this.count_new)) || parseInt(this.count_new) <= 0)
-        flg = true;
+      if (Number.isNaN(this.class_new)) flg = true;
+      if (Number.isNaN(this.count_new) || this.count_new <= 0) flg = true;
       for (let i in this.classSelected) {
         console.log(i);
         if (this.classSelected[i]["id"] == this.class_new) {
@@ -156,18 +155,18 @@ export default {
       if (!flg)
         this.classSelected.push({
           id: this.class_new,
-          stuMax: parseInt(this.count_new),
+          max: this.count_new,
         });
-      this.class_new = "";
+      this.class_new = NaN;
       this.count_new = 0;
     },
-    delFromList(i) {
+    delFromList(i: number) {
       this.classSelected.splice(i, 1);
     },
   },
-  computed:{
-    ...mapStores(useInfoStore)
-  }
+  computed: {
+    ...mapStores(useInfoStore),
+  },
 };
 </script>
 

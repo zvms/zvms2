@@ -103,7 +103,15 @@ import {
   validateNotLargerThan,
   validateNotNegative,
 } from "@/utils/validation";
-import { VolStatus, fApi, getVolTypeName, type SingleVolunteer, ThoughtStatus, type SearchThoughts, type Thought } from "@/apis";
+import {
+  VolStatus,
+  fApi,
+  getVolTypeName,
+  type SingleVolunteer,
+  ThoughtStatus,
+  type SearchThoughts,
+  type Thought,
+} from "@/apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
 import { mapStores } from "pinia";
@@ -136,7 +144,7 @@ export default {
     fApi.searchThoughts(
       this.infoStore.classId,
       ThoughtStatus.WaitingForFirstAudit
-    )((result:Thought[]) => {
+    )((result: Thought[]) => {
       this.singleVols = result;
     });
   },

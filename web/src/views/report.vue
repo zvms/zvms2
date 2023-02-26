@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title>反馈错误</v-card-title>
       <v-card-text>
-        <v-form ref="form">
+        <v-form v-bind="isFormValid">
           <v-text-field
             v-model="report"
             :rules="rules"
@@ -29,10 +29,11 @@ export default {
   data: () => ({
     report: "",
     rules: [NOTEMPTY()],
+    isFormValid: false,
   }),
   methods: {
     submitReport() {
-      if (this.$refs.form.validate()) {
+      if (this.isFormValid) {
         fApi.report(this.report)(() => {});
       }
     },

@@ -42,8 +42,8 @@ import volcert from "./vol-cert.vue";
 import { VDataTable } from "vuetify/labs/VDataTable";
 
 export default {
-  components:{
-    VDataTable
+  components: {
+    VDataTable,
   },
   name: "stu-vol-list",
   props: ["userid", "title"],
