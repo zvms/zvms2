@@ -120,7 +120,6 @@ export default {
       isFormValid: false,
     };
   },
-  components: {},
   mounted() {
     fApi.listClasses()((classes) => {
       this.classes = classes;

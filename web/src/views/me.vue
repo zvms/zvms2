@@ -10,6 +10,9 @@
         </v-chip>
       </v-card-text>
     </v-card-title>
+    <v-card-actions>
+      <v-btn @click="logout">登出</v-btn>
+    </v-card-actions>
   </v-card>
 
   <v-card>
@@ -42,9 +45,11 @@
 
 <script lang="ts">
 import { useInfoStore, useNoticesStore } from "@/stores";
-import { type NoticeBody } from "@/apis";
+import { fApi, type NoticeBody } from "@/apis";
 import { permissionNames, permissionTypes } from "@/utils/permissions";
 import { mapStores } from "pinia";
+import router from "@/router";
+import { applyNavItems } from "@/utils/nav";
 
 export default {
   name: "me",
@@ -57,10 +62,10 @@ export default {
       timer: "",
     };
   },
-  computed: {
-    ...mapStores(useInfoStore, useNoticesStore),
-  },
   mounted() {
+    if(!(this.infoStore.token?.length>1)){
+      router.push("/login");
+    }
     this.chips = [
       ...(Number.isFinite(this.infoStore.classId)
         ? [{ id: -1, icon: "mdi-label", content: this.infoStore.className }]
@@ -69,7 +74,7 @@ export default {
         return {
           id: i,
           icon: "mdi-label",
-          content: permissionNames[key],
+          content: permissionNames[key as any],
         };
       }),
     ];
@@ -88,6 +93,16 @@ export default {
       this.curNoticeText = s;
       this.dialog = true;
     },
+    logout() {
+      fApi.logout()(() => {
+        useInfoStore().$reset();
+        applyNavItems();
+        router.push("/login");
+      });
+    },
+  },
+  computed: {
+    ...mapStores(useInfoStore, useNoticesStore),
   },
 };
 </script>

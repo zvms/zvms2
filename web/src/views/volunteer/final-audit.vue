@@ -1,18 +1,9 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title>
-        未审核感想列表
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="搜索"
-          single-line
-          hide-details
-        ></v-text-field>
-      </v-card-title>
+      <v-card-title> 未审核感想列表 </v-card-title>
       <v-card-text>
-        <v-data-table
+        <data-table
           fixed-header
           :headers="headers"
           :items="thoughts"
@@ -21,16 +12,16 @@
           no-data-text="没有数据哦"
           no-results-text="没有结果"
         >
-        </v-data-table>
+        </data-table>
       </v-card-text>
     </v-card>
     <v-dialog v-model="dialog1" max-width="80%">
       <v-card>
         <v-card-title>详细信息</v-card-title>
-        <vol-info :vol="currentVol" />
-        <thought-info :thought="currentThought" />
+        <vol-info v-if="currentVol" :vol="currentVol" />
+        <thought-info v-if="currentThought" :thought="currentThought" />
         <v-spacer />
-        发放的{{ getVolTypeName(vol.type) }}时长（分钟）
+        发放的{{ getVolTypeName(currentVol!.type) }}时长（分钟）
         <v-text-field
           v-model="currentReward"
           label="不填为默认值"
@@ -39,7 +30,7 @@
         <v-card-actions>
           <v-spacer />
           <v-btn color="green" @click="audit(true)">通过 </v-btn>
-          <v-btn color="yellow" @click="audit(false)">打回 </v-btn>
+          <v-btn color="red" @click="audit(false)">打回 </v-btn>
           <!-- <v-btn color="primary" @click="dialog1 = false">取消 </v-btn> -->
         </v-card-actions>
       </v-card>
@@ -67,13 +58,13 @@ import {
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
 import { mapStores } from "pinia";
-import { VDataTable } from "vuetify/labs/VDataTable";
+import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import ThoughtInfo from "@/components/thought-info.vue";
 import VolInfo from "@/components/vol-info.vue";
 
 export default {
   components: {
-    VDataTable,
+    DataTable,
     VolInfo,
     ThoughtInfo,
   },
@@ -83,11 +74,22 @@ export default {
       getVolTypeName,
 
       headers: [
-        { title: "义工编号", value: "volId", align: "start", sortable: true },
-        { title: "学号", value: "stuId" },
+        {
+          key: "volId",
+          title: "义工编号",
+          value: "volId",
+          align: "start",
+          sortable: true,
+        },
+        { key: "stuId", title: "学号", value: "stuId" },
       ],
 
-      thoughts: [] as Thought[],
+      thoughts: [
+        {
+          thought: "123",
+          pictures: [],
+        },
+      ] as Thought[],
 
       dialog1: false,
       currentVol: undefined as VolunteerInfoResponse | undefined,
@@ -96,18 +98,21 @@ export default {
     };
   },
   mounted() {
-    fApi.searchThoughts(
-      undefined,
-      ThoughtStatus.WaitingForFinalAudit
-    )((result) => {
-      this.thoughts = result;
-    });
+    this.fetchThoughts();
   },
   methods: {
+    fetchThoughts() {
+      fApi.searchThoughts(
+        undefined,
+        ThoughtStatus.WaitingForFinalAudit
+      )((result) => {
+        this.thoughts = result;
+      });
+    },
     rowClick(
       event: Event,
       value: {
-        item: DataTableItem;
+        item: any;
       }
     ) {
       fApi.getThoughtInfo(
@@ -126,44 +131,29 @@ export default {
       let value = await confirm();
       if (value) {
         this.dialog1 = false;
-        if (status == 1) {
-          if (this.inside == undefined || this.inside == "")
-            this.inside = this.volTI;
-          if (this.outside == undefined || this.outside == "")
-            this.outside = this.volTO;
-          if (this.large == undefined || this.large == "")
-            this.large = this.volTL;
+        if (status) {
+          fApi.finalAudit(
+            this.currentThought!.volId,
+            this.currentThought!.stuId,
+            this.currentReward
+          )(() => {});
+          this.fetchThoughts();
         } else {
-          this.inside = "0";
-          this.outside = "0";
-          this.large = "0";
+          fApi.repulse(
+            this.currentThought!.volId,
+            this.currentThought!.stuId,
+            ""
+          )(() => {});
         }
 
-        validate(
-          [this.currentReward],
-          [validateNotNAN(), validateNotNegative(), validateNotLargerThan(4)]
-        );
-
-        fApi.finalAudit(
-          this.currentThought.volId,
-          this.curre
-        )((result) => {
-          this.volDate = data.date;
-          this.volTime = data.time;
-          this.volDesc = data.description;
-          this.volTI = data.inside;
-          this.volTO = data.outside;
-          this.volTL = data.large;
-        });
-        this.inside = undefined;
-        this.outside = undefined;
-        this.large = undefined;
-        this.pageload();
+        // validate(
+        //   [this.currentReward],
+        //   [validateNotNAN(), validateNotNegative(), validateNotLargerThan(4)]
+        // );
       }
     },
   },
   computed: {
-    ...mapIsLoading(),
     ...mapStores(useInfoStore),
   },
 };

@@ -20,11 +20,6 @@ const router = createRouter({
       component: () => import("../views/modify-pwd.vue"),
     },
     {
-      path: "/logout",
-      name: "logout",
-      component: () => import("../views/logout.vue"),
-    },
-    {
       path: "/report",
       name: "report",
       component: () => import("../views/report.vue"),

@@ -79,11 +79,6 @@ export function getNavItems(permission: permissionTypes) {
       to: "/about",
       icon: "mdi-help-circle",
     },
-    logout: {
-      title: "登出",
-      to: "/logout",
-      icon: "mdi-exit-to-app",
-    },
   } satisfies Record<string, NavItem>;
 
   const items: NavItem[] = [];
@@ -92,7 +87,6 @@ export function getNavItems(permission: permissionTypes) {
   if (permission & permissionTypes.logined) items.push(navItems.volList);
   if (permission & permissionTypes.logined) items.push(navItems.createVol);
   if (permission & permissionTypes.system) items.push(navItems.finalAuditVol);
-  if (permission & permissionTypes.logined) items.push(navItems.logout);
   items.push(navItems.report);
   items.push(navItems.about);
   return items;

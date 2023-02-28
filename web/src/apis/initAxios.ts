@@ -2,7 +2,7 @@ import Axios from "axios";
 import { useInfoStore } from "../stores";
 
 export function initAxios() {
-  Axios.defaults.baseURL = "http://10.49.23.47:5000";
+  Axios.defaults.baseURL = "http://10.49.23.47:0";
   //Axios携带cookie
   Axios.defaults.withCredentials = true;
   //post设定，自动序列化表单的json数据
@@ -13,6 +13,9 @@ export function initAxios() {
   //     data = qs.stringify(data);
   //     return data;
   // }]
+
+  const infoStore = useInfoStore();
+
   Axios.interceptors.request.use(
     (config) => {
       config.params = {
@@ -20,7 +23,7 @@ export function initAxios() {
         timestamp: Date.now(),
       };
       config.headers = config.headers ?? {};
-      config.headers.Authorization = useInfoStore().token || "";
+      config.headers.Authorization = infoStore.token || "";
       return config;
     },
     (error) => Promise.reject(error)

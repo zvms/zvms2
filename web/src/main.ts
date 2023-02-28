@@ -5,6 +5,7 @@ import piniaPluginPersist from "pinia-plugin-persist";
 import App from "./App.vue";
 import router from "./router";
 import vuetify from "./plugins/vuetify";
+import { initAxios } from "./apis/initAxios";
 
 import "./assets/main.css";
 import "./style.css";
@@ -16,3 +17,5 @@ app.use(router);
 app.use(vuetify);
 
 app.mount("#app");
+
+initAxios();
