@@ -31,7 +31,19 @@ export interface UserInfoResponse {
   auth: number;
   clsName: string;
 }
-export interface VolunteerTimeResponse {
+export interface ThoughtInfoResponse {
+  reason: string;
+  thought: string;
+  reward: number;
+  pics: string[];
+}
+export interface StudentThoughtsResponse {
+  accepted: ThoughtInfoResponse[];
+  unsubmitted: ThoughtInfoResponse[];
+  draft: ThoughtInfoResponse[];
+  unaudited: ThoughtInfoResponse[];
+}
+export interface StudentStatResponse {
   inside: number;
   outside: number;
   large: number;
@@ -63,6 +75,7 @@ export interface VolunteerInfoResponse {
   name: string;
   description: string;
   time: string;
+  status: number;
   type: number;
   reward: number;
   joiners: SingleUserWithoutAuth[];

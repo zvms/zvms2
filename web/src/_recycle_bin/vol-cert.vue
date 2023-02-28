@@ -12,8 +12,7 @@
       <div v-if="toggled == false && stu.status == 1" @click="flipcard()">
         <p class="cert">
           <span class="stress">{{ stuname }}</span
-          >同学已于<span class="stress"
-            >{{ formalDate(vol.date) }} {{ formalTime(vol.time) }}</span
+          >同学已于<span class="stress">{{ formalTime(vol.time) }}</span
           >完成名为<span class="stress">{{ vol.name }}</span
           >的义工活动，预计获得校内义工时长<span class="stress">{{
             timeToHint(vol.inside)
@@ -67,11 +66,11 @@
               :color="stColor(stu.status)"
               :text-color="stColorT(stu.status)"
             >
-              {{ statusToStr(stu.status) }}
+              {{ getVolStatusName(stu.status) }}
             </v-chip>
           </v-col>
         </v-row>
-        <fieldset v-if="haveThought()">
+        <fieldset v-if="haveThought">
           <legend>学生感想</legend>
           <pre v-for="i in stu.thought.split('\n')" v-bind:key="i">{{ i }}</pre>
         </fieldset>
@@ -79,6 +78,75 @@
     </v-container>
   </v-card>
 </template>
+
+<script lang="ts">
+import {
+  fApi,
+  getVolStatusName,
+  VolStatus,
+  type SingleVolunteer,
+} from "../apis";
+import { toasts } from "../utils/dialogs";
+import { timeToHint } from "@/utils/calc";
+
+export default {
+  name: "vol-cert",
+  props: ["volid", "stuid", "stuname"],
+  data() {
+    return {
+      timeToHint,
+      getVolStatusName,
+      volid: NaN,
+      stuid: NaN,
+      stuName: "",
+      toggled: false,
+      vol: undefined as SingleVolunteer,
+    };
+  },
+  methods: {
+    stColor(a: VolStatus) {
+      if (a == VolStatus.Audited) return "green";
+      if (a == VolStatus.Unaudited) return "red";
+      return "";
+    },
+    stColorT(a: VolStatus) {
+      if (a == VolStatus.Audited) return "white";
+      if (a == VolStatus.Unaudited) return "white";
+      return "black";
+    },
+    flipcard() {
+      this.toggled = !this.toggled;
+    },
+    update() {
+      this.toggled = false;
+      if (Number.isFinite(this.volid)) {
+        fApi.getSingleVolunteerInfo(this.volid, this.stuid);
+        this.vol = data.vol;
+        this.stu = data.stu;
+      }
+    },
+  },
+  computed: {
+    haveThought(): boolean {
+      return this.vol.thought.length > 0;
+    },
+  },
+  created() {
+    this.update();
+  },
+  watch: {
+    volid() {
+      this.update();
+    },
+    stuid() {
+      this.update();
+    },
+    stuname() {
+      this.update();
+    },
+  },
+};
+</script>
 
 <style>
 fieldset {
@@ -120,101 +188,3 @@ p.cert {
   font-family: "仿宋";
 }
 </style>
-
-<script lang="ts">
-import { fApi } from "../apis";
-import { toasts } from "../utils/dialogs";
-
-export default {
-  name: "vol-cert",
-  props: ["volid", "stuid", "stuname"],
-  data: () => ({
-    toggled: false,
-    vol: {
-      id: undefined,
-      name: "加载中...",
-      date: undefined,
-      time: undefined,
-      description: undefined,
-      inside: undefined,
-      outside: undefined,
-      large: undefined,
-    },
-    stu: {
-      id: undefined,
-      status: undefined,
-      thought: "",
-      inside: undefined,
-      outside: undefined,
-      large: undefined,
-    },
-  }),
-  created() {
-    this.init();
-  },
-  methods: {
-    statusToStr(a) {
-      if (a == 1) return "通过";
-      if (a == 2) return "打回，不可重新提交";
-      if (a == 3) return "打回，可以重新提交";
-      return "等待审核";
-    },
-    stColor(a) {
-      if (a == 1) return "green";
-      if (a == 2) return "red";
-      if (a == 3) return "orange";
-      return "";
-    },
-    stColorT(a) {
-      if (a == 1) return "white";
-      if (a == 2) return "white";
-      if (a == 3) return "white";
-      return "black";
-    },
-    formalDate(date) {
-      let y = date.slice(0, 4);
-      let m = date.slice(5, 7);
-      let d = date.slice(8, 10);
-      return parseInt(y) + "年" + parseInt(m) + "月" + parseInt(d) + "日";
-    },
-    formalTime(time) {
-      let hr = time.slice(0, 2);
-      let mn = time.slice(3, 5);
-      return parseInt(hr) + "时" + parseInt(mn) + "分";
-    },
-    flipcard() {
-      this.toggled = !this.toggled;
-    },
-    haveThought() {
-      return this.stu.thought.length > 0;
-    },
-    init: async function () {
-      this.toggled = false;
-      if (
-        this.volid != 0 &&
-        this.volid != undefined &&
-        this.stuid != 0 &&
-        this.stuid != undefined
-      ) {
-        let data = await fApi.volcert(this.volid, this.stuid);
-        if (data.type == "ERROR") toasts.error(data.message);
-        else if (data.type == "SUCCESS") {
-          this.vol = data.vol;
-          this.stu = data.stu;
-        } else toasts.error("未知错误");
-      }
-    },
-  },
-  watch: {
-    volid() {
-      this.init();
-    },
-    stuid() {
-      this.init();
-    },
-    stuname() {
-      this.init();
-    },
-  },
-};
-</script>

@@ -28,7 +28,7 @@
     <v-dialog v-model="dialog1" max-width="80%">
       <v-card>
         <v-card-title>详细信息</v-card-title>
-        <v-simple-table style="margin: 20px">
+        <v-table style="margin: 20px">
           <tbody>
             <tr>
               <td>义工编号</td>
@@ -47,20 +47,12 @@
               <td>{{ volDesc }}</td>
             </tr>
             <tr>
-              <td>校内时长</td>
-              <td>{{ timeToHint(volTI) }}</td>
+              <td>{{ getVolTypeName(currentThought!.type) }}时长</td>
+              <td>{{ timeToHint(reward) }}</td>
             </tr>
             <tr>
-              <td>校外时长</td>
-              <td>{{ timeToHint(volTO) }}</td>
-            </tr>
-            <tr>
-              <td>大型时长</td>
-              <td>{{ timeToHint(volTL) }}</td>
-            </tr>
-            <tr>
-              <td>学号</td>
-              <td>{{ stuid }}</td>
+              <td>参与者</td>
+              <td>{{ stuid }} {{ stuname }}</td>
             </tr>
             <tr>
               <td>感想</td>
@@ -80,37 +72,17 @@
               </td>
             </tr>
             <tr>
-              <td>发放的校内时长（分钟）</td>
+              <td>发放的{{ getVolTypeName(vol.type) }}时长（分钟）</td>
               <td>
                 <v-text-field
-                  v-model="inside"
-                  label="不填为默认值"
-                  prepend-icon="mdi-view-list"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>发放的校外时长（分钟）</td>
-              <td>
-                <v-text-field
-                  v-model="outside"
-                  label="不填为默认值"
-                  prepend-icon="mdi-view-list"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>发放的大型时长（分钟）</td>
-              <td>
-                <v-text-field
-                  v-model="large"
+                  v-model="reward"
                   label="不填为默认值"
                   prepend-icon="mdi-view-list"
                 />
               </td>
             </tr>
           </tbody>
-        </v-simple-table>
+        </v-table>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" @click="audit(1)">通过 </v-btn>
@@ -124,65 +96,73 @@
 </template>
 
 <script lang="ts">
-import { toasts, confirm } from "../../utils/dialogs.js";
-import { permissionTypes } from "../../utils/permissions";
+import { confirm } from "@/utils/dialogs";
 import {
   validate,
   validateNotNAN,
   validateNotLargerThan,
   validateNotNegative,
-} from "../../utils/validation";
-import { fApi, checkToken } from "../../apis";
+} from "@/utils/validation";
+import {
+  VolStatus,
+  fApi,
+  getVolTypeName,
+  type SingleVolunteer,
+  ThoughtStatus,
+  type SearchThoughts,
+  type Thought,
+} from "@/apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
 import { mapStores } from "pinia";
 
 export default {
-  data: () => ({
-    search: "",
-    headers: [
-      { text: "义工编号", value: "volId", align: "start", sortable: true },
-      { text: "学号", value: "stuId" },
-    ],
-    thoughts: undefined,
-    dialog1: false,
-    stuid: undefined,
-    volid: undefined,
-    thought: undefined,
-    volTime: undefined,
-    volDate: undefined,
-    volDesc: undefined,
-    volTI: undefined,
-    volTO: undefined,
-    volTL: undefined,
-    inside: undefined,
-    outside: undefined,
-    large: undefined,
+  data() {
+    return {
+      timeToHint,
+      getVolTypeName,
+      search: "",
+      headers: [
+        { text: "义工编号", value: "volId", align: "start", sortable: true },
+        { text: "学号", value: "stuId" },
+      ],
+      singleVols: [] as Thought[],
+      dialog1: false,
+      stuid: NaN,
+      volid: NaN,
+      thought: "",
+      currentThought: undefined as Thought | undefined,
+      reward: NaN,
 
-    pictures: [],
-  }),
+      pictures: [],
+    };
+  },
   mounted() {
-    this.pageload();
+    // const permisson = this.infoStore.permission;
+    // this.auditType =( permission & (permissionTypes.teacher|permissionTypes.admin|permissionTypes._super|permissionTypes.system))?
+    //   "final":(permission&permissionTypes.secretary)?"first"|"error";
+    fApi.searchThoughts(
+      this.infoStore.classId,
+      ThoughtStatus.WaitingForFirstAudit
+    )((result: Thought[]) => {
+      this.singleVols = result;
+    });
   },
   methods: {
-    async pageload() {
-      await checkToken();
-      this.thoughts = await fApi.fetchUnauditedVolunteers();
-    },
-    granted() {
-      return this.infoStore.permission < permissionTypes.teacher;
-    },
-    rowClick: async function (item) {
+    rowClick(item) {
       this.dialog1 = true;
       this.volid = item.volId;
       this.stuid = item.stuId;
       this.thought = item.thought;
       this.pictures = item.picture;
 
-      console.log(this.pictures);
+      fApi.getSingleThoughtInfo(
+        this.volid,
+        this.stuid
+      )((result) => {
+        this.currentThought = result;
+      });
 
-      let vol = await fApi.fetchOneVolunteer(this.volid);
-      toasts.success(vol.message); //TODO
       this.volDate = vol.date;
       this.volTime = vol.time;
       this.volDesc = vol.description;
@@ -212,28 +192,20 @@ export default {
           [validateNotNAN(), validateNotNegative(), validateNotLargerThan(4)]
         );
 
-        let data = await fApi.audit(
+        fApi.firstAudit(
           this.stuid,
-          status,
-          this.inside,
-          this.outside,
-          this.large
-        );
-        if (data.type == "SUCCESS") {
-          toasts.success(data.message);
+          status
+        )((result) => {
           this.volDate = data.date;
           this.volTime = data.time;
           this.volDesc = data.description;
           this.volTI = data.inside;
           this.volTO = data.outside;
           this.volTL = data.large;
-        } else {
-          toasts.error(data.message);
-        }
+        });
         this.inside = undefined;
         this.outside = undefined;
         this.large = undefined;
-        // location.reload();
         this.pageload();
       }
     },

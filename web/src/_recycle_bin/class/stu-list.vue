@@ -61,12 +61,16 @@
 
 <script lang="ts">
 import { permissionTypes } from "../../utils/permissions.js";
-import stuvolist from "@/components/stu-vol-list.vue";
-import { fApi, checkToken } from "../../apis";
+import stuvolist from "@/_recycle_bin/stu-vol-list.vue.js";
+import { fApi } from "../../apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
+import { VDataTable } from "vuetify/labs/VDataTable";
 
 export default {
+  components: {
+    VDataTable,
+  },
   data: () => ({
     classes: undefined,
     students: undefined,
@@ -114,8 +118,8 @@ export default {
           this.viewClassName = "点击选择班级";
         }
       } else {
-        this.viewClassId = this.infoStore.class;
-        this.viewClassName = this.infoStore.classname;
+        this.viewClassId = this.infoStore.classId;
+        this.viewClassName = this.infoStore.className;
       }
 
       if (this.viewClassId !== "0") await this.fetchstulist();

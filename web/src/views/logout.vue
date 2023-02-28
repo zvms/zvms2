@@ -7,13 +7,14 @@
 <script lang="ts">
 import { fApi } from "@/apis";
 import router from "@/router";
-import { useInfoStore, useLastseenvolStore } from "@/stores";
+import { useInfoStore, useLastseenvolStore, useHeartbeatStore } from "@/stores";
 import { applyNavItems } from "@/utils/nav";
 
 export default {
   name: "logout",
   async mounted() {
-    fApi.okToast("登陆成功").logout()(() => {
+    fApi.logout()(() => {
+      clearInterval(useHeartbeatStore().intervalId);
       useInfoStore().$reset();
       useLastseenvolStore().$reset();
       applyNavItems();

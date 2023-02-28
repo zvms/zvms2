@@ -5,19 +5,18 @@ import * as structs from "./types/structs";
 import * as enums from "./types/enums";
 
 interface ForegroundApiConfig {
-  beforeRequest(info: ReqInfo): void;
-  afterRequest(info: ReqInfo): void;
-  errorRequest(e: Error, info: ReqInfo): void;
+  beforeReq(info: ReqInfo): void;
+  errorReq(e: Error, info: ReqInfo): void;
 
-  notSuccessed(res: AxiosResponse<any> | undefined, info: ReqInfo): void;
-  successed(res: AxiosResponse<any>, info: ReqInfo): void;
+  successedRes(res: AxiosResponse<any>, info: ReqInfo): void;
+  failedRes(res: AxiosResponse<any> | undefined, info: ReqInfo): void;
 
-  beforeProcess(info: ReqInfo): void;
   afterProcess(info: ReqInfo): void;
   errorProcess(e: Error, info: ReqInfo): void;
 
   cleanup(info: ReqInfo): void;
 
+  defaultFailedToast: boolean;
   defaultOkToast: boolean;
 }
 
@@ -61,36 +60,37 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
 
   const func = methods[method];
   if (!func) {
-    config.errorRequest(new Error(`Method ${method} is not supported`), info);
+    config.errorReq(new Error(`Method ${method} is not supported`), info);
   }
 
   return async (processor: ForegroundApiProcessor<R>) => {
-    config.beforeRequest(info);
+    config.beforeReq(info);
     try {
-      let toProcess = false;
       let res;
       try {
-        res = await func(url, ...args);
+        res = await func(url, ...args); //axios
       } catch (e) {
-        config.errorRequest(e as Error, info);
+        if (config.defaultFailedToast) {
+          toasts.error((e as Error).message);
+        }
+        config.errorReq(e as Error, info);
+        throw e;
       }
 
       if (res?.data?.type !== "SUCCESS") {
-        config.notSuccessed(res, info);
+        config.failedRes(res, info);
+        if (config.defaultFailedToast) {
+          toasts.error(res?.data?.message);
+        }
       } else {
-        config.successed(res, info);
-        toProcess = true;
-      }
-      config.afterRequest(info);
-
-      if (toProcess) {
         const { message, result } = res?.data;
-        config.beforeProcess(info);
+        config.successedRes(res, info);
         try {
           await processor(result);
           if (config.defaultOkToast) {
             toasts.success(message);
           }
+          config.afterProcess(info);
         } catch (e) {
           config.errorProcess(e as Error, info);
         }
@@ -120,8 +120,8 @@ export class ForegroundApi {
     const oldConfig: ForegroundApiConfig = this.config;
     return new ForegroundApi({
       ...oldConfig,
-      beforeRequest(info) {
-        oldConfig.beforeRequest(info);
+      beforeReq(info) {
+        oldConfig.beforeReq(info);
         useLoadingStore().incLoading();
       },
       cleanup(info) {
@@ -137,18 +137,17 @@ export class ForegroundApi {
 }
 
 export const fApi = new ForegroundApi({
-  beforeRequest(info: ReqInfo) {},
-  afterRequest(info: ReqInfo) {},
-  errorRequest(e: Error, info: ReqInfo) {},
+  beforeReq(info: ReqInfo) {},
+  errorReq(e: Error, info: ReqInfo) {},
 
-  notSuccessed(res: AxiosResponse<any>, info: ReqInfo) {},
-  successed(res: AxiosResponse<any>, info: ReqInfo) {},
+  successedRes(res: AxiosResponse<any>, info: ReqInfo) {},
+  failedRes(res: AxiosResponse<any> | undefined, info: ReqInfo) {},
 
-  beforeProcess(info: ReqInfo) {},
   afterProcess(info: ReqInfo) {},
   errorProcess(e: Error, info: ReqInfo) {},
 
   cleanup(info: ReqInfo) {},
 
+  defaultFailedToast: true,
   defaultOkToast: true,
 });

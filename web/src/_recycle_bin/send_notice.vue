@@ -2,8 +2,8 @@
   <v-card>
     <v-card-title>创建通知</v-card-title>
     <v-card-text>
-      <v-form ref="form">
-        <v-simple-table>
+      <v-form v-bind="isFormValid">
+        <v-table>
           <thead>
             <td>班级</td>
             <td></td>
@@ -28,9 +28,9 @@
               <td>
                 <v-select
                   prepend-icon="mdi-switch"
-                  v-model="target_new"
+                  v-model="newTargetUser"
                   label="发送目标"
-                  :items="users"
+                  :items="targetUsers"
                   item-text="name"
                   item-value="id"
                 >
@@ -50,7 +50,7 @@
               </td>
             </tr>
           </tbody>
-        </v-simple-table>
+        </v-table>
         <v-text-field
           v-model="form.title"
           label="标题"
@@ -99,7 +99,7 @@
 import { toasts } from "@/utils/dialogs";
 import { fApi } from "@/apis";
 import { NOTEMPTY } from "@/utils/validation";
-import {  } from "@/stores";
+import {} from "@/stores";
 import { mapStores } from "pinia";
 
 export default {
@@ -110,25 +110,14 @@ export default {
         message: "",
         date: "",
       },
-      users:[],
-      target_new: undefined,
-      userSelected: [],
-      mp: {},
+      targetUsers: [] as string[],
+      newTargetUser: "",
+      userSelected: [] as { id: string }[],
+      mp: {} as Record<string, string>,
       modalDate: false,
       rules: [NOTEMPTY()],
-    } as {
-      form:{
-        title:string,
-        message:string,
-        date:string,
-      },
-      users:string[],
-      target_new: string,
-      userSelected: string[],
-      mp: Record<string,string>,
-      modalDate: boolean,
-      rules: any[],
-    },
+      isFormValid: false,
+    };
   },
   computed: {
     ...mapStores(),
@@ -138,25 +127,27 @@ export default {
   },
   methods: {
     async pageload() {
-      let users = await fApi.fetchClassList();
-      for (const cls of this.users) this.mp[cls.id] = cls.name;
+      fApi.listClasses()((users) => {
+        this.targetUsers = users;
+        for (const cls of this.targetUsers) this.mp[cls.id] = cls.name;
+      });
     },
     addToList() {
       let flg = false;
-      if (this.target_new == "") flg = true;
+      if (this.newTargetUser == "") flg = true;
       for (const user of this.userSelected) {
-        if (user["id"] == this.target_new) {
+        if (user["id"] == this.newTargetUser) {
           flg = true;
           break;
         }
       }
-      if (!flg) this.userSelected.push(this.target_new);
-      this.target_new = "";
+      if (!flg) this.userSelected.push(this.newTargetUser);
+      this.newTargetUser = "";
     },
     delFromList(i) {
       this.userSelected.splice(i, 1);
     },
-    send: async function () {
+    send() {
       if (!this.userSelected || this.userSelected.length == 0) {
         toasts.error("请选择发送目标");
         return;
@@ -168,20 +159,16 @@ export default {
           d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + (d.getDate() + 2);
       }
 
-      let data = await fApi.sendNotice(
+      fApi.sendNotice(
         this.userSelected,
         this.form.title,
         this.form.date,
         this.form.message
-      );
-      if (data.type == "SUCCESS") {
-        toasts.success(data.message);
+      )((result) => {
         for (let k in this.form) this.form[k] = undefined;
         this.userSelected = [];
-      } else {
-        toasts.error(data.message);
-      }
+      });
     },
-  }
+  },
 };
 </script>
