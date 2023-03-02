@@ -47,7 +47,7 @@ class Object(Checker):
         if not isinstance(json, dict):
             return False
         for k, v in self.fields():
-            if k not in json or not(v(json[k])):
+            if k not in json or not(v.check(json[k])):
                 return False
         return True
 
@@ -196,7 +196,7 @@ class Optional(Object):
         if not isinstance(json, dict):
             return False
         for k, v in json.items():
-            if k in fields.keys() and not v(fields[k]):
+            if k in fields.keys() and not v.check(fields[k]):
                 return False
         return True
 

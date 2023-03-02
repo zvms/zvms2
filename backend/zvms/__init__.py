@@ -27,3 +27,5 @@ def create_app():
     tk.init_app(app)
     Api.init_app(app)
     db.init_app(app)
+
+    return app

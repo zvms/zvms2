@@ -6,4 +6,3 @@ cryptography
 pyjwt
 tornado
 mistune
-yaml

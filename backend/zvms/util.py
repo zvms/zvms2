@@ -47,6 +47,7 @@ def foo(func):
         if isinstance(self, Iterable):
             return map(self, rpartial(func, *args, **kwargs))
         return func(self, *args, **kwargs)
+    return wrapper
 
 def bar(func):
     @wraps(func)
@@ -54,6 +55,7 @@ def bar(func):
         if isinstance(self, Iterable):
             foreach(self, rpartial(func, *args, **kwargs))
         return func(self, *args, **kwargs)
+    return wrapper
 
 def foreach(iterable, func):
     ret = None
@@ -97,15 +99,24 @@ class Wrapper:
         self.raw = raw
 
     def __getattr__(self, name):
-        return (lambda t: type(self)(t) if isinstance(t, type(self).T) else self.__deco(t))(getattr(self.raw, name))
+        ret = getattr(self.raw, name)
+        if isinstance(ret, type(self).T):
+            return type(self)(ret)
+        return self.__deco(ret)
 
     def __iter__(self):
         return iter(self.raw)
 
     def __deco(self, func):
-        return wraps(lambda *args, **kwargs: (lambda t: type(self)(t) if isinstance(t, type(self).T) else t)(func(*args, **kwargs)))
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            ret = func(*args, **kwargs)
+            if isinstance(ret, type(self).T):
+                return type(self)(ret)
+            return ret
+        return wrapper
 
-class ZvmsWrapper:
+class ZvmsWrapper(Wrapper):
     select = select
     update = update
     select_value = select_value
@@ -113,6 +124,7 @@ class ZvmsWrapper:
 class _QueryProperty:
     def __get__(self, obj, cls):
         return Query(db.session().query(cls))
+
 class Query(ZvmsWrapper):
     T = _Query
 
@@ -165,32 +177,15 @@ class ModelMixIn:
 
     query = _QueryProperty()
 
-class filter:
+class filter(filter):
     select = select
     update = update
     select_value = select_value
 
-    def __init__(self, iterable, match):
-        self.iterable = iterable
-        self.match = match
-
-    def __iter__(self):
-        for item in self.iterable:
-            if self.match(item):
-                yield item
-
-class map:
+class map(map):
     select = select
     update = update
     select_value = select_value
-
-    def __init__(self, iterable, mapper):
-        self.iterable = iterable
-        self.mapper = mapper
-
-    def __iter__(self):
-        for item in self.iterable:
-            yield self.mapper(item)
 
 class chain:
     select = select
@@ -268,4 +263,4 @@ def parse(json):
 
 
 def interface_error(expected, found):
-    return json.dumps({'type': 'ERROR', 'message': '请求接口错误', 'expected': str(expected), 'found': parse(found)})
+    return json.dumps({'type': 'ERROR', 'message': '请求接口错误', 'expected': expected.as_json(), 'found': parse(found)})

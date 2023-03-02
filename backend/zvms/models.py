@@ -28,8 +28,6 @@ class User(ModelMixIn, db.Model):
     cls_id = Column(Integer, name='class')
     pwd = Column(String(32))
     auth = Column(Integer)
-    exp = Column(Integer)
-    last_sign_date = Column(Date)
 
     def on_delete(self):
         UserNotice.query.filter_by(user_id=self.user_id).delete()

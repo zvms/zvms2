@@ -82,13 +82,13 @@ def deco(impl, params, response, auth):
                     f.write(f'({token_data["id"]}) ')
                 print(f'[{datetime.datetime.now()}] {request.method} {request.url}')
                 f.write(f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
-            if not params(json_data):
+            if not params.check(json_data):
                 print(json.loads(interface_error(params, json_data)))
                 print(json_data)
                 return interface_error(params, json_data)
             ret = impl(*args, **kwargs, **json_data, token_data=token_data)
-            if not response(ret.get('result')):
-                return {'type': 'ERROR', 'message': '响应返回错误', 'expected': str(response), 'found': parse(ret)}
+            if ret['type'] == 'SUCCESS' and not response.check(ret.get('result')):
+                return {'type': 'ERROR', 'message': '响应返回错误', 'expected': response.as_json(), 'found': parse(ret)}
             return json.dumps(ret)
         except ZvmsError as ex:
             return json.dumps(error(ex.message))
