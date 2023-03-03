@@ -87,8 +87,9 @@ def deco(impl, params, response, auth):
                 print(json_data)
                 return interface_error(params, json_data)
             ret = impl(*args, **kwargs, **json_data, token_data=token_data)
-            if ret['type'] == 'SUCCESS' and not response.check(ret.get('result')):
-                return {'type': 'ERROR', 'message': '响应返回错误', 'expected': response.as_json(), 'found': parse(ret)}
+            result = ret.get('result')
+            if ret['type'] == 'SUCCESS' and not response.check(result):
+                return {'type': 'ERROR', 'message': '响应返回错误', 'expected': response.as_json(), 'found': result}
             return json.dumps(ret)
         except ZvmsError as ex:
             return json.dumps(error(ex.message))

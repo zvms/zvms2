@@ -45,7 +45,7 @@ def foo(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
         if isinstance(self, Iterable):
-            return map(self, rpartial(func, *args, **kwargs))
+            return map(rpartial(func, *args, **kwargs), self)
         return func(self, *args, **kwargs)
     return wrapper
 
@@ -53,11 +53,11 @@ def bar(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
         if isinstance(self, Iterable):
-            foreach(self, rpartial(func, *args, **kwargs))
+            foreach(rpartial(func, *args, **kwargs), self)
         return func(self, *args, **kwargs)
     return wrapper
 
-def foreach(iterable, func):
+def foreach(func, iterable):
     ret = None
     for item in iterable:
         ret = func(item)
@@ -65,11 +65,10 @@ def foreach(iterable, func):
 
 @foo
 def select(self, *cols, **aliases):
-    return dict(chain(zip(cols, map(partial(getattr, self), cols)), 
-        ((((k, v(getattr(self, k)) if isinstance(v, Callable) else
-        (v, getattr(self, k)) if isinstance(v, str) else
-        (v[1], v[0](getattr(self, k))) if isinstance(v, tuple) else
-        (k, v)) for k, v in aliases.items())))))
+    return dict(chain(zip(cols, map(partial(getattr, self), cols)),
+        ((k, getattr(self, v)) if isinstance(v, str) else
+        (k, v[1](getattr(self, v[0]))) if isinstance(v, tuple) else
+        (k, v(getattr(self, k))) for k, v in aliases.items())))
 
 @bar
 def update(self, /, on=True, **updates):
@@ -192,7 +191,7 @@ class chain:
     update = update
     select_value = select_value
 
-    def __init__(self, iterables):
+    def __init__(self, *iterables):
         self.iterables = iterables
 
     def __iter__(self):
@@ -257,9 +256,9 @@ def parse(json):
     if isinstance(json, str):
         return f'string({len(json)})'
     if isinstance(json, (list, tuple)):
-        return '[' + ', '.join(map(parse, json)) + ']'
+        return list(map(parse, json))
     if isinstance(json, dict):
-        return '{' + ', '.join(map(lambda p: f'"{p[0]}": {parse(p[1])}', json.items())) + '}'
+        return {k: parse(v) for k, v in json.items()}
 
 
 def interface_error(expected, found):

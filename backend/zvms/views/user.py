@@ -16,7 +16,7 @@ def login(id, pwd, token_data):
     user = User.query.get(id)
     if not user or user.pwd != pwd:
         return error('用户名或密码错误')
-    return success('登录成功', token=tk.generate(**user.select('id', 'auth', cls_id='cls')))
+    return success('登录成功', token=tk.generate(**user.select('id', 'auth', cls='cls_id')))
 
 
 @Api(rule='/user/logout', method='POST')
@@ -48,7 +48,8 @@ def search_users(token_data, name=None, cls=None, auth=None):
 def get_user_info(id, token_data):
     '''获取一个用户的详细详细信息'''
     user = User.query.get_or_error(id)
-    return success('获取成功', **user.select('name', 'auth', cls_id='cls'), clsName=user.cls.name)
+    # print(user.select('name', 'auth', cls='cls_id'))
+    return success('获取成功', **user.select('name', 'auth', cls='cls_id'), clsName=user.cls.name)
 
 @Api(rule='/user/<int:id>/time', response='StudentStatResponse')
 def get_student_stat(id, token_data):

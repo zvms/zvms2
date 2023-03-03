@@ -27,7 +27,8 @@ class Requester:
             return res.get('result')
         for k, v in res.items():
             if k not in ('type', 'message'):
-                print(k, v)
+                print(k)
+                print(json.dumps(v, indent=4, ensure_ascii=False))
         return None
 
 headers = {}

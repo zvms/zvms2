@@ -36,7 +36,7 @@ def search_volunteers(token_data, **kwargs):
 def get_volunteer_info(id, token_data):
     '''获取一个义工的详细信息'''
     ret = Volunteer.query.get_or_error(id).select('name',
-        'time', 'type', 'reward', 'joiners', markdown='description', holder_id='holder', holder_name='holderName')
+        'time', 'type', 'reward', 'joiners', 'signable', description=render_markdown, holder=rpartial(getattr, 'id'), holderName=('holder', rpartial(getattr, 'name')))
     ret['time'] = str(ret['time'])
     return success('获取成功', **ret)
 
@@ -44,7 +44,6 @@ def get_volunteer_info(id, token_data):
 @Api(rule='/volunteer/create', method='POST', params='Volunteer', response='VolunteerInfoResponse')
 def create_volunteer(token_data, classes, **kwargs):
     '''创建一个义工'''
-    try_parse_time(kwargs['time'])
     if token_data['auth'] == Categ.STUDENT and kwargs['type'] == VolType.OUTSIDE:
         return error('权限不足: 只能创建校外义工')
     id = Volunteer(

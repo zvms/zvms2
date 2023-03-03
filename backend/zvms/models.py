@@ -103,6 +103,10 @@ class Volunteer(ModelMixIn, db.Model):
     def holder(self):
         return User.query.get(self.holder_id)
 
+    @property
+    def signable(self):
+        return True
+
 
 class StuVol(ModelMixIn, db.Model):
     __tablename__ = 'stu_vol'

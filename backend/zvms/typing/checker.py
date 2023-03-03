@@ -192,7 +192,7 @@ class ParsableEnum(Enum):
 
 class Optional(Object):
     def check(self, json):
-        fields = dict(fields)
+        fields = dict(self.fields())
         if not isinstance(json, dict):
             return False
         for k, v in json.items():

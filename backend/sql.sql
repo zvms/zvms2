@@ -76,15 +76,9 @@ CREATE TABLE user_tie(
     tie_id INT,
     attitude INT
 );
--- 各个用户的权限, 用+组合
--- 按照计划, zvms不会有管理员接口, 所以用户都必须通过数据库操作直接添加
--- 当然你也可以用flask, 这样做: flask --app zvms shell
--- 然后from zvms.models import *
--- from zvms.util import *
--- from zvms.res import *
--- User(...).insert()
--- ...
--- db.session.commit()
+CREATE TABLE log(
+    id INT PRIMARY KEY
+);
 SET @none = 1;
 SET @student = 2;
 SET @teacher = 4;
