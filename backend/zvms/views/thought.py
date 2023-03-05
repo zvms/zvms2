@@ -35,8 +35,14 @@ def search_thoughts(**kwargs):
         return error('请求接口错误: 非法的URL参数')
 
     def process_query(query):
-        return success('获取成功', list_or_error(select(query, 'status', stu_id='stuId', vol_id='volId', stu_name='stuName', vol_name='volName')))
-    return process_query(filter(filter_, StuVol.query.filter(*conds)))
+        return success('获取成功', list_or_error(query.select(
+            'status',
+            stuId='stu_id',
+            volId='vol_id',
+            stuName='stu_name',
+            volName='vol_name'
+        )))
+    return process_query(filter(lambda sv: filter_(sv) and sv.vol.status == VolStatus.AUDITED, StuVol.query.filter(*conds)))
 
 
 @Api(rule='/thought/<int:volId>/<int:stuId>', response='ThoughtInfoResponse')
@@ -45,7 +51,12 @@ def get_thought_info(volId, stuId, token_data):
     thought = StuVol.query.get_or_error((volId, stuId))
     if thought.status == ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
         return error('未查询到相关数据')
-    return success('获取成功', thought.select('reason', 'reward', 'pics', 'thought'))
+    return success('获取成功', {k: v for k, v in thought.select(
+        'reason',
+        'reward',
+        'pics',
+        thought=render_markdown
+    ).items() if v is not None})
 
 
 def md5ify(raw):
@@ -58,6 +69,7 @@ def _submit_thought(volId, stuId, thought, pictures, status):
     _thought = StuVol.query.get((volId, stuId))
     if not _thought:
         StuVol(
+            reason='',
             vol_id=volId,
             stu_id=stuId,
             status=status,
@@ -126,13 +138,14 @@ def first_audit(token_data, volId, stuId):
     return success('审核成功')
 
 
-@Api(rule='/thought/<int:volId>/<int:stuId>/audit/final', method='POST', auth=Categ.AUDITOR)
-def final_audit(token_data, volId, stuId):
+@Api(rule='/thought/<int:volId>/<int:stuId>/audit/final', method='POST', auth=Categ.AUDITOR, params='ACCEPT')
+def final_audit(token_data, reward, volId, stuId):
     '''终审感想(义管会)'''
     thought = StuVol.query.get((volId, stuId))
     if thought.status != ThoughtStatus.WAITING_FOR_FINAL_AUDIT:
         return error('该感想不可终审')
     thought.update(
+        reward=reward,
         status=ThoughtStatus.ACCEPTED
     )
     return success('审核成功')

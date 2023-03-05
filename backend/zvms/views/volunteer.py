@@ -1,8 +1,14 @@
+import datetime
+
 from zvms.models import *
 from zvms.res import *
 from zvms.util import *
 from zvms.apilib import Api
 
+
+def get_signable(id, time, token_data):
+    cv = ClassVol.query.get_or_error((id, token_data['cls']))
+    return time <= datetime.datetime.now() and cv is not None and cv.now < cv.max
 
 @Api(rule='/volunteer/search', params='SearchVolunteers', response='SearchVolunteersResponse')
 def search_volunteers(token_data, **kwargs):
@@ -25,8 +31,9 @@ def search_volunteers(token_data, **kwargs):
         return error('请求接口错误: 非法的URL参数')
 
     def process_query(query):
-        ret = list_or_error(query.select('id', 'name', 'time', 'status'))
+        ret = list_or_error(query.select('id', 'name', 'status', 'time'))
         for i in ret:
+            i['signable'] = get_signable(i['id'], i['time'], token_data)
             i['time'] = str(i['time'])
         return success('获取成功', ret)
     return process_query(Volunteer.query.filter(*conds))
@@ -35,22 +42,36 @@ def search_volunteers(token_data, **kwargs):
 @Api(rule='/volunteer/<int:id>', response='VolunteerInfoResponse')
 def get_volunteer_info(id, token_data):
     '''获取一个义工的详细信息'''
-    ret = Volunteer.query.get_or_error(id).select('name',
-        'time', 'type', 'reward', 'joiners', 'signable', description=render_markdown, holder=rpartial(getattr, 'id'), holderName=('holder', rpartial(getattr, 'name')))
+    ret = Volunteer.query.get_or_error(id).select(
+        'name',
+        'type',
+        'reward',
+        'joiners',
+        'time',
+        'status',
+        description=render_markdown,
+        holder=rpartial(getattr, 'id'),
+        holderName=('holder', rpartial(getattr, 'name'))
+    )
+    ret['signable'] = get_signable(id, ret['time'], token_data)
     ret['time'] = str(ret['time'])
     return success('获取成功', **ret)
 
 
-@Api(rule='/volunteer/create', method='POST', params='Volunteer', response='VolunteerInfoResponse')
-def create_volunteer(token_data, classes, **kwargs):
-    '''创建一个义工'''
+def _create_volunteer(token_data, kwargs):
     if token_data['auth'] == Categ.STUDENT and kwargs['type'] == VolType.OUTSIDE:
-        return error('权限不足: 只能创建校外义工')
-    id = Volunteer(
+        raise ZvmsError('权限不足: 只能创建校外义工')
+    return Volunteer(
         **kwargs,
         holder_id=token_data['id'],
         status=VolStatus.UNAUDITED if token_data['auth'] == Categ.STUDENT else VolStatus.AUDITED
     ).insert().id
+
+
+@Api(rule='/volunteer/create', method='POST', params='Volunteer')
+def create_volunteer(token_data, classes, **kwargs):
+    '''创建一个义工'''
+    id = _create_volunteer(token_data, kwargs)
     if (Categ.CLASS | Categ.TEACHER).authorized(token_data['auth']):
         for cls in classes:
             cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
@@ -72,6 +93,23 @@ def create_volunteer(token_data, classes, **kwargs):
                 vol_id=id,
                 max=cls['max']
             ).insert()
+    return success('创建成功')
+
+
+@Api(rule='/volunteer/create/appointed', method='POST', params='AppointedVolunteer')
+def create_appointed_volunteer(token_data, joiners, **kwargs):
+    '''创建一个成员全部指定的义工'''
+    id = _create_volunteer(token_data, kwargs)
+    for joiner in joiners:
+        user = User.query.get(joiner)
+        if user is None:
+            return error(f'学生{joiner}不存在')
+        if user.auth & Categ.TEACHER:
+            return error(f'不可报名教师{joiner}')
+        StuVol(
+            stu_id=joiner['id'],
+            vol_id=id
+        ).insert()
     return success('创建成功')
 
 

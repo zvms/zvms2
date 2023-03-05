@@ -89,7 +89,7 @@ def deco(impl, params, response, auth):
             ret = impl(*args, **kwargs, **json_data, token_data=token_data)
             result = ret.get('result')
             if ret['type'] == 'SUCCESS' and not response.check(result):
-                return {'type': 'ERROR', 'message': '响应返回错误', 'expected': response.as_json(), 'found': result}
+                return {'type': 'ERROR', 'message': '响应返回错误', 'expected': response.as_json(), 'found': parse(result)}
             return json.dumps(ret)
         except ZvmsError as ex:
             return json.dumps(error(ex.message))
