@@ -68,6 +68,11 @@ import { useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 
+interface Action {
+  text: string;
+  onclick: () => any;
+}
+
 export default {
   components: {
     volinfo,
@@ -102,10 +107,7 @@ export default {
 
       current: undefined as any as {
         vol: VolunteerInfoResponse;
-        actions: {
-          text: string;
-          onclick: () => any;
-        }[];
+        actions: Action[];
         thought: ThoughtInfoResponse | null;
         picFiles: File[];
       },
@@ -120,6 +122,21 @@ export default {
       fApi.searchVolunteers()((result) => {
         this.vols = result;
       });
+    },
+    getActions(): Action[] {
+      let result:Action[] = [];
+      if()result.push({
+              text: "提交感想",
+              onclick: () => {
+                this.thoughtDlg = true;
+              },
+            });
+            result.push({
+              text: "报名",
+              onclick: () => {
+                this.thoughtDlg = true;
+              },
+            });
     },
     onRowClick(ev: Event, v: any) {
       const item: SingleVolunteer = v.item.raw;
@@ -160,12 +177,12 @@ export default {
       }[] = [];
       for (const f of this.current.picFiles) {
         const readResult = await f.stream().getReader().read();
-        if(!readResult.done){
-          toasts.error(`文件${f.name}上传失败！`)
+        if (!readResult.done) {
+          toasts.error(`文件${f.name}上传失败！`);
           continue;
         }
         pics.push({
-          data: readResult.value??Uint8Array.from([]),
+          data: readResult.value ?? Uint8Array.from([]),
           name: f.name,
         });
       }
