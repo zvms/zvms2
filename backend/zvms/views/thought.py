@@ -138,7 +138,7 @@ def first_audit(token_data, volId, stuId):
     return success('审核成功')
 
 
-@Api(rule='/thought/<int:volId>/<int:stuId>/audit/final', method='POST', auth=Categ.AUDITOR, params='ACCEPT')
+@Api(rule='/thought/<int:volId>/<int:stuId>/audit/final', method='POST', auth=Categ.AUDITOR, params='Accept')
 def final_audit(token_data, reward, volId, stuId):
     '''终审感想(义管会)'''
     thought = StuVol.query.get((volId, stuId))
