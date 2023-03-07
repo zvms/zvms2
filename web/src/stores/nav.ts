@@ -2,7 +2,7 @@ import { getNavItems } from "@/utils/nav";
 import { permissionTypes } from "@/utils/permissions";
 import { defineStore } from "pinia";
 
-export const useDrawerStore = defineStore("drawer", {
+export const useNavStore = defineStore("nav", {
   state: () => {
     return {
       items: getNavItems(permissionTypes.none),

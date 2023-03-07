@@ -2,8 +2,8 @@
   <v-card>
     <v-card-title>创建通知</v-card-title>
     <v-card-text>
-      <v-form ref="form">
-        <v-simple-table>
+      <v-form v-bind="isFormValid">
+        <v-table>
           <thead>
             <td>班级</td>
             <td></td>
@@ -50,7 +50,7 @@
               </td>
             </tr>
           </tbody>
-        </v-simple-table>
+        </v-table>
         <v-text-field
           v-model="form.title"
           label="标题"
@@ -116,6 +116,7 @@ export default {
       mp: {} as Record<string, string>,
       modalDate: false,
       rules: [NOTEMPTY()],
+      isFormValid: false,
     };
   },
   computed: {
@@ -146,7 +147,7 @@ export default {
     delFromList(i) {
       this.userSelected.splice(i, 1);
     },
-    send () {
+    send() {
       if (!this.userSelected || this.userSelected.length == 0) {
         toasts.error("请选择发送目标");
         return;
@@ -163,10 +164,10 @@ export default {
         this.form.title,
         this.form.date,
         this.form.message
-      )((result)=>{
+      )((result) => {
         for (let k in this.form) this.form[k] = undefined;
         this.userSelected = [];
-      })
+      });
     },
   },
 };

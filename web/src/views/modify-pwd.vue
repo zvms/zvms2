@@ -3,25 +3,32 @@
     <v-card>
       <v-card-title>修改密码</v-card-title>
       <v-card-text>
-        <v-text-field
-          v-model="oldPwd"
-          label="旧密码"
-          type="password"
-          prepend-icon="mdi-view-list"
-        />
-        <v-text-field
-          v-model="newPwd"
-          label="新密码"
-          type="password"
-          prepend-icon="mdi-view-list"
-        />
-        <v-text-field
-          v-model="confirmPwd"
-          label="确认密码"
-          type="password"
-          prepend-icon="mdi-view-list"
-        />
-        <v-btn text color="primary" @click="modifyPwd()"> 确定 </v-btn>
+        <v-form v-bind="isFormValid">
+          <v-text-field
+            v-model="oldPwd"
+            label="旧密码"
+            type="password"
+            prepend-icon="mdi-view-list"
+            :rules="rules"
+          />
+          <v-text-field
+            v-model="newPwd"
+            label="新密码"
+            type="password"
+            prepend-icon="mdi-view-list"
+            :rules="rules"
+          />
+          <v-text-field
+            v-model="confirmPwd"
+            label="确认密码"
+            type="password"
+            prepend-icon="mdi-view-list"
+            :rules="rules"
+          />
+          <v-btn class="me-4" type="submit" color="primary" @click="modifyPwd">
+            确定
+          </v-btn>
+        </v-form>
       </v-card-text>
     </v-card>
   </v-container>
@@ -31,6 +38,7 @@
 import { toasts } from "@/utils/dialogs";
 import { fApi } from "@/apis";
 import { md5 } from "@/utils/md5";
+import { NOTEMPTY } from "@/utils/validation";
 
 export default {
   data() {
@@ -39,16 +47,20 @@ export default {
       oldPwd: "",
       newPwd: "",
       confirmPwd: "",
+      rules: [NOTEMPTY()],
+      isFormValid: false,
     };
   },
   methods: {
     async modifyPwd() {
-      if (this.newPwd != this.confirmPwd) {
-        toasts.error("两次密码不一致");
-        this.confirmPwd = "";
-        return;
+      if (this.isFormValid) {
+        if (this.newPwd != this.confirmPwd) {
+          toasts.error("两次密码不一致");
+          this.confirmPwd = "";
+          return;
+        }
+        fApi.modifyPassword(md5(this.oldPwd), md5(this.newPwd))(() => {});
       }
-      fApi.modifyPassword(md5(this.oldPwd), md5(this.newPwd))(() => {});
     },
   },
 };

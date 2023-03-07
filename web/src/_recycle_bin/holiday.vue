@@ -76,7 +76,7 @@
             </v-time-picker>
           </v-dialog>
 
-          <v-simple-table>
+          <v-table>
             <thead>
               <td>学号</td>
               <td>删除</td>
@@ -123,7 +123,7 @@
                 </td>
               </tr>
             </tbody>
-          </v-simple-table>
+          </v-table>
 
           <v-text-field
             v-model="form.description"
@@ -164,7 +164,7 @@
 
 <script lang="ts">
 import { toasts } from "@/utils/dialogs.js";
-import { fApi} from "@/apis";
+import { fApi } from "@/apis";
 import { NOTEMPTY } from "@/utils/validation.js";
 import { useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
@@ -187,6 +187,7 @@ export default {
       large: undefined,
     },
     rules: [NOTEMPTY()],
+    isFormValid: false,
   }),
   mounted() {
     this.pageload();

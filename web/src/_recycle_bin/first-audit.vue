@@ -28,7 +28,7 @@
     <v-dialog v-model="dialog1" max-width="80%">
       <v-card>
         <v-card-title>详细信息</v-card-title>
-        <v-simple-table style="margin: 20px">
+        <v-table style="margin: 20px">
           <tbody>
             <tr>
               <td>义工编号</td>
@@ -82,7 +82,7 @@
               </td>
             </tr>
           </tbody>
-        </v-simple-table>
+        </v-table>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" @click="audit(1)">通过 </v-btn>
@@ -103,7 +103,15 @@ import {
   validateNotLargerThan,
   validateNotNegative,
 } from "@/utils/validation";
-import { VolStatus, fApi, getVolTypeName, type SingleVolunteer, ThoughtStatus, type SearchThoughts, type Thought } from "@/apis";
+import {
+  VolStatus,
+  fApi,
+  getVolTypeName,
+  type SingleVolunteer,
+  ThoughtStatus,
+  type SearchThoughts,
+  type Thought,
+} from "@/apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
 import { mapStores } from "pinia";
@@ -136,7 +144,7 @@ export default {
     fApi.searchThoughts(
       this.infoStore.classId,
       ThoughtStatus.WaitingForFirstAudit
-    )((result:Thought[]) => {
+    )((result: Thought[]) => {
       this.singleVols = result;
     });
   },

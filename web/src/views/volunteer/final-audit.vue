@@ -16,7 +16,6 @@
           fixed-header
           :headers="headers"
           :items="thoughts"
-          :search="search"
           @click:row="rowClick"
           loading-text="加载中..."
           no-data-text="没有数据哦"
@@ -28,67 +27,20 @@
     <v-dialog v-model="dialog1" max-width="80%">
       <v-card>
         <v-card-title>详细信息</v-card-title>
-        <v-simple-table style="margin: 20px">
-          <tbody>
-            <tr>
-              <td>义工编号</td>
-              <td>{{ volid }}</td>
-            </tr>
-            <tr>
-              <td>义工日期</td>
-              <td>{{ volDate }}</td>
-            </tr>
-            <tr>
-              <td>义工时间</td>
-              <td>{{ volTime }}</td>
-            </tr>
-            <tr>
-              <td>义工详细信息</td>
-              <td>{{ volDesc }}</td>
-            </tr>
-            <tr>
-              <td>{{ getVolTypeName(vol.type) }}时长</td>
-              <td>{{ timeToHint(reward) }}</td>
-            </tr>
-            <tr>
-              <td>参与者</td>
-              <td>{{ stuid }} {{ stuname }}</td>
-            </tr>
-            <tr>
-              <td>感想</td>
-              <td>{{ thought }}</td>
-            </tr>
-            <tr v-if="pictures">
-              <td>图片</td>
-              <td>
-                <ul v-for="img in pictures" :key="img.id">
-                  <li>
-                    <img
-                      :src="'data:image/png;base64,' + img.src"
-                      class="pic"
-                    />
-                  </li>
-                </ul>
-              </td>
-            </tr>
-            <tr>
-              <td>发放的{{ getVolTypeName(vol.type) }}时长（分钟）</td>
-              <td>
-                <v-text-field
-                  v-model="reward"
-                  label="不填为默认值"
-                  prepend-icon="mdi-view-list"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </v-simple-table>
+        <vol-info :vol="currentVol" />
+        <thought-info :thought="currentThought" />
+        <v-spacer />
+        发放的{{ getVolTypeName(vol.type) }}时长（分钟）
+        <v-text-field
+          v-model="currentReward"
+          label="不填为默认值"
+          prepend-icon="mdi-view-list"
+        />
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" @click="audit(1)">通过 </v-btn>
-          <v-btn color="red" @click="audit(2)">拒绝 </v-btn>
-          <v-btn color="yellow" @click="audit(3)">打回 </v-btn>
-          <v-btn color="primary" @click="dialog1 = false">取消 </v-btn>
+          <v-spacer />
+          <v-btn color="green" @click="audit(true)">通过 </v-btn>
+          <v-btn color="yellow" @click="audit(false)">打回 </v-btn>
+          <!-- <v-btn color="primary" @click="dialog1 = false">取消 </v-btn> -->
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -96,71 +48,81 @@
 </template>
 
 <script lang="ts">
-import { toasts, confirm } from "@/utils/dialogs";
-import { permissionTypes } from "@/utils/permissions";
+import { confirm } from "@/utils/dialogs";
 import {
   validate,
   validateNotNAN,
   validateNotLargerThan,
   validateNotNegative,
 } from "@/utils/validation";
-import { VolStatus, fApi, getVolTypeName, type SingleVolunteer } from "@/apis";
+import {
+  VolStatus,
+  fApi,
+  getVolTypeName,
+  type Thought,
+  type VolunteerInfoResponse,
+  type ThoughtInfoResponse,
+  ThoughtStatus,
+} from "@/apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
 import { mapStores } from "pinia";
+import { VDataTable } from "vuetify/labs/VDataTable";
+import ThoughtInfo from "@/components/thought-info.vue";
+import VolInfo from "@/components/vol-info.vue";
 
 export default {
+  components: {
+    VDataTable,
+    VolInfo,
+    ThoughtInfo,
+  },
   data() {
     return {
       timeToHint,
       getVolTypeName,
-      search: "",
-      headers: [
-        { text: "义工编号", value: "volId", align: "start", sortable: true },
-        { text: "学号", value: "stuId" },
-      ],
-      singleVols: [] as SingleVolunteer[],
-      dialog1: false,
-      stuid: NaN,
-      volid: NaN,
-      thought: "",
-      currentVol:undefined as SingleVolunteer|undefined,
-      reward:NaN,
 
-      pictures: [],
+      headers: [
+        { title: "义工编号", value: "volId", align: "start", sortable: true },
+        { title: "学号", value: "stuId" },
+      ],
+
+      thoughts: [] as Thought[],
+
+      dialog1: false,
+      currentVol: undefined as VolunteerInfoResponse | undefined,
+      currentThought: undefined as ThoughtInfoResponse | undefined,
+      currentReward: NaN,
     };
   },
   mounted() {
-    fApi.searchVolunteers(
-        undefined,
-        undefined,
-        this.infoSt,
-        undefined,
-        VolStatus.Unaudited
-      )((result) => {
-        this.singleVols = result;
-      });
+    fApi.searchThoughts(
+      undefined,
+      ThoughtStatus.WaitingForFinalAudit
+    )((result) => {
+      this.thoughts = result;
+    });
   },
   methods: {
-    rowClick (item) {
-      this.dialog1 = true;
-      this.volid = item.volId;
-      this.stuid = item.stuId;
-      this.thought = item.thought;
-      this.pictures = item.picture;
-
-      fApi.getSingleVolunteerInfo(this.volid,this.stuid)((result)=>{
-        this.currentVol = result;
-      })
-
-      this.volDate = vol.date;
-      this.volTime = vol.time;
-      this.volDesc = vol.description;
-      this.volTI = vol.inside;
-      this.volTO = vol.outside;
-      this.volTL = vol.large;
+    rowClick(
+      event: Event,
+      value: {
+        item: DataTableItem;
+      }
+    ) {
+      fApi.getThoughtInfo(
+        item.volid,
+        item.stuid
+      )((thought) => {
+        this.currentVol = vol;
+        this.currentThought = thought;
+        this.dialog1 = true;
+      });
     },
-    audit(status) {
+    /**
+     * @param status `true` for ok.
+     */
+    async audit(status: boolean) {
       let value = await confirm();
       if (value) {
         this.dialog1 = false;
@@ -178,24 +140,21 @@ export default {
         }
 
         validate(
-          [this.inside, this.outside, this.large],
+          [this.currentReward],
           [validateNotNAN(), validateNotNegative(), validateNotLargerThan(4)]
         );
 
-        fApi.firstAudit(
-          this.stuid,
-          status,
-          this.inside,
-          this.outside,
-          this.large
-        )((result)=>{
+        fApi.finalAudit(
+          this.currentThought.volId,
+          this.curre
+        )((result) => {
           this.volDate = data.date;
           this.volTime = data.time;
           this.volDesc = data.description;
           this.volTI = data.inside;
           this.volTO = data.outside;
           this.volTL = data.large;
-        })
+        });
         this.inside = undefined;
         this.outside = undefined;
         this.large = undefined;

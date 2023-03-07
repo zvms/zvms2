@@ -142,8 +142,9 @@ export interface SingleThought {
 }
 
 export interface Thought {
-    thought: string,
-    pictures: string[]
+  volunteer: SingleVolunteer;
+  thought: string;
+  pictures: string[];
 }
 
 export interface Login {

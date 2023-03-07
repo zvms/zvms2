@@ -1,3 +1,3 @@
-export function md5(str:string):string{
-    return "";
+export function md5(str: string): string {
+  return "";
 }
