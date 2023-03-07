@@ -13,7 +13,7 @@ def get_student_thoughts():
     '''获取某个学生的感想'''
 
 
-@Api(rule='/thought/search', params='SearchThoughts')
+@Api(rule='/thought/search', params='SearchThoughts', response='SearchThoughtsResponse')
 def search_thoughts(**kwargs):
     '''搜索感想'''
     conds = [StuVol.status != ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT]

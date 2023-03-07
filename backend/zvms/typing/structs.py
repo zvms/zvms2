@@ -121,6 +121,8 @@ class SingleThought(Object):
     status = Enum(ThoughtStatus)
     stuName = String
     volName = String
+
+SearchThoughtsResponse = Array(SingleThought)
     
 class Thought(Object):
     thought = Len(String, 1, 1025)
