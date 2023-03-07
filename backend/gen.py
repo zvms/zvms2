@@ -2,10 +2,11 @@ from time import perf_counter
 
 begin = perf_counter()
 
-from enum import IntEnum, IntFlag, EnumType
+from enum import IntEnum, IntFlag
 from collections import defaultdict
 from itertools import chain
 from operator import itemgetter
+import enum
 import json
 import sys
 import re
@@ -79,7 +80,7 @@ with open('genconfig.yaml', encoding='utf-8') as config_file:
 with open(config['enums'], 'w', encoding='utf-8') as enums_output,\
     open(config['enums-mapping'], encoding='utf-8') as mapping_file:
     mapping = yaml.full_load(mapping_file.read())
-    for enum in (i for i in res.__dict__.values() if isinstance(i, EnumType) and i not in (IntEnum, IntFlag)):
+    for enum in (i for i in res.__dict__.values() if issubclass(i, enum.Enum) and i not in (IntEnum, IntFlag)):
         map_this = mapping[enum.__name__]
         valid_cons = lambda: ((convert(field, 'upper_snake', 'pascal'), value) for field, value in enum.__dict__.items() if type(value) == enum)
         enums_output.write(tpl.ENUMS.format(
