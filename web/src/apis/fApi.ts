@@ -152,11 +152,12 @@ export class ForegroundApi {
     pwd: string
   ): ForegroundApiRunner<structs.UserLoginResponse> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/user/login`,
-        id,
-      pwd);
+      this,
+      "POST",
+      `/user/login`,
+      id,
+      pwd
+    );
   }
   /**
    * ## 登出
@@ -176,14 +177,11 @@ export class ForegroundApi {
     kwargs: structs.SearchUsers
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "GET",
-        `/user/search`,
-        ...[
-          name,
-          cls,
-          auth
-        ].filter((value: any) => value != undefined));
+      this,
+      "GET",
+      `/user/search`,
+      kwargs
+    );
   }
   /**
    * ## 获取一个用户的详细详细信息
@@ -227,26 +225,12 @@ export class ForegroundApi {
     neo: string
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/user/mod-pwd`,
-        old,
-      neo);
-  }
-  /**
-   * ## 修改自己(老师)的班级
-   * ### [POST] /user/change-class
-   * #### 权限: Any
-   * @param cls
-   */
-  changeClass(
-    cls: number
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-        this,
-        "POST",
-        `/user/change-class`,
-        cls);
+      this,
+      "POST",
+      `/user/mod-pwd`,
+      old,
+      neo
+    );
   }
   /**
    * ## 创建用户
@@ -255,13 +239,14 @@ export class ForegroundApi {
    * @param users
    */
   createUser(
-    users: structs.OneUser[]
+    users: Array<structs.OneUser>
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/user/create`,
-        users);
+      this,
+      "POST",
+      `/user/create`,
+      users
+    );
   }
   /**
    * ## 修改用户信息
@@ -279,12 +264,13 @@ export class ForegroundApi {
     auth: number
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/user/${id}/modify`,
-        name,
+      this,
+      "POST",
+      `/user/${id}/modify`,
+      name,
       cls,
-      auth);
+      auth
+    );
   }
   /**
    * ## 删除用户
@@ -311,10 +297,11 @@ export class ForegroundApi {
     report: string
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/report`,
-        report);
+      this,
+      "POST",
+      `/report`,
+      report
+    );
   }
   /**
    * ## 搜索通知
@@ -324,17 +311,13 @@ export class ForegroundApi {
    */
   searchNotices(
     kwargs: structs.SearchNotices
-  ): ForegroundApiRunner<structs.SingleNotice[]> {
+  ): ForegroundApiRunner<Array<structs.SingleNotice>> {
     return createForegroundApiRunner(
-        this,
-        "GET",
-        `/notice/search`,
-        ...[
-          sender,
-          user,
-          cls,
-          school
-        ].filter((value: any) => value != undefined));
+      this,
+      "GET",
+      `/notice/search`,
+      kwargs
+    );
   }
   /**
    * ## 发送用户通知
@@ -346,19 +329,20 @@ export class ForegroundApi {
    * @param deadtime
    */
   sendUserNotice(
-    targets: number[],
+    targets: Array<number>,
     title: string,
     content: string,
     deadtime: string
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/notice/send/user`,
-        title,
+      this,
+      "POST",
+      `/notice/send/user`,
+      targets,
+      title,
       content,
-      deadtime,
-      targets);
+      deadtime
+    );
   }
   /**
    * ## 发送班级通知
@@ -370,19 +354,20 @@ export class ForegroundApi {
    * @param deadtime
    */
   sendClassNotice(
-    targets: number[],
+    targets: Array<number>,
     title: string,
     content: string,
     deadtime: string
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/notice/send/class`,
-        title,
+      this,
+      "POST",
+      `/notice/send/class`,
+      targets,
+      title,
       content,
-      deadtime,
-      targets);
+      deadtime
+    );
   }
   /**
    * ## 发送学校通知
@@ -398,12 +383,13 @@ export class ForegroundApi {
     deadtime: string
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/notice/send/school`,
-        title,
+      this,
+      "POST",
+      `/notice/send/school`,
+      title,
       content,
-      deadtime);
+      deadtime
+    );
   }
   /**
    * ## 删除一个通知
@@ -436,12 +422,13 @@ export class ForegroundApi {
     deadtime: string
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/notice/${id}/modify`,
-        title,
+      this,
+      "POST",
+      `/notice/${id}/modify`,
+      title,
       content,
-      deadtime);
+      deadtime
+    );
   }
   /**
    * ## 列出一个班级的报名
@@ -451,7 +438,7 @@ export class ForegroundApi {
    */
   listSignup(
     cls: number
-  ): ForegroundApiRunner<structs.SingleSignup[]> {
+  ): ForegroundApiRunner<Array<structs.SingleSignup>> {
     return createForegroundApiRunner(
       this,
       "GET",
@@ -465,9 +452,15 @@ export class ForegroundApi {
    * @param volId
    * @param stuId
    */
-  auditSignup(volId: number,
-    stuId: number): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(this, "POST", `/signup/${volId}/${stuId}/audit`);
+  auditSignup(
+    volId: number,
+    stuId: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/signup/${volId}/${stuId}/audit`
+    );
   }
   /**
    * ## 报名一个义工
@@ -476,12 +469,16 @@ export class ForegroundApi {
    * @param volId
    * @param students
    */
-  signup(volId: number, students: number[]): ForegroundApiRunner<{}> {
+  signup(
+    volId: number,
+    students: Array<number>
+  ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/signup/${volId}`,
-        students);
+      this,
+      "POST",
+      `/signup/${volId}`,
+      students
+    );
   }
   /**
    * ## 撤回一个报名
@@ -490,9 +487,15 @@ export class ForegroundApi {
    * @param volId
    * @param stuId
    */
-  rollback(volId: number,
-    stuId: number): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(this, "POST", `/signup/${volId}/${stuId}/rollback`);
+  rollback(
+    volId: number,
+    stuId: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/signup/${volId}/${stuId}/rollback`
+    );
   }
   /**
    * ## 搜索义工
@@ -502,18 +505,13 @@ export class ForegroundApi {
    */
   searchVolunteers(
     kwargs: structs.SearchVolunteers
-  ): ForegroundApiRunner<structs.SingleVolunteer[]> {
+  ): ForegroundApiRunner<Array<structs.SingleVolunteer>> {
     return createForegroundApiRunner(
-        this,
-        "GET",
-        `/volunteer/search`,
-        ...[
-          holder,
-          student,
-          cls,
-          name,
-          status
-        ].filter((value: any) => value != undefined));
+      this,
+      "GET",
+      `/volunteer/search`,
+      kwargs
+    );
   }
   /**
    * ## 获取一个义工的详细信息
@@ -521,70 +519,109 @@ export class ForegroundApi {
    * #### 权限: Any
    * @param id
    */
-  getVolunteerInfo(id: number): ForegroundApiRunner<structs.VolunteerInfoResponse> {
-    return createForegroundApiRunner(this, "GET", `/volunteer/${id}`);
+  getVolunteerInfo(
+    id: number
+  ): ForegroundApiRunner<structs.VolunteerInfoResponse> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/volunteer/${id}`
+    );
   }
   /**
    * ## 创建一个义工
    * ### [POST] /volunteer/create
    * #### 权限: Any
+   * @param classes
    * @param name
    * @param description
    * @param time
    * @param type
    * @param reward
-   * @param classes
    */
   createVolunteer(
+    classes: Array<structs.ClassVol>,
     name: string,
     description: string,
     time: string,
     type: enums.VolType,
-    reward: number,
-    classes: structs.ClassVol[]
-  ): ForegroundApiRunner<structs.VolunteerInfoResponse> {
+    reward: number
+  ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/volunteer/create`,
-        name,
+      this,
+      "POST",
+      `/volunteer/create`,
+      classes,
+      name,
       description,
       time,
       type,
-      reward,
-      classes);
+      reward
+    );
+  }
+  /**
+   * ## 创建一个成员全部指定的义工
+   * ### [POST] /volunteer/create/appointed
+   * #### 权限: Any
+   * @param joiners
+   * @param name
+   * @param description
+   * @param time
+   * @param type
+   * @param reward
+   */
+  createAppointedVolunteer(
+    joiners: Array<number>,
+    name: string,
+    description: string,
+    time: string,
+    type: enums.VolType,
+    reward: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/volunteer/create/appointed`,
+      joiners,
+      name,
+      description,
+      time,
+      type,
+      reward
+    );
   }
   /**
    * ## 修改义工
    * ### [POST] /volunteer/<int:id>/modify
    * #### 权限: Any
    * @param id
+   * @param classes
    * @param name
    * @param description
    * @param time
    * @param type
    * @param reward
-   * @param classes
    */
   modifyVolunteer(
     id: number,
+    classes: Array<structs.ClassVol>,
     name: string,
     description: string,
     time: string,
     type: enums.VolType,
-    reward: number,
-    classes: structs.ClassVol[]
+    reward: number
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/volunteer/${id}/modify`,
-        name,
+      this,
+      "POST",
+      `/volunteer/${id}/modify`,
+      classes,
+      name,
       description,
       time,
       type,
-      reward,
-      classes);
+      reward
+    );
   }
   /**
    * ## 删除义工
@@ -622,8 +659,14 @@ export class ForegroundApi {
    * #### 权限: Any
    * @param id
    */
-  getStudentThoughts(id: number): ForegroundApiRunner<structs.StudentThoughtsResponse> {
-    return createForegroundApiRunner(this, "GET", `/thought/student/${id}`);
+  getStudentThoughts(
+    id: number
+  ): ForegroundApiRunner<structs.StudentThoughtsResponse> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/thought/student/${id}`
+    );
   }
   /**
    * ## 搜索感想
@@ -633,17 +676,13 @@ export class ForegroundApi {
    */
   searchThoughts(
     kwargs: structs.SearchThoughts
-  ): ForegroundApiRunner<{}> {
+  ): ForegroundApiRunner<Array<structs.SingleThought>> {
     return createForegroundApiRunner(
-        this,
-        "GET",
-        `/thought/search`,
-        ...[
-          cls,
-          status,
-          student,
-          Volunteer
-        ].filter((value: any) => value != undefined));
+      this,
+      "GET",
+      `/thought/search`,
+      kwargs
+    );
   }
   /**
    * ## 获取一个感想的详细信息
@@ -652,17 +691,20 @@ export class ForegroundApi {
    * @param volId
    * @param stuId
    */
-  getThoughtInfo(volId: number,
-    stuId: number): ForegroundApiRunner<structs.ThoughtInfoResponse> {
-    return createForegroundApiRunner(this, "GET", `/thought/${volId}/${stuId}`);
+  getThoughtInfo(
+    volId: number,
+    stuId: number
+  ): ForegroundApiRunner<structs.ThoughtInfoResponse> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/thought/${volId}/${stuId}`
+    );
   }
   /**
    * ## 保存感想草稿
    * ### [POST] /thought/<int:volId>/<int:stuId>/save
    * #### 权限: Any
-   * @param volunteer
-   * @param thought
-   * @param pictures
    * @param volId
    * @param stuId
    * @param thought
@@ -671,25 +713,21 @@ export class ForegroundApi {
   saveThought(
     volId: number,
     stuId: number,
-    volunteer: structs.SingleVolunteer,
     thought: string,
-    pictures: string[]
+    pictures: Array<string>
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/thought/${volId}/${stuId}/save`,
-        volunteer,
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/save`,
       thought,
-      pictures);
+      pictures
+    );
   }
   /**
    * ## 提交感想
    * ### [POST] /thought/<int:volId>/<int:stuId>/submit
    * #### 权限: Any
-   * @param volunteer
-   * @param thought
-   * @param pictures
    * @param volId
    * @param stuId
    * @param thought
@@ -698,17 +736,16 @@ export class ForegroundApi {
   submitThought(
     volId: number,
     stuId: number,
-    volunteer: structs.SingleVolunteer,
     thought: string,
-    pictures: string[]
+    pictures: Array<string>
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/thought/${volId}/${stuId}/submit`,
-        volunteer,
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/submit`,
       thought,
-      pictures);
+      pictures
+    );
   }
   /**
    * ## 初审感想(班内)
@@ -717,9 +754,15 @@ export class ForegroundApi {
    * @param volId
    * @param stuId
    */
-  firstAudit(volId: number,
-    stuId: number): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(this, "POST", `/thought/${volId}/${stuId}/audit/first`);
+  firstAudit(
+    volId: number,
+    stuId: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/audit/first`
+    );
   }
   /**
    * ## 终审感想(义管会)
@@ -727,10 +770,19 @@ export class ForegroundApi {
    * #### 权限: Auditor
    * @param volId
    * @param stuId
+   * @param reward
    */
-  finalAudit(volId: number,
-    stuId: number): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(this, "POST", `/thought/${volId}/${stuId}/audit/final`);
+  finalAudit(
+    volId: number,
+    stuId: number,
+    reward: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/audit/final`,
+      reward
+    );
   }
   /**
    * ## 打回感想
@@ -746,17 +798,18 @@ export class ForegroundApi {
     reason: string
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/thought/${volId}/${stuId}/repulse`,
-        reason);
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/repulse`,
+      reason
+    );
   }
   /**
    * ## 列出所有班级
    * ### [GET] /class/list
    * #### 权限: Any
    */
-  listClasses(): ForegroundApiRunner<structs.SingleClass[]> {
+  listClasses(): ForegroundApiRunner<Array<structs.SingleClass>> {
     return createForegroundApiRunner(this, "GET", `/class/list`);
   }
   /**
@@ -799,10 +852,11 @@ export class ForegroundApi {
     name: string
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/class/create`,
-        name);
+      this,
+      "POST",
+      `/class/create`,
+      name
+    );
   }
   /**
    * ## 修改一个班级的名称
@@ -816,11 +870,13 @@ export class ForegroundApi {
     name: string
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
-        this,
-        "POST",
-        `/class/${id}/modify`,
-        name);
+      this,
+      "POST",
+      `/class/${id}/modify`,
+      name
+    );
   }
+
 
 //--METHODS END----
 

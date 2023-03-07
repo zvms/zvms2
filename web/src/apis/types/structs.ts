@@ -18,19 +18,19 @@ export interface SingleUser extends SingleUserWithoutAuth {
     auth: number
 }
 
-export type ListClassesResponse = SingleClass[]
+export type ListClassesResponse = Array<SingleClass>
 
 export interface ClassInfoResponse {
     name: string,
-    students: SingleUser[],
-    teachers: SingleUser[]
+    students: Array<SingleUser>,
+    teachers: Array<SingleUser>
 }
 
 export interface UserLoginResponse {
     token: string
 }
 
-export type SearchUsersResponse = SingleUser[]
+export type SearchUsersResponse = Array<SingleUser>
 
 export interface UserInfoResponse {
     name: string,
@@ -40,17 +40,17 @@ export interface UserInfoResponse {
 }
 
 export interface ThoughtInfoResponse {
-    reason: string,
-    thought: string,
-    reward: number,
-    pics: string[]
+    reason?: string,
+    thought?: string,
+    reward?: number,
+    pics?: Array<string>
 }
 
 export interface StudentThoughtsResponse {
-    accepted: ThoughtInfoResponse[],
-    unsubmitted: ThoughtInfoResponse[],
-    draft: ThoughtInfoResponse[],
-    unaudited: ThoughtInfoResponse[]
+    accepted: Array<ThoughtInfoResponse>,
+    unsubmitted: Array<ThoughtInfoResponse>,
+    draft: Array<ThoughtInfoResponse>,
+    unaudited: Array<ThoughtInfoResponse>
 }
 
 export interface StudentStatResponse {
@@ -68,7 +68,7 @@ export interface SingleNotice {
     senderName: string
 }
 
-export type SearchNoticesResponse = SingleNotice[]
+export type SearchNoticesResponse = Array<SingleNotice>
 
 export interface SingleSignup {
     volId: number,
@@ -77,16 +77,17 @@ export interface SingleSignup {
     stuName: string
 }
 
-export type ListSignupResponse = SingleSignup[]
+export type ListSignupResponse = Array<SingleSignup>
 
 export interface SingleVolunteer {
     id: number,
     name: string,
     time: string,
-    status: number
+    status: number,
+    signable: boolean
 }
 
-export type SearchVolunteersResponse = SingleVolunteer[]
+export type SearchVolunteersResponse = Array<SingleVolunteer>
 
 export interface VolunteerInfoResponse {
     name: string,
@@ -96,7 +97,7 @@ export interface VolunteerInfoResponse {
     type: enums.VolType,
     reward: number,
     signable: boolean,
-    joiners: SingleUserWithoutAuth[],
+    joiners: Array<SingleUserWithoutAuth>,
     holder: number,
     holderName: string
 }
@@ -115,7 +116,7 @@ export interface NoticeBody {
 }
 
 export interface Notice extends NoticeBody {
-    targets: number[]
+    targets: Array<number>
 }
 
 export interface Report {
@@ -123,7 +124,7 @@ export interface Report {
 }
 
 export interface Signup {
-    students: number[]
+    students: Array<number>
 }
 
 export interface SearchThoughts {
@@ -141,10 +142,11 @@ export interface SingleThought {
     volName: string
 }
 
+export type SearchThoughtsResponse = Array<SingleThought>
+
 export interface Thought {
-  volunteer: SingleVolunteer;
-  thought: string;
-  pictures: string[];
+    thought: string,
+    pictures: Array<string>
 }
 
 export interface Login {
@@ -174,7 +176,7 @@ export interface OneUser extends User {
 }
 
 export interface Users {
-    users: OneUser[]
+    users: Array<OneUser>
 }
 
 export interface ClassVol {
@@ -190,16 +192,27 @@ export interface SearchVolunteers {
     status?: enums.VolStatus
 }
 
-export interface Volunteer {
+export interface VolunteerBody {
     name: string,
     description: string,
     time: string,
     type: enums.VolType,
-    reward: number,
-    classes: ClassVol[]
+    reward: number
+}
+
+export interface Volunteer extends VolunteerBody {
+    classes: Array<ClassVol>
+}
+
+export interface AppointedVolunteer extends VolunteerBody {
+    joiners: Array<number>
 }
 
 export interface Repulse {
     reason: string
+}
+
+export interface Accept {
+    reward: number
 }
 

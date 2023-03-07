@@ -122,7 +122,7 @@ class SingleThought(Object):
     stuName = String
     volName = String
 
-SearchThoughtsResponse = Array(SingleThought)
+SearchThoughtsResponse = Array(SingleThought())
     
 class Thought(Object):
     thought = Len(String, 1, 1025)
