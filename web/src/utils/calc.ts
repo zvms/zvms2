@@ -1,3 +1,5 @@
+import type { VolunteerInfoResponse } from "@/apis";
+
 export function isTimeFinished(
   id: number,
   time: { inside: number; outside: number; large: number }
@@ -40,3 +42,7 @@ export function timeToHint(a: number) {
     else return hr + " 小时 ";
   else return mi + "分钟";
 }
+
+// export function canSingup(user:number,vol:VolunteerInfoResponse):boolean{
+//   return vol.
+// }

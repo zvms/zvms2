@@ -1,10 +1,10 @@
 <template>
   <v-app class="overflow-y-hidden" full-height>
     <v-theme-provider theme="light">
-      <v-navigation-drawer app permanent style="width: 9em">
+      <v-navigation-drawer app permanent style="width:7em">
         <v-list nav dense class="py-0">
           <v-list-item line="two" class="px-0">
-            <v-list-item tile class="w-75">
+            <v-list-item tile class="w-50">
               <img src="./assets/logo.png" />
             </v-list-item>
             <v-list-item>
@@ -19,12 +19,8 @@
             :to="item.to"
             link
           >
-            <v-list-item icon>
               <v-icon :icon="item.icon" small></v-icon>
-            </v-list-item>
-            <v-list-item>
               <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
           </v-list-item>
         </v-list>
         <template v-slot:append>

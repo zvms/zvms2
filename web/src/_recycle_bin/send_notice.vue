@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>创建通知</v-card-title>
     <v-card-text>
-      <v-form v-bind="isFormValid">
+      <v-form v-model="isFormValid">
         <v-table>
           <thead>
             <td>班级</td>

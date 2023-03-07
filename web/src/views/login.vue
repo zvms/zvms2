@@ -7,7 +7,7 @@
     >
     <br />
     <v-card-text>
-      <v-form v-bind="isFormValid">
+      <v-form v-model="isFormValid">
         <v-text-field
           type="username"
           v-model="form.userid"
