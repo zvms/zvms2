@@ -76,7 +76,7 @@ export default {
         return {
           id: i,
           icon: "mdi-label",
-          content: permissionNames[key as any],
+          content: (permissionNames as any)[key as any],
         };
       }),
     ];

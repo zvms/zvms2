@@ -106,8 +106,8 @@ export default {
       ] as SingleVolunteer[],
 
       current: undefined as any as {
+        singleVol: SingleVolunteer;
         vol: VolunteerInfoResponse;
-        actions: Action[];
         thought: ThoughtInfoResponse | null;
         picFiles: File[];
       },
@@ -119,55 +119,37 @@ export default {
   },
   methods: {
     fetchVols() {
-      fApi.searchVolunteers()((result) => {
+      fApi.searchVolunteers({
+        student:
+          this.infoStore.permission &
+          (permissionTypes.secretary | permissionTypes.teacher)
+            ? undefined
+            : this.infoStore.userId,
+        cls:
+          this.infoStore.permission & permissionTypes.system
+            ? undefined
+            : this.infoStore.classId,
+      })((result) => {
         this.vols = result;
       });
     },
-    getActions(): Action[] {
-      let result:Action[] = [];
-      if()result.push({
-              text: "提交感想",
-              onclick: () => {
-                this.thoughtDlg = true;
-              },
-            });
-            result.push({
-              text: "报名",
-              onclick: () => {
-                this.thoughtDlg = true;
-              },
-            });
-    },
+
     onRowClick(ev: Event, v: any) {
       const item: SingleVolunteer = v.item.raw;
       fApi.getVolunteerInfo(item.id)((vol) => {
-        this.current.vol = vol;
-        if (
-          vol.joiners.findIndex((v) => v.id == this.infoStore.userId) !== -1
-        ) {
-          fApi.getThoughtInfo(
-            item.id,
-            this.infoStore.userId
-          )((thought) => {
-            this.current.thought = thought;
-            this.current.actions.push({
-              text: "提交感想",
-              onclick: () => {
-                this.thoughtDlg = true;
-              },
-            });
-          });
-        } else {
-          this.current.actions.push({
-            text: "报名",
-            onclick: () => {
-              confirm("确定报名？").then(() => {
-                fApi.signup(item.id, [this.infoStore.userId])(() => {});
-              });
-            },
-          });
-        }
+        this.current = {
+          singleVol: item,
+          vol,
+        };
         this.infoDlg = true;
+      });
+    },
+    viewThought() {
+      fApi.getThoughtInfo(
+        this.current!.singleVol.id,
+        this.infoStore.userId
+      )((thought) => {
+        this.current.thought = thought;
       });
     },
     async saveThought() {
@@ -194,18 +176,43 @@ export default {
       )(() => {});
     },
     async submitThought() {
+      this.saveThought();
       if (await confirm("确定提交？")) {
         fApi.submitThought(
           this.current.thought!.volId,
-          this.current.thought!.stuId,
-          this.current.thought!.thought,
-          this.current.thought!.pictures
+          this.current.thought!.stuId
         );
       }
     },
   },
   computed: {
     ...mapStores(useInfoStore),
+    actions(): Action[] {
+      let result: Action[] = [];
+      if (
+        this.current!.vol.joiners.findIndex(
+          (v) => v.id === this.infoStore.userId
+        ) > -1
+      ) {
+        result.push({
+          text: "感想",
+          onclick: () => {
+            this.thoughtDlg = true;
+          },
+        });
+      }
+      if (this.current.vol.signable) {
+        result.push({
+          text: "报名",
+          onclick: () => {
+            confirm("确定报名？").then(() => {
+              fApi.signup(item.id, [this.infoStore.userId])(() => {});
+            });
+          },
+        });
+      }
+      return result;
+    },
   },
 };
 </script>

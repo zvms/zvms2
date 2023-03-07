@@ -19,7 +19,7 @@
       <v-card>
         <v-card-title>详细信息</v-card-title>
         <vol-info v-if="currentVol" :vol="currentVol" />
-        <thought-info v-if="currentThought" :thought="currentThought" />
+        <thought-info v-if="currentThoughtData" :thought="currentThoughtData" />
         <v-spacer />
         发放的{{ getVolTypeName(currentVol!.type) }}时长（分钟）
         <v-text-field
@@ -40,20 +40,19 @@
 
 <script lang="ts">
 import { confirm } from "@/utils/dialogs";
+// import {
+//   validate,
+//   validateNotNAN,
+//   validateNotLargerThan,
+//   validateNotNegative,
+// } from "@/utils/validation";
 import {
-  validate,
-  validateNotNAN,
-  validateNotLargerThan,
-  validateNotNegative,
-} from "@/utils/validation";
-import {
-  VolStatus,
   fApi,
   getVolTypeName,
-  type Thought,
   type VolunteerInfoResponse,
   type ThoughtInfoResponse,
   ThoughtStatus,
+  type SingleThought,
 } from "@/apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
@@ -88,14 +87,16 @@ export default {
         {
           volId: 123,
           stuId: 456,
-          thought: "123",
-          pictures: [],
+          status: ThoughtStatus.Draft,
+          stuName: "stuname",
+          volName: "volname",
         },
-      ] as Thought[],
+      ] as SingleThought[],
 
       dialog1: false,
       currentVol: undefined as VolunteerInfoResponse | undefined,
-      currentThought: undefined as ThoughtInfoResponse | undefined,
+      currentThoughtInfo: undefined as SingleThought | undefined,
+      currentThoughtData: undefined as ThoughtInfoResponse | undefined,
       currentReward: NaN,
     };
   },
@@ -104,26 +105,28 @@ export default {
   },
   methods: {
     fetchThoughts() {
-      fApi.searchThoughts(
-        undefined,
-        ThoughtStatus.WaitingForFinalAudit
-      )((result) => {
+      fApi.searchThoughts({
+        status: ThoughtStatus.WaitingForFinalAudit,
+      })((result: SingleThought[]) => {
         this.thoughts = result;
       });
     },
     rowClick(
-      event: Event,
+      _event: Event,
       value: {
         item: any;
       }
     ) {
-      const item = value.item as Thought;
+      const item = value.item as SingleThought;
+      this.currentThoughtInfo = item;
+      fApi.getVolunteerInfo(item.volId)((volunteer) => {
+        this.currentVol = volunteer;
+      });
       fApi.getThoughtInfo(
-        item.volid,
-        item.stuid
+        item.volId,
+        item.stuId
       )((thought) => {
-        this.currentVol = vol;
-        this.currentThought = thought;
+        this.currentThoughtData = thought;
         this.dialog1 = true;
       });
     },
@@ -136,17 +139,20 @@ export default {
         this.dialog1 = false;
         if (status) {
           fApi.finalAudit(
-            this.currentThought!.volId,
-            this.currentThought!.stuId,
-            this.currentReward
-          )(() => {});
-          this.fetchThoughts();
+            this.currentThoughtInfo!.volId,
+            this.currentThoughtInfo!.stuId
+            //this.currentReward
+          )(() => {
+            this.fetchThoughts();
+          });
         } else {
           fApi.repulse(
-            this.currentThought!.volId,
-            this.currentThought!.stuId,
+            this.currentThoughtInfo!.volId,
+            this.currentThoughtInfo!.stuId,
             ""
-          )(() => {});
+          )(() => {
+            this.fetchThoughts();
+          });
         }
 
         // validate(
