@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
         "strict": true,
-        "target": "ESNext",
+        "target": "ES6",
         "moduleResolution": "node",
-        "module": "ESNext",
+        "module": "ES6",
         "composite": true,
         "sourceMap": true,
         "declarationMap": true,

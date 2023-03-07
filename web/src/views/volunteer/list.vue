@@ -34,7 +34,7 @@
 
           <v-form>
             <v-textarea v-model="current.thought!.thought" />
-            <v-file-input v-model="current.thought!.pics">
+            <v-file-input v-model="current.picFiles">
               <template v-slot:selection="{ fileNames }">
                 <template v-for="fileName in fileNames" :key="fileName">
                   <v-img :src="fileName" />
@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { confirm } from "@/utils/dialogs.js";
+import { confirm, toasts } from "@/utils/dialogs.js";
 import { permissionTypes } from "@/utils/permissions";
 import volinfo from "@/components/vol-info.vue";
 import {
@@ -107,13 +107,14 @@ export default {
           onclick: () => any;
         }[];
         thought: ThoughtInfoResponse | null;
+        picFiles: File[];
       },
 
       infoDlg: false,
       thoughtDlg: false,
+      uploadDlg: false,
     };
   },
-  mounted() {},
   methods: {
     fetchVols() {
       fApi.searchVolunteers()((result) => {
@@ -152,13 +153,28 @@ export default {
         this.infoDlg = true;
       });
     },
-    saveThought() {
+    async saveThought() {
+      const pics: {
+        data: Uint8Array;
+        name: string;
+      }[] = [];
+      for (const f of this.current.picFiles) {
+        const readResult = await f.stream().getReader().read();
+        if(!readResult.done){
+          toasts.error(`文件${f.name}上传失败！`)
+          continue;
+        }
+        pics.push({
+          data: readResult.value??Uint8Array.from([]),
+          name: f.name,
+        });
+      }
       fApi.saveThought(
         this.current.thought!.volId,
         this.current.thought!.stuId,
         this.current.thought!.thought,
-        this.current.thought!.pictures
-      );
+        pics
+      )(() => {});
     },
     async submitThought() {
       if (await confirm("确定提交？")) {

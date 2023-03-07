@@ -19,11 +19,6 @@ const router = createRouter({
       name: "modifyPwd",
       component: () => import("../views/modify-pwd.vue"),
     },
-    {
-      path: "/report",
-      name: "report",
-      component: () => import("../views/report.vue"),
-    },
     // {
     //   path: "/class/list",
     //   name: "classList",

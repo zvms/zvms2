@@ -11,6 +11,7 @@
       </v-card-text>
     </v-card-title>
     <v-card-actions>
+      <v-btn @click="modifyPwd">修改密码</v-btn>
       <v-btn @click="logout">登出</v-btn>
     </v-card-actions>
   </v-card>
@@ -63,7 +64,8 @@ export default {
     };
   },
   mounted() {
-    if(!(this.infoStore.token?.length>1)){
+    if (!(this.infoStore.permission & permissionTypes.logined)) {
+      console.log("login!");
       router.push("/login");
     }
     this.chips = [
@@ -100,6 +102,9 @@ export default {
         router.push("/login");
       });
     },
+    modifyPwd(){
+      router.push("/modifyPwd");
+    }
   },
   computed: {
     ...mapStores(useInfoStore, useNoticesStore),

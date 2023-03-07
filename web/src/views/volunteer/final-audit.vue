@@ -78,7 +78,7 @@ export default {
           key: "volId",
           title: "义工编号",
           value: "volId",
-          align: "start",
+          // align: "start",
           sortable: true,
         },
         { key: "stuId", title: "学号", value: "stuId" },
@@ -86,6 +86,8 @@ export default {
 
       thoughts: [
         {
+          volId: 123,
+          stuId: 456,
           thought: "123",
           pictures: [],
         },
@@ -115,6 +117,7 @@ export default {
         item: any;
       }
     ) {
+      const item = value.item as Thought;
       fApi.getThoughtInfo(
         item.volid,
         item.stuid
