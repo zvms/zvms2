@@ -1,14 +1,14 @@
 import { useNavStore, useInfoStore } from "@/stores";
 import { permissionTypes } from "./permissions";
 
-interface NavItem {
+export interface NavItem {
   title: string;
   to: string;
   icon: string;
 }
 
 export function getNavItems(permission: permissionTypes) {
-  const navItems = {
+  const navItems: Record<string, NavItem> = {
     login: {
       title: "登录",
       to: "/login",
@@ -69,31 +69,20 @@ export function getNavItems(permission: permissionTypes) {
     //   to: "/volunteer/thought",
     //   icon: "mdi-upload",
     // },
-    report: {
-      title: "反馈错误",
-      to: "/report",
-      icon: "mdi-alert",
-    },
     about: {
       title: "关于我们",
       to: "/about",
-      icon: "mdi-help-circle",
+      icon: "mdi-information",
     },
-    logout: {
-      title: "登出",
-      to: "/logout",
-      icon: "mdi-exit-to-app",
-    },
-  } satisfies Record<string, NavItem>;
+  };
 
   const items: NavItem[] = [];
 
   if (!(permission & permissionTypes.logined)) items.push(navItems.login);
+  if (permission & permissionTypes.logined) items.push(navItems.me);
   if (permission & permissionTypes.logined) items.push(navItems.volList);
   if (permission & permissionTypes.logined) items.push(navItems.createVol);
   if (permission & permissionTypes.system) items.push(navItems.finalAuditVol);
-  if (permission & permissionTypes.logined) items.push(navItems.logout);
-  items.push(navItems.report);
   items.push(navItems.about);
   return items;
 }

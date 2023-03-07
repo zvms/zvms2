@@ -36,10 +36,12 @@
 <script lang="ts">
 import { type VolunteerInfoResponse, getVolTypeName } from "../apis";
 import { timeToHint } from "@/utils/calc";
+import type { PropType } from "vue";
 
 export default {
   name: "vol-info",
   props: {
+    timeToHint,
     vol: {
       type: Object as PropType<VolunteerInfoResponse>,
       required: true,

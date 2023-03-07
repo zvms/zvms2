@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title> 创建义工 </v-card-title>
       <v-card-text>
-        <v-form v-bind="isFormValid">
+        <v-form v-model="isFormValid">
           <v-text-field
             v-model="form.name"
             :rules="rules"
@@ -12,14 +12,14 @@
           />
           <!---->
           <v-table v-if="infoStore.permission & permissionTypes.system">
-            <thead>
+            <!-- <thead>
               <td>班级</td>
               <td>最多报名人数</td>
               <td></td>
-            </thead>
+            </thead> -->
             <tbody>
               <tr v-for="(cls, i) in classSelected" :key="i">
-                <td>{{ classes.find((v) => v.id === cls.id)?.name }}</td>
+                <td class="pa-0">{{ classes.find((v) => v.id === cls.id)?.name }}</td>
                 <td>{{ cls.max }}</td>
                 <td>
                   <v-btn
@@ -35,14 +35,11 @@
                 </td>
               </tr>
               <tr>
-                <td>
+                <td  class="pa-0">
                   <v-select
-                    prepend-icon="mdi-switch"
+                    prepend-icon="mdi-account-group"
                     v-model="class_new"
                     label="限定班级"
-                    :items="classes"
-                    item-text="name"
-                    item-value="id"
                   >
                   </v-select>
                 </td>
@@ -70,7 +67,7 @@
             v-model="form.date"
             :rules="rules"
             label="日期（e.g. 23-9-1）"
-            prepend-icon="mdi-text"
+            prepend-icon="mdi-calendar-range"
           />
           <v-textarea
             v-model="form.description"
@@ -81,7 +78,7 @@
           <v-text-field
             v-model.number="form.reward"
             label="时长（分钟）"
-            prepend-icon="mdi-view-list"
+            prepend-icon="mdi-clock-time-three-outline"
           />
         </v-form>
         <v-card-actions>
@@ -107,7 +104,7 @@ export default {
       classSelected: [] as ClassVol[],
       count_new: 5,
       class_new: NaN,
-      classes: [] as SingleClass[],
+      classes: [{id:123,name:"aaa"},{id:456,name:"bbb"}] as SingleClass[],
       form: {
         name: "",
         date: "",
@@ -120,7 +117,6 @@ export default {
       isFormValid: false,
     };
   },
-  components: {},
   mounted() {
     fApi.listClasses()((classes) => {
       this.classes = classes;

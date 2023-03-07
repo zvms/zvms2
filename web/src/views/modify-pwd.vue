@@ -3,26 +3,26 @@
     <v-card>
       <v-card-title>修改密码</v-card-title>
       <v-card-text>
-        <v-form v-bind="isFormValid">
+        <v-form v-model="isFormValid">
           <v-text-field
             v-model="oldPwd"
             label="旧密码"
             type="password"
-            prepend-icon="mdi-view-list"
+            prepend-icon="mdi-lock-outline"
             :rules="rules"
           />
           <v-text-field
             v-model="newPwd"
             label="新密码"
             type="password"
-            prepend-icon="mdi-view-list"
+            prepend-icon="mdi-lock-outline"
             :rules="rules"
           />
           <v-text-field
             v-model="confirmPwd"
             label="确认密码"
             type="password"
-            prepend-icon="mdi-view-list"
+            prepend-icon="mdi-lock-outline"
             :rules="rules"
           />
           <v-btn class="me-4" type="submit" color="primary" @click="modifyPwd">
@@ -52,9 +52,10 @@ export default {
     };
   },
   methods: {
-    async modifyPwd() {
+    modifyPwd() {
       if (this.isFormValid) {
-        if (this.newPwd != this.confirmPwd) {
+        if (this.newPwd !== this.confirmPwd) {
+          console.log("1111")
           toasts.error("两次密码不一致");
           this.confirmPwd = "";
           return;

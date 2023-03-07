@@ -840,4 +840,4 @@ export const fApi = new ForegroundApi({
 
   defaultFailedToast: true,
   defaultOkToast: true,
-});
+}).loadingState;

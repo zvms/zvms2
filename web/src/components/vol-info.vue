@@ -34,7 +34,7 @@
       <tr>
         <td>状态</td>
         <td>{{ getVolStatusName(vol.status) }}</td>
-        <td>{{ getVolArrangedName(vol.isArranged) }}</td>
+        <!-- <td>{{ getVolArrangedName(vol.isArranged) }}</td> -->
       </tr>
     </tbody>
   </v-table>
@@ -47,6 +47,8 @@ import {
   getVolTypeName,
   getVolStatusName,
 } from "@/apis";
+import type { PropType } from "vue";
+
 export default {
   name: "vol-info",
   props: {
@@ -59,7 +61,7 @@ export default {
     return {
       timeToHint,
       getVolTypeName,
-      getVolStatusName,
+      getVolStatusName
     };
   },
 };
