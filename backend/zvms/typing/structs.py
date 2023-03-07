@@ -33,7 +33,7 @@ class UserInfoResponse(Object):
     auth = Int
     clsName = String
 
-class ThoughtInfoResponse(Object):
+class ThoughtInfoResponse(Optional):
     reason = String
     thought = String
     reward = Int
@@ -73,6 +73,7 @@ class SingleVolunteer(Object):
     name = String
     time = String
     status = Int
+    signable = Boolean
     
 SearchVolunteersResponse = Array(SingleVolunteer())
 
@@ -160,13 +161,21 @@ class SearchVolunteers(Optional):
     name = String
     status = ParsableEnum(VolStatus)
     
-class Volunteer(Object):
+class VolunteerBody(Object):
     name = Len(String, 1, 33)
     description = Len(String, 1, 1025)
     time = DateTime
     type = Enum(VolType)
     reward = Int
+
+class Volunteer(VolunteerBody):
     classes = Array(ClassVol())
+
+class AppointedVolunteer(VolunteerBody):
+    joiners = Array(Int)
 
 class Repulse(Object):
     reason = Len(String, 1, 65)
+
+class Accept(Object):
+    reward = Int

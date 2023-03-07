@@ -109,6 +109,7 @@ with open(config['structs'], 'w', encoding='utf-8') as structs_output:
                 ),
                 body=',\n'.join((tpl.INTERFACE_MEMBER.format(
                     field=field,
+                    colon='?:' if issubclass(struct, Optional) else ':',
                     value=value.render()
                 ) for field, value in struct.__dict__.items() if isinstance(value, Checker)))
             ))

@@ -99,7 +99,7 @@ class Array(Checker):
         self.item = item
 
     def render(self):
-        return f'{self.item.render()}[]'
+        return f'Array<{self.item.render()}>'
 
     def check(self, json):
         if not isinstance(json, (list, tuple)):
@@ -196,7 +196,8 @@ class Optional(Object):
         if not isinstance(json, dict):
             return False
         for k, v in json.items():
-            if k in fields.keys() and not v.check(fields[k]):
+            if k in fields and not fields[k].check(v):
+                print(k, v)
                 return False
         return True
 

@@ -102,10 +102,10 @@ export interface VolunteerInfoResponse {
 }
 
 export interface SearchNotices {
-    sender: number,
-    user: number,
-    cls: number,
-    school: number
+    sender?: number,
+    user?: number,
+    cls?: number,
+    school?: number
 }
 
 export interface NoticeBody {
@@ -127,10 +127,10 @@ export interface Signup {
 }
 
 export interface SearchThoughts {
-    cls: number,
-    status: enums.ThoughtStatus,
-    student: number,
-    volunteer: number
+    cls?: number,
+    status?: enums.ThoughtStatus,
+    student?: number,
+    volunteer?: number
 }
 
 export interface SingleThought {
@@ -152,9 +152,9 @@ export interface Login {
 }
 
 export interface SearchUsers {
-    name: string,
-    cls: number,
-    auth: number
+    name?: string,
+    cls?: number,
+    auth?: number
 }
 
 export interface ModPwd {
@@ -182,11 +182,11 @@ export interface ClassVol {
 }
 
 export interface SearchVolunteers {
-    holder: number,
-    student: number,
-    cls: number,
-    name: string,
-    status: enums.VolStatus
+    holder?: number,
+    student?: number,
+    cls?: number,
+    name?: string,
+    status?: enums.VolStatus
 }
 
 export interface Volunteer {

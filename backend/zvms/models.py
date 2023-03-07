@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, SmallInteger, DateTime, Date
 from flask_sqlalchemy import SQLAlchemy
 
 from zvms.res import *
-from zvms.util import ModelMixIn, render_markdown, select_value, count, init_util
+from zvms.util import ModelMixIn, render_markdown, select_value, count, init_util, list_or_error
 
 db = SQLAlchemy()
 
@@ -103,10 +103,6 @@ class Volunteer(ModelMixIn, db.Model):
     def holder(self):
         return User.query.get(self.holder_id)
 
-    @property
-    def signable(self):
-        return True
-
 
 class StuVol(ModelMixIn, db.Model):
     __tablename__ = 'stu_vol'
@@ -120,7 +116,7 @@ class StuVol(ModelMixIn, db.Model):
 
     @property
     def pics(self):
-        return Picture.query.filter_by(stu_id=self.stu_id, vol_id=self.vol_id).select_value('hash')
+        return list_or_error(Picture.query.filter_by(stu_id=self.stu_id, vol_id=self.vol_id).select_value('hash'))
 
     @property
     def stu(self):
@@ -129,14 +125,14 @@ class StuVol(ModelMixIn, db.Model):
     @property
     def stu_name(self):
         return User.query.get(self.stu_id).name
+    
+    @property
+    def vol(self):
+        return Volunteer.query.get(self.vol_id)
 
     @property
     def vol_name(self):
-        return Volunteer.query.get(self.vol_id).name
-
-    @property
-    def markdown(self):
-        return render_markdown(self.thought)
+        return self.vol.name
 
 
 class ClassVol(ModelMixIn, db.Model):

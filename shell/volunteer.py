@@ -11,7 +11,10 @@ def search_volunteers(**kwargs):
     res = req.get(url)
     if res:
         for i in res:
-            print('{id} {name} {audited}过审 过期于{time}'.format(audited='已' if i['status'] == 2 else '未', **i))
+            print('{id} {name} {is_signable}报名 {audited}过审 过期于{time}'.format(
+                audited='已' if i['status'] == 2 else '未',
+                is_signable='可' if i['signable'] else '不可',
+                **i))
 
 @volunteer.route('vol <int:id>')
 def get_volunteer_info(id):
@@ -25,10 +28,16 @@ def get_volunteer_info(id):
 举办者: {holder}
 类型: {vol_type}
 报酬: {reward}
+{is_signable}报名
 参与者:
-'''.format(**res, vol_type=vol_types[res['type']]))
-        for i in res['joiners']:
-            print('{name}({id})'.format(**i))
+{joiners_unfolded}
+'''.format(**res,
+            vol_type=vol_types[res['type']],
+            is_signable='可' if res['signable'] else '不可',
+            joiners_unfolded='\n'.join((
+                '{name}({id})'.format(**i)
+                for i in res['joiners']
+            ))))
 
 @volunteer.route('vol create <name> <time> <int:type> <int:reward> -m: 描述 <description> -f: 存放描述的文件路径 <file> *classes int:id int:max')
 def create_volunteer(**kwargs):

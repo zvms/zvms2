@@ -1,5 +1,6 @@
 from functools import wraps, partial
-from typing import Callable, Iterable
+from types import NoneType
+from typing import Iterable
 from itertools import chain
 import hashlib
 import datetime
@@ -196,8 +197,7 @@ class chain:
 
     def __iter__(self):
         for iterable in self.iterables:
-            for item in iterable:
-                yield item
+            yield from iterable
 
 
 def error(message):
@@ -245,13 +245,13 @@ def exists(seq, predicate):
     return False
 
 def parse(json):
-    if isinstance(json, int):
-        return 'number(int)'
-    if isinstance(json, float):
-        return 'number(float)'
     if isinstance(json, bool):
         return 'boolean'
-    if isinstance(json, type(None)):
+    if isinstance(json, int):
+        return 'int'
+    if isinstance(json, float):
+        return 'float'
+    if isinstance(json, NoneType):
         return 'null'
     if isinstance(json, str):
         return f'string({len(json)})'

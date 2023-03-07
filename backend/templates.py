@@ -27,7 +27,7 @@ INTERFACE = '''export interface {name}{inheritance} {{
 
 INHERITANCE = ''' extends {base}'''
 
-INTERFACE_MEMBER = '''    {field}: {value}'''
+INTERFACE_MEMBER = '''    {field}{colon} {value}'''
 
 TYPE = '''export type {name} = {alias}
 
