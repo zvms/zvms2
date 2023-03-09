@@ -381,7 +381,8 @@
         "id": "number",
         "name": "string",
         "time": "string",
-        "status": "number"
+        "status": "number",
+        "signable": "boolean"
     }
 ]
 ```
@@ -420,57 +421,17 @@
 参数: 
 ```json
 {
-    "name": "string",
-    "description": "string",
-    "time": "string",
-    "type": "VolType",
-    "reward": "number",
     "classes": [
         {
             "id": "number",
             "max": "number"
-        }
-    ]
-}
-```
-响应:  
-```json
-{
-    "name": "string",
-    "description": "string",
-    "time": "string",
-    "status": "VolStatus",
-    "type": "VolType",
-    "reward": "number",
-    "signable": "boolean",
-    "joiners": [
-        {
-            "id": "number",
-            "name": "string"
         }
     ],
-    "holder": "number",
-    "holderName": "string"
-}
-```
-
-#### 5.4 modifyVolunteer
-[POST] /volunteer/<int:id>/modify  
-**修改义工**  
-参数: 
-```json
-{
     "name": "string",
     "description": "string",
     "time": "string",
     "type": "VolType",
-    "reward": "number",
-    "classes": [
-        {
-            "id": "number",
-            "max": "number"
-        }
-    ]
+    "reward": "number"
 }
 ```
 响应:  
@@ -478,7 +439,52 @@
 "any"
 ```
 
-#### 5.5 deleteVolunteer
+#### 5.4 createAppointedVolunteer
+[POST] /volunteer/create/appointed  
+**创建一个成员全部指定的义工**  
+参数: 
+```json
+{
+    "joiners": [
+        "number"
+    ],
+    "name": "string",
+    "description": "string",
+    "time": "string",
+    "type": "VolType",
+    "reward": "number"
+}
+```
+响应:  
+```json
+"any"
+```
+
+#### 5.5 modifyVolunteer
+[POST] /volunteer/<int:id>/modify  
+**修改义工**  
+参数: 
+```json
+{
+    "classes": [
+        {
+            "id": "number",
+            "max": "number"
+        }
+    ],
+    "name": "string",
+    "description": "string",
+    "time": "string",
+    "type": "VolType",
+    "reward": "number"
+}
+```
+响应:  
+```json
+"any"
+```
+
+#### 5.6 deleteVolunteer
 [POST] /volunteer/<int:id>/delete  
 **删除义工**  
 参数: 
@@ -490,7 +496,7 @@
 "any"
 ```
 
-#### 5.6 auditVolunteer
+#### 5.7 auditVolunteer
 [POST] /volunteer/<int:id>/audit  
 **审核义工(班内)**  
 参数: 
@@ -575,7 +581,15 @@
 ```
 响应:  
 ```json
-"any"
+[
+    {
+        "volId": "number",
+        "stuId": "number",
+        "status": "ThoughtStatus",
+        "stuName": "string",
+        "volName": "string"
+    }
+]
 ```
 
 #### 6.3 getThoughtInfo
@@ -648,7 +662,9 @@
 **终审感想(义管会)**  
 参数: 
 ```json
-"any"
+{
+    "reward": "number"
+}
 ```
 响应:  
 ```json
