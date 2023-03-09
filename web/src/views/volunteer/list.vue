@@ -22,7 +22,7 @@
 
         <v-card-actions>
           <v-btn
-            v-for="(item, index) in current.actions"
+            v-for="(item, index) in actions"
             :key="index"
             @click="item.onclick"
           />
@@ -33,8 +33,8 @@
           <v-card-title>上传感想</v-card-title>
 
           <v-form>
-            <v-textarea v-model="current.thought!.thought" />
-            <v-file-input v-model="current.picFiles">
+            <v-textarea v-model="current.thought!.data.thought" />
+            <v-file-input v-model="current.thought!.picFiles">
               <template v-slot:selection="{ fileNames }">
                 <template v-for="fileName in fileNames" :key="fileName">
                   <v-img :src="fileName" />
@@ -67,6 +67,7 @@ import {
 import { useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
+import Base64 from "crypto-js/enc-base64";
 
 interface Action {
   text: string;
@@ -84,10 +85,12 @@ export default {
         {
           title: "编号",
           value: "id",
+          key: "id",
         },
         {
           title: "名称",
           value: "name",
+          key: "name",
         },
       ],
       vols: [
@@ -108,8 +111,10 @@ export default {
       current: undefined as any as {
         singleVol: SingleVolunteer;
         vol: VolunteerInfoResponse;
-        thought: ThoughtInfoResponse | null;
-        picFiles: File[];
+        thought?: {
+          data: ThoughtInfoResponse;
+          picFiles: File[];
+        };
       },
 
       infoDlg: false,
@@ -149,29 +154,23 @@ export default {
         this.current!.singleVol.id,
         this.infoStore.userId
       )((thought) => {
-        this.current.thought = thought;
+        this.current.thought = { data: thought, picFiles: [] };
       });
     },
     async saveThought() {
-      const pics: {
-        data: Uint8Array;
-        name: string;
-      }[] = [];
-      for (const f of this.current.picFiles) {
+      const pics: string[] = [];
+      for (const f of this.current.thought!.picFiles) {
         const readResult = await f.stream().getReader().read();
         if (!readResult.done) {
           toasts.error(`文件${f.name}上传失败！`);
           continue;
         }
-        pics.push({
-          data: readResult.value ?? Uint8Array.from([]),
-          name: f.name,
-        });
+        pics.push(Base64.stringify(readResult.value ?? Uint8Array.from([])));
       }
       fApi.saveThought(
-        this.current.thought!.volId,
-        this.current.thought!.stuId,
-        this.current.thought!.thought,
+        this.current.singleVol.id,
+        this.infoStore.userId,
+        this.current.thought!.data.thought ?? "",
         pics
       )(() => {});
     },
@@ -206,7 +205,9 @@ export default {
           text: "报名",
           onclick: () => {
             confirm("确定报名？").then(() => {
-              fApi.signup(item.id, [this.infoStore.userId])(() => {});
+              fApi.signup(this.current.singleVol.id, [this.infoStore.userId])(
+                () => {}
+              );
             });
           },
         });
@@ -216,14 +217,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.v-card {
-  margin: 0.3rem;
-}
-
-.pic {
-  width: auto;
-  height: 120px;
-}
-</style>

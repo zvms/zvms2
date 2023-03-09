@@ -8,7 +8,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vuetify"],
+    "types": ["vuetify", "crypto-js"],
     "allowJs": true,
     "importsNotUsedAsValues": "remove"
   }

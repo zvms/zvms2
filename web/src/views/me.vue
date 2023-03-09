@@ -102,9 +102,9 @@ export default {
         router.push("/login");
       });
     },
-    modifyPwd(){
+    modifyPwd() {
       router.push("/modifyPwd");
-    }
+    },
   },
   computed: {
     ...mapStores(useInfoStore, useNoticesStore),

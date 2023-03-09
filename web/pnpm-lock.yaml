@@ -7,6 +7,7 @@ specifiers:
   '@commitlint/prompt-cli': ^17.3.0
   '@mdi/font': ^7.1.96
   '@rushstack/eslint-patch': ^1.1.4
+  '@types/crypto-js': ^4.1.1
   '@types/jsdom': ^20.0.1
   '@types/node': ^18.11.9
   '@types/nprogress': ^0.2.0
@@ -19,6 +20,7 @@ specifiers:
   '@vueuse/core': ^9.6.0
   autoprefixer: ^10.4.13
   axios: ^1.2.0
+  crypto-js: ^4.1.1
   dayjs: ^1.11.6
   eslint: ^8.22.0
   eslint-plugin-vue: ^9.3.0
@@ -46,6 +48,7 @@ specifiers:
 dependencies:
   '@commitlint/format': 17.0.0
   '@mdi/font': 7.1.96
+  crypto-js: 4.1.1
   pinia: 2.0.27_prq2uz4lho2pwp6irk4cfkrxwu
   pinia-plugin-persist: 1.0.0_pinia@2.0.27+vue@3.2.45
   sweetalert2: 11.6.15
@@ -57,6 +60,7 @@ devDependencies:
   '@commitlint/config-conventional': 17.3.0
   '@commitlint/prompt-cli': 17.3.0
   '@rushstack/eslint-patch': 1.2.0
+  '@types/crypto-js': 4.1.1
   '@types/jsdom': 20.0.1
   '@types/node': 18.11.10
   '@types/nprogress': 0.2.0
@@ -934,6 +938,10 @@ packages:
 
   /@types/chai/4.3.4:
     resolution: {integrity: sha512-KnRanxnpfpjUTqTCXslZSEdLfXExwgNxYPdiO2WGUj8+HDjFi8R3k5RVKPeSCzLjCcshCAtVO2QBbVuAV4kTnw==}
+    dev: true
+
+  /@types/crypto-js/4.1.1:
+    resolution: {integrity: sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==}
     dev: true
 
   /@types/estree/1.0.0:
@@ -1834,6 +1842,10 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
     dev: true
+
+  /crypto-js/4.1.1:
+    resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
+    dev: false
 
   /cssesc/3.0.0:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}

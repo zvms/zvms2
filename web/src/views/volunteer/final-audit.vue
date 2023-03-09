@@ -117,17 +117,17 @@ export default {
         item: any;
       }
     ) {
-      const item = value.item as SingleThought;
+      const item = value.item.raw as SingleThought;
       this.currentThoughtInfo = item;
       fApi.getVolunteerInfo(item.volId)((volunteer) => {
         this.currentVol = volunteer;
-      });
-      fApi.getThoughtInfo(
-        item.volId,
-        item.stuId
-      )((thought) => {
-        this.currentThoughtData = thought;
-        this.dialog1 = true;
+        fApi.getThoughtInfo(
+          item.volId,
+          item.stuId
+        )((thought) => {
+          this.currentThoughtData = thought;
+          this.dialog1 = true;
+        });
       });
     },
     /**
@@ -140,8 +140,8 @@ export default {
         if (status) {
           fApi.finalAudit(
             this.currentThoughtInfo!.volId,
-            this.currentThoughtInfo!.stuId
-            //this.currentReward
+            this.currentThoughtInfo!.stuId,
+            this.currentReward
           )(() => {
             this.fetchThoughts();
           });

@@ -20,7 +20,6 @@ export function initAxios() {
     (config) => {
       config.params = {
         ...config.params,
-        timestamp: Date.now(),
       };
       config.headers = config.headers ?? {};
       config.headers.Authorization = infoStore.token || "";

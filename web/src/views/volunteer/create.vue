@@ -126,6 +126,7 @@ export default {
     createVolunteer() {
       if (this.isFormValid) {
         fApi.createVolunteer(
+          this.classSelected,
           this.form.name,
           this.form.description,
           this.form.date,

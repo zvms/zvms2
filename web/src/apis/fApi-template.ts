@@ -1,6 +1,7 @@
 import { toasts } from "@/utils/dialogs";
 import { useLoadingStore } from "@/stores";
-import Axios, { type AxiosResponse } from "axios";
+import { type AxiosResponse } from "axios";
+import axios from "@/plugins/axios";
 import * as structs from "./types/structs";
 import * as enums from "./types/enums";
 
@@ -51,11 +52,11 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
   };
 
   const methods = {
-    POST: Axios.post,
-    GET: Axios.get,
-    DELETE: Axios.delete,
-    PUT: Axios.put,
-    PATCH: Axios.patch,
+    POST: axios.post,
+    GET: axios.get,
+    DELETE: axios.delete,
+    PUT: axios.put,
+    PATCH: axios.patch,
   } as const;
 
   const func = methods[method];

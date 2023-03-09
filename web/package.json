@@ -15,6 +15,7 @@
   "dependencies": {
     "@commitlint/format": "^17.0.0",
     "@mdi/font": "^7.1.96",
+    "crypto-js": "^4.1.1",
     "pinia": "^2.0.26",
     "pinia-plugin-persist": "^1.0.0",
     "sweetalert2": "^11.6.15",
@@ -26,6 +27,7 @@
     "@commitlint/config-conventional": "^17.3.0",
     "@commitlint/prompt-cli": "^17.3.0",
     "@rushstack/eslint-patch": "^1.1.4",
+    "@types/crypto-js": "^4.1.1",
     "@types/jsdom": "^20.0.1",
     "@types/node": "^18.11.9",
     "@types/nprogress": "^0.2.0",
