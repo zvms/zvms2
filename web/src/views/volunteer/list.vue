@@ -28,19 +28,26 @@
           />
         </v-card-actions>
       </v-card>
-      <v-dialog v-model="uploadDlg" max-height="80%">
+      <v-dialog v-model="thoughtDlg" max-height="80%">
         <v-card>
           <v-card-title>上传感想</v-card-title>
 
           <v-form>
             <v-textarea v-model="current.thought!.data.thought" />
-            <v-file-input v-model="current.thought!.picFiles">
-              <template v-slot:selection="{ fileNames }">
+            <v-file-input accept="image/*" @update:model-value="uploadImg">
+              <!-- <template v-slot:selection="{ fileNames }">
                 <template v-for="fileName in fileNames" :key="fileName">
                   <v-img :src="fileName" />
                 </template>
-              </template>
+              </template> -->
             </v-file-input>
+            <v-container>
+              <v-row>
+                <v-col v-for="p,i in current.thought!.pics" :key="i">
+                  <v-img :src="`data:${p.type};base64,${p.base64}`" />
+                </v-col>
+              </v-row>
+            </v-container>
           </v-form>
           <v-card-actions>
             <v-btn @click="saveThought">保存</v-btn>
@@ -113,14 +120,19 @@ export default {
         vol: VolunteerInfoResponse;
         thought?: {
           data: ThoughtInfoResponse;
-          picFiles: File[];
+          pics: {
+            type: string;
+            base64: string;
+          }[];
         };
       },
 
       infoDlg: false,
       thoughtDlg: false,
-      uploadDlg: false,
     };
+  },
+  mounted() {
+    this.fetchVols();
   },
   methods: {
     fetchVols() {
@@ -138,7 +150,6 @@ export default {
         this.vols = result;
       });
     },
-
     onRowClick(ev: Event, v: any) {
       const item: SingleVolunteer = v.item.raw;
       fApi.getVolunteerInfo(item.id)((vol) => {
@@ -154,34 +165,38 @@ export default {
         this.current!.singleVol.id,
         this.infoStore.userId
       )((thought) => {
-        this.current.thought = { data: thought, picFiles: [] };
+        this.current.thought = { data: thought, pics: [] };
       });
     },
-    async saveThought() {
-      const pics: string[] = [];
-      for (const f of this.current.thought!.picFiles) {
-        const readResult = await f.stream().getReader().read();
-        if (!readResult.done) {
-          toasts.error(`文件${f.name}上传失败！`);
-          continue;
-        }
-        pics.push(Base64.stringify(readResult.value ?? Uint8Array.from([])));
+    async uploadImg(files: File[]) {
+      const newFile = files[0];
+      const readResult = await newFile.stream().getReader().read();
+      if (!readResult.done) {
+        toasts.error(`文件${newFile.name}上传失败！`);
+        return;
       }
+      this.current.thought!.pics.push({
+        type: newFile.type,
+        base64: Base64.stringify(readResult.value ?? Uint8Array.from([])),
+      });
+    },
+    async saveThought(then = () => {}) {
       fApi.saveThought(
         this.current.singleVol.id,
         this.infoStore.userId,
         this.current.thought!.data.thought ?? "",
-        pics
-      )(() => {});
+        this.current.thought!.pics.map((v) => v.base64)
+      )(then);
     },
     async submitThought() {
-      this.saveThought();
-      if (await confirm("确定提交？")) {
-        fApi.submitThought(
-          this.current.thought!.volId,
-          this.current.thought!.stuId
-        );
-      }
+      this.saveThought(async () => {
+        if (await confirm("确定提交？")) {
+          fApi.submitThought(
+            this.current.thought!.volId,
+            this.current.thought!.stuId
+          );
+        }
+      });
     },
   },
   computed: {

@@ -13,7 +13,6 @@
           v-model="form.userid"
           :rules="rules"
           label="学号/ID"
-          @keyup.native.enter="login"
         />
         <v-text-field
           type="password"
@@ -22,7 +21,7 @@
           label="密码"
           @keyup.native.enter="login"
         />
-        <v-btn class="me-4" type="submit" click="login">登录 </v-btn>
+        <v-btn class="me-4" type="submit" @click="login">登录 </v-btn>
       </v-form>
     </v-card-text>
   </v-card>
@@ -51,6 +50,7 @@ export default {
   },
   methods: {
     login() {
+      console.log("!!!");
       if (this.isFormValid) {
         this.form.password = "";
         const id = parseInt(this.form.userid);
@@ -66,17 +66,16 @@ export default {
               className: clsName,
               token: token,
             });
+
+            applyNavItems();
+            this.$router.push("/");
           });
 
-          fApi.searchNotices(
-            undefined,
-            id
-          )((result) => {
+          fApi.searchNotices({
+            user: id,
+          })((result) => {
             this.noticesStore.notices = result;
           });
-
-          applyNavItems();
-          this.$router.push("/");
         });
       }
     },

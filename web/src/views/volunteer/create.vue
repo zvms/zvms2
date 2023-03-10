@@ -18,7 +18,7 @@
               <td></td>
             </thead> -->
             <tbody>
-              <tr v-for="(cls, i) in classSelected" :key="i">
+              <tr v-for="(cls, i) in form.classSelected" :key="i">
                 <td class="pa-0">{{ classes.find((v) => v.id === cls.id)?.name }}</td>
                 <td>{{ cls.max }}</td>
                 <td>
@@ -76,7 +76,7 @@
             prepend-icon="mdi-text"
           />
           <v-text-field
-            v-model.number="form.reward"
+            v-model.number="form.reward"form.
             label="时长（分钟）"
             prepend-icon="mdi-clock-time-three-outline"
           />
@@ -101,7 +101,6 @@ export default {
   data() {
     return {
       permissionTypes,
-      classSelected: [] as ClassVol[],
       count_new: 5,
       class_new: NaN,
       classes: [{id:123,name:"aaa"},{id:456,name:"bbb"}] as SingleClass[],
@@ -110,6 +109,7 @@ export default {
         date: "",
         description: "",
         reward: 0,
+      classSelected: [] as ClassVol[],
         type: NaN as VolType,
         class: undefined,
       },
@@ -126,13 +126,12 @@ export default {
     createVolunteer() {
       if (this.isFormValid) {
         fApi.createVolunteer(
-          this.classSelected,
+          this.form.classSelected,
           this.form.name,
           this.form.description,
           this.form.date,
           this.form.type,
-          this.form.reward,
-          this.classSelected
+          this.form.reward
         )((result) => {
           this.$router.push("/");
         });
@@ -142,15 +141,15 @@ export default {
       let flg = false;
       if (Number.isNaN(this.class_new)) flg = true;
       if (Number.isNaN(this.count_new) || this.count_new <= 0) flg = true;
-      for (let i in this.classSelected) {
+      for (let i in this.form.classSelected) {
         console.log(i);
-        if (this.classSelected[i]["id"] == this.class_new) {
+        if (this.form.classSelected[i]["id"] == this.class_new) {
           flg = true;
           break;
         }
       }
       if (!flg)
-        this.classSelected.push({
+        this.form.classSelected.push({
           id: this.class_new,
           max: this.count_new,
         });
@@ -158,7 +157,7 @@ export default {
       this.count_new = 0;
     },
     delFromList(i: number) {
-      this.classSelected.splice(i, 1);
+      this.form.classSelected.splice(i, 1);
     },
   },
   computed: {

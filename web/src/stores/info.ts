@@ -4,11 +4,11 @@ import { defineStore } from "pinia";
 export const useInfoStore = defineStore("info", {
   state: () => {
     return {
-      userId: 111111, //NaN,
-      username: "admin", //"",
-      permission: 0xfffffff, //permissionTypes.none as permissionTypes,
-      classId: 12333, // NaN,
-      className: "className", //"",
+      userId: NaN,
+      username: "",
+      permission: permissionTypes.none,
+      classId: NaN,
+      className: "",
       token: "",
     };
   },
