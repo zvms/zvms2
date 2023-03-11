@@ -33,7 +33,7 @@ specifiers:
   pinia-plugin-persist: ^1.0.0
   postcss: ^8.4.19
   prettier: ^2.7.1
-  sweetalert2: ^11.6.15
+  sweetalert2: ^11.7.3
   tailwindcss: ^3.2.4
   typescript: ~4.9.4
   unplugin-auto-import: ^0.12.0
@@ -51,7 +51,7 @@ dependencies:
   crypto-js: 4.1.1
   pinia: 2.0.27_prq2uz4lho2pwp6irk4cfkrxwu
   pinia-plugin-persist: 1.0.0_pinia@2.0.27+vue@3.2.45
-  sweetalert2: 11.6.15
+  sweetalert2: 11.7.3
   vue: 3.2.45
   vue-router: 4.1.6_vue@3.2.45
 
@@ -4166,8 +4166,8 @@ packages:
     resolution: {integrity: sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==}
     dev: true
 
-  /sweetalert2/11.6.15:
-    resolution: {integrity: sha512-FqMy1gRGHEI5G145NE5XSP059TziCJu9Xf9/mkki/aKu5pLNcYzjggOzKO5Ex10EBgAGDXQ99jyGfYYzGCYXRQ==}
+  /sweetalert2/11.7.3:
+    resolution: {integrity: sha512-fUN/fyVSBZNtY4Rr/Qtxn7tNNnlRAbUhQxTQ9uOo0xVMIHBmqq4/9pau5N9dB2pvkB353XL/ywRAycscLoYU3w==}
     dev: false
 
   /symbol-tree/3.2.4:

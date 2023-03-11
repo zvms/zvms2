@@ -60,7 +60,7 @@ export default {
           this.confirmPwd = "";
           return;
         }
-        fApi.modifyPassword(md5(this.oldPwd), md5(this.newPwd))(() => {});
+        fApi.modifyPassword(md5(this.oldPwd), md5(this.newPwd))();
       }
     },
   },

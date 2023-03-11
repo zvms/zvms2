@@ -28,7 +28,6 @@ export const toasts = {
   },
 };
 export const confirm = async (msg: string = "确定操作？") => {
-  //console.log(`%c${new Date()}\n${msg}`, 'color: #f1c40f')
   const res = await Swal.fire({
     title: "三思而后行",
     text: msg,

@@ -1,0 +1,41 @@
+
+
+POST
+
+createVolunteer(
+    classes: Array<structs.ClassVol>,
+    name: string,
+    description: string,
+    time: string,
+    type: enums.VolType,
+    reward: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/volunteer/create`,
+      {
+        classes,
+        name,
+        description,
+        time,
+        type,
+        reward
+      }
+    );
+  }
+
+
+GET
+
+  searchUsers(
+    kwargs: structs.SearchUsers
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/user/search?` + (
+        new URLSearchParams(kwargs)
+      ),
+    );
+  }

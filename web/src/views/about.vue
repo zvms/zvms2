@@ -43,7 +43,7 @@ export default {
   methods: {
     submitReport() {
       if (this.isFormValid) {
-        fApi.report(this.report)(() => {});
+        fApi.report(this.report)();
       }
     },
   },

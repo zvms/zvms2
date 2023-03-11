@@ -35,7 +35,7 @@ export function isTimeFinished(
 }
 
 export function timeToHint(a: number) {
-  const hr = a / 60;
+  const hr = Math.floor(a / 60);
   const mi = a % 60;
   if (hr != 0)
     if (mi != 0) return hr + " 小时 " + mi + " 分钟";

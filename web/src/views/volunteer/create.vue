@@ -76,7 +76,8 @@
             prepend-icon="mdi-text"
           />
           <v-text-field
-            v-model.number="form.reward"form.
+            v-model.number="form.reward"
+            :rules="rules"
             label="时长（分钟）"
             prepend-icon="mdi-clock-time-three-outline"
           />

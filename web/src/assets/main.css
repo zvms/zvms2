@@ -1,5 +1,9 @@
 @import "./base.css";
 
-.v-card{
+.v-card {
     margin-bottom: .5em;
+}
+
+.swal2-container {
+    z-index: 10000 !important
 }

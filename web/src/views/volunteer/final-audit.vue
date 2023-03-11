@@ -15,26 +15,31 @@
         </data-table>
       </v-card-text>
     </v-card>
-    <v-dialog v-model="dialog1" max-width="80%">
+    <v-dialog v-model="dialog" persistent fullscreen scrollable>
       <v-card>
         <v-card-title>详细信息</v-card-title>
-        <vol-info v-if="currentVol" :vol="currentVol" />
-        <thought-info v-if="currentThoughtData" :thought="currentThoughtData" />
-        <v-spacer />
-        发放的{{ getVolTypeName(currentVol!.type) }}时长（分钟）
-        <v-text-field
-          v-model="currentReward"
-          label="不填为默认值"
-          prepend-icon="mdi-view-list"
-        />
+        <v-card-text>
+          <vol-info v-if="currentVol" :vol="currentVol" />
+          <thought-info
+            v-if="currentThoughtData"
+            :thought="currentThoughtData"
+          />
+          <v-spacer />
+          发放的{{ getVolTypeName(currentVol!.type) }}时长（分钟）
+          <v-text-field
+            v-model="currentReward"
+            prepend-icon="mdi-clock-time-three-outline"
+          />
+        </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn color="green" @click="audit(true)">通过 </v-btn>
           <v-btn color="red" @click="audit(false)">打回 </v-btn>
-          <!-- <v-btn color="primary" @click="dialog1 = false">取消 </v-btn> -->
+          <v-btn @click="dialog = false">关闭 </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-btn @click="test">test</v-btn>
   </v-container>
 </template>
 
@@ -53,6 +58,8 @@ import {
   type ThoughtInfoResponse,
   ThoughtStatus,
   type SingleThought,
+  VolType,
+  VolStatus,
 } from "@/apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
@@ -93,7 +100,7 @@ export default {
         },
       ] as SingleThought[],
 
-      dialog1: false,
+      dialog: false,
       currentVol: undefined as VolunteerInfoResponse | undefined,
       currentThoughtInfo: undefined as SingleThought | undefined,
       currentThoughtData: undefined as ThoughtInfoResponse | undefined,
@@ -104,6 +111,32 @@ export default {
     this.fetchThoughts();
   },
   methods: {
+    test() {
+      this.currentVol = {
+        name: "VolName",
+        description: "DESC",
+        time: "1-1-1",
+        status: VolStatus.Unaudited,
+        type: VolType.Inside,
+        reward: 11122222,
+        signable: true,
+        joiners: [
+          {
+            id: 1,
+            name: "abc",
+          },
+        ],
+        holder: 2,
+        holderName: "aaa",
+      };
+      this.currentThoughtInfo = this.thoughts[0];
+      this.currentThoughtData = {
+        thought: "thought text",
+        pics: ["1111", "1111"],
+      };
+      this.currentReward = this.currentVol.reward;
+      this.dialog = true;
+    },
     fetchThoughts() {
       fApi.searchThoughts({
         status: ThoughtStatus.WaitingForFinalAudit,
@@ -120,13 +153,14 @@ export default {
       const item = value.item.raw as SingleThought;
       this.currentThoughtInfo = item;
       fApi.getVolunteerInfo(item.volId)((volunteer) => {
-        this.currentVol = volunteer;
         fApi.getThoughtInfo(
           item.volId,
           item.stuId
         )((thought) => {
+          this.currentVol = volunteer;
           this.currentThoughtData = thought;
-          this.dialog1 = true;
+          this.currentReward = volunteer.reward;
+          this.dialog = true;
         });
       });
     },
@@ -136,7 +170,6 @@ export default {
     async audit(status: boolean) {
       let value = await confirm();
       if (value) {
-        this.dialog1 = false;
         if (status) {
           fApi.finalAudit(
             this.currentThoughtInfo!.volId,
@@ -144,6 +177,7 @@ export default {
             this.currentReward
           )(() => {
             this.fetchThoughts();
+            this.dialog = false;
           });
         } else {
           fApi.repulse(
@@ -152,6 +186,7 @@ export default {
             ""
           )(() => {
             this.fetchThoughts();
+            this.dialog = false;
           });
         }
 

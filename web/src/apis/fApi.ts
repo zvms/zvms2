@@ -35,7 +35,7 @@ export type ForegroundApiProcessor<R extends any> = (
   result: R
 ) => Promise<void> | void;
 export type ForegroundApiRunner<R extends any> = (
-  processor: ForegroundApiProcessor<R>
+  processor?: ForegroundApiProcessor<R>
 ) => Promise<void>;
 export function createForegroundApiRunner<T extends any[], R extends any>(
   fApi: ForegroundApi,
@@ -64,7 +64,7 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
     config.errorReq(new Error(`Method ${method} is not supported`), info);
   }
 
-  return async (processor: ForegroundApiProcessor<R>) => {
+  return async (processor: ForegroundApiProcessor<R> = () => {}) => {
     config.beforeReq(info);
     try {
       let res;
