@@ -21,6 +21,7 @@ declare module '@vue/runtime-core' {
     VCardText: typeof import('vuetify/components')['VCardText']
     VCardTitle: typeof import('vuetify/components')['VCardTitle']
     VChip: typeof import('vuetify/components')['VChip']
+    VChipGroup: typeof import('vuetify/components')['VChipGroup']
     VCol: typeof import('vuetify/components')['VCol']
     VContainer: typeof import('vuetify/components')['VContainer']
     VDataTable: typeof import('vuetify/components')['VDataTable']

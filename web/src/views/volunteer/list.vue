@@ -6,19 +6,20 @@
         <v-spacer></v-spacer>
       </v-card-title>
     </v-card>
-    <data-table
-      fixed-header
-      :headers="headers"
-      :items="vols"
-      no-data-text="没有数据哦"
-      no-results-text="没有结果"
-      @click:row="onRowClick"
-    >
-    </data-table>
+    <v-card>
+      <data-table
+        fixed-header
+        :headers="headers"
+        :items="vols"
+        no-data-text="没有数据哦"
+        no-results-text="没有结果"
+        @click:row="onRowClick"
+      />
+    </v-card>
 
     <v-dialog v-if="infoDlg" v-model="infoDlg" persistent fullscreen scrollable>
       <v-card>
-        <v-card-title>{{ current.vol.name }}</v-card-title>
+        <v-card-title variant="outlined">{{ current.vol.name }}</v-card-title>
 
         <v-card-text>
           <vol-info :vol="current.vol" />
@@ -35,7 +36,7 @@
       </v-card>
       <v-dialog v-model="thoughtDlg" persistent fullscreen>
         <v-card>
-          <v-card-title>上传感想</v-card-title>
+          <v-card-title outlined>上传感想</v-card-title>
           <v-card-text>
             <v-form>
               <v-textarea v-model="current.thought!.data.thought" />
@@ -49,8 +50,17 @@
               <v-container>
                 <v-row>
                   <v-col v-for="p,i in current.thought!.pics" :key="i">
-                    <v-img :src="`data:${p.type};base64,${p.base64}`" class="m-10" max-width="10em" outlined/>
-                    <v-btn color="white" @click="current.thought!.pics.splice(i)">删除</v-btn>
+                    <v-img
+                      :src="`data:${p.type};base64,${p.base64}`"
+                      class="m-10"
+                      max-width="10em"
+                      outlined
+                    />
+                    <v-btn
+                      color="white"
+                      @click="current.thought!.pics.splice(i)"
+                      >删除</v-btn
+                    >
                   </v-col>
                 </v-row>
               </v-container>

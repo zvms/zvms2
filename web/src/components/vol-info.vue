@@ -1,42 +1,46 @@
 <template>
   <v-table dense>
-    <tbody>
-      <tr>
-        <td>简介</td>
-        <td>{{ vol.description }}</td>
-      </tr>
-      <tr>
-        <td>时间</td>
-        <td>{{ vol.time }}</td>
-      </tr>
-      <tr>
-        <td>{{ getVolTypeName(vol.type) }}时长</td>
-        <td>{{ timeToHint(vol.reward) }}</td>
-      </tr>
-      <tr>
-        <td>主持</td>
-        <td>{{ vol.holderName }}</td>
-      </tr>
-      <tr v-if="vol.isArranged">
-        <td>参与者（{{ vol.joiners.length }}人）</td>
-        <td v-for="j in vol.joiners">{{ j.name }}</td>
-      </tr>
-      <div v-else>
-        <tr>
-          <td>人数</td>
-          <td>{{ vol.maxJoiner }}</td>
-        </tr>
-        <tr>
-          <td>已报名（{{ vol.joiners.length }}人）</td>
-          <td v-for="j in vol.joiners">{{ j.name }}</td>
-        </tr>
-      </div>
-      <tr>
-        <td>状态</td>
-        <td>{{ getVolStatusName(vol.status) }}</td>
-        <!-- <td>{{ getVolArrangedName(vol.isArranged) }}</td> -->
-      </tr>
-    </tbody>
+    <v-list>
+      <v-list-item>
+        <v-list-item-title>简介</v-list-item-title>
+        {{ vol.description }}
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-title>时间</v-list-item-title>
+        {{ vol.time }}
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-title
+          >{{ getVolTypeName(vol.type) }}时长</v-list-item-title
+        >
+        {{ timeToHint(vol.reward) }}
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-title>主持</v-list-item-title>
+        {{ vol.holderName }}
+      </v-list-item>
+      <!-- <v-list-item>
+        <v-list-item-title>参与者（{{ vol.joiners.length }}人）</v-list-item-title>
+        <v-list-item-title v-for="j in vol.joiners">{{ j.name }}</v-list-item-title>
+      </v-list-item> -->
+      <!-- <v-list-item>
+          <v-list-item-title>人数</v-list-item-title>
+          {{ vol.maxJoiner }}
+        </v-list-item> -->
+      <v-list-item>
+        <v-list-item-title
+          >已报名（{{ vol.joiners.length }}人）</v-list-item-title
+        >
+        <v-chip-group>
+          <v-chip label small v-for="j in vol.joiners">{{ j.name }}</v-chip>
+        </v-chip-group>
+      </v-list-item>
+      <v-list-item>
+        <v-list-item-title>状态</v-list-item-title>
+        {{ getVolStatusName(vol.status) }}
+        <!-- {{ getVolArrangedName(vol.isArranged) }} -->
+      </v-list-item>
+    </v-list>
   </v-table>
 </template>
 
@@ -61,7 +65,7 @@ export default {
     return {
       timeToHint,
       getVolTypeName,
-      getVolStatusName
+      getVolStatusName,
     };
   },
 };

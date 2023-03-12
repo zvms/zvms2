@@ -1,11 +1,12 @@
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
+import { pl, zhHans } from 'vuetify/locale'
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { md1 } from "vuetify/blueprints";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 import "@mdi/font/css/materialdesignicons.css";
-import { VDataTable } from "vuetify/labs/VDataTable";
+//import { VDataTable } from "vuetify/labs/VDataTable";
 
 export default createVuetify({
   components: {
@@ -13,7 +14,7 @@ export default createVuetify({
     //VDataTable
   },
   directives,
-  blueprint: md1,
+//  blueprint: md1,
   icons: {
     defaultSet: "mdi",
     aliases,
@@ -21,4 +22,8 @@ export default createVuetify({
       mdi,
     },
   },
+  locale: {
+    locale: 'zhHans',
+    messages: { zhHans, pl }
+  }
 });
