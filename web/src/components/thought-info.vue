@@ -1,22 +1,19 @@
 <template>
-  <v-table dense>
-    <tbody>
-      <tr>
-        <td>感想</td>
-        <td>{{ thought.thought }}</td>
-      </tr>
-      <tr v-if="thought.pics">
-        <td>图片</td>
-        <td>
-          <ul v-for="img in thought.pics" :key="img">
-            <li>
-              <img :src="'data:image/png;base64,' + img" class="pic" />
-            </li>
-          </ul>
-        </td>
-      </tr>
-    </tbody>
-  </v-table>
+  <v-list>
+    <v-list-item>
+      <v-list-item-title>感想</v-list-item-title>
+      {{ thought.thought }}
+    </v-list-item>
+    <v-list-item v-if="thought.pics">
+      <v-list-item-title>图片</v-list-item-title>
+
+      <ul v-for="img in thought.pics" :key="img">
+        <li>
+          <img :src="'data:image;base64,' + img" class="pic" />
+        </li>
+      </ul>
+    </v-list-item>
+  </v-list>
 </template>
 
 <script lang="ts">

@@ -22,7 +22,7 @@
         <v-card-title variant="outlined">{{ current.vol.name }}</v-card-title>
 
         <v-card-text>
-          <vol-info :vol="current.vol" />
+          <vol-info :vol="current.vol" class="pa-14" />
         </v-card-text>
 
         <v-card-actions>
@@ -39,8 +39,8 @@
           <v-card-title outlined>上传感想</v-card-title>
           <v-card-text>
             <v-form>
-              <v-textarea v-model="current.thought!.data.thought" />
-              <v-file-input accept="image/*" @update:model-value="uploadImg">
+              <v-textarea v-model="current.thought!.data.thought" label="感想文字"/>
+              <v-file-input accept="image/*" @update:model-value="uploadImg" label="感想图片，支持拖入">
                 <!-- <template v-slot:selection="{ fileNames }">
                 <template v-for="fileName in fileNames" :key="fileName">
                   <v-img :src="fileName" />
@@ -49,16 +49,15 @@
               </v-file-input>
               <v-container>
                 <v-row>
-                  <v-col v-for="p,i in current.thought!.pics" :key="i">
+                  <v-col v-for="p,i in current.thought!.pics" :key="p.key">
                     <v-img
                       :src="`data:${p.type};base64,${p.base64}`"
-                      class="m-10"
                       max-width="10em"
                       outlined
                     />
                     <v-btn
                       color="white"
-                      @click="current.thought!.pics.splice(i)"
+                      @click="current.thought!.pics.splice(i, 1)"
                       >删除</v-btn
                     >
                   </v-col>
@@ -143,6 +142,7 @@ export default {
           pics: {
             type: string;
             base64: string;
+            key: string;
           }[];
         };
       },
@@ -221,6 +221,10 @@ export default {
     },
     async uploadImg(files: File[]) {
       const newFile = files[0];
+      if (newFile.size > 1024 * 1024 * 10) {
+        toasts.error("图片大小不能超过10MB");
+        return;
+      }
       const arrayBuffer = await newFile.arrayBuffer();
       if (!arrayBuffer) {
         toasts.error(`文件${newFile.name}上传失败！`);
@@ -243,6 +247,7 @@ export default {
         base64: CryptoJS.enc.Base64.stringify(
           ArrayBufferToWordArray(arrayBuffer)
         ),
+        key: Date.now() + "",
       });
     },
     async saveThought(then = () => {}) {
@@ -316,10 +321,6 @@ export default {
         onclick: () => {
           this.infoDlg = false;
         },
-      });
-      result.push({
-        text: "test",
-        onclick: () => {},
       });
       return result;
     },
