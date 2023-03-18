@@ -5,6 +5,20 @@ import axios from "@/plugins/axios";
 import * as structs from "./types/structs";
 import * as enums from "./types/enums";
 
+function toURLSearchParams(
+  kwargs?: any //Record<string, number | string | undefined>
+): string {
+  if (!kwargs) return "";
+  const params: Record<string, string> = {};
+  for (const k in kwargs) {
+    const v = kwargs[k];
+    if (v !== undefined && v !== null) {
+      params[k] = v.toString();
+    }
+  }
+  return new URLSearchParams(params).toString();
+}
+
 interface ForegroundApiConfig {
   beforeReq(info: ReqInfo): void;
   errorReq(e: Error, info: ReqInfo): void;
@@ -155,9 +169,10 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/user/login`,
-      id,
+      `/user/login`, {
+              id,
       pwd
+      }
     );
   }
   /**
@@ -180,8 +195,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/user/search`,
-      kwargs
+      `/user/search?`+ toURLSearchParams(      kwargs)
     );
   }
   /**
@@ -196,7 +210,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/user/${id}`
+      `/user/${id}?`+ toURLSearchParams()
     );
   }
   /**
@@ -211,7 +225,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/user/${id}/time`
+      `/user/${id}/time?`+ toURLSearchParams()
     );
   }
   /**
@@ -228,9 +242,10 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/user/mod-pwd`,
-      old,
+      `/user/mod-pwd`, {
+              old,
       neo
+      }
     );
   }
   /**
@@ -245,8 +260,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/user/create`,
-      users
+      `/user/create`, {
+              users
+      }
     );
   }
   /**
@@ -267,10 +283,11 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/user/${id}/modify`,
-      name,
+      `/user/${id}/modify`, {
+              name,
       cls,
       auth
+      }
     );
   }
   /**
@@ -285,7 +302,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/user/${id}/delete`
+      `/user/${id}/delete`, {
+        
+      }
     );
   }
   /**
@@ -300,8 +319,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/report`,
-      report
+      `/report`, {
+              report
+      }
     );
   }
   /**
@@ -316,8 +336,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/notice/search`,
-      kwargs
+      `/notice/search?`+ toURLSearchParams(      kwargs)
     );
   }
   /**
@@ -338,11 +357,12 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/notice/send/user`,
-      targets,
+      `/notice/send/user`, {
+              targets,
       title,
       content,
       deadtime
+      }
     );
   }
   /**
@@ -363,11 +383,12 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/notice/send/class`,
-      targets,
+      `/notice/send/class`, {
+              targets,
       title,
       content,
       deadtime
+      }
     );
   }
   /**
@@ -386,10 +407,11 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/notice/send/school`,
-      title,
+      `/notice/send/school`, {
+              title,
       content,
       deadtime
+      }
     );
   }
   /**
@@ -404,7 +426,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/notice/${id}/delete`
+      `/notice/${id}/delete`, {
+        
+      }
     );
   }
   /**
@@ -425,10 +449,11 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/notice/${id}/modify`,
-      title,
+      `/notice/${id}/modify`, {
+              title,
       content,
       deadtime
+      }
     );
   }
   /**
@@ -443,7 +468,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/signup/list/${cls}`
+      `/signup/list/${cls}?`+ toURLSearchParams()
     );
   }
   /**
@@ -460,7 +485,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/signup/${volId}/${stuId}/audit`
+      `/signup/${volId}/${stuId}/audit`, {
+        
+      }
     );
   }
   /**
@@ -477,8 +504,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/signup/${volId}`,
-      students
+      `/signup/${volId}`, {
+              students
+      }
     );
   }
   /**
@@ -495,7 +523,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/signup/${volId}/${stuId}/rollback`
+      `/signup/${volId}/${stuId}/rollback`, {
+        
+      }
     );
   }
   /**
@@ -510,8 +540,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/volunteer/search`,
-      kwargs
+      `/volunteer/search?`+ toURLSearchParams(      kwargs)
     );
   }
   /**
@@ -526,7 +555,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/volunteer/${id}`
+      `/volunteer/${id}?`+ toURLSearchParams()
     );
   }
   /**
@@ -551,13 +580,14 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/volunteer/create`,
-      classes,
+      `/volunteer/create`, {
+              classes,
       name,
       description,
       time,
       type,
       reward
+      }
     );
   }
   /**
@@ -582,13 +612,14 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/volunteer/create/appointed`,
-      joiners,
+      `/volunteer/create/appointed`, {
+              joiners,
       name,
       description,
       time,
       type,
       reward
+      }
     );
   }
   /**
@@ -615,13 +646,14 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/volunteer/${id}/modify`,
-      classes,
+      `/volunteer/${id}/modify`, {
+              classes,
       name,
       description,
       time,
       type,
       reward
+      }
     );
   }
   /**
@@ -636,7 +668,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/volunteer/${id}/delete`
+      `/volunteer/${id}/delete`, {
+        
+      }
     );
   }
   /**
@@ -651,7 +685,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/volunteer/${id}/audit`
+      `/volunteer/${id}/audit`, {
+        
+      }
     );
   }
   /**
@@ -666,7 +702,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/thought/student/${id}`
+      `/thought/student/${id}?`+ toURLSearchParams()
     );
   }
   /**
@@ -681,8 +717,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/thought/search`,
-      kwargs
+      `/thought/search?`+ toURLSearchParams(      kwargs)
     );
   }
   /**
@@ -699,7 +734,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/thought/${volId}/${stuId}`
+      `/thought/${volId}/${stuId}?`+ toURLSearchParams()
     );
   }
   /**
@@ -720,9 +755,10 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/thought/${volId}/${stuId}/save`,
-      thought,
+      `/thought/${volId}/${stuId}/save`, {
+              thought,
       pictures
+      }
     );
   }
   /**
@@ -743,9 +779,10 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/thought/${volId}/${stuId}/submit`,
-      thought,
+      `/thought/${volId}/${stuId}/submit`, {
+              thought,
       pictures
+      }
     );
   }
   /**
@@ -762,7 +799,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/thought/${volId}/${stuId}/audit/first`
+      `/thought/${volId}/${stuId}/audit/first`, {
+        
+      }
     );
   }
   /**
@@ -781,8 +820,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/thought/${volId}/${stuId}/audit/final`,
-      reward
+      `/thought/${volId}/${stuId}/audit/final`, {
+              reward
+      }
     );
   }
   /**
@@ -801,8 +841,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/thought/${volId}/${stuId}/repulse`,
-      reason
+      `/thought/${volId}/${stuId}/repulse`, {
+              reason
+      }
     );
   }
   /**
@@ -825,7 +866,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/class/${id}`
+      `/class/${id}?`+ toURLSearchParams()
     );
   }
   /**
@@ -840,7 +881,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/class/${id}/delete`
+      `/class/${id}/delete`, {
+        
+      }
     );
   }
   /**
@@ -855,8 +898,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/class/create`,
-      name
+      `/class/create`, {
+              name
+      }
     );
   }
   /**
@@ -873,8 +917,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/class/${id}/modify`,
-      name
+      `/class/${id}/modify`, {
+              name
+      }
     );
   }
 

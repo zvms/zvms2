@@ -79,7 +79,7 @@
 
 <script lang="ts">
 import { confirm, toasts } from "@/utils/dialogs.js";
-import { permissionTypes } from "@/utils/permissions";
+import { Categ } from "@/apis/types/enums";
 import VolInfo from "@/components/vol-info.vue";
 import {
   fApi,
@@ -190,11 +190,11 @@ export default {
       fApi.searchVolunteers({
         student:
           this.infoStore.permission &
-          (permissionTypes.secretary | permissionTypes.teacher)
+          (Categ.Class | Categ.Teacher)
             ? undefined
             : this.infoStore.userId,
         cls:
-          this.infoStore.permission & permissionTypes.system
+          this.infoStore.permission & Categ.System
             ? undefined
             : this.infoStore.classId,
       })((result) => {
@@ -300,9 +300,9 @@ export default {
         });
       }
       if (
-        (this.infoStore.permission & permissionTypes.secretary) |
-          permissionTypes.teacher |
-          permissionTypes.system &&
+        (this.infoStore.permission & Categ.Class) |
+          Categ.Teacher |
+          Categ.System &&
         this.current.vol.status === VolStatus.Unaudited
       ) {
         result.push({

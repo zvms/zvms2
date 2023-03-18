@@ -1,5 +1,5 @@
 import { useNavStore, useInfoStore } from "@/stores";
-import { permissionTypes } from "./permissions";
+import { Categ } from "@/apis/types/enums";
 
 export interface NavItem {
   title: string;
@@ -7,7 +7,7 @@ export interface NavItem {
   icon: string;
 }
 
-export function getNavItems(permission: permissionTypes) {
+export function getNavItems(permission: Categ) {
   const navItems: Record<string, NavItem> = {
     login: {
       title: "登录",
@@ -78,17 +78,17 @@ export function getNavItems(permission: permissionTypes) {
 
   const items: NavItem[] = [];
 
-  if (!(permission & permissionTypes.logined)) items.push(navItems.login);
-  if (permission & permissionTypes.logined) items.push(navItems.me);
-  if (permission & permissionTypes.logined) items.push(navItems.volList);
-  if (permission & permissionTypes.logined) items.push(navItems.createVol);
-  if (permission & permissionTypes.system) items.push(navItems.finalAuditVol);
+  if (permission & Categ.None) items.push(navItems.login);
+  if (!(permission & Categ.None)) items.push(navItems.me);
+  if (!(permission & Categ.None)) items.push(navItems.volList);
+  if (!(permission & Categ.None)) items.push(navItems.createVol);
+  if (permission & Categ.System) items.push(navItems.finalAuditVol);
   items.push(navItems.about);
   return items;
 }
 
 export function applyNavItems() {
   return (useNavStore().items = getNavItems(
-    useInfoStore().permission || permissionTypes.none
+    useInfoStore().permission || Categ.None
   ));
 }

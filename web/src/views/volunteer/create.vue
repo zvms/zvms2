@@ -11,7 +11,7 @@
             prepend-icon="mdi-pen"
           />
           <!---->
-          <v-table v-if="infoStore.permission & permissionTypes.system">
+          <v-table v-if="infoStore.permission & Categ.system">
             <!-- <thead>
               <td>班级</td>
               <td>最多报名人数</td>
@@ -96,12 +96,12 @@ import { fApi, type ClassVol, type SingleClass, VolType } from "@/apis";
 import { NOTEMPTY } from "@/utils/validation.js";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
-import { permissionTypes } from "@/utils/permissions";
+import { Categ } from "@/apis/types/enums";
 
 export default {
   data() {
     return {
-      permissionTypes,
+      Categ,
       count_new: 5,
       class_new: NaN,
       classes: [{id:123,name:"aaa"},{id:456,name:"bbb"}] as SingleClass[],

@@ -15,7 +15,6 @@ const axios = Axios.create({
 axios.interceptors.request.use(
   (config) => {
     const infoStore = useInfoStore();
-
     config.params = {
       ...config.params,
     };

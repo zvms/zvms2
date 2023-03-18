@@ -1,4 +1,4 @@
-import { permissionTypes } from "@/utils/permissions";
+import { Categ } from "@/apis/types/enums";
 import { defineStore } from "pinia";
 
 export const useInfoStore = defineStore("info", {
@@ -6,7 +6,7 @@ export const useInfoStore = defineStore("info", {
     return {
       userId: NaN,
       username: "",
-      permission: permissionTypes.none,
+      permission: Categ.None,
       classId: NaN,
       className: "",
       token: "",

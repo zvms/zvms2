@@ -139,8 +139,8 @@ export default {
   },
   mounted() {
     // const permisson = this.infoStore.permission;
-    // this.auditType =( permission & (permissionTypes.teacher|permissionTypes.admin|permissionTypes._super|permissionTypes.system))?
-    //   "final":(permission&permissionTypes.secretary)?"first"|"error";
+    // this.auditType =( permission & (Categ.Teacher|Categ.admin|Categ._super|Categ.system))?
+    //   "final":(permission&Categ.Class)?"first"|"error";
     fApi.searchThoughts(
       this.infoStore.classId,
       ThoughtStatus.WaitingForFirstAudit

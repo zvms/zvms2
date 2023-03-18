@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { permissionTypes } from "../../utils/permissions.js";
+import { Categ } from "@/apis/types/enums.js";
 import stuvolist from "@/_recycle_bin/stu-vol-list.vue.js";
 import { fApi } from "../../apis";
 import { mapIsLoading, useInfoStore } from "@/stores";
@@ -108,7 +108,7 @@ export default {
 
       this.classes = await fApi.fetchClassList();
 
-      if (this.infoStore.permission > permissionTypes.secretary) {
+      if (this.infoStore.permission > Categ.Class) {
         this.menudisabled = false;
         this.tipText = "点击选择班级";
         if (this.$route.params.classid !== "0") {

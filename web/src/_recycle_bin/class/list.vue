@@ -29,7 +29,7 @@
 <script lang="ts">
 import { toasts } from "../../utils/dialogs";
 import { fApi } from "../../apis";
-import { permissionTypes } from "../../utils/permissions";
+import { Categ } from "@/apis/types/enums";
 import { useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
 
@@ -54,7 +54,7 @@ export default {
       classes ? (this.classes = classes) : toasts.error("获取班级列表失败");
     },
     rowClick(item) {
-      if (this.infoStore.permission >= permissionTypes.teacher)
+      if (this.infoStore.permission >= Categ.Teacher)
         this.$router.push({
           name: "classStulist",
           params: { classid: item.id },

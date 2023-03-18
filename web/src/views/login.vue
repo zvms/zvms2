@@ -34,7 +34,7 @@ import { applyNavItems } from "../utils/nav";
 import { useNoticesStore, useInfoStore, useHeartbeatStore } from "@/stores";
 import { md5 } from "@/utils/md5";
 import { mapStores } from "pinia";
-import { permissionTypes } from "@/utils/permissions";
+import { Categ } from "@/apis/types/enums";
 
 export default {
   name: "login",
@@ -50,21 +50,21 @@ export default {
   },
   methods: {
     login() {
-      console.log("!!!");
       if (this.isFormValid) {
-        this.form.password = "";
+        const pwd = this.form.password;
+        //this.form.password = "";
         const id = parseInt(this.form.userid);
         fApi.login(
           id,
-          md5(this.form.password)
+          md5(pwd)
         )(({ token }) => {
+          this.infoStore.token = token;
           fApi.getUserInfo(id)(({ name, cls, auth, clsName }) => {
             this.infoStore.$patch({
               username: name,
               permission: auth,
               classId: cls,
-              className: clsName,
-              token: token,
+              className: clsName
             });
 
             applyNavItems();

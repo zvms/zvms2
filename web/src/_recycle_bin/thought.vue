@@ -112,7 +112,7 @@
 
 <script lang="ts">
 import { toasts } from "../utils/dialogs.js";
-import { permissionTypes } from "../utils/permissions.js";
+import { Categ } from "@/apis/types/enums.js";
 import axios from "axios";
 import { fApi } from "../apis/index.js";
 
@@ -160,7 +160,7 @@ export default {
     },
 
     granted() {
-      return this.infoStore.permission < permissionTypes.teacher;
+      return this.infoStore.permission < Categ.Teacher;
     },
 
     rowClick: async function (item) {

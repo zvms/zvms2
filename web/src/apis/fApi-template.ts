@@ -5,6 +5,20 @@ import axios from "@/plugins/axios";
 import * as structs from "./types/structs";
 import * as enums from "./types/enums";
 
+function toURLSearchParams(
+  kwargs?: any //Record<string, number | string | undefined>
+): string {
+  if (!kwargs) return "";
+  const params: Record<string, string> = {};
+  for (const k in kwargs) {
+    const v = kwargs[k];
+    if (v !== undefined && v !== null) {
+      params[k] = v.toString();
+    }
+  }
+  return new URLSearchParams(params).toString();
+}
+
 interface ForegroundApiConfig {
   beforeReq(info: ReqInfo): void;
   errorReq(e: Error, info: ReqInfo): void;

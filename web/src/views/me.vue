@@ -47,7 +47,7 @@
 <script lang="ts">
 import { useInfoStore, useNoticesStore } from "@/stores";
 import { fApi, type NoticeBody } from "@/apis";
-import { permissionNames, permissionTypes } from "@/utils/permissions";
+import { getCategName, Categ } from "@/apis/types/enums";
 import { mapStores } from "pinia";
 import router from "@/router";
 import { applyNavItems } from "@/utils/nav";
@@ -64,22 +64,24 @@ export default {
     };
   },
   mounted() {
-    if (!(this.infoStore.permission & permissionTypes.logined)) {
-      console.log("login!");
+    if (this.infoStore.permission & Categ.None) {
       router.push("/login");
     }
-    this.chips = [
-      ...(Number.isFinite(this.infoStore.classId)
-        ? [{ id: -1, icon: "mdi-label", content: this.infoStore.className }]
-        : []),
-      ...Object.keys(permissionNames).map((key, i) => {
-        return {
-          id: i,
-          icon: "mdi-label",
-          content: (permissionNames as any)[key as any],
-        };
-      }),
-    ];
+    // const permissionNames:string[]=[];
+    // for(const i=1)
+    // this.chips = [
+    //   ...(Number.isFinite(this.infoStore.classId)
+    //     ? [{ id: -1, icon: "mdi-label", content: this.infoStore.className }]
+    //     : []),
+    //   ...Object.keys(Categ).map((key, i) => {
+    //     return {
+    //       id: i,
+    //       icon: "mdi-label",
+    //       content: getCategName(Categ[key]),
+    //     };
+    //   }),
+    // ];
+    this.chips=[];//NOT FNISHED
   },
   methods: {
     showNotice(notice: NoticeBody) {

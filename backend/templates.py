@@ -51,10 +51,18 @@ PARAM = '''    {name}: {type}'''
 
 CREATE_NO_PARAMS = '''this, "{method}", `{url}`'''
 
-CREATE = '''
+CREATE_POST = '''
       this,
       "{method}",
-      `{url}`{args}
+      `{url}`, {{
+        {args}
+      }}
+    '''
+
+CREATE_GET = '''
+      this,
+      "{method}",
+      `{url}?`+ toURLSearchParams({args})
     '''
 
 ARG = '''      {arg}'''

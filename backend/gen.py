@@ -152,10 +152,10 @@ with open(config['apis'], 'w', encoding='utf-8') as apis_output,\
         create_args=tpl.CREATE_NO_PARAMS.format(
             method=api.method,
             url=gen_url(api)
-        ) if not has_params(api) else tpl.CREATE.format(
+        ) if not has_params(api) else (tpl.CREATE_POST if api.method == "POST" else tpl.CREATE_GET).format(
             method=api.method,
             url=gen_url(api),
-            args='' if isinstance(api.params, Any) else ',\n' + ',\n'.join((tpl.ARG.format(
+            args='' if isinstance(api.params, Any) else ',\n'.join((tpl.ARG.format(
                 arg=arg
             ) for arg in api.params.as_params()))
         )
