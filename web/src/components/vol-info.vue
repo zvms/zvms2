@@ -70,3 +70,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.v-list-item-title{
+  padding-top: 10px;
+  font-size: larger;
+  border-bottom: 1px black solid;
+}
+</style>

@@ -2,14 +2,14 @@
   <v-card>
     <v-card-title>
       你好,
-      <v-card-text>
-        {{ infoStore.username }}
-        <v-chip v-for="chip in chips" v-bind:key="chip.id" class="ma-2">
-          <v-icon left>{{ chip.icon }}</v-icon>
-          {{ chip.content }}
-        </v-chip>
-      </v-card-text>
+      <strong>{{ infoStore.username }}</strong>
     </v-card-title>
+    <v-card-text>
+      <v-chip v-for="chip in chips" v-bind:key="chip.id" class="ma-2">
+        <v-icon left>{{ chip.icon }}</v-icon>
+        {{ chip.content }}
+      </v-chip>
+    </v-card-text>
     <v-card-actions>
       <v-btn @click="modifyPwd">修改密码</v-btn>
       <v-btn @click="logout">登出</v-btn>
@@ -67,6 +67,13 @@ export default {
     if (this.infoStore.permission & Categ.None) {
       router.push("/login");
     }
+    this.chips = [
+      {
+        id: 0,
+        icon: "mdi-label",
+        content: this.infoStore.className,
+      },
+    ];
     // const permissionNames:string[]=[];
     // for(const i=1)
     // this.chips = [
@@ -81,7 +88,7 @@ export default {
     //     };
     //   }),
     // ];
-    this.chips=[];//NOT FNISHED
+    //NOT FNISHED
   },
   methods: {
     showNotice(notice: NoticeBody) {

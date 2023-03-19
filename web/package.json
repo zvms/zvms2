@@ -16,6 +16,7 @@
     "@commitlint/format": "^17.0.0",
     "@mdi/font": "^7.1.96",
     "crypto-js": "^4.1.1",
+    "lxgw-wenkai-lite-webfont": "^1.7.0",
     "pinia": "^2.0.26",
     "pinia-plugin-persist": "^1.0.0",
     "sweetalert2": "^11.7.3",

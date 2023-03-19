@@ -26,6 +26,7 @@ specifiers:
   eslint-plugin-vue: ^9.3.0
   jsdom: ^21.0.0
   lodash: ^4.17.21
+  lxgw-wenkai-lite-webfont: ^1.7.0
   mockjs: ^1.1.0
   npm-run-all: ^4.1.5
   nprogress: ^0.2.0
@@ -49,6 +50,7 @@ dependencies:
   '@commitlint/format': 17.0.0
   '@mdi/font': 7.1.96
   crypto-js: 4.1.1
+  lxgw-wenkai-lite-webfont: 1.7.0
   pinia: 2.0.27_prq2uz4lho2pwp6irk4cfkrxwu
   pinia-plugin-persist: 1.0.0_pinia@2.0.27+vue@3.2.45
   sweetalert2: 11.7.3
@@ -3124,6 +3126,10 @@ packages:
     dependencies:
       yallist: 4.0.0
     dev: true
+
+  /lxgw-wenkai-lite-webfont/1.7.0:
+    resolution: {integrity: sha512-VcQYNRpdXAxaZsJ18rfT1mmAreGqkIFNZ/9pdVLbT2Tkb+2lLWJDXq4zYxMEk9AcecSnxO31R2LHh5ieLlxjRg==}
+    dev: false
 
   /magic-string/0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}

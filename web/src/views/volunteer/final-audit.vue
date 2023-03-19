@@ -32,10 +32,11 @@
           />
         </v-card-text>
         <v-card-actions>
-          <v-spacer />
-          <v-btn color="green" @click="audit(true)">通过 </v-btn>
-          <v-btn color="red" @click="audit(false)">打回 </v-btn>
-          <v-btn @click="dialog = false">关闭 </v-btn>
+          <v-btn color="green" class="action" @click="audit(true)">通过 </v-btn>
+          <v-btn color="red" class="action" @click="audit(false)">打回 </v-btn>
+          <v-btn color="black" class="action" @click="dialog = false">
+            关闭
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -204,12 +205,8 @@ export default {
 </script>
 
 <style scoped>
-.v-card {
-  margin: 0.3rem;
-}
-
-.pic {
-  width: auto;
-  height: 120px;
+.action {
+  width:30%;
+  border:1px solid currentColor
 }
 </style>

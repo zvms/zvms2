@@ -1,9 +1,22 @@
 @import "./base.css";
 
+@import 'lxgw-wenkai-lite-webfont/style.css';
+
 .v-card {
     margin-bottom: .5em;
 }
 
 .swal2-container {
     z-index: 10000 !important
+}
+body {
+  font-family: "LXGW WenKai Lite", sans-serif;
+  font-size: larger;
+}
+pre,code {
+  font-family: "LXGW WenKai Mono Lite", sans-serif;
+}
+
+.v-card-title{
+    border-bottom: 1px solid #ccc;
 }

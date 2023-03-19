@@ -6,12 +6,17 @@
     </v-list-item>
     <v-list-item v-if="thought.pics">
       <v-list-item-title>图片</v-list-item-title>
-
-      <ul v-for="img in thought.pics" :key="img">
-        <li>
-          <img :src="'data:image;base64,' + img" class="pic" />
-        </li>
-      </ul>
+      <v-container>
+        <v-row>
+          <v-col v-for="(img, i) in thought.pics" :key="i">
+            <v-img
+              :src="`data:${img.type};base64,${img.base64}`"
+              max-width="10em"
+              outlined
+            />
+          </v-col>
+        </v-row>
+      </v-container>
     </v-list-item>
   </v-list>
 </template>
@@ -42,3 +47,10 @@ export default {
   },
 };
 </script>
+<style scoped>
+.v-list-item-title {
+  padding-top: 10px;
+  font-size: larger;
+  border-bottom: 1px black solid;
+}
+</style>

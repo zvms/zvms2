@@ -9,7 +9,7 @@
     <v-card-text>
       <v-form v-model="isFormValid">
         <v-text-field
-          type="username"
+          type="text"
           v-model="form.userid"
           :rules="rules"
           label="学号/ID"

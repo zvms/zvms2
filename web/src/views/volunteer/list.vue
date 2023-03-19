@@ -1,12 +1,9 @@
 <template>
   <v-container>
-    <v-card color="primary" dark>
+    <v-card>
       <v-card-title>
         义工列表
-        <v-spacer></v-spacer>
       </v-card-title>
-    </v-card>
-    <v-card>
       <data-table
         fixed-header
         :headers="headers"

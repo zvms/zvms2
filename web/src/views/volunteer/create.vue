@@ -11,57 +11,45 @@
             prepend-icon="mdi-pen"
           />
           <!---->
-          <v-table v-if="infoStore.permission & Categ.system">
-            <!-- <thead>
-              <td>班级</td>
-              <td>最多报名人数</td>
-              <td></td>
-            </thead> -->
-            <tbody>
-              <tr v-for="(cls, i) in form.classSelected" :key="i">
-                <td class="pa-0">{{ classes.find((v) => v.id === cls.id)?.name }}</td>
-                <td>{{ cls.max }}</td>
-                <td>
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    dark
-                    x-small
-                    color="primary"
-                    @click="delFromList(i)"
-                  >
-                    <v-icon dark> mdi-minus </v-icon>
-                  </v-btn>
-                </td>
-              </tr>
-              <tr>
-                <td  class="pa-0">
-                  <v-select
-                    prepend-icon="mdi-account-group"
-                    v-model="class_new"
-                    label="限定班级"
-                  >
-                  </v-select>
-                </td>
-                <td>
-                  <v-text-field v-model.number="count_new" label="限制人数">
-                  </v-text-field>
-                </td>
-                <td>
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    dark
-                    x-small
-                    color="primary"
-                    @click="addToList"
-                  >
-                    <v-icon dark> mdi-plus </v-icon>
-                  </v-btn>
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
+          <v-container v-if="selectClassPermission">
+            <v-row v-if="unselctedClasses.length > 0">
+              <v-col cols="3">
+                <v-select
+                  prepend-icon="mdi-account-group"
+                  v-model="classNew"
+                  label="限定班级"
+                  :items="unselctedClasses"
+                  item-title="name"
+                  item-value="id"
+                />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model.number="countNew" label="限制人数" />
+              </v-col>
+              <v-col cols="2">
+                <v-btn rounded class="mx-2" fab @click="addToList">
+                  <v-icon> mdi-plus </v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-row v-for="(cls, i) in form.classSelected" :key="cls.id">
+              <v-col cols="3" class="pl-16">
+                {{ classes.find((v) => v.id == cls.id)?.name }}
+              </v-col>
+              <v-col cols="3" class="pl-7">{{ cls.max }}</v-col>
+              <v-col cols="2">
+                <v-btn rounded class="mx-2" fab @click="delFromList(i)">
+                  <v-icon> mdi-minus </v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+          <v-text-field
+            v-else
+            v-model.number="countNew"
+            label="限制人数"
+            prepend-icon="mdi-account-group"
+          />
           <!---->
           <v-text-field
             v-model="form.date"
@@ -78,13 +66,13 @@
           <v-text-field
             v-model.number="form.reward"
             :rules="rules"
-            label="时长（分钟）"
+            label="预期时长（分钟）"
             prepend-icon="mdi-clock-time-three-outline"
           />
+          <v-btn color="primary" type="submit" @click="createVolunteer"
+            >创建义工</v-btn
+          >
         </v-form>
-        <v-card-actions>
-          <v-btn color="primary" block @click="createVolunteer">创建义工</v-btn>
-        </v-card-actions>
       </v-card-text>
     </v-card>
     <br />
@@ -97,21 +85,22 @@ import { NOTEMPTY } from "@/utils/validation.js";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
+import { toasts } from "@/utils/dialogs";
 
 export default {
   data() {
     return {
       Categ,
-      count_new: 5,
-      class_new: NaN,
-      classes: [{id:123,name:"aaa"},{id:456,name:"bbb"}] as SingleClass[],
+      countNew: 5,
+      classNew: NaN,
+      classes: [] as (SingleClass & { selcted?: boolean })[],
       form: {
         name: "",
         date: "",
         description: "",
         reward: 0,
-      classSelected: [] as ClassVol[],
-        type: NaN as VolType,
+        classSelected: [] as ClassVol[],
+        type: VolType.Outside,
         class: undefined,
       },
       rules: [NOTEMPTY()],
@@ -119,15 +108,30 @@ export default {
     };
   },
   mounted() {
-    fApi.listClasses()((classes) => {
+    fApi.skipOkToast.listClasses()((classes) => {
       this.classes = classes;
+      this.setDefaultClass();
     });
   },
   methods: {
     createVolunteer() {
       if (this.isFormValid) {
+        if (
+          this.selectClassPermission &&
+          this.form.classSelected.length === 0
+        ) {
+          toasts.error("必须至少选择一个班级！");
+          return;
+        }
         fApi.createVolunteer(
-          this.form.classSelected,
+          this.selectClassPermission
+            ? this.form.classSelected
+            : [
+                {
+                  id: this.infoStore.classId,
+                  max: this.countNew,
+                },
+              ],
           this.form.name,
           this.form.description,
           this.form.date,
@@ -139,36 +143,42 @@ export default {
       }
     },
     addToList() {
-      let flg = false;
-      if (Number.isNaN(this.class_new)) flg = true;
-      if (Number.isNaN(this.count_new) || this.count_new <= 0) flg = true;
-      for (let i in this.form.classSelected) {
-        console.log(i);
-        if (this.form.classSelected[i]["id"] == this.class_new) {
-          flg = true;
-          break;
-        }
-      }
-      if (!flg)
-        this.form.classSelected.push({
-          id: this.class_new,
-          max: this.count_new,
-        });
-      this.class_new = NaN;
-      this.count_new = 0;
+      const idx = this.classes.findIndex((v) => v.id == this.classNew);
+      this.form.classSelected.unshift({
+        id: this.classNew,
+        max: this.countNew,
+      });
+      this.classes[idx].selcted = true;
+      this.setDefaultClass();
     },
     delFromList(i: number) {
-      this.form.classSelected.splice(i, 1);
+      const id = this.form.classSelected.splice(i, 1)[0].id;
+      const idx = this.classes.findIndex((v) => v.id == id);
+      this.classes[idx].selcted = false;
+      this.setDefaultClass();
+    },
+    setDefaultClass() {
+      const myClass = this.infoStore.classId;
+      if (this.unselctedClasses.findIndex((v) => v.id == myClass) !== -1) {
+        this.classNew = myClass;
+      } else {
+        this.classNew = this.unselctedClasses[0].id;
+      }
+      this.countNew = 5;
     },
   },
   computed: {
     ...mapStores(useInfoStore),
+    unselctedClasses() {
+      return this.classes.filter((v) => !v.selcted);
+    },
+    selectClassPermission() {
+      // return (
+      //   this.infoStore.permission &
+      //   (Categ.System | Categ.Manager | Categ.Auditor)
+      // );
+      return false;
+    },
   },
 };
 </script>
-
-<style scoped>
-.v-card {
-  margin: 0.3rem;
-}
-</style>
