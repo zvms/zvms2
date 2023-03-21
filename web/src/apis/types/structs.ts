@@ -39,11 +39,16 @@ export interface UserInfoResponse {
     clsName: string
 }
 
+export interface PictureResponse {
+    hash: string,
+    type: string
+}
+
 export interface ThoughtInfoResponse {
     reason?: string,
     thought?: string,
     reward?: number,
-    pics?: Array<string>
+    pics?: Array<PictureResponse>
 }
 
 export interface StudentThoughtsResponse {
@@ -144,75 +149,8 @@ export interface SingleThought {
 
 export type SearchThoughtsResponse = Array<SingleThought>
 
-export interface Thought {
-    thought: string,
-    pictures: Array<string>
-}
-
-export interface Login {
-    id: number,
-    pwd: string
-}
-
-export interface SearchUsers {
-    name?: string,
-    cls?: number,
-    auth?: number
-}
-
-export interface ModPwd {
-    old: string,
-    neo: string
-}
-
-export interface User {
-    name: string,
-    cls: number,
-    auth: number
-}
-
-export interface OneUser extends User {
-    id: number
-}
-
-export interface Users {
-    users: Array<OneUser>
-}
-
-export interface ClassVol {
-    id: number,
-    max: number
-}
-
-export interface SearchVolunteers {
-    holder?: number,
-    student?: number,
-    cls?: number,
-    name?: string,
-    status?: enums.VolStatus
-}
-
-export interface VolunteerBody {
-    name: string,
-    description: string,
-    time: string,
-    type: enums.VolType,
-    reward: number
-}
-
-export interface Volunteer extends VolunteerBody {
-    classes: Array<ClassVol>
-}
-
-export interface AppointedVolunteer extends VolunteerBody {
-    joiners: Array<number>
-}
-
-export interface Repulse {
-    reason: string
-}
-
-export interface Accept {
-    reward: number
+export interface Picture {
+    base64: string,
+    type: string
 }
 
