@@ -3,6 +3,7 @@
     <v-card>
       <v-card-title>关于开发者</v-card-title>
       <v-card-text>
+        <br />
         本项目由 neko_moyi &amp; Zecyel &amp; fpc5719 &amp; So1aric &amp;
         Solecour &amp; dblark 开发。
         <br />
@@ -35,15 +36,20 @@ import { fApi } from "../apis";
 
 export default {
   name: "report",
-  data: () => ({
-    report: "",
-    rules: [NOTEMPTY()],
-    isFormValid: false,
-  }),
+  data() {
+    return {
+      report: "",
+      rules: [NOTEMPTY()],
+      isFormValid: false,
+    };
+  },
   methods: {
     submitReport() {
       if (this.isFormValid) {
-        fApi.report(this.report)();
+        fApi.report(this.report)(() => {
+          this.isFormValid = true;
+          this.report = "";
+        });
       }
     },
   },

@@ -70,12 +70,6 @@ export default {
             applyNavItems();
             this.$router.push("/");
           });
-
-          fApi.searchNotices({
-            user: id,
-          })((result) => {
-            this.noticesStore.notices = result;
-          });
         });
       }
     },

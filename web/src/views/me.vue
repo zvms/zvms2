@@ -21,7 +21,7 @@
     <v-list shaped>
       <v-list-item
         color="primary"
-        v-for="(notice, i) in noticesStore.notices"
+        v-for="(notice, i) in notices"
         :key="i"
         @click="showNotice(notice)"
       >
@@ -45,8 +45,8 @@
 </template>
 
 <script lang="ts">
-import { useInfoStore, useNoticesStore } from "@/stores";
-import { fApi, type NoticeBody } from "@/apis";
+import { useInfoStore } from "@/stores";
+import { fApi, type SingleNotice, type NoticeBody } from "@/apis";
 import { getCategName, Categ } from "@/apis/types/enums";
 import { mapStores } from "pinia";
 import router from "@/router";
@@ -61,6 +61,7 @@ export default {
       curNoticeTitle: "",
       curNoticeText: "",
       timer: "",
+      notices:[] as SingleNotice []
     };
   },
   mounted() {
@@ -74,6 +75,11 @@ export default {
         content: this.infoStore.className,
       },
     ];
+    fApi.searchNotices({
+      user: this.infoStore.userId,
+    })((result) => {
+      this.notices = result;
+    });
     // const permissionNames:string[]=[];
     // for(const i=1)
     // this.chips = [
@@ -116,7 +122,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore, useNoticesStore),
+    ...mapStores(useInfoStore),
   },
 };
 </script>

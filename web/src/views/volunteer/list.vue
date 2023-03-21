@@ -1,9 +1,7 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title>
-        义工列表
-      </v-card-title>
+      <v-card-title> 义工列表 </v-card-title>
       <data-table
         fixed-header
         :headers="headers"
@@ -36,8 +34,15 @@
           <v-card-title outlined>上传感想</v-card-title>
           <v-card-text>
             <v-form>
-              <v-textarea v-model="current.thought!.data.thought" label="感想文字"/>
-              <v-file-input accept="image/*" @update:model-value="uploadImg" label="感想图片，支持拖入">
+              <v-textarea
+                v-model="current.thought!.data.thought"
+                label="感想文字"
+              />
+              <v-file-input
+                accept="image/*"
+                @update:model-value="uploadImg"
+                label="感想图片，支持拖入"
+              >
                 <!-- <template v-slot:selection="{ fileNames }">
                 <template v-for="fileName in fileNames" :key="fileName">
                   <v-img :src="fileName" />
@@ -70,7 +75,6 @@
         </v-card>
       </v-dialog>
     </v-dialog>
-    <v-btn @click="test">test</v-btn>
   </v-container>
 </template>
 
@@ -116,20 +120,7 @@ export default {
           key: "name",
         },
       ],
-      vols: [
-        {
-          id: 12211,
-          name: "111",
-          time: "11",
-          status: 11,
-        },
-        {
-          id: 12211,
-          name: "111",
-          time: "11",
-          status: 11,
-        },
-      ] as SingleVolunteer[],
+      vols: [] as SingleVolunteer[],
 
       current: undefined as any as {
         singleVol: SingleVolunteer;
@@ -152,42 +143,10 @@ export default {
     this.fetchVols();
   },
   methods: {
-    test() {
-      this.current = {
-        singleVol: this.vols[0],
-        vol: {
-          name: "VolName",
-          description: "DESC",
-          time: "1-1-1",
-          status: VolStatus.Unaudited,
-          type: VolType.Inside,
-          reward: 111,
-          signable: true,
-          joiners: [
-            {
-              id: 1,
-              name: "abc",
-            },
-          ],
-          holder: 2,
-          holderName: "aaa",
-        },
-        thought: {
-          data: {
-            thought: "thought text",
-            pics: ["1111", "1111"],
-          },
-          pics: [],
-        },
-      };
-      this.infoDlg = true;
-      this.thoughtDlg = true;
-    },
     fetchVols() {
-      fApi.searchVolunteers({
+      fApi.skipOkToast.searchVolunteers({
         student:
-          this.infoStore.permission &
-          (Categ.Class | Categ.Teacher)
+          this.infoStore.permission & (Categ.Class | Categ.Teacher)
             ? undefined
             : this.infoStore.userId,
         cls:
@@ -200,7 +159,7 @@ export default {
     },
     onRowClick(ev: Event, v: any) {
       const item: SingleVolunteer = v.item.raw;
-      fApi.getVolunteerInfo(item.id)((vol) => {
+      fApi.skipOkToast.getVolunteerInfo(item.id)((vol) => {
         this.current = {
           singleVol: item,
           vol,

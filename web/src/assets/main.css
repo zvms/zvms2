@@ -1,22 +1,31 @@
 @import "./base.css";
 
-@import 'lxgw-wenkai-lite-webfont/style.css';
+@import "lxgw-wenkai-lite-webfont/style.css";
 
 .v-card {
-    margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 
 .swal2-container {
-    z-index: 10000 !important
+  z-index: 10000 !important;
 }
 body {
   font-family: "LXGW WenKai Lite", sans-serif;
   font-size: larger;
 }
-pre,code {
+pre,
+code {
   font-family: "LXGW WenKai Mono Lite", sans-serif;
 }
 
-.v-card-title{
-    border-bottom: 1px solid #ccc;
+.v-card-title {
+  border-bottom: 1px solid #ccc;
+}
+
+.v-card-actions > button {
+  border: solid 1px currentColor;
+}
+
+button[type="submit"] {
+  border: solid 1px currentColor;
 }

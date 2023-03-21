@@ -3,8 +3,10 @@ import Axios from "axios";
 // import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 
+export const baseURL = "http://172.31.2.3:1145";
+
 const axios = Axios.create({
-  baseURL: "http://172.31.2.3:1145",
+  baseURL,
   withCredentials: true,
   headers: {
     "Content-type": "application/json",

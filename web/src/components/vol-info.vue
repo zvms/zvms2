@@ -3,7 +3,7 @@
     <v-list>
       <v-list-item>
         <v-list-item-title>简介</v-list-item-title>
-        {{ vol.description }}
+        <Fragment v-html="vol.name"></Fragment>
       </v-list-item>
       <v-list-item>
         <v-list-item-title>时间</v-list-item-title>
@@ -16,7 +16,7 @@
         {{ timeToHint(vol.reward) }}
       </v-list-item>
       <v-list-item>
-        <v-list-item-title>主持</v-list-item-title>
+        <v-list-item-title>组织者</v-list-item-title>
         {{ vol.holderName }}
       </v-list-item>
       <!-- <v-list-item>
@@ -51,7 +51,7 @@ import {
   getVolTypeName,
   getVolStatusName,
 } from "@/apis";
-import type { PropType } from "vue";
+import { Fragment, type PropType } from "vue";
 
 export default {
   name: "vol-info",
@@ -72,7 +72,7 @@ export default {
 </script>
 
 <style scoped>
-.v-list-item-title{
+.v-list-item-title {
   padding-top: 10px;
   font-size: larger;
   border-bottom: 1px black solid;

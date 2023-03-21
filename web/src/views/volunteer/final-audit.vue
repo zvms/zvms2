@@ -7,7 +7,7 @@
           fixed-header
           :headers="headers"
           :items="thoughts"
-          @click:row="rowClick"
+          @click:row="onRowClick"
           loading-text="加载中..."
           no-data-text="没有数据哦"
           no-results-text="没有结果"
@@ -40,7 +40,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-btn @click="test">test</v-btn>
   </v-container>
 </template>
 
@@ -82,24 +81,23 @@ export default {
 
       headers: [
         {
-          key: "volId",
-          title: "义工编号",
-          value: "volId",
+          key: "volName",
+          title: "义工名称",
+          value: "volName",
+          // align: "start",
+          sortable: true,
+        },
+        {
+          key: "stuName",
+          title: "提交者",
+          value: "stuName",
           // align: "start",
           sortable: true,
         },
         { key: "stuId", title: "学号", value: "stuId" },
       ],
 
-      thoughts: [
-        {
-          volId: 123,
-          stuId: 456,
-          status: ThoughtStatus.Draft,
-          stuName: "stuname",
-          volName: "volname",
-        },
-      ] as SingleThought[],
+      thoughts: [] as SingleThought[],
 
       dialog: false,
       currentVol: undefined as VolunteerInfoResponse | undefined,
@@ -112,40 +110,14 @@ export default {
     this.fetchThoughts();
   },
   methods: {
-    test() {
-      this.currentVol = {
-        name: "VolName",
-        description: "DESC",
-        time: "1-1-1",
-        status: VolStatus.Unaudited,
-        type: VolType.Inside,
-        reward: 11122222,
-        signable: true,
-        joiners: [
-          {
-            id: 1,
-            name: "abc",
-          },
-        ],
-        holder: 2,
-        holderName: "aaa",
-      };
-      this.currentThoughtInfo = this.thoughts[0];
-      this.currentThoughtData = {
-        thought: "thought text",
-        pics: ["1111", "1111"],
-      };
-      this.currentReward = this.currentVol.reward;
-      this.dialog = true;
-    },
     fetchThoughts() {
-      fApi.searchThoughts({
+      fApi.skipOkToast.searchThoughts({
         status: ThoughtStatus.WaitingForFinalAudit,
       })((result: SingleThought[]) => {
         this.thoughts = result;
       });
     },
-    rowClick(
+    onRowClick(
       _event: Event,
       value: {
         item: any;
@@ -153,8 +125,8 @@ export default {
     ) {
       const item = value.item.raw as SingleThought;
       this.currentThoughtInfo = item;
-      fApi.getVolunteerInfo(item.volId)((volunteer) => {
-        fApi.getThoughtInfo(
+      fApi.skipOkToast.getVolunteerInfo(item.volId)((volunteer) => {
+        fApi.skipOkToast.getThoughtInfo(
           item.volId,
           item.stuId
         )((thought) => {
@@ -190,11 +162,6 @@ export default {
             this.dialog = false;
           });
         }
-
-        // validate(
-        //   [this.currentReward],
-        //   [validateNotNAN(), validateNotNegative(), validateNotLargerThan(4)]
-        // );
       }
     },
   },

@@ -10,7 +10,7 @@
         <v-row>
           <v-col v-for="(img, i) in thought.pics" :key="i">
             <v-img
-              :src="`data:${img.type};base64,${img.base64}`"
+              :src="`${baseURL}/static/pics/${img}`"
               max-width="10em"
               outlined
             />
@@ -29,6 +29,7 @@ import {
   type ThoughtInfoResponse,
 } from "@/apis";
 import type { PropType } from "vue";
+import { baseURL } from "@/plugins/axios";
 
 export default {
   name: "thought-info",
@@ -43,6 +44,7 @@ export default {
       timeToHint,
       getVolTypeName,
       getVolStatusName,
+      baseURL,
     };
   },
 };

@@ -7,6 +7,7 @@
           <v-text-field
             v-model="form.name"
             :rules="rules"
+            type="text"
             label="义工名称"
             prepend-icon="mdi-pen"
           />
@@ -24,7 +25,11 @@
                 />
               </v-col>
               <v-col cols="3">
-                <v-text-field v-model.number="countNew" label="限制人数" />
+                <v-text-field
+                  v-model.number="countNew"
+                  type="number"
+                  label="限制人数"
+                />
               </v-col>
               <v-col cols="2">
                 <v-btn rounded class="mx-2" fab @click="addToList">
@@ -48,24 +53,28 @@
             v-else
             v-model.number="countNew"
             label="限制人数"
+            type="number"
             prepend-icon="mdi-account-group"
           />
           <!---->
           <v-text-field
             v-model="form.date"
             :rules="rules"
+            type="text"
             label="日期（e.g. 23-9-1）"
             prepend-icon="mdi-calendar-range"
           />
           <v-textarea
             v-model="form.description"
             :rules="rules"
+            type="text"
             label="义工描述"
             prepend-icon="mdi-text"
           />
           <v-text-field
             v-model.number="form.reward"
             :rules="rules"
+            type="number"
             label="预期时长（分钟）"
             prepend-icon="mdi-clock-time-three-outline"
           />
@@ -173,11 +182,10 @@ export default {
       return this.classes.filter((v) => !v.selcted);
     },
     selectClassPermission() {
-      // return (
-      //   this.infoStore.permission &
-      //   (Categ.System | Categ.Manager | Categ.Auditor)
-      // );
-      return false;
+      return (
+        this.infoStore.permission &
+        (Categ.System | Categ.Manager | Categ.Auditor)
+      );
     },
   },
 };
