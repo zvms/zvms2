@@ -33,11 +33,15 @@ class UserInfoResponse(Object):
     auth = Int
     clsName = String
 
+class PictureResponse(Object):
+    hash = String
+    type = String
+
 class ThoughtInfoResponse(Optional):
     reason = String
     thought = String
     reward = Int
-    pics = Array(String)
+    pics = Array(PictureResponse())
 
 class StudentThoughtsResponse(Object):
     accepted = Array(ThoughtInfoResponse())
@@ -123,10 +127,14 @@ class SingleThought(Object):
     volName = String
 
 SearchThoughtsResponse = Array(SingleThought())
+
+class Picture(Object):
+    base64 = String
+    type = Len(String, 4, 6)
     
 class Thought(Object):
     thought = Len(String, 1, 1025)
-    pictures = Array(String)
+    pictures = Array(Picture)
 
 class Login(Object):
     id = Int

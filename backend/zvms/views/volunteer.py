@@ -7,7 +7,7 @@ from zvms.apilib import Api
 
 
 def get_signable(id, time, token_data):
-    cv = ClassVol.query.get_or_error((id, token_data['cls']))
+    cv = ClassVol.query.get((id, token_data['cls']))
     return time <= datetime.datetime.now() and cv is not None and cv.now < cv.max
 
 @Api(rule='/volunteer/search', params='SearchVolunteers', response='SearchVolunteersResponse')
@@ -64,7 +64,7 @@ def _create_volunteer(token_data, kwargs):
     return Volunteer(
         **kwargs,
         holder_id=token_data['id'],
-        status=VolStatus.UNAUDITED if token_data['auth'] == Categ.STUDENT else VolStatus.AUDITED
+        status=int(VolStatus.UNAUDITED if token_data['auth'] == Categ.STUDENT else VolStatus.AUDITED)
     ).insert().id
 
 

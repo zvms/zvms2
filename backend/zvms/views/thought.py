@@ -35,6 +35,7 @@ def search_thoughts(**kwargs):
         return error('请求接口错误: 非法的URL参数')
 
     def process_query(query):
+        print(conds)
         return success('获取成功', list_or_error(query.select(
             'status',
             stuId='stu_id',
@@ -92,11 +93,12 @@ def _submit_thought(volId, stuId, thought, pictures, status):
     for i, pic in enumerate(pictures):
         if not Picture.query.get((volId, stuId, hashes[i])):
             with open(os.path.join(STATIC_FOLDER, 'pics', f'{hashes[i]}.jpg'), 'wb') as f:
-                f.write(b64decode(pic))
+                f.write(b64decode(pic['base64']))
             Picture(
                 vol_id=volId,
                 stu_id=stuId,
-                hash=hashes[i]
+                hash=hashes[i],
+                extension=pic['type']
             ).insert()
 
 

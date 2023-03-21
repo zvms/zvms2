@@ -116,7 +116,7 @@ class StuVol(ModelMixIn, db.Model):
 
     @property
     def pics(self):
-        return list_or_error(Picture.query.filter_by(stu_id=self.stu_id, vol_id=self.vol_id).select_value('hash'))
+        return list_or_error(Picture.query.filter_by(stu_id=self.stu_id, vol_id=self.vol_id).select('hash', type='extension'))
 
     @property
     def stu(self):
@@ -153,6 +153,7 @@ class Picture(ModelMixIn, db.Model):
     vol_id = Column(Integer, primary_key=True)
     stu_id = Column(Integer, primary_key=True)
     hash = Column(String(32), primary_key=True)
+    extension = Column(String(5))
 
 
 class UserNotice(ModelMixIn, db.Model):

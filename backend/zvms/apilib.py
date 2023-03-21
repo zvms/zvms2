@@ -78,18 +78,18 @@ def deco(impl, params, response, auth):
         try:
             with open('log.txt', 'a', encoding='utf-8') as f:
                 if auth != Categ.NONE:
-                    print(f'({token_data["id"]})', end=' ')
+                    # print(f'({token_data["id"]})', end=' ')
                     f.write(f'({token_data["id"]}) ')
-                print(f'[{datetime.datetime.now()}] {request.method} {request.url}')
+                # print(f'[{datetime.datetime.now()}] {request.method} {request.url}')
                 f.write(f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
-            if not params.check(json_data):
-                print(json.loads(interface_error(params, json_data)))
-                print(json_data)
-                return interface_error(params, json_data)
+            # if not params.check(json_data):
+            #     print('expected', json.loads(interface_error(params, json_data)))
+            #     print('found', json_data)
+            #     return interface_error(params, json_data)
             ret = impl(*args, **kwargs, **json_data, token_data=token_data)
             result = ret.get('result')
-            if ret['type'] == 'SUCCESS' and not response.check(result):
-                return {'type': 'ERROR', 'message': '响应返回错误', 'expected': response.as_json(), 'found': parse(result)}
+            # if ret['type'] == 'SUCCESS' and not response.check(result):
+            #     return {'type': 'ERROR', 'message': '响应返回错误', 'expected': response.as_json(), 'found': parse(result)}
             return json.dumps(ret)
         except ZvmsError as ex:
             return json.dumps(error(ex.message))
