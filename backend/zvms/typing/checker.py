@@ -197,7 +197,6 @@ class Optional(Object):
             return False
         for k, v in json.items():
             if k in fields and not fields[k].check(v):
-                print(k, v)
                 return False
         return True
 
