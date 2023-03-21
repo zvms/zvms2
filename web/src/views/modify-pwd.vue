@@ -28,6 +28,9 @@
           <v-btn class="me-4" type="submit" color="primary" @click="modifyPwd">
             确定
           </v-btn>
+          <v-btn class="me-4" @click="$router.push('/')">
+            取消
+          </v-btn>
         </v-form>
       </v-card-text>
     </v-card>

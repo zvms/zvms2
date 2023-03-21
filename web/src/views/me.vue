@@ -75,7 +75,7 @@ export default {
         content: this.infoStore.className,
       },
     ];
-    fApi.searchNotices({
+    fApi.skipOkToast.searchNotices({
       user: this.infoStore.userId,
     })((result) => {
       this.notices = result;

@@ -90,7 +90,7 @@
 
 <script lang="ts">
 import { fApi, type ClassVol, type SingleClass, VolType } from "@/apis";
-import { NOTEMPTY } from "@/utils/validation.js";
+import { NOTEMPTY, validateNotNegative } from "@/utils/validation.js";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
@@ -100,14 +100,14 @@ export default {
   data() {
     return {
       Categ,
-      countNew: 5,
+      countNew: "" as any as number,
       classNew: NaN,
       classes: [] as (SingleClass & { selcted?: boolean })[],
       form: {
         name: "",
         date: "",
         description: "",
-        reward: 0,
+        reward: "" as any as number,
         classSelected: [] as ClassVol[],
         type: VolType.Outside,
         class: undefined,
@@ -173,7 +173,7 @@ export default {
       } else {
         this.classNew = this.unselctedClasses[0].id;
       }
-      this.countNew = 5;
+      this.countNew = "" as any as number;
     },
   },
   computed: {
