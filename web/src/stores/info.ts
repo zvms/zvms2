@@ -14,5 +14,11 @@ export const useInfoStore = defineStore("info", {
   },
   persist: {
     enabled: true,
+    strategies: [
+      {
+        storage: localStorage,
+        key: "zvms/v2/info",
+      },
+    ],
   },
 });

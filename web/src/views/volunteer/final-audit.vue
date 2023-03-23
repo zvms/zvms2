@@ -1,7 +1,12 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title> 未审核感想列表 </v-card-title>
+      <v-card-title>
+        未审核感想列表
+        <v-btn @click="fetchThoughts" size="xsmall">
+          <v-icon icon="mdi-reload" size="xsmall" />
+        </v-btn>
+      </v-card-title>
       <v-card-text>
         <data-table
           fixed-header
@@ -173,7 +178,7 @@ export default {
 
 <style scoped>
 .action {
-  width:30%;
-  border:1px solid currentColor
+  width: 30%;
+  border: 1px solid currentColor;
 }
 </style>

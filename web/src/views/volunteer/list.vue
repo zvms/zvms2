@@ -1,7 +1,12 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title> 义工列表 </v-card-title>
+      <v-card-title>
+        义工列表
+        <v-btn @click="fetchVols" size="xsmall">
+          <v-icon icon="mdi-reload" size="xsmall"/>
+        </v-btn>
+      </v-card-title>
       <data-table
         fixed-header
         :headers="headers"
@@ -86,10 +91,8 @@ import {
   fApi,
   VolStatus,
   type SingleVolunteer,
-  type Thought,
   type ThoughtInfoResponse,
   type VolunteerInfoResponse,
-  VolType,
 } from "@/apis";
 import { useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
@@ -129,6 +132,7 @@ export default {
           data: ThoughtInfoResponse;
           pics: {
             type: string;
+            extName: string;
             base64: string;
             key: string;
           }[];
@@ -200,6 +204,7 @@ export default {
       }
       this.current.thought!.pics.push({
         type: newFile.type,
+        extName: newFile.name.substring(newFile.name.lastIndexOf(".")),
         base64: CryptoJS.enc.Base64.stringify(
           ArrayBufferToWordArray(arrayBuffer)
         ),
@@ -211,18 +216,32 @@ export default {
         this.current.singleVol.id,
         this.infoStore.userId,
         this.current.thought!.data.thought ?? "",
-        this.current.thought!.pics.map((v) => v.base64)
+        this.current.thought!.pics.map((v) => ({
+          type: v.type,
+          base64: v.base64,
+        }))
       )(then);
     },
     async submitThought() {
-      this.saveThought(async () => {
-        if (await confirm("确定提交？")) {
-          fApi.submitThought(
-            this.current.thought!.volId,
-            this.current.thought!.stuId
-          );
-        }
-      });
+      // this.saveThought(async () => {
+      //   if (await confirm("确定提交？")) {
+      //     fApi.submitThought(
+      //       this.current.thought!.volId,
+      //       this.current.thought!.stuId
+      //     );
+      //   }
+      // });
+      if (await confirm("确定提交？")) {
+        fApi.submitThought(
+          this.current.singleVol.id,
+          this.infoStore.userId,
+          this.current.thought!.data.thought ?? "",
+          this.current.thought!.pics.map((v) => ({
+            type: v.extName,
+            base64: v.base64,
+          }))
+        );
+      }
     },
   },
   computed: {

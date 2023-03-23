@@ -134,7 +134,7 @@ class Picture(Object):
     
 class Thought(Object):
     thought = Len(String, 1, 1025)
-    pictures = Array(Picture)
+    pictures = Array(Picture())
 
 class Login(Object):
     id = Int

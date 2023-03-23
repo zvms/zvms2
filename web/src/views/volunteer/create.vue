@@ -90,7 +90,7 @@
 
 <script lang="ts">
 import { fApi, type ClassVol, type SingleClass, VolType } from "@/apis";
-import { NOTEMPTY, validateNotNegative } from "@/utils/validation.js";
+import { NOTEMPTY } from "@/utils/validation.js";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";

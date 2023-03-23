@@ -3,7 +3,7 @@
     <v-list>
       <v-list-item>
         <v-list-item-title>简介</v-list-item-title>
-        <Fragment v-html="vol.name"></Fragment>
+        <div v-html="vol.name"></div>
       </v-list-item>
       <v-list-item>
         <v-list-item-title>时间</v-list-item-title>

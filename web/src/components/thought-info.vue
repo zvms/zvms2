@@ -10,7 +10,7 @@
         <v-row>
           <v-col v-for="(img, i) in thought.pics" :key="i">
             <v-img
-              :src="`${baseURL}/static/pics/${img}`"
+              :src="`${baseURL}/static/pics/${img.hash}${img.type}`"
               max-width="10em"
               outlined
             />

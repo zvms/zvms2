@@ -1,7 +1,7 @@
 <template>
   <v-app class="overflow-y-hidden" full-height>
     <v-theme-provider theme="light">
-      <v-navigation-drawer app permanent style="width:7em">
+      <v-navigation-drawer app permanent style="width: 7em">
         <v-list nav dense class="py-0">
           <v-list-item line="two" class="px-0">
             <v-list-item tile class="w-50">
@@ -19,8 +19,8 @@
             :to="item.to"
             link
           >
-              <v-icon :icon="item.icon" small></v-icon>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-icon :icon="item.icon" small></v-icon>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
         <template v-slot:append>
@@ -39,6 +39,7 @@
         </v-container>
       </v-main>
     </v-theme-provider>
+    <div id="prevent-click" v-if="loadingStore.isLoading"></div>
   </v-app>
 </template>
 
@@ -57,3 +58,12 @@ export default {
   },
 };
 </script>
+<style scoped>
+#prevent-click {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  color: transparent;
+}
+</style>

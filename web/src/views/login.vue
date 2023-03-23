@@ -31,10 +31,11 @@
 import { fApi } from "../apis";
 import { NOTEMPTY } from "../utils/validation.js"; //校验表单完整性
 import { applyNavItems } from "../utils/nav";
-import { useNoticesStore, useInfoStore, useHeartbeatStore } from "@/stores";
+import { useInfoStore, useHeartbeatStore } from "@/stores";
 import { md5 } from "@/utils/md5";
 import { mapStores } from "pinia";
 import { Categ } from "@/apis/types/enums";
+import router from "@/router";
 
 export default {
   name: "login",
@@ -48,6 +49,11 @@ export default {
       isFormValid: false,
     };
   },
+  mounted() {
+    if (this.infoStore.token && !(this.infoStore.permission & Categ.None)) {
+      router.push("/");
+    }
+  },
   methods: {
     login() {
       if (this.isFormValid) {
@@ -59,12 +65,13 @@ export default {
           md5(pwd)
         )(({ token }) => {
           this.infoStore.token = token;
-          fApi.getUserInfo(id)(({ name, cls, auth, clsName }) => {
+          fApi.skipOkToast.getUserInfo(id)(({ name, cls, auth, clsName }) => {
             this.infoStore.$patch({
+              userId: id,
               username: name,
               permission: auth,
               classId: cls,
-              className: clsName
+              className: clsName,
             });
 
             applyNavItems();
@@ -75,7 +82,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore, useNoticesStore, useHeartbeatStore),
+    ...mapStores(useInfoStore, useHeartbeatStore),
   },
 };
 </script>

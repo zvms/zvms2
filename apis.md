@@ -530,7 +530,10 @@
             "thought": "string",
             "reward": "number",
             "pics": [
-                "string"
+                {
+                    "hash": "string",
+                    "type": "string"
+                }
             ]
         }
     ],
@@ -540,7 +543,10 @@
             "thought": "string",
             "reward": "number",
             "pics": [
-                "string"
+                {
+                    "hash": "string",
+                    "type": "string"
+                }
             ]
         }
     ],
@@ -550,7 +556,10 @@
             "thought": "string",
             "reward": "number",
             "pics": [
-                "string"
+                {
+                    "hash": "string",
+                    "type": "string"
+                }
             ]
         }
     ],
@@ -560,7 +569,10 @@
             "thought": "string",
             "reward": "number",
             "pics": [
-                "string"
+                {
+                    "hash": "string",
+                    "type": "string"
+                }
             ]
         }
     ]
@@ -606,7 +618,10 @@
     "thought": "string",
     "reward": "number",
     "pics": [
-        "string"
+        {
+            "hash": "string",
+            "type": "string"
+        }
     ]
 }
 ```
@@ -619,7 +634,10 @@
 {
     "thought": "string",
     "pictures": [
-        "string"
+        {
+            "base64": "string",
+            "type": "string"
+        }
     ]
 }
 ```
@@ -636,7 +654,10 @@
 {
     "thought": "string",
     "pictures": [
-        "string"
+        {
+            "base64": "string",
+            "type": "string"
+        }
     ]
 }
 ```

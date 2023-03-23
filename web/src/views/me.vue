@@ -36,7 +36,7 @@
     </v-list>
   </v-card>
 
-  <v-dialog v-model="dialog" max-width="80%">
+  <v-dialog v-model="noticeDialog" max-width="80%">
     <v-card>
       <v-card-title>{{ curNoticeTitle }}</v-card-title>
       <v-card-text v-html="curNoticeText"></v-card-text>
@@ -56,25 +56,16 @@ export default {
   name: "me",
   data() {
     return {
-      chips: [] as { id: number; icon: string; content: string }[],
-      dialog: false,
+      noticeDialog: false,
       curNoticeTitle: "",
       curNoticeText: "",
-      timer: "",
-      notices:[] as SingleNotice []
+      notices: [] as SingleNotice[],
     };
   },
   mounted() {
-    if (this.infoStore.permission & Categ.None) {
+    if (!this.infoStore.token || this.infoStore.permission & Categ.None) {
       router.push("/login");
     }
-    this.chips = [
-      {
-        id: 0,
-        icon: "mdi-label",
-        content: this.infoStore.className,
-      },
-    ];
     fApi.skipOkToast.searchNotices({
       user: this.infoStore.userId,
     })((result) => {
@@ -108,7 +99,7 @@ export default {
         }
       }
       this.curNoticeText = s;
-      this.dialog = true;
+      this.noticeDialog = true;
     },
     logout() {
       fApi.logout()(() => {
@@ -123,6 +114,15 @@ export default {
   },
   computed: {
     ...mapStores(useInfoStore),
+    chips(): { id: number; icon: string; content: string }[] {
+      return [
+        {
+          id: 0,
+          icon: "mdi-label",
+          content: this.infoStore.className,
+        },
+      ];
+    },
   },
 };
 </script>

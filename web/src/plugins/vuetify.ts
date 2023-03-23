@@ -48,7 +48,6 @@ export default createVuetify({
           color8: '#524040',
           color9: '#5F2817',
           color10: '#D98640',
-          
         }
       },
     },

@@ -750,7 +750,7 @@ export class ForegroundApi {
     volId: number,
     stuId: number,
     thought: string,
-    pictures: Array<string>
+    pictures: Array<structs.Picture>
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
       this,
@@ -774,7 +774,7 @@ export class ForegroundApi {
     volId: number,
     stuId: number,
     thought: string,
-    pictures: Array<string>
+    pictures: Array<structs.Picture>
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
       this,

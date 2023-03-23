@@ -19,7 +19,7 @@ code {
 }
 
 .v-card-title {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 2px solid rgb(var(--v-theme-color4));
 }
 
 .v-card-actions > button {
@@ -28,4 +28,8 @@ code {
 
 button[type="submit"] {
   border: solid 1px currentColor;
+}
+
+.v-card {
+  border: 1px solid rgb(var(--v-theme-color1)) !important;
 }
