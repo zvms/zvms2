@@ -20,6 +20,7 @@ code {
 
 .v-card-title {
   border-bottom: 2px solid rgb(var(--v-theme-color4));
+  margin-bottom: 10px;
 }
 
 .v-card-actions > button {
@@ -32,4 +33,24 @@ button[type="submit"] {
 
 .v-card {
   border: 1px solid rgb(var(--v-theme-color1)) !important;
+}
+
+/* .v-navigation-drawer--left {
+  border-right-color: rgb(var(--v-theme-color4));
+} */
+
+.v-main {
+  padding-left: 13% !important;
+}
+
+.v-container {
+  max-width: unset !important;
+}
+
+.bg-primary[type="submit"] {
+  background: unset !important;
+  border: rgb(var(--v-theme-color3)) solid 1px !important;
+  color: black !important;
+  font-weight: bolder;
+  font-size: larger;
 }

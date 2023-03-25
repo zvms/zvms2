@@ -3,6 +3,7 @@ node_modules
 dist
 **/__pycache__
 /.backup
+**/venv
 
 # local env files
 .env.local

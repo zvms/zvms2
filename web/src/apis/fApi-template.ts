@@ -84,9 +84,13 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
       let res;
       try {
         res = await func(url, ...args); //axios
-      } catch (e) {
+      } catch (e:any) {
         if (config.defaultFailedToast) {
-          toasts.error((e as Error).message);
+          if (e?.code === "ERR_NETWORK") {
+            toasts.error("服务器内部错误！");
+          } else {
+            toasts.error((e as Error).message);
+          }
         }
         config.errorReq(e as Error, info);
         throw e;

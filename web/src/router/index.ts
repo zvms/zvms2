@@ -1,5 +1,6 @@
+import { Categ } from "@/apis";
+import { useInfoStore } from "@/stores";
 import { createRouter, createWebHashHistory } from "vue-router";
-import NProgress from "../plugins/nprogress";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -72,8 +73,20 @@ const router = createRouter({
   ],
 });
 
-router.afterEach(() => {
-  NProgress.done();
+router.beforeEach((to, from, next) => {
+  /* 页面title */
+  if (to.name !== "login" && to.name !== "about") {
+    const infoStore = useInfoStore();
+    if (!infoStore.token || infoStore.permission & Categ.None) {
+      next({
+        path: "/login",
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

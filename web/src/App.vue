@@ -1,14 +1,17 @@
 <template>
   <v-app class="overflow-y-hidden" full-height>
     <v-theme-provider theme="light">
-      <v-navigation-drawer app permanent style="width: 7em">
+      <v-navigation-drawer app permanent style="width: 7em" touchless>
         <v-list nav dense class="py-0">
           <v-list-item line="two" class="px-0">
-            <v-list-item tile class="w-50">
+            <!-- <v-list-item tile class="w-50">
               <img src="./assets/logo.png" />
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-title>义工管理系统</v-list-item-title>
+            </v-list-item> -->
+            <v-list-item class="pt-5">
+              <v-list-item-title style="font-size: medium"
+                ><span style="color: rgb(var(--v-theme-color2));font-size: larger;">镇海中学</span
+                ><br />义工管理系统</v-list-item-title
+              >
               <v-list-item-subtitle>v2.0.0</v-list-item-subtitle>
             </v-list-item>
           </v-list-item>

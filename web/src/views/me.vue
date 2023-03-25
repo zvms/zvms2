@@ -3,6 +3,11 @@
     <v-card-title>
       你好,
       <strong>{{ infoStore.username }}</strong>
+      <span
+        style="font-size: x-large; color: gray; text-align: right; float: right"
+      >
+        励志&nbsp;&nbsp;进取&nbsp;&nbsp;勤奋&nbsp;&nbsp;健美
+      </span>
     </v-card-title>
     <v-card-text>
       <v-chip v-for="chip in chips" v-bind:key="chip.id" class="ma-2">
@@ -19,7 +24,9 @@
   <v-card>
     <v-card-title> 通知 </v-card-title>
     <v-list shaped>
+      <v-col v-if="notices.length === 0"> 没有通知哦 </v-col>
       <v-list-item
+        v-else
         color="primary"
         v-for="(notice, i) in notices"
         :key="i"
@@ -63,29 +70,11 @@ export default {
     };
   },
   mounted() {
-    if (!this.infoStore.token || this.infoStore.permission & Categ.None) {
-      router.push("/login");
-    }
     fApi.skipOkToast.searchNotices({
       user: this.infoStore.userId,
     })((result) => {
       this.notices = result;
     });
-    // const permissionNames:string[]=[];
-    // for(const i=1)
-    // this.chips = [
-    //   ...(Number.isFinite(this.infoStore.classId)
-    //     ? [{ id: -1, icon: "mdi-label", content: this.infoStore.className }]
-    //     : []),
-    //   ...Object.keys(Categ).map((key, i) => {
-    //     return {
-    //       id: i,
-    //       icon: "mdi-label",
-    //       content: getCategName(Categ[key]),
-    //     };
-    //   }),
-    // ];
-    //NOT FNISHED
   },
   methods: {
     showNotice(notice: NoticeBody) {
@@ -118,9 +107,14 @@ export default {
       return [
         {
           id: 0,
-          icon: "mdi-label",
+          icon: "mdi-account-multiple",
           content: this.infoStore.className,
         },
+        ...[2, 4, 8, 16, 32, 64].map((id) => ({
+          id,
+          icon: "mdi-check-decagram",
+          content: getCategName(id),
+        })),
       ];
     },
   },

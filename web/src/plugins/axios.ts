@@ -1,9 +1,7 @@
 import { useInfoStore } from "@/stores";
 import Axios from "axios";
-// import NProgress from "nprogress";
-import "nprogress/nprogress.css";
 
-export const baseURL = "http://172.31.2.3:1145";
+export const baseURL = "http://172.28.1.13:1145";//"http://172.31.2.3:1145";
 
 const axios = Axios.create({
   baseURL,
@@ -28,25 +26,3 @@ axios.interceptors.request.use(
 );
 
 export default axios;
-
-// request.interceptors.request.use(
-//   (config) => {
-//     NProgress.start();
-//     return config;
-//   },
-//   (error) => {
-//     NProgress.done();
-//     return Promise.reject(error);
-//   }
-// );
-
-// request.interceptors.response.use(
-//   (response) => {
-//     NProgress.done();
-//     return response;
-//   },
-//   (error) => {
-//     NProgress.done();
-//     return Promise.reject(error);
-//   }
-// );

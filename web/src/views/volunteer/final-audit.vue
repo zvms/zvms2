@@ -7,18 +7,13 @@
           <v-icon icon="mdi-reload" size="xsmall" />
         </v-btn>
       </v-card-title>
-      <v-card-text>
-        <data-table
-          fixed-header
-          :headers="headers"
-          :items="thoughts"
-          @click:row="onRowClick"
-          loading-text="加载中..."
-          no-data-text="没有数据哦"
-          no-results-text="没有结果"
-        >
-        </data-table>
-      </v-card-text>
+      <data-table
+        fixed-header
+        :headers="headers"
+        :items="thoughts"
+        @click:row="onRowClick"
+        no-data-text="没有数据哦"
+      />
     </v-card>
     <v-dialog v-model="dialog" persistent fullscreen scrollable>
       <v-card>
