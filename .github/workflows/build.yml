@@ -1,10 +1,10 @@
-name: Build
+name: Build Webapp
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build:
@@ -15,25 +15,19 @@ jobs:
         node-version: [16.x, 18.x]
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Init
-      working-directory: ./scripts
-      run: |
-        npm i -g pnpm typescript
-        bash ./init.sh
+      - name: Init webapp
+        working-directory: ./web
+        run: |
+          npx pnpm ci
 
-    - name: Build scripts & run gen
-      working-directory: ./scripts/main
-      run: |
-        pnpm run gen
-
-    - name: Build webapp
-      working-directory: ./web
-      run: |
-        pnpm run build
+      - name: Build webapp
+        working-directory: ./web
+        run: |
+          npx pnpm run build
