@@ -1,20 +1,38 @@
 <template>
   <v-container>
     <v-card>
+      <v-card-title>关于ZVMS</v-card-title>
+      <v-card-text>
+        <p style="font-size: medium">
+          <span class="f">Z</span>henhai High School
+          <span class="f">V</span>olunteer <span class="f">M</span>anagement
+          <span class="f">S</span>ystem
+        </p>
+        <p style="font-size: larger" class="pt-3">
+          开发历时>1ky
+          <br/>
+          共产主义万岁！
+        </p>
+      </v-card-text>
+    </v-card>
+    <v-card>
       <v-card-title>关于开发者</v-card-title>
       <v-card-text>
-        <br />
-        本项目由 neko_moyi &amp; Zecyel &amp; fpc5719 &amp; So1aric &amp;
-        Solecour &amp; dblark 开发。
-        <br />
-        新版由 qnc &amp; _Kerman &amp; clc 开发。
+        <p style="font-size: larger">
+          本项目由 neko_moyi &amp; Zecyel &amp; fpc5719 &amp; So1aric &amp;
+          Solecour &amp; dblark 开发。
+          <br />
+          新版由 qnc &amp; _Kerman &amp; clc 开发。
+          <br />
+          特别鸣谢 7086cmd。
+        </p>
       </v-card-text>
     </v-card>
     <v-card>
       <v-card-title>反馈错误</v-card-title>
       <v-card-text>
         <v-form v-model="isFormValid">
-          <v-text-field
+          <v-textarea
             v-model="report"
             :rules="rules"
             label="问题的描述"
@@ -55,3 +73,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+.f {
+  font-weight: 900;
+  font-size: x-large;
+}
+</style>

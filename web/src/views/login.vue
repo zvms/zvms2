@@ -2,11 +2,21 @@
   <v-card>
     <v-card-title
       class="headline primary white--text"
-      style="backdrop-filter: blur(2px)"
-      >登录</v-card-title
     >
-    <br />
+      &nbsp;&nbsp;<span style="color: #777">镇海中学义工管理系统</span> ZVMS
+    </v-card-title>
     <v-card-text>
+      <div
+        style="
+          font-size: x-large;
+          color: gray;
+          text-align: right;
+          margin-bottom: 2px;
+          padding-top: 14px;
+        "
+      >
+        励志&nbsp;&nbsp;进取&nbsp;&nbsp;勤奋&nbsp;&nbsp;健美
+      </div>
       <v-form v-model="isFormValid">
         <v-text-field
           type="text"
@@ -21,7 +31,9 @@
           label="密码"
           @keyup.native.enter="login"
         />
-        <v-btn class="me-4" type="submit" @click="login">登录 </v-btn>
+        <v-btn class="me-4" color="primary" type="submit" @click="login"
+          >登录
+        </v-btn>
       </v-form>
     </v-card-text>
   </v-card>

@@ -4,19 +4,35 @@
       <v-card-title>
         义工列表
         <v-btn @click="fetchVols" size="xsmall">
-          <v-icon icon="mdi-reload" size="xsmall"/>
+          <v-icon icon="mdi-reload" size="xsmall" />
         </v-btn>
       </v-card-title>
+      <v-container>
+        <v-row>
+          <v-select
+            v-if="
+              infoStore.permission &
+              (Categ.Manager | Categ.Auditor | Categ.System)
+            "
+            x-small
+            prepend-icon="mdi-account-group"
+            v-model="filter.class"
+            label="限定班级"
+            :items="classes"
+            item-title="name"
+            item-value="id"
+            class="pl-5 pr-20"
+          />
+        </v-row>
+      </v-container>
       <data-table
         fixed-header
         :headers="headers"
         :items="vols"
         no-data-text="没有数据哦"
-        no-results-text="没有结果"
         @click:row="onRowClick"
       />
     </v-card>
-
     <v-dialog v-if="infoDlg" v-model="infoDlg" persistent fullscreen scrollable>
       <v-card>
         <v-card-title variant="outlined">{{ current.vol.name }}</v-card-title>
@@ -90,6 +106,7 @@ import VolInfo from "@/components/vol-info.vue";
 import {
   fApi,
   VolStatus,
+  type SingleClass,
   type SingleVolunteer,
   type ThoughtInfoResponse,
   type VolunteerInfoResponse,
@@ -111,6 +128,7 @@ export default {
   },
   data() {
     return {
+      Categ,
       headers: [
         {
           title: "编号",
@@ -124,7 +142,10 @@ export default {
         },
       ],
       vols: [] as SingleVolunteer[],
-
+      filter: {
+        class: -1 /** any */,
+      },
+      classes: [] as SingleClass[],
       current: undefined as any as {
         singleVol: SingleVolunteer;
         vol: VolunteerInfoResponse;
@@ -144,18 +165,38 @@ export default {
     };
   },
   mounted() {
+    fApi.skipOkToast.listClasses()((classes) => {
+      this.classes = [
+        {
+          id: -1,
+          name: "任意班级",
+        },
+        ...classes,
+      ];
+    });
     this.fetchVols();
   },
   methods: {
+    resetFilter() {
+      this.filter.class = -1;
+    },
     fetchVols() {
       fApi.skipOkToast.searchVolunteers({
         student:
-          this.infoStore.permission & (Categ.Class | Categ.Teacher)
+          this.infoStore.permission &
+          (Categ.Class |
+            Categ.Manager |
+            Categ.Teacher |
+            Categ.System |
+            Categ.Auditor)
             ? undefined
             : this.infoStore.userId,
         cls:
-          this.infoStore.permission & Categ.System
-            ? undefined
+          this.infoStore.permission &
+          (Categ.Manager | Categ.System | Categ.Auditor)
+            ? this.filter.class === -1
+              ? undefined
+              : this.filter.class
             : this.infoStore.classId,
       })((result) => {
         this.vols = result;
@@ -204,7 +245,7 @@ export default {
       }
       this.current.thought!.pics.push({
         type: newFile.type,
-        extName: newFile.name.substring(newFile.name.lastIndexOf(".")),
+        extName: newFile.name.substring(newFile.name.lastIndexOf(".") + 1),
         base64: CryptoJS.enc.Base64.stringify(
           ArrayBufferToWordArray(arrayBuffer)
         ),
@@ -298,6 +339,22 @@ export default {
         },
       });
       return result;
+    },
+  },
+  watch: {
+    // "filter.class"(v: number[], ov: number[]) {
+    //   if (v.indexOf(-1) !== -1) {
+    //     if (ov.indexOf(-1) === -1) {
+    //       console.log("1");
+    //       this.filter.class = [-1];
+    //     } else {
+    //       console.log("2");
+    //       this.filter.class.splice(v.indexOf(-1));
+    //     }
+    //   }
+    // },
+    "filter.class"() {
+      this.fetchVols();
     },
   },
 };

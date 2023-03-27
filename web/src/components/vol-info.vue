@@ -10,9 +10,9 @@
         {{ vol.time }}
       </v-list-item>
       <v-list-item>
-        <v-list-item-title
-          >{{ getVolTypeName(vol.type) }}时长</v-list-item-title
-        >
+        <v-list-item-title>
+          {{ getVolTypeName(vol.type) }}时长
+        </v-list-item-title>
         {{ timeToHint(vol.reward) }}
       </v-list-item>
       <v-list-item>
@@ -28,12 +28,12 @@
           {{ vol.maxJoiner }}
         </v-list-item> -->
       <v-list-item>
-        <v-list-item-title
-          >已报名（{{ vol.joiners.length }}人）</v-list-item-title
-        >
-        <v-chip-group>
-          <v-chip label small v-for="j in vol.joiners">{{ j.name }}</v-chip>
-        </v-chip-group>
+        <v-list-item-title>
+          已报名（{{ vol.joiners.length }}人）
+        </v-list-item-title>
+        <v-chip label small v-for="j in vol.joiners" class="ma-1">{{
+          j.name
+        }}</v-chip>
       </v-list-item>
       <v-list-item>
         <v-list-item-title>状态</v-list-item-title>
@@ -51,7 +51,7 @@ import {
   getVolTypeName,
   getVolStatusName,
 } from "@/apis";
-import { Fragment, type PropType } from "vue";
+import { type PropType } from "vue";
 
 export default {
   name: "vol-info",
@@ -75,6 +75,7 @@ export default {
 .v-list-item-title {
   padding-top: 10px;
   font-size: larger;
-  border-bottom: 1px black solid;
+  border-bottom: 1px rgb(var(--v-theme-color7)) solid;
+  border-radius: 3px;
 }
 </style>

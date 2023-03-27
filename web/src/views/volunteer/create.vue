@@ -27,13 +27,13 @@
               <v-col cols="3">
                 <v-text-field
                   v-model.number="countNew"
-                  type="number"
+                  type="text"
                   label="限制人数"
                 />
               </v-col>
               <v-col cols="2">
-                <v-btn rounded class="mx-2" fab @click="addToList">
-                  <v-icon> mdi-plus </v-icon>
+                <v-btn rounded class="mx-2 add" flat @click="addToList">
+                  <v-icon size="x-large"> mdi-plus </v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -43,8 +43,8 @@
               </v-col>
               <v-col cols="3" class="pl-7">{{ cls.max }}</v-col>
               <v-col cols="2">
-                <v-btn rounded class="mx-2" fab @click="delFromList(i)">
-                  <v-icon> mdi-minus </v-icon>
+                <v-btn rounded class="mx-2 delete" flat @click="delFromList(i)">
+                  <v-icon size="x-large"> mdi-minus </v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -74,7 +74,7 @@
           <v-text-field
             v-model.number="form.reward"
             :rules="rules"
-            type="number"
+            type="text"
             label="预期时长（分钟）"
             prepend-icon="mdi-clock-time-three-outline"
           />
@@ -152,6 +152,9 @@ export default {
       }
     },
     addToList() {
+      if(!Number.isFinite(this.countNew)){
+        return;
+      }
       const idx = this.classes.findIndex((v) => v.id == this.classNew);
       this.form.classSelected.unshift({
         id: this.classNew,
@@ -190,3 +193,15 @@ export default {
   },
 };
 </script>
+<style scoped>
+.v-btn.add,.v-btn.delete{
+  border: 2px solid rgb(var(--v-theme-color8));
+  margin-left: -90px !important;
+}
+.v-btn.add{
+  margin-top: 10px;
+}
+.v-btn.delete{
+  margin-top: -7px;
+}
+</style>
