@@ -86,4 +86,3 @@ SET @class = 8;
 SET @manager = 16;
 SET @auditor = 32;
 SET @system = 64;
--- 顺便, 班级也是手动加的

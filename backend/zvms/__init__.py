@@ -5,7 +5,7 @@ def create_app():
     from zvms.res import STATIC_FOLDER
 
     app = Flask(__name__)
-    CORS(app, supports_credentials=True, resources={r"/*", "*"})
+    CORS(app, supports_credentials=True, resources={r"/*", "*"}, max_age=600)
     app.config.from_pyfile('config.py')
     app.static_folder = STATIC_FOLDER
 

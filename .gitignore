@@ -3,6 +3,7 @@ node_modules
 dist
 **/__pycache__
 /.backup
+**/venv
 
 # local env files
 .env.local
@@ -25,5 +26,4 @@ yarn-error.log*
 report.txt
 log.txt
 tmp.*
-config.py
 statitic.py
