@@ -59,7 +59,7 @@
           <!---->
           <v-text-field
             v-model="form.date"
-            :rules="rules"
+            :rules="[DATE(),...rules]"
             type="text"
             label="日期（e.g. 23-9-1）"
             prepend-icon="mdi-calendar-range"
@@ -90,7 +90,7 @@
 
 <script lang="ts">
 import { fApi, type ClassVol, type SingleClass, VolType } from "@/apis";
-import { NOTEMPTY } from "@/utils/validation.js";
+import { NOTEMPTY, DATE } from "@/utils/validation.js";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
@@ -99,6 +99,7 @@ import { toasts } from "@/utils/dialogs";
 export default {
   data() {
     return {
+      DATE,
       Categ,
       countNew: "" as any as number,
       classNew: NaN,
@@ -152,7 +153,7 @@ export default {
       }
     },
     addToList() {
-      if(!Number.isFinite(this.countNew)){
+      if (!Number.isFinite(this.countNew)) {
         return;
       }
       const idx = this.classes.findIndex((v) => v.id == this.classNew);
@@ -194,14 +195,15 @@ export default {
 };
 </script>
 <style scoped>
-.v-btn.add,.v-btn.delete{
+.v-btn.add,
+.v-btn.delete {
   border: 2px solid rgb(var(--v-theme-color8));
   margin-left: -90px !important;
 }
-.v-btn.add{
+.v-btn.add {
   margin-top: 10px;
 }
-.v-btn.delete{
+.v-btn.delete {
   margin-top: -7px;
 }
 </style>

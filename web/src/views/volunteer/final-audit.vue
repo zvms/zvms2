@@ -12,8 +12,11 @@
         :headers="headers"
         :items="thoughts"
         @click:row="onRowClick"
-        no-data-text="没有数据哦"
-      />
+      >
+        <template v-slot:body v-if="thoughts.length === 0">
+          <p class="text-center">是空的~</p>
+        </template>
+      </data-table>
     </v-card>
     <v-dialog v-model="dialog" persistent fullscreen scrollable>
       <v-card>

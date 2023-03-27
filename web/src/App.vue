@@ -1,7 +1,7 @@
 <template>
   <v-app class="overflow-y-hidden" full-height>
     <v-theme-provider theme="light">
-      <v-navigation-drawer app permanent style="width: 7em" touchless>
+      <v-navigation-drawer app permanent style="width: 7em;max-width: 17%;" touchless>
         <v-list nav dense class="py-0">
           <v-list-item line="two" class="px-0">
             <!-- <v-list-item tile class="w-50">

@@ -29,9 +29,12 @@
         fixed-header
         :headers="headers"
         :items="vols"
-        no-data-text="没有数据哦"
         @click:row="onRowClick"
-      />
+      >
+        <template v-slot:body v-if="vols.length === 0">
+          <p class="text-center">是空的~</p>
+        </template>
+      </data-table>
     </v-card>
     <v-dialog v-if="infoDlg" v-model="infoDlg" persistent fullscreen scrollable>
       <v-card>

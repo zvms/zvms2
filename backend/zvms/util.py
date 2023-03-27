@@ -73,7 +73,7 @@ def select(self, *cols, **aliases):
 
 @bar
 def update(self, /, on=True, **updates):
-    self.query_self().raw.update({getattr(type(self), k): v for k, v in updates.items()})
+    self.query_self().update({getattr(type(self), k): v for k, v in updates.items()})
     if on:
         self.on_update()
     return self
@@ -158,7 +158,7 @@ class ModelMixIn:
     insert = insert
 
     def query_self(self):
-        return db.session.query.filter_by(**{k: v.__get__(self, type(self)) for k, v in self.__dict__.items() if isinstance(v, Column)})
+        return db.session.query(type(self)).filter_by(**{k: v.__get__(self, type(self)) for k, v in self.__dict__.items() if isinstance(v, Column)})
 
     def delete(self, on=True):
         self.query_self().raw.delete()

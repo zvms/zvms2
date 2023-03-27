@@ -20,7 +20,7 @@ def search_thoughts(**kwargs):
     def filter_(_): return True
 
     def filter_cls(sv):
-        return User.query.get(sv.stu_id).cls_id == filter_cls
+        return User.query.get(sv.stu_id).cls_id == cls
     try:
         if 'cls' in kwargs:
             cls = int(kwargs['cls'])
