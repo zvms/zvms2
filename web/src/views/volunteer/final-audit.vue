@@ -26,6 +26,7 @@
           <thought-info
             v-if="currentThoughtData"
             :thought="currentThoughtData"
+            :showWordCount="true"
           />
           <v-spacer />
           发放的{{ getVolTypeName(currentVol!.type) }}时长（分钟）

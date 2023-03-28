@@ -3,6 +3,8 @@
     <v-list-item>
       <v-list-item-title>感想</v-list-item-title>
       {{ thought.thought }}
+      <br/>
+      <p v-if="showWordCount" class="text-right">中文字数：{{ getWordCount(thought.thought) }}</p>
     </v-list-item>
     <v-list-item v-if="thought.pics">
       <v-list-item-title>图片</v-list-item-title>
@@ -38,6 +40,10 @@ export default {
       type: Object as PropType<ThoughtInfoResponse>,
       required: true,
     },
+    showWordCount: {
+      type: Boolean,
+      default: ()=>false,
+    }
   },
   data() {
     return {
@@ -47,6 +53,18 @@ export default {
       baseURL,
     };
   },
+  methods: {
+    getWordCount(str: string) {
+      let n = 0;
+      for (i = 0; i < str.length; i++) {
+        let c = str.charAt(i);
+        if (c.match(/[\u4e00-\u9fa5\u9FA6-\u9fcb]/)) {
+          n++;
+        }
+      }
+      return n;
+    }
+  }
 };
 </script>
 <style scoped>
