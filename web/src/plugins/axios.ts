@@ -1,7 +1,7 @@
 import { useInfoStore } from "@/stores";
 import Axios from "axios";
 
-export const baseURL = "http://172.28.1.13:1145";//"http://172.31.2.3:1145";
+export const baseURL = "http://172.31.2.4:1145";
 
 const axios = Axios.create({
   baseURL,

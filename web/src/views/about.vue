@@ -8,11 +8,6 @@
           <span class="f">V</span>olunteer <span class="f">M</span>anagement
           <span class="f">S</span>ystem
         </p>
-        <p style="font-size: larger" class="pt-3">
-          开发历时>1ky
-          <br/>
-          共产主义万岁！
-        </p>
       </v-card-text>
     </v-card>
     <v-card>
@@ -24,7 +19,7 @@
           <br />
           新版由 qnc &amp; _Kerman &amp; clc 开发。
           <br />
-          特别鸣谢 7086cmd。
+          特别感谢 7086cmd的前端初始化配置。
         </p>
       </v-card-text>
     </v-card>
