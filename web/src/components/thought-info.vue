@@ -2,7 +2,9 @@
   <v-list>
     <v-list-item>
       <v-list-item-title>感想</v-list-item-title>
-      {{ thought.thought }}
+      <div v-html="thought.thought"></div>
+      <br/>
+      <p v-if="showWordCount" class="text-right">中文字数：{{ getWordCount(thought.thought??"") }}</p>
     </v-list-item>
     <v-list-item v-if="thought.pics">
       <v-list-item-title>图片</v-list-item-title>
@@ -13,11 +15,22 @@
               :src="`${baseURL}/static/pics/${img.hash}${img.type}`"
               max-width="10em"
               outlined
+              @click="
+                showImage = true;
+                currentImage = `${baseURL}/static/pics/${img.hash}${img.type}`;
+              "
             />
           </v-col>
         </v-row>
       </v-container>
     </v-list-item>
+    <v-dialog v-model="showImage" scrollable @click="showImage = false">
+      <v-list>
+        <v-list-item>
+          <v-img :src="currentImage" />
+        </v-list-item>
+      </v-list>
+    </v-dialog>
   </v-list>
 </template>
 
@@ -38,6 +51,10 @@ export default {
       type: Object as PropType<ThoughtInfoResponse>,
       required: true,
     },
+    showWordCount: {
+      type: Boolean,
+      default: ()=>false,
+    }
   },
   data() {
     return {
@@ -45,8 +62,22 @@ export default {
       getVolTypeName,
       getVolStatusName,
       baseURL,
+      showImage: false,
+      currentImage: "",
     };
   },
+  methods: {
+    getWordCount(str: string) {
+      let n = 0;
+      for (let i = 0; i < str.length; i++) {
+        let c = str.charAt(i);
+        if (c.match(/[\u4e00-\u9fa5\u9FA6-\u9fcb]/)) {
+          n++;
+        }
+      }
+      return n;
+    }
+  }
 };
 </script>
 <style scoped>

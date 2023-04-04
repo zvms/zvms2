@@ -28,7 +28,7 @@
       <data-table
         fixed-header
         :headers="headers"
-        :items="vols"
+        :items="volsForTable"
         no-data-text="没有数据哦"
         @click:row="onRowClick"
       />
@@ -110,6 +110,7 @@ import {
   type SingleVolunteer,
   type ThoughtInfoResponse,
   type VolunteerInfoResponse,
+  getVolStatusName
 } from "@/apis";
 import { useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
@@ -128,17 +129,23 @@ export default {
   },
   data() {
     return {
+      getVolStatusName,
       Categ,
       headers: [
-        {
-          title: "编号",
-          value: "id",
-          key: "id",
-        },
         {
           title: "名称",
           value: "name",
           key: "name",
+        },
+        {
+          title: "时间",
+          value: "time",
+          key: "time",
+        },
+        {
+          title: "状态",
+          value: "status",
+          key: "status",
         },
       ],
       vols: [] as SingleVolunteer[],
@@ -340,6 +347,14 @@ export default {
       });
       return result;
     },
+    volsForTable(){
+      return this.vols.map(
+        vol=>({
+          ...vol,
+          status: this.getVolStatusName(vol.status),
+        })
+      )
+    }
   },
   watch: {
     // "filter.class"(v: number[], ov: number[]) {

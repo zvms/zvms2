@@ -52,14 +52,14 @@
           <v-text-field
             v-else
             v-model.number="countNew"
-            label="限制人数"
-            type="number"
+            :label="`允许${infoStore.className}报名的人数`"
+            type="text"
             prepend-icon="mdi-account-group"
           />
           <!---->
           <v-text-field
             v-model="form.date"
-            :rules="rules"
+            :rules="[DATE(),...rules]"
             type="text"
             label="日期（e.g. 23-9-1）"
             prepend-icon="mdi-calendar-range"
@@ -90,7 +90,7 @@
 
 <script lang="ts">
 import { fApi, type ClassVol, type SingleClass, VolType } from "@/apis";
-import { NOTEMPTY } from "@/utils/validation.js";
+import { NOTEMPTY ,DATE} from "@/utils/validation.js";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
@@ -113,6 +113,7 @@ export default {
         class: undefined,
       },
       rules: [NOTEMPTY()],
+      DATE,
       isFormValid: false,
     };
   },

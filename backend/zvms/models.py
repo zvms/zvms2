@@ -19,6 +19,10 @@ class Class(ModelMixIn, db.Model):
         ClassVol.query.filter_by(cls_id=self.id).delete()
         User.query.filter_by(cls_id=self.id).delete()
 
+    @property
+    def members(self):
+        return User.query.filter_by(cls_id=self.id)
+
 
 class User(ModelMixIn, db.Model):
     __tablename__ = 'user'

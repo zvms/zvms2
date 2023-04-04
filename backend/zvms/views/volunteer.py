@@ -36,7 +36,7 @@ def search_volunteers(token_data, **kwargs):
             i['signable'] = get_signable(i['id'], i['time'], token_data)
             i['time'] = str(i['time'])
         return success('获取成功', ret)
-    return process_query(Volunteer.query.filter(*conds))
+    return process_query(Volunteer.query.filter(*conds).order_by(Volunteer.id.desc()))
 
 
 @Api(rule='/volunteer/<int:id>', response='VolunteerInfoResponse')
@@ -59,7 +59,8 @@ def get_volunteer_info(id, token_data):
 
 
 def _create_volunteer(token_data, kwargs):
-    if token_data['auth'] == Categ.STUDENT and kwargs['type'] == VolType.OUTSIDE:
+    try_parse_time(kwargs['time'])
+    if token_data['auth'] == Categ.STUDENT and kwargs['type'] != VolType.OUTSIDE:
         raise ZvmsError('权限不足: 只能创建校外义工')
     return Volunteer(
         **kwargs,

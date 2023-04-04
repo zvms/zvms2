@@ -25,9 +25,9 @@ export enum VolStatus {
 export function getVolStatusName(id: VolStatus): string {
     switch (id) {
         case VolStatus.Unaudited:
-            return "未过审";
+            return "审核后可报名";
         case VolStatus.Audited:
-            return "已过审";
+            return "可报名";
         default:
             throw Error("Invalid enum value");
     }

@@ -158,7 +158,7 @@ class ModelMixIn:
     insert = insert
 
     def query_self(self):
-        return db.session.query.filter_by(**{k: v.__get__(self, type(self)) for k, v in self.__dict__.items() if isinstance(v, Column)})
+        return db.session.query(type(self)).filter_by(**{k: v.__get__(self, type(self)) for k, v in self.__dict__.items() if isinstance(v, Column)})
 
     def delete(self, on=True):
         self.query_self().raw.delete()
@@ -219,6 +219,12 @@ class ZvmsError(Exception):
     def __init__(self, message):
         self.message = message
 
+
+def try_parse_time(s):
+    try:
+        datetime.datetime(s)
+    except:
+        raise ZvmsError('时间格式不正确')
 
 def auth_self(id, token_data, message):
     if id != token_data['id'] and not (token_data['auth'] & Categ.SYSTEM):

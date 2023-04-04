@@ -22,8 +22,8 @@ ThoughtStatus:
   WaitingForSignupAudit: 等待报名审核
 
 VolStatus:
-  Audited: 已过审
-  Unaudited: 未过审
+  Audited: 可报名
+  Unaudited: 审核后可报名
 
 VolType:
   Inside: 校内义工

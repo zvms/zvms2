@@ -110,11 +110,13 @@ export default {
           icon: "mdi-account-multiple",
           content: this.infoStore.className,
         },
-        ...[2, 4, 8, 16, 32, 64].map((id) => ({
-          id,
-          icon: "mdi-check-decagram",
-          content: getCategName(id),
-        })),
+        ...[2, 4, 8, 16, 32, 64]
+          .filter((id) => id & this.infoStore.permission)
+          .map((id) => ({
+            id,
+            icon: "mdi-check-decagram",
+            content: getCategName(id),
+          })),
       ];
     },
   },

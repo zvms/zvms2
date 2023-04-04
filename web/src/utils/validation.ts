@@ -60,3 +60,18 @@ export function validate(
 }
 
 export const NOTEMPTY = () => (v: any) => !!v || "此处不能为空";
+
+/**
+ * 22-2-3
+ */
+export const DATE = () => (v: any) => {
+  try {
+    const vs: string[] = v.split("-");
+    if (vs.length !== 3) throw new Error();
+    const [y, m, d] = vs.map((x) => parseInt(x));
+    if (Number.isNaN(Date.UTC(y, m, d))) throw new Error();
+    return true;
+  } catch (e) {
+    return "格式不正确！";
+  }
+};
