@@ -17,10 +17,9 @@
           本项目由 neko_moyi &amp; Zecyel &amp; fpc5719 &amp; So1aric &amp;
           Solecour &amp; dblark 开发。
           <br />
-          新版由 qnc &amp; _Kerman &amp; clc 开发。
+          新版由 qnc &amp; _Kerman(xtr) &amp; clc 开发。
           <br />
           特别感谢 7086cmd的前端初始化配置。
-          https://prod.liveshare.vsengsaas.visualstudio.com/join?81F8581C4158268E105170802CA016B4C4E3
         </p>
       </v-card-text>
     </v-card>

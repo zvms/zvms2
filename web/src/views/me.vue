@@ -97,11 +97,10 @@ export default {
       this.noticeDialog = true;
     },
     logout() {
-      fApi.logout()(() => {
-        useInfoStore().$reset();
-        applyNavItems();
-        router.push("/login");
-      });
+      fApi.logout()();
+      useInfoStore().$reset();
+      applyNavItems();
+      router.push("/login");
     },
     modifyPwd() {
       router.push("/modifyPwd");
