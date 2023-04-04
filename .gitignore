@@ -26,5 +26,4 @@ yarn-error.log*
 report.txt
 log.txt
 tmp.*
-config.py
 statitic.py

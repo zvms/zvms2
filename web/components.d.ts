@@ -35,6 +35,7 @@ declare module '@vue/runtime-core' {
     VProgressCircular: typeof import('vuetify/components')['VProgressCircular']
     VRow: typeof import('vuetify/components')['VRow']
     VSelect: typeof import('vuetify/components')['VSelect']
+    VSheet: typeof import('vuetify/components')['VSheet']
     VSpacer: typeof import('vuetify/components')['VSpacer']
     VTable: typeof import('vuetify/components')['VTable']
     VTextarea: typeof import('vuetify/components')['VTextarea']

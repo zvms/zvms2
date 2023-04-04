@@ -73,7 +73,7 @@ def select(self, *cols, **aliases):
 
 @bar
 def update(self, /, on=True, **updates):
-    self.query_self().raw.update({getattr(type(self), k): v for k, v in updates.items()})
+    self.query_self().update({getattr(type(self), k): v for k, v in updates.items()})
     if on:
         self.on_update()
     return self

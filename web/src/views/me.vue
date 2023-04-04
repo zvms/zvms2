@@ -4,7 +4,13 @@
       你好,
       <strong>{{ infoStore.username }}</strong>
       <span
-        style="font-size: x-large; color: gray; text-align: right; float: right"
+        style="
+          font-size: x-large;
+          color: #999;
+          text-align: right;
+          float: right;
+          transform: translateY(5px);
+        "
       >
         励志&nbsp;&nbsp;进取&nbsp;&nbsp;勤奋&nbsp;&nbsp;健美
       </span>
