@@ -29,15 +29,18 @@
         </v-list-item> -->
       <v-list-item>
         <v-list-item-title>
-          已报名（{{ vol.joiners.length }}人）
+          已报名（{{ vol.joiners.length + 1 }}人）
         </v-list-item-title>
+        <v-chip label small>
+          {{ vol.holderName }}
+        </v-chip>
         <v-chip label small v-for="j in vol.joiners" class="ma-1">{{
           j.name
         }}</v-chip>
       </v-list-item>
       <v-list-item>
         <v-list-item-title>状态</v-list-item-title>
-        {{ getVolStatusName(vol.status) }}
+        {{ getVolStatusNameForUser(infoStore.userId, vol) }}
         <!-- {{ getVolArrangedName(vol.isArranged) }} -->
       </v-list-item>
     </v-list>
@@ -45,13 +48,11 @@
 </template>
 
 <script lang="ts">
-import { timeToHint } from "@/utils/calc";
-import {
-  type VolunteerInfoResponse,
-  getVolTypeName,
-  getVolStatusName,
-} from "@/apis";
+import { getVolStatusNameForUser, timeToHint } from "@/utils/calc";
+import { type VolunteerInfoResponse, getVolTypeName } from "@/apis";
 import { type PropType } from "vue";
+import { mapStores } from "pinia";
+import { useInfoStore } from "@/stores";
 
 export default {
   name: "vol-info",
@@ -65,8 +66,11 @@ export default {
     return {
       timeToHint,
       getVolTypeName,
-      getVolStatusName,
+      getVolStatusNameForUser,
     };
+  },
+  computed: {
+    ...mapStores(useInfoStore),
   },
 };
 </script>

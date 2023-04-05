@@ -38,10 +38,10 @@
               </v-col>
             </v-row>
             <v-row v-for="(cls, i) in form.classSelected" :key="cls.id">
-              <v-col cols="3" class="pl-16">
+              <v-col cols="3" class="pl-16"  style="font-size: larger;">
                 {{ classes.find((v) => v.id == cls.id)?.name }}
               </v-col>
-              <v-col cols="3" class="pl-7">{{ cls.max }}</v-col>
+              <v-col cols="3" class="pl-7"  style="font-size: larger;">{{ cls.max }}</v-col>
               <v-col cols="2">
                 <v-btn rounded class="mx-2 delete" flat @click="delFromList(i)">
                   <v-icon size="x-large"> mdi-minus </v-icon>
@@ -59,7 +59,7 @@
           <!---->
           <v-text-field
             v-model="form.date"
-            :rules="[DATE(),...rules]"
+            :rules="[DATE(), ...rules]"
             type="text"
             label="日期（e.g. 23-9-1）"
             prepend-icon="mdi-calendar-range"
@@ -111,7 +111,6 @@ export default {
         reward: "" as any as number,
         classSelected: [] as ClassVol[],
         type: VolType.Outside,
-        class: undefined,
       },
       rules: [NOTEMPTY()],
       isFormValid: false,
@@ -130,7 +129,7 @@ export default {
           this.selectClassPermission &&
           this.form.classSelected.length === 0
         ) {
-          toasts.error("必须至少选择一个班级！");
+          toasts.error("必须至少选择一个班级。请点击“+”号添加班级");
           return;
         }
         fApi.createVolunteer(

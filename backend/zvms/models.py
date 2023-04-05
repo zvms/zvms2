@@ -72,8 +72,6 @@ class Notice(ModelMixIn, db.Model):
         ClassNotice.query.filter_by(notice_id=self.id).delete()
         SchoolNotice.query.filter_by(notice_id=self.id).delete()
 
-    sqlite_autoincrement = True
-
     id = Column(Integer, primary_key=True)
     title = Column(String(32))
     content = Column(String(1024))
@@ -90,8 +88,6 @@ class Volunteer(ModelMixIn, db.Model):
 
     def on_delete(self):
         StuVol.query.filter_by(vol_id=self.id).delete()
-
-    sqlite_autoincrement = True
 
     id = Column(Integer, primary_key=True)
     name = Column(String(32))
@@ -187,5 +183,4 @@ class SchoolNotice(ModelMixIn, db.Model):
 class Log(ModelMixIn, db.Model):
     __tablename__ = 'log'
 
-    sqlite_autoincrement = True
     id = Column(Integer, primary_key=True, autoincrement=True)

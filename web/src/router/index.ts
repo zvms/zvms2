@@ -1,9 +1,9 @@
 import { Categ } from "@/apis";
 import { useInfoStore } from "@/stores";
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/login",
@@ -39,6 +39,11 @@ const router = createRouter({
       path: "/volunteer/create",
       name: "volunteerCreate",
       component: () => import("../views/volunteer/create.vue"),
+    },
+    {
+      path: "/volunteer/record",
+      name: "volunteerRecord",
+      component: () => import("../views/volunteer/record.vue"),
     },
     // {
     //   path: "/volunteer/firstAudit",

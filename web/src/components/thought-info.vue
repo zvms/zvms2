@@ -1,10 +1,8 @@
 <template>
   <v-list>
     <v-list-item>
-      <v-list-item-title>感想</v-list-item-title>
-      <div v-html="thought.thought"></div>
-      <br/>
-      <p v-if="showWordCount" class="text-right">中文字数：{{ getWordCount(thought.thought??"") }}</p>
+      <v-list-item-title>感想 <span v-if="showWordCount" style="font-size: medium;">&emsp;&emsp;中文字数：{{ getWordCount(thought.thought??"") }}</span></v-list-item-title>
+      <div v-html="thought.thought"></div>      
     </v-list-item>
     <v-list-item v-if="thought.pics">
       <v-list-item-title>图片</v-list-item-title>
@@ -38,7 +36,6 @@
 import { timeToHint } from "@/utils/calc";
 import {
   getVolTypeName,
-  getVolStatusName,
   type ThoughtInfoResponse,
 } from "@/apis";
 import type { PropType } from "vue";
@@ -60,7 +57,6 @@ export default {
     return {
       timeToHint,
       getVolTypeName,
-      getVolStatusName,
       baseURL,
       showImage: false,
       currentImage: "",

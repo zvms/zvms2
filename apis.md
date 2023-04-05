@@ -371,7 +371,8 @@
     "student": "number",
     "cls": "number",
     "name": "string",
-    "status": "VolStatus"
+    "status": "VolStatus",
+    "signable": "boolean"
 }
 ```
 响应:  
@@ -382,7 +383,15 @@
         "name": "string",
         "time": "string",
         "status": "number",
-        "signable": "boolean"
+        "signable": "boolean",
+        "joiners": [
+            {
+                "id": "number",
+                "name": "string"
+            }
+        ],
+        "holder": "number",
+        "holderName": "string"
     }
 ]
 ```

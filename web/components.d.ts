@@ -10,6 +10,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ThoughtInfo: typeof import('./src/components/thought-info.vue')['default']
+    VAlert: typeof import('vuetify/components')['VAlert']
     VApp: typeof import('vuetify/components')['VApp']
     VBtn: typeof import('vuetify/components')['VBtn']
     VCard: typeof import('vuetify/components')['VCard']
@@ -35,9 +36,15 @@ declare module '@vue/runtime-core' {
     VProgressCircular: typeof import('vuetify/components')['VProgressCircular']
     VRow: typeof import('vuetify/components')['VRow']
     VSelect: typeof import('vuetify/components')['VSelect']
+    VSpacer: typeof import('vuetify/components')['VSpacer']
+    VTab: typeof import('vuetify/components')['VTab']
     VTable: typeof import('vuetify/components')['VTable']
+    VTabs: typeof import('vuetify/components')['VTabs']
+    VTex: typeof import('vuetify/components')['VTex']
     VTextarea: typeof import('vuetify/components')['VTextarea']
     VTextField: typeof import('vuetify/components')['VTextField']
     VThemeProvider: typeof import('vuetify/components')['VThemeProvider']
+    VWindow: typeof import('vuetify/components')['VWindow']
+    VWindowItem: typeof import('vuetify/components')['VWindowItem']
   }
 }

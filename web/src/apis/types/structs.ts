@@ -89,7 +89,10 @@ export interface SingleVolunteer {
     name: string,
     time: string,
     status: number,
-    signable: boolean
+    signable: boolean,
+    joiners: Array<SingleUserWithoutAuth>,
+    holder: number,
+    holderName: string
 }
 
 export type SearchVolunteersResponse = Array<SingleVolunteer>
@@ -199,7 +202,8 @@ export interface SearchVolunteers {
     student?: number,
     cls?: number,
     name?: string,
-    status?: enums.VolStatus
+    status?: enums.VolStatus,
+    signable?: boolean
 }
 
 export interface VolunteerBody {

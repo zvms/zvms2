@@ -123,7 +123,8 @@ def save_thought(token_data, volId, stuId, thought, pictures):
 def submit_thought(token_data, volId, stuId, thought, pictures):
     '''提交感想'''
     is_common = not _auth_thought(stuId, '提交', token_data)
-    _submit_thought(volId, stuId, thought, pictures, ThoughtStatus.WAITING_FOR_FIRST_AUDIT if is_common else ThoughtStatus.WAITING_FOR_FINAL_AUDIT)
+    # 临时由WAITING_FOR_FIRST_AUDIT修改为WAITING_FOR_FINAL_AUDIT
+    _submit_thought(volId, stuId, thought, pictures, ThoughtStatus.WAITING_FOR_FINAL_AUDIT if is_common else ThoughtStatus.WAITING_FOR_FINAL_AUDIT)
     return success('提交成功')
 
 

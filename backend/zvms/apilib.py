@@ -45,6 +45,8 @@ class Api:
         for api in Api.apis:
             app.add_url_rule(api.rule, methods=[api.method], view_func=deco(api.func, api.params, api.response, api.auth))
 
+jsonHeader = {"Content-Type": "application/json ; charset=utf-8"}
+
 def deco(impl, params, response, auth):
     @wraps(impl)
     def wrapper(*args, **kwargs):
@@ -68,13 +70,13 @@ def deco(impl, params, response, auth):
                 token_data = tk.read(token_data)
                 if not tk.exists(token_data):
                     print('Token失效')
-                    return json.dumps({'type': 'ERROR', 'message': "Token失效, 请重新登陆"})
+                    return json.dumps({'type': 'ERROR', 'message': "Token失效, 请重新登陆"}),jsonHeader
                 if not auth.authorized(token_data['auth']):
                     print('权限不足')
-                    return json.dumps({'type': 'ERROR', 'message': '权限不足'})
+                    return json.dumps({'type': 'ERROR', 'message': '权限不足'}),jsonHeader
             except InvalidSignatureError as ex:
                 print('未获取到Token')
-                return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"})
+                return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"}),jsonHeader
         try:
             with open('log.txt', 'a', encoding='utf-8') as f:
                 if auth != Categ.NONE:
@@ -85,12 +87,12 @@ def deco(impl, params, response, auth):
             # if not params.check(json_data):
             #     print('expected', json.loads(interface_error(params, json_data)))
             #     print('found', json_data)
-            #     return interface_error(params, json_data)
+            #     return interface_error(params, json_data), jsonHeader
             ret = impl(*args, **kwargs, **json_data, token_data=token_data)
             result = ret.get('result')
             # if ret['type'] == 'SUCCESS' and not response.check(result):
-            #     return {'type': 'ERROR', 'message': '响应返回错误', 'expected': response.as_json(), 'found': parse(result)}
-            return json.dumps(ret)
+            #     return {'type': 'ERROR', 'message': '响应返回错误', 'expected': response.as_json(), 'found': parse(result)}, jsonHeader
+            return json.dumps(ret), jsonHeader
         except ZvmsError as ex:
-            return json.dumps(error(ex.message))
+            return json.dumps(error(ex.message)), jsonHeader
     return wrapper

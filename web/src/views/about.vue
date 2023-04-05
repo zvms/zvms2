@@ -40,12 +40,20 @@
         </v-form>
       </v-card-text>
     </v-card>
+    <v-card>
+      <v-card-title>TEST</v-card-title>
+      <v-card-text>
+        {{ t }}
+        <v-img :src = "t1"/>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
 <script lang="ts">
 import { NOTEMPTY } from "../utils/validation";
 import { fApi } from "../apis";
+import axios from "axios";
 
 export default {
   name: "report",
@@ -54,7 +62,28 @@ export default {
       report: "",
       rules: [NOTEMPTY()],
       isFormValid: false,
+      t: "",
+      t1:""
     };
+  },
+  async mounted() {
+    const keyTableApiUrl =
+      "https://gitee.com/api/v5/repos/zvms/zvms-imagebed/issues/comments/17281159?access_token=bce04e8d78a6e8e5fa514aa96d79d417";
+
+    type KeyTable = [short: string, remoteUrl: string][];
+    async function fetchTable(): Promise<KeyTable> {
+      const response = await axios.get(keyTableApiUrl);
+      const text = response.data.body as string;
+      const table = text
+        .split("\n")
+        .map((s) => s.split("="))
+        .map((ss) => [ss[0].trim(), ss[1].trim()] as [string, string]);
+      return table;
+    }
+    const table = await fetchTable();
+    const item = table[table.length-1];
+    this.t = item[0] 
+    this.t1  = item[1];
   },
   methods: {
     submitReport() {

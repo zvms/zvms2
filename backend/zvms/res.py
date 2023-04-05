@@ -9,6 +9,8 @@ class VolType(IntEnum):
 class VolStatus(IntEnum):
     UNAUDITED = 1
     AUDITED = 2
+    FINISHED = 3
+    DEPRECATED = 4
 
 class ThoughtStatus(IntEnum):
     WAITING_FOR_SIGNUP_AUDIT = 1

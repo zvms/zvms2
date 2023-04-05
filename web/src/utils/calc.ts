@@ -1,4 +1,4 @@
-import type { VolunteerInfoResponse } from "@/apis";
+import { VolStatus, type SingleVolunteer, type VolunteerInfoResponse, getVolStatusName } from "@/apis";
 
 export function isTimeFinished(
   id: number,
@@ -43,6 +43,14 @@ export function timeToHint(a: number) {
   else return mi + "分钟";
 }
 
-// export function canSingup(user:number,vol:VolunteerInfoResponse):boolean{
-//   return vol.
-// }
+export function getVolStatusNameForUser(userId:number,volunteer:SingleVolunteer|VolunteerInfoResponse){
+  if(userId ===volunteer.holder || volunteer.joiners.findIndex(v=>v.id === userId)!==-1){
+    if (volunteer.status === VolStatus.Audited){
+      return "已报名";
+    }
+    if (volunteer.status === VolStatus.Finished){
+      return "已参与";
+    }
+  }
+  return getVolStatusName(volunteer.status)
+}

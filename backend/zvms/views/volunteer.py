@@ -1,19 +1,40 @@
 import datetime
+import dateparser
 
 from zvms.models import *
 from zvms.res import *
 from zvms.util import *
 from zvms.apilib import Api
 
+def is_outdated(time):
+    return time < datetime.datetime.now()
 
-def get_signable(id, time, token_data):
+def is_signable(id, time, token_data)->bool:
     cv = ClassVol.query.get((id, token_data['cls']))
-    return time <= datetime.datetime.now() and cv is not None and cv.now < cv.max
+    # if not isinstance(time,datetime.datetime):
+    #     time = dateparser.parse(time)
+    return not is_outdated(time) and (cv is not None) and (cv.now < cv.max)
+
+def is_participator(joiners:list, holder:int,me:int):
+    return holder==me or any(x['id']==me for x in joiners)
 
 @Api(rule='/volunteer/search', params='SearchVolunteers', response='SearchVolunteersResponse')
 def search_volunteers(token_data, **kwargs):
     '''搜索义工'''
+
+    see_all = token_data['auth']&(Categ.AUDITOR|Categ.MANAGER|Categ.SYSTEM)
+
     conds = []
+
+    def filter_(v):
+        return True
+    def filter_2(v):
+        if see_all:
+            return True
+        else:
+            return is_participator(v['joiners'],v['holder'],token_data['id']) or is_signable(v['id'], v['time'], token_data)
+    def filter_signable(v):
+        return is_signable(v['id'], v['time'], token_data)
     try:
         if 'holder' in kwargs:
             conds.append(Volunteer.holder_id == int(kwargs['holder']))
@@ -27,13 +48,18 @@ def search_volunteers(token_data, **kwargs):
             conds.append(Volunteer.name.like(f'%{kwargs["name"]}%'))
         if 'status' in kwargs:
             conds.append(Volunteer.status == int(kwargs['status']))
+        if 'signable' in kwargs and kwargs['signable']:
+            filter_ = filter_signable
     except ValueError:
         return error('请求接口错误: 非法的URL参数')
 
     def process_query(query):
-        ret = list_or_error(query.select('id', 'name', 'status', 'time'))
+        ret = list_or_error(query.select('id', 'name', 'status', 'time', 'joiners', holder=rpartial(getattr, 'id'), holderName=('holder', rpartial(getattr, 'name'))))
+        ret = list(filter(filter_, filter(filter_2, ret)))
         for i in ret:
-            i['signable'] = get_signable(i['id'], i['time'], token_data)
+            i['signable'] = is_signable(i['id'], i['time'], token_data)
+            if is_outdated(i['time']):
+                i['status'] = VolStatus.FINISHED if i['status'] == VolStatus.AUDITED else VolStatus.DEPRECATED
             i['time'] = str(i['time'])
         return success('获取成功', ret)
     return process_query(Volunteer.query.filter(*conds).order_by(Volunteer.id.desc()))
@@ -53,8 +79,11 @@ def get_volunteer_info(id, token_data):
         holder=rpartial(getattr, 'id'),
         holderName=('holder', rpartial(getattr, 'name'))
     )
-    ret['signable'] = get_signable(id, ret['time'], token_data)
+    ret['signable'] = is_signable(id, ret['time'], token_data)
+    if is_outdated(ret['time']):
+        ret['status'] = VolStatus.FINISHED if ret['status'] == VolStatus.AUDITED else VolStatus.DEPRECATED
     ret['time'] = str(ret['time'])
+    print(ret['joiners'])
     return success('获取成功', **ret)
 
 

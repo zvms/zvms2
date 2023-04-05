@@ -8,7 +8,7 @@ export interface NavItem {
 }
 
 export function getNavItems(permission: Categ) {
-  const navItems: Record<string, NavItem> = {
+  const navItems = {
     login: {
       title: "登录",
       to: "/login",
@@ -49,6 +49,11 @@ export function getNavItems(permission: Categ) {
       to: "/volunteer/create",
       icon: "mdi-folder-multiple-plus",
     },
+    recordVol: {
+      title: "记录义工",
+      to: "/volunteer/record",
+      icon: "mdi-folder-multiple-plus",
+    },
     // firstAuditVol: {
     //   title: "初审感想",
     //   to: "/volunteer/firstAudit",
@@ -74,7 +79,7 @@ export function getNavItems(permission: Categ) {
       to: "/about",
       icon: "mdi-information",
     },
-  };
+  } as const satisfies Record<string, NavItem> ;
 
   const items: NavItem[] = [];
 
@@ -82,7 +87,9 @@ export function getNavItems(permission: Categ) {
   if (!(permission & Categ.None)) items.push(navItems.me);
   if (!(permission & Categ.None)) items.push(navItems.volList);
   if (!(permission & Categ.None)) items.push(navItems.createVol);
-  if (permission & Categ.System) items.push(navItems.finalAuditVol);
+  if (permission & (Categ.System | Categ.Auditor | Categ.Manager)) items.push(navItems.recordVol);
+  if (permission & (Categ.System | Categ.Auditor | Categ.Manager))
+    items.push(navItems.finalAuditVol);
   items.push(navItems.about);
   return items;
 }

@@ -62,22 +62,40 @@
                 v-model="current.thought!.data.thought"
                 label="感想文字"
               />
-              <v-file-input
-                accept="image/*"
-                @update:model-value="uploadImg"
-                label="感想图片，支持拖入"
-              >
-                <!-- <template v-slot:selection="{ fileNames }">
+              <v-tabs v-model="tab">
+                <v-tab value="one">
+                  通过图片ID上传
+                </v-tab>
+                <v-tab value="two">
+                  从本地上传（学海平板无效）
+                </v-tab>
+              </v-tabs>
+              <v-window v-model="tab">
+                <v-window-item value="one">
+                  <v-text-field label="图片ID" v-model="picsId" />
+                  <v-btn @click="uploadFromId"> 上传 </v-btn>
+                </v-window-item>
+                <v-window-item value="two">
+                  <v-file-input
+                    accept="image/*"
+                    @update:model-value="uploadImg"
+                    label="感想图片，支持拖入"
+                  />
+                </v-window-item>
+              </v-window>
+
+              <!-- <template v-slot:selection="{ fileNames }">
                 <template v-for="fileName in fileNames" :key="fileName">
                   <v-img :src="fileName" />
                 </template>
               </template> -->
-              </v-file-input>
               <v-container>
                 <v-row>
                   <v-col v-for="p,i in current.thought!.pics" :key="p.key">
                     <v-img
-                      :src="`data:${p.type};base64,${p.base64}`"
+                      :src="
+                        p.byHash ? p.url : `data:${p.type};base64,${p.base64}`
+                      "
                       max-width="10em"
                       outlined
                     />
@@ -113,12 +131,14 @@ import {
   type SingleVolunteer,
   type ThoughtInfoResponse,
   type VolunteerInfoResponse,
-  getVolStatusName
 } from "@/apis";
 import { useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import CryptoJS from "crypto-js";
+import { ArrayBufferToWordArray, getPicsById } from "@/utils/pics.js";
+import { getVolStatusNameForUser } from "@/utils/calc";
+import { baseURL } from "@/plugins/axios";
 
 interface Action {
   text: string;
@@ -132,7 +152,6 @@ export default {
   },
   data() {
     return {
-      getVolStatusName,
       Categ,
       headers: [
         {
@@ -141,14 +160,19 @@ export default {
           key: "name",
         },
         {
-          title: "时间",
-          value: "time",
-          key: "time",
+          title: "组织者",
+          value: "holderName",
+          key: "holderName",
         },
         {
           title: "状态",
           value: "status",
           key: "status",
+        },
+        {
+          title: "时间",
+          value: "time",
+          key: "time",
         },
       ],
       vols: [] as SingleVolunteer[],
@@ -161,17 +185,27 @@ export default {
         vol: VolunteerInfoResponse;
         thought?: {
           data: ThoughtInfoResponse;
-          pics: {
-            type: string;
-            extName: string;
-            base64: string;
-            key: string;
-          }[];
+          pics: (
+            | {
+                byHash: false;
+                type: string;
+                extName: string;
+                base64: string;
+                key: string;
+              }
+            | {
+                byHash: true;
+                type: string;
+                url: string;
+                key: string;
+              }
+          )[];
         };
       },
-
+      picsId: "",
       infoDlg: false,
       thoughtDlg: false,
+      tab:"one"
     };
   },
   mounted() {
@@ -191,23 +225,25 @@ export default {
       this.filter.class = -1;
     },
     fetchVols() {
+      this.infoDlg = false;
+      this.thoughtDlg = false;
       fApi.skipOkToast.searchVolunteers({
-        student:
-          this.infoStore.permission &
-          (Categ.Class |
-            Categ.Manager |
-            Categ.Teacher |
-            Categ.System |
-            Categ.Auditor)
-            ? undefined
-            : this.infoStore.userId,
+        // student:
+        //   this.infoStore.permission &
+        //   (Categ.Class |
+        //     Categ.Manager |
+        //     Categ.Teacher |
+        //     Categ.System |
+        //     Categ.Auditor)
+        //     ? undefined
+        //     : this.infoStore.userId,
         cls:
           this.infoStore.permission &
           (Categ.Manager | Categ.System | Categ.Auditor)
             ? this.filter.class === -1
               ? undefined
               : this.filter.class
-            : this.infoStore.classId,
+            : undefined /*this.infoStore.classId*/,
       })((result) => {
         this.vols = result;
       });
@@ -223,12 +259,44 @@ export default {
       });
     },
     viewThought() {
-      fApi.getThoughtInfo(
+      fApi.skipOkToast.getThoughtInfo(
         this.current!.singleVol.id,
         this.infoStore.userId
       )((thought) => {
-        this.current.thought = { data: thought, pics: [] };
+        this.current.thought = {
+          data: thought,
+          pics:
+            thought.pics?.map((v, i) => ({
+              byHash: true,
+              type: v.type,
+              url: `${baseURL}/static/pics/${v.hash}${v.type}`,
+              key: v.hash,
+            })) ?? [],
+        };
+        this.thoughtDlg = true;
       });
+    },
+    async uploadFromId() {
+      if (Number.isNaN(parseInt(this.picsId, 36))) {
+        toasts.error("图片ID格式错误");
+        return;
+      }
+      const pics = await getPicsById(this.picsId);
+      if (pics.length === 0) {
+        toasts.error("图片不存在");
+        return;
+      }
+      for (const pic of pics) {
+        this.current.thought!.pics.push({
+          byHash: false,
+          type: "UNKNOWN!!!",
+          extName: pic.substring(pic.lastIndexOf(".") + 1),
+          base64: CryptoJS.enc.Base64.stringify(
+            ArrayBufferToWordArray(await (await fetch(pic)).arrayBuffer())
+          ),
+          key: Date.now() + "",
+        });
+      }
     },
     async uploadImg(files: File[]) {
       const newFile = files[0];
@@ -241,19 +309,8 @@ export default {
         toasts.error(`文件${newFile.name}上传失败！`);
         return;
       }
-      function ArrayBufferToWordArray(arrayBuffer: ArrayBuffer | Uint8Array) {
-        let u8: Uint8Array;
-        if (arrayBuffer instanceof ArrayBuffer)
-          u8 = new Uint8Array(arrayBuffer, 0, arrayBuffer.byteLength);
-        else u8 = arrayBuffer;
-        const len = u8.length;
-        const words: any[] = [];
-        for (let i = 0; i < len; i += 1) {
-          words[i >>> 2] |= (u8[i] & 0xff) << (24 - (i % 4) * 8);
-        }
-        return CryptoJS.lib.WordArray.create(words, len);
-      }
       this.current.thought!.pics.push({
+        byHash: false,
         type: newFile.type,
         extName: newFile.name.substring(newFile.name.lastIndexOf(".") + 1),
         base64: CryptoJS.enc.Base64.stringify(
@@ -267,10 +324,7 @@ export default {
         this.current.singleVol.id,
         this.infoStore.userId,
         this.current.thought!.data.thought ?? "",
-        this.current.thought!.pics.map((v) => ({
-          type: v.type,
-          base64: v.base64,
-        }))
+          await this.picsForUpload
       )(then);
     },
     async submitThought() {
@@ -287,10 +341,7 @@ export default {
           this.current.singleVol.id,
           this.infoStore.userId,
           this.current.thought!.data.thought ?? "",
-          this.current.thought!.pics.map((v) => ({
-            type: v.extName,
-            base64: v.base64,
-          }))
+          await this.picsForUpload
         );
       }
     },
@@ -302,33 +353,38 @@ export default {
       if (
         this.current!.vol.joiners.findIndex(
           (v) => v.id === this.infoStore.userId
-        ) > -1
+        ) !== -1 ||
+        this.current!.vol.holder === this.infoStore.userId
       ) {
         result.push({
-          text: "感想",
+          text: "查看/修改感想",
           onclick: () => {
-            this.thoughtDlg = true;
+            this.viewThought();
           },
         });
       }
-      if (this.current.vol.signable) {
+      if (
+        this.current.vol.signable &&
+        this.current.vol.status === VolStatus.Audited
+      ) {
         result.push({
           text: "报名",
           onclick: () => {
             confirm("确定报名？").then((ok) => {
               if (ok) {
-                fApi.signup(this.current.singleVol.id, [
-                  this.infoStore.userId,
-                ])();
+                fApi.signup(this.current.singleVol.id, [this.infoStore.userId])(
+                  () => {
+                    this.fetchVols();
+                  }
+                );
               }
             });
           },
         });
       }
       if (
-        (this.infoStore.permission & Categ.Class) |
-          Categ.Teacher |
-          Categ.System &&
+        this.infoStore.permission &
+          (Categ.Class | Categ.Teacher | Categ.System) &&
         this.current.vol.status === VolStatus.Unaudited
       ) {
         result.push({
@@ -336,7 +392,9 @@ export default {
           onclick: () => {
             confirm("确定？").then((ok) => {
               if (ok) {
-                fApi.auditVolunteer(this.current.singleVol.id)();
+                fApi.auditVolunteer(this.current.singleVol.id)(() => {
+                  this.fetchVols();
+                });
               }
             });
           },
@@ -350,14 +408,31 @@ export default {
       });
       return result;
     },
-    volsForTable(){
-      return this.vols.map(
-        vol=>({
-          ...vol,
-          status: this.getVolStatusName(vol.status),
-        })
-      )
-    }
+    volsForTable() {
+      return this.vols.map((vol) => ({
+        ...vol,
+        status: getVolStatusNameForUser(this.infoStore.userId, vol),
+      }));
+    },
+    async picsForUpload() {
+      const pics = [];
+      for (const v of this.current.thought!.pics) {
+        if (v.byHash) {
+          pics.push({
+            type: v.type,
+            base64: CryptoJS.enc.Base64.stringify(
+              ArrayBufferToWordArray(await (await fetch(v.url)).arrayBuffer())
+            ),
+          });
+        } else {
+          pics.push({
+            type: v.extName,
+            base64: v.base64,
+          });
+        }
+      }
+      return pics;
+    },
   },
   watch: {
     // "filter.class"(v: number[], ov: number[]) {
@@ -377,3 +452,15 @@ export default {
   },
 };
 </script>
+<style scoped>
+.v-card-actions {
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+.v-card-actions > button {
+  min-width: 7em;
+  font-size: x-large;
+  border: solid 1px currentColor;
+}
+</style>

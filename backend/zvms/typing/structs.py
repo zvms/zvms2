@@ -78,6 +78,9 @@ class SingleVolunteer(Object):
     time = String
     status = Int
     signable = Boolean
+    joiners = Array(SingleUserWithoutAuth())
+    holder = Int
+    holderName = String
     
 SearchVolunteersResponse = Array(SingleVolunteer())
 
@@ -170,6 +173,7 @@ class SearchVolunteers(Optional):
     cls = Parsable(Int)
     name = String
     status = ParsableEnum(VolStatus)
+    signable = Parsable(Boolean)
     
 class VolunteerBody(Object):
     name = Len(String, 1, 33)

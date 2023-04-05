@@ -1,3 +1,4 @@
+import datetime
 from zvms.models import *
 from zvms.res import *
 from zvms.util import *
@@ -28,7 +29,7 @@ def signup(students, volId, token_data):
     if vol.status == VolStatus.UNAUDITED:
         return error('该义工未过审')
     if vol.time < datetime.datetime.now():
-        return error('该义工报名已截至')
+        return error('该义工报名已截止')
     for stuId in students:
         if StuVol.query.get((volId, stuId)):
             return error('学生已报名该义工')
@@ -50,7 +51,7 @@ def signup(students, volId, token_data):
             StuVol(
                 stu_id=stuId,
                 vol_id=volId,
-                status=ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT
+                status=ThoughtStatus.UNSUBMITTED#ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT
             ).insert()
     return success('报名成功')
 
