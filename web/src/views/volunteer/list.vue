@@ -55,22 +55,44 @@
       </v-card>
       <v-dialog v-model="thoughtDlg" persistent fullscreen>
         <v-card>
-          <v-card-title outlined>上传感想</v-card-title>
+          <v-card-title outlined>义工感想</v-card-title>
           <v-card-text>
+            感想状态：
+            <br />
+            {{ getThoughtStatusName(current.thought!.data.status!!) }}
+            <span v-if="current.thought!.data.status===ThoughtStatus.Accepted">
+              时长{{ current.thought!.data.reward!! }}分钟
+            </span>
+            <span v-if="current.thought!.data.reason">
+              上次的提交被打回的原因：
+              <br />
+              {{ current.thought!.data.reason!! }}
+            </span>
+            <div
+              style="width: 100%; border-bottom: 1px grey solid; height: 1px"
+              class="my-3"
+            ></div>
             <v-form>
               <v-textarea
+                :class="isThoughtModifiable ? '' : 'disabled-input'"
                 v-model="current.thought!.data.thought"
                 label="感想文字"
               />
-              <v-tabs v-model="tab">
-                <v-tab value="one">
-                  通过图片ID上传
-                </v-tab>
-                <v-tab value="two">
-                  从本地上传（学海平板无效）
-                </v-tab>
+              预览感想
+              <div
+                v-html="current.thought!.data.thought?.toString()"
+                class="disable-click"
+              ></div>
+              <div
+                style="width: 100%; border-bottom: 1px grey solid; height: 1px"
+                class="my-3"
+              ></div>
+              感想图片
+              <v-tabs v-if="isThoughtModifiable" v-model="tab">
+                <v-tab value="one"> 通过图片ID上传 </v-tab>
+                <v-tab value="two"> 从本地上传（学海平板无效） </v-tab>
               </v-tabs>
-              <v-window v-model="tab">
+              <v-window v-if="isThoughtModifiable" v-model="tab">
                 <v-window-item value="one">
                   <v-text-field label="图片ID" v-model="picsId" />
                   <v-btn @click="uploadFromId"> 上传 </v-btn>
@@ -100,6 +122,7 @@
                       outlined
                     />
                     <v-btn
+                      v-if="isThoughtModifiable"
                       color="white"
                       @click="current.thought!.pics.splice(i, 1)"
                       >删除</v-btn
@@ -110,8 +133,10 @@
             </v-form>
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="saveThought">保存</v-btn>
-            <v-btn @click="submitThought">提交</v-btn>
+            <v-btn v-if="isThoughtModifiable" @click="saveThought">保存</v-btn>
+            <v-btn v-if="isThoughtModifiable" @click="submitThought"
+              >提交</v-btn
+            >
             <v-btn @click="thoughtDlg = false">关闭</v-btn>
           </v-card-actions>
         </v-card>
@@ -131,6 +156,8 @@ import {
   type SingleVolunteer,
   type ThoughtInfoResponse,
   type VolunteerInfoResponse,
+  ThoughtStatus,
+  getThoughtStatusName,
 } from "@/apis";
 import { useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
@@ -153,6 +180,8 @@ export default {
   data() {
     return {
       Categ,
+      getThoughtStatusName,
+      ThoughtStatus,
       headers: [
         {
           title: "名称",
@@ -160,7 +189,7 @@ export default {
           key: "name",
         },
         {
-          title: "组织者",
+          title: "创建者",
           value: "holderName",
           key: "holderName",
         },
@@ -205,7 +234,7 @@ export default {
       picsId: "",
       infoDlg: false,
       thoughtDlg: false,
-      tab:"one"
+      tab: "one",
     };
   },
   mounted() {
@@ -266,10 +295,10 @@ export default {
         this.current.thought = {
           data: thought,
           pics:
-            thought.pics?.map((v, i) => ({
+            thought.pics?.map((v) => ({
               byHash: true,
               type: v.type,
-              url: `${baseURL}/static/pics/${v.hash}${v.type}`,
+              url: `${baseURL}/static/pics/${v.hash}.${v.type}`,
               key: v.hash,
             })) ?? [],
         };
@@ -297,6 +326,7 @@ export default {
           key: Date.now() + "",
         });
       }
+      this.picsId = "";
     },
     async uploadImg(files: File[]) {
       const newFile = files[0];
@@ -319,13 +349,13 @@ export default {
         key: Date.now() + "",
       });
     },
-    async saveThought(then = () => {}) {
+    async saveThought() {
       fApi.saveThought(
         this.current.singleVol.id,
         this.infoStore.userId,
         this.current.thought!.data.thought ?? "",
-          await this.picsForUpload
-      )(then);
+        await this.picsForUpload
+      )();
     },
     async submitThought() {
       // this.saveThought(async () => {
@@ -336,26 +366,30 @@ export default {
       //     );
       //   }
       // });
-      if (await confirm("确定提交？")) {
+      confirm("确定提交？提交后不可修改").then(async () => {
         fApi.submitThought(
           this.current.singleVol.id,
           this.infoStore.userId,
           this.current.thought!.data.thought ?? "",
           await this.picsForUpload
-        );
-      }
+        )(() => {
+          this.thoughtDlg = false;
+        });
+      });
     },
   },
   computed: {
     ...mapStores(useInfoStore),
-    actions(): Action[] {
-      let result: Action[] = [];
-      if (
+    isJoiner() {
+      return (
         this.current!.vol.joiners.findIndex(
           (v) => v.id === this.infoStore.userId
-        ) !== -1 ||
-        this.current!.vol.holder === this.infoStore.userId
-      ) {
+        ) !== -1
+      );
+    },
+    actions(): Action[] {
+      let result: Action[] = [];
+      if (this.isJoiner) {
         result.push({
           text: "查看/修改感想",
           onclick: () => {
@@ -364,6 +398,7 @@ export default {
         });
       }
       if (
+        !this.isJoiner &&
         this.current.vol.signable &&
         this.current.vol.status === VolStatus.Audited
       ) {
@@ -433,19 +468,14 @@ export default {
       }
       return pics;
     },
+    isThoughtModifiable() {
+      return (
+        this.current.thought!.data.status == ThoughtStatus.Unsubmitted ||
+        this.current.thought!.data.status == ThoughtStatus.Draft
+      );
+    },
   },
   watch: {
-    // "filter.class"(v: number[], ov: number[]) {
-    //   if (v.indexOf(-1) !== -1) {
-    //     if (ov.indexOf(-1) === -1) {
-    //       console.log("1");
-    //       this.filter.class = [-1];
-    //     } else {
-    //       console.log("2");
-    //       this.filter.class.splice(v.indexOf(-1));
-    //     }
-    //   }
-    // },
     "filter.class"() {
       this.fetchVols();
     },
@@ -462,5 +492,9 @@ export default {
   min-width: 7em;
   font-size: x-large;
   border: solid 1px currentColor;
+}
+
+.disabled-input {
+  pointer-events: none;
 }
 </style>

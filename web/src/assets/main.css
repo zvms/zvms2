@@ -1,5 +1,3 @@
-@import "./base.css";
-
 @import "lxgw-wenkai-lite-webfont/style.css";
 
 .v-card {
@@ -54,4 +52,8 @@ button[type="submit"] {
   color: black !important;
   font-weight: bolder;
   font-size: larger;
+}
+
+.disable-click{
+  pointer-events: none;
 }

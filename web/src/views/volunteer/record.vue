@@ -11,8 +11,24 @@
             label="义工名称"
             prepend-icon="mdi-pen"
           />
-          <!---->
-          <v-container>
+          <v-select
+            prepend-icon="mdi-shape"
+            label="义工类型"
+            :items="[
+              {
+                name: '校外义工',
+                value: VolType.Outside,
+              },
+              {
+                name: '校内义工',
+                value: VolType.Inside,
+              },
+            ]"
+            item-title="name"
+            item-value="value"
+            v-model="form.type"
+          />
+          <v-container class="p-0">
             <v-row>
               <v-col cols="3">
                 <v-text-field
@@ -102,6 +118,7 @@ export default {
   data() {
     return {
       DATE,
+      VolType,
       Categ,
       userNew: "" as any as number,
       userNewName: "",
@@ -147,7 +164,7 @@ export default {
       this.form.joiners.splice(i, 1);
     },
     updateUserName() {
-      if (!Number.isFinite(this.userNew)) {
+      if (!Number.isFinite(this.userNew) || ("" + this.userNew).length !== 8) {
         this.userNewName = "";
         return;
       }

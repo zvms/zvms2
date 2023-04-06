@@ -1,8 +1,6 @@
 <template>
   <v-card>
-    <v-card-title
-      class="headline primary white--text"
-    >
+    <v-card-title class="headline primary white--text">
       &nbsp;&nbsp;<span style="color: #777">镇海中学义工管理系统</span> ZVMS
     </v-card-title>
     <v-card-text>

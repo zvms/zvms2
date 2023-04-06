@@ -15,8 +15,8 @@ def is_signable(id, time, token_data)->bool:
     #     time = dateparser.parse(time)
     return not is_outdated(time) and (cv is not None) and (cv.now < cv.max)
 
-def is_participator(joiners:list, holder:int,me:int):
-    return holder==me or any(x['id']==me for x in joiners)
+def is_joiner(joiners:list, me:int):
+    return any(x['id']==me for x in joiners)
 
 @Api(rule='/volunteer/search', params='SearchVolunteers', response='SearchVolunteersResponse')
 def search_volunteers(token_data, **kwargs):
@@ -32,7 +32,7 @@ def search_volunteers(token_data, **kwargs):
         if see_all:
             return True
         else:
-            return is_participator(v['joiners'],v['holder'],token_data['id']) or is_signable(v['id'], v['time'], token_data)
+            return is_joiner(v['joiners'], token_data['id']) or is_signable(v['id'], v['time'], token_data)
     def filter_signable(v):
         return is_signable(v['id'], v['time'], token_data)
     try:

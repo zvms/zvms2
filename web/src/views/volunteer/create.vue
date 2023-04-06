@@ -11,8 +11,25 @@
             label="义工名称"
             prepend-icon="mdi-pen"
           />
-          <!---->
-          <v-container v-if="selectClassPermission">
+          <v-select
+            prepend-icon="mdi-shape"
+            label="义工类型"
+            v-if="advancedOptionsPermission"
+            :items="[
+              {
+                name: '校外义工',
+                value: VolType.Outside,
+              },
+              {
+                name: '校内义工',
+                value: VolType.Inside,
+              },
+            ]"
+            item-title="name"
+            item-value="value"
+            v-model="form.type"
+          />
+          <v-container v-if="advancedOptionsPermission" class="p-0">
             <v-row v-if="unselctedClasses.length > 0">
               <v-col cols="3">
                 <v-select
@@ -38,10 +55,12 @@
               </v-col>
             </v-row>
             <v-row v-for="(cls, i) in form.classSelected" :key="cls.id">
-              <v-col cols="3" class="pl-16"  style="font-size: larger;">
+              <v-col cols="3" class="pl-16" style="font-size: larger">
                 {{ classes.find((v) => v.id == cls.id)?.name }}
               </v-col>
-              <v-col cols="3" class="pl-7"  style="font-size: larger;">{{ cls.max }}</v-col>
+              <v-col cols="3" class="pl-7" style="font-size: larger">{{
+                cls.max
+              }}</v-col>
               <v-col cols="2">
                 <v-btn rounded class="mx-2 delete" flat @click="delFromList(i)">
                   <v-icon size="x-large"> mdi-minus </v-icon>
@@ -100,6 +119,7 @@ export default {
   data() {
     return {
       DATE,
+      VolType,
       Categ,
       countNew: "" as any as number,
       classNew: NaN,
@@ -126,14 +146,14 @@ export default {
     createVolunteer() {
       if (this.isFormValid) {
         if (
-          this.selectClassPermission &&
+          this.advancedOptionsPermission &&
           this.form.classSelected.length === 0
         ) {
           toasts.error("必须至少选择一个班级。请点击“+”号添加班级");
           return;
         }
         fApi.createVolunteer(
-          this.selectClassPermission
+          this.advancedOptionsPermission
             ? this.form.classSelected
             : [
                 {
@@ -184,7 +204,7 @@ export default {
     unselctedClasses() {
       return this.classes.filter((v) => !v.selcted);
     },
-    selectClassPermission() {
+    advancedOptionsPermission() {
       return (
         this.infoStore.permission &
         (Categ.System | Categ.Manager | Categ.Auditor)

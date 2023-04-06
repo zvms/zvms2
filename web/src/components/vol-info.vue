@@ -11,12 +11,15 @@
       </v-list-item>
       <v-list-item>
         <v-list-item-title>
-          {{ getVolTypeName(vol.type) }}时长
+          {{ getVolTypeName(vol.type) }}（预期）时长
+          <span style="font-size: medium"
+            >&emsp;&emsp;注：实际获得时长由审计部决定。</span
+          >
         </v-list-item-title>
         {{ timeToHint(vol.reward) }}
       </v-list-item>
       <v-list-item>
-        <v-list-item-title>组织者</v-list-item-title>
+        <v-list-item-title>创建者</v-list-item-title>
         {{ vol.holderName }}
       </v-list-item>
       <!-- <v-list-item>
@@ -29,11 +32,8 @@
         </v-list-item> -->
       <v-list-item>
         <v-list-item-title>
-          已报名（{{ vol.joiners.length + 1 }}人）
+          已报名（{{ vol.joiners.length }}人）
         </v-list-item-title>
-        <v-chip label small>
-          {{ vol.holderName }}
-        </v-chip>
         <v-chip label small v-for="j in vol.joiners" class="ma-1">{{
           j.name
         }}</v-chip>

@@ -9,7 +9,7 @@ const axios = Axios.create({
   headers: {
     "Content-type": "application/json",
   },
-  timeout: 6000,
+  timeout: 10000,
 });
 
 axios.interceptors.request.use(

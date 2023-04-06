@@ -53,6 +53,7 @@ def get_thought_info(volId, stuId, token_data):
     if thought.status == ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
         return error('未查询到相关数据')
     return success('获取成功', {k: v for k, v in thought.select(
+        'status',
         'reason',
         'reward',
         'pics',
@@ -88,11 +89,11 @@ def _submit_thought(volId, stuId, thought, pictures, status):
             status=status,
             thought=thought
         )
-    hashes = list(map(md5ify, pictures))
+    hashes = [md5ify(pic['base64']) for pic in pictures]
     Picture.query.filter_by(stu_id=stuId, vol_id=volId).filter(Picture.hash.in_(hashes)).delete()
     for i, pic in enumerate(pictures):
         if not Picture.query.get((volId, stuId, hashes[i])):
-            with open(os.path.join(STATIC_FOLDER, 'pics', f'{hashes[i]}.jpg'), 'wb') as f:
+            with open(os.path.join(STATIC_FOLDER, 'pics', f'{hashes[i]}.{pic["type"]}'), 'wb') as f:
                 f.write(b64decode(pic['base64']))
             Picture(
                 vol_id=volId,

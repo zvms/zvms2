@@ -1,8 +1,13 @@
 <template>
   <v-list>
     <v-list-item>
-      <v-list-item-title>感想 <span v-if="showWordCount" style="font-size: medium;">&emsp;&emsp;中文字数：{{ getWordCount(thought.thought??"") }}</span></v-list-item-title>
-      <div v-html="thought.thought"></div>      
+      <v-list-item-title
+        >感想
+        <span v-if="showWordCount" style="font-size: medium"
+          >&emsp;&emsp;中文字数：{{ getWordCount(thought.thought ?? "") }}</span
+        ></v-list-item-title
+      >
+      <div v-html="thought.thought" class="disable-click"></div>
     </v-list-item>
     <v-list-item v-if="thought.pics">
       <v-list-item-title>图片</v-list-item-title>
@@ -34,10 +39,7 @@
 
 <script lang="ts">
 import { timeToHint } from "@/utils/calc";
-import {
-  getVolTypeName,
-  type ThoughtInfoResponse,
-} from "@/apis";
+import { getVolTypeName, type ThoughtInfoResponse } from "@/apis";
 import type { PropType } from "vue";
 import { baseURL } from "@/plugins/axios";
 
@@ -50,8 +52,8 @@ export default {
     },
     showWordCount: {
       type: Boolean,
-      default: ()=>false,
-    }
+      default: () => false,
+    },
   },
   data() {
     return {
@@ -72,8 +74,8 @@ export default {
         }
       }
       return n;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

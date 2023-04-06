@@ -1,21 +1,8 @@
 <template>
   <v-layout>
-    <v-main>
-      <!--
-      <v-img
-        src="favicon.ico"
-        height="50px"
-        width="50px"
-      />
-      -->
-      <v-app-bar
-        image="favicon.ico"
-        title="ZVMS 义工图片上传"
-      />
+    <v-app-bar image="favicon.ico" title="镇海中学义工管理系统 校外图片上传" />
+    <v-main style="padding-left: 50px; padding-top: 150px">
       <v-form>
-        <v-card>
-          <v-card-text>提示:请记住图片ID，并在一周之内在校内用平板上传，图床会每周清空</v-card-text>
-        </v-card>
         <v-file-input
           label="点击选择图片，支持拖入"
           show-size
@@ -26,25 +13,25 @@
           v-model="files"
         />
         <v-btn @click="submit">开始上传</v-btn>
+        <v-sheet v-html="msg" />
       </v-form>
       <v-dialog v-model="showPopup">
         <v-card>
           <v-card-title> 图片上传成功 </v-card-title>
           <v-card-text>
-            <v-list>
-              <v-list-item v-for="(key, i) in shortKeys" :key="key">
-                {{ key }} : {{ files[i].name }}
-              </v-list-item>
-            </v-list>
+            图片上传成功，图片ID为：
+            <p style="font-size: x-large">{{ shortKey }}</p>
+            请记录在平板或其他任何地方。
+            <br />
+            在校内访问义工管理平台即可通过输入这个ID上传感想图片哦。
+            <br />
+            PS: 不能保证一周之后图片仍然保留。请在一周之内上传至平台。
           </v-card-text>
-          <v-table> </v-table>
           <v-card-actions>
             <v-btn @click="closePop">确定</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <div v-if="showPopup" style="z-index: 10000"></div>
-      <v-sheet v-html="msg" />
     </v-main>
   </v-layout>
 </template>
@@ -70,9 +57,13 @@ export default {
       return CryptoJS.MD5(this.ArrayBufferToWordArray(await file.arrayBuffer())).toString()
     },
     async submit() {
+      if(this.files.length ===0) {
+        this.msg = '不能为空，请先在上方输入框上传图片';
+        return
+      }
       if (this.msg === '请上传图片') {
         this.msg = '开始上传...<br/>'
-      }else{
+      } else {
         this.msg += '开始上传...<br/>'
       }
       const remoteUrls = [] as string[]
@@ -129,7 +120,7 @@ export default {
     closePop() {
       this.files = []
       //this.msg= '请上传图片';
-      this.shortKey = ""
+      this.shortKey = ''
       this.showPopup = false
     },
     ArrayBufferToWordArray(arrayBuffer: ArrayBuffer | Uint8Array) {

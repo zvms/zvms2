@@ -1,38 +1,43 @@
-import { VolStatus, type SingleVolunteer, type VolunteerInfoResponse, getVolStatusName } from "@/apis";
+import {
+  VolStatus,
+  type SingleVolunteer,
+  type VolunteerInfoResponse,
+  getVolStatusName,
+} from "@/apis";
 
-export function isTimeFinished(
-  id: number,
-  time: { inside: number; outside: number; large: number }
-) {
-  // 义工时间上限；2021届以后有变动
-  let vim = 24,
-    vom = 20,
-    vlm = 16;
-  if (id > 20210000) {
-    vim = 30;
-    vom = 16;
-    vlm = 18;
-  }
+// export function isTimeFinished(
+//   id: number,
+//   time: { inside: number; outside: number; large: number }
+// ) {
+//   // 义工时间上限；2021届以后有变动
+//   let vim = 24,
+//     vom = 20,
+//     vlm = 16;
+//   if (id > 20210000) {
+//     vim = 30;
+//     vom = 16;
+//     vlm = 18;
+//   }
 
-  let inside = time.inside / 60.0;
-  let outside = time.outside / 60.0;
-  const large = time.large / 60.0;
-  let result = true;
-  if (outside < vom) {
-    // 溢出判满机制：校内除二当校外
-    inside = inside - (vom - outside) * 2;
-    outside = vom;
-  }
-  if (
-    large < vlm ||
-    inside < vim ||
-    outside < vom ||
-    inside + outside < vim + vom
-  ) {
-    result = false;
-  }
-  return result;
-}
+//   let inside = time.inside / 60.0;
+//   let outside = time.outside / 60.0;
+//   const large = time.large / 60.0;
+//   let result = true;
+//   if (outside < vom) {
+//     // 溢出判满机制：校内除二当校外
+//     inside = inside - (vom - outside) * 2;
+//     outside = vom;
+//   }
+//   if (
+//     large < vlm ||
+//     inside < vim ||
+//     outside < vom ||
+//     inside + outside < vim + vom
+//   ) {
+//     result = false;
+//   }
+//   return result;
+// }
 
 export function timeToHint(a: number) {
   const hr = Math.floor(a / 60);
@@ -43,14 +48,17 @@ export function timeToHint(a: number) {
   else return mi + "分钟";
 }
 
-export function getVolStatusNameForUser(userId:number,volunteer:SingleVolunteer|VolunteerInfoResponse){
-  if(userId ===volunteer.holder || volunteer.joiners.findIndex(v=>v.id === userId)!==-1){
-    if (volunteer.status === VolStatus.Audited){
+export function getVolStatusNameForUser(
+  userId: number,
+  volunteer: SingleVolunteer | VolunteerInfoResponse
+) {
+  if (volunteer.joiners.findIndex((v) => v.id === userId) !== -1) {
+    if (volunteer.status === VolStatus.Audited) {
       return "已报名";
     }
-    if (volunteer.status === VolStatus.Finished){
+    if (volunteer.status === VolStatus.Finished) {
       return "已参与";
     }
   }
-  return getVolStatusName(volunteer.status)
+  return getVolStatusName(volunteer.status);
 }

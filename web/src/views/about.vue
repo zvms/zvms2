@@ -14,12 +14,12 @@
       <v-card-title>关于开发者</v-card-title>
       <v-card-text>
         <p style="font-size: larger">
-          本项目由 neko_moyi &amp; Zecyel &amp; fpc5719 &amp; So1aric &amp;
+          本项目初版由 neko_moyi &amp; Zecyel &amp; fpc5719 &amp; So1aric &amp;
           Solecour &amp; dblark 开发。
           <br />
-          新版由 qnc &amp; _Kerman(xtr) &amp; clc 开发。
+          新版由 qnc &amp; _Kerman_xtr &amp; clc 开发。
           <br />
-          特别感谢 7086cmd的前端初始化配置。
+          特别感谢 7086cmd的前端初始化配置。以及zsz同学的新版图标设计。
         </p>
       </v-card-text>
     </v-card>
@@ -44,7 +44,7 @@
       <v-card-title>TEST</v-card-title>
       <v-card-text>
         {{ t }}
-        <v-img :src = "t1"/>
+        <v-img :src="t1" />
       </v-card-text>
     </v-card>
   </v-container>
@@ -63,7 +63,7 @@ export default {
       rules: [NOTEMPTY()],
       isFormValid: false,
       t: "",
-      t1:""
+      t1: "",
     };
   },
   async mounted() {
@@ -81,9 +81,9 @@ export default {
       return table;
     }
     const table = await fetchTable();
-    const item = table[table.length-1];
-    this.t = item[0] 
-    this.t1  = item[1];
+    const item = table[table.length - 1];
+    this.t = item[0];
+    this.t1 = item[1];
   },
   methods: {
     submitReport() {

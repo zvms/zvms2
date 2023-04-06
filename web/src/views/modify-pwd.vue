@@ -28,9 +28,7 @@
           <v-btn class="me-4" type="submit" color="primary" @click="modifyPwd">
             确定
           </v-btn>
-          <v-btn class="me-4" @click="$router.push('/')">
-            取消
-          </v-btn>
+          <v-btn class="me-4" @click="$router.push('/')"> 取消 </v-btn>
         </v-form>
       </v-card-text>
     </v-card>
@@ -58,7 +56,7 @@ export default {
     modifyPwd() {
       if (this.isFormValid) {
         if (this.newPwd !== this.confirmPwd) {
-          console.log("1111")
+          console.log("1111");
           toasts.error("两次密码不一致");
           this.confirmPwd = "";
           return;

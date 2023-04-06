@@ -38,6 +38,7 @@ class PictureResponse(Object):
     type = String
 
 class ThoughtInfoResponse(Optional):
+    status = Enum(ThoughtStatus)
     reason = String
     thought = String
     reward = Int

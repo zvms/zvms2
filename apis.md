@@ -535,6 +535,7 @@
 {
     "accepted": [
         {
+            "status": "ThoughtStatus",
             "reason": "string",
             "thought": "string",
             "reward": "number",
@@ -548,6 +549,7 @@
     ],
     "unsubmitted": [
         {
+            "status": "ThoughtStatus",
             "reason": "string",
             "thought": "string",
             "reward": "number",
@@ -561,6 +563,7 @@
     ],
     "draft": [
         {
+            "status": "ThoughtStatus",
             "reason": "string",
             "thought": "string",
             "reward": "number",
@@ -574,6 +577,7 @@
     ],
     "unaudited": [
         {
+            "status": "ThoughtStatus",
             "reason": "string",
             "thought": "string",
             "reward": "number",
@@ -623,6 +627,7 @@
 响应:  
 ```json
 {
+    "status": "ThoughtStatus",
     "reason": "string",
     "thought": "string",
     "reward": "number",

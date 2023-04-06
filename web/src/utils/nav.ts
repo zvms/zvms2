@@ -79,7 +79,7 @@ export function getNavItems(permission: Categ) {
       to: "/about",
       icon: "mdi-information",
     },
-  } as const satisfies Record<string, NavItem> ;
+  } as const satisfies Record<string, NavItem>;
 
   const items: NavItem[] = [];
 
@@ -87,7 +87,8 @@ export function getNavItems(permission: Categ) {
   if (!(permission & Categ.None)) items.push(navItems.me);
   if (!(permission & Categ.None)) items.push(navItems.volList);
   if (!(permission & Categ.None)) items.push(navItems.createVol);
-  if (permission & (Categ.System | Categ.Auditor | Categ.Manager)) items.push(navItems.recordVol);
+  if (permission & (Categ.System | Categ.Auditor | Categ.Manager))
+    items.push(navItems.recordVol);
   if (permission & (Categ.System | Categ.Auditor | Categ.Manager))
     items.push(navItems.finalAuditVol);
   items.push(navItems.about);
