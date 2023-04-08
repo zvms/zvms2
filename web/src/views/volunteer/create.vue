@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title> 创建义工 </v-card-title>
+      <v-card-title> 创建{{advancedOptionsPermission?"":"校内"}}义工 </v-card-title>
       <v-card-text>
         <v-form v-model="isFormValid">
           <v-text-field
@@ -97,7 +97,7 @@
             label="预期时长（分钟）"
             prepend-icon="mdi-clock-time-three-outline"
           />
-          <v-btn color="primary" type="submit" @click="createVolunteer"
+          <v-btn color="primary" class="submit" @click="createVolunteer"
             >创建义工</v-btn
           >
         </v-form>
@@ -137,10 +137,12 @@ export default {
     };
   },
   mounted() {
-    fApi.skipOkToast.listClasses()((classes) => {
-      this.classes = classes;
-      this.setDefaultClass();
-    });
+    if (this.advancedOptionsPermission) {
+      fApi.skipOkToast.listClasses()((classes) => {
+        this.classes = classes;
+        this.setDefaultClass();
+      });
+    }
   },
   methods: {
     createVolunteer() {

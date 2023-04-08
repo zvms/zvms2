@@ -78,11 +78,6 @@
                 v-model="current.thought!.data.thought"
                 label="感想文字"
               />
-              预览感想
-              <div
-                v-html="current.thought!.data.thought?.toString()"
-                class="disable-click"
-              ></div>
               <div
                 style="width: 100%; border-bottom: 1px grey solid; height: 1px"
                 class="my-3"
@@ -310,23 +305,28 @@ export default {
         toasts.error("图片ID格式错误");
         return;
       }
-      const pics = await getPicsById(this.picsId);
-      if (pics.length === 0) {
-        toasts.error("图片不存在");
-        return;
+      try {
+        const pics = await getPicsById(this.picsId);
+
+        if (pics.length === 0) {
+          toasts.error("图片不存在");
+          return;
+        }
+        for (const pic of pics) {
+          this.current.thought!.pics.push({
+            byHash: false,
+            type: "UNKNOWN!!!",
+            extName: pic.substring(pic.lastIndexOf(".") + 1),
+            base64: CryptoJS.enc.Base64.stringify(
+              ArrayBufferToWordArray(await (await fetch(pic)).arrayBuffer())
+            ),
+            key: Date.now() + "",
+          });
+        }
+        this.picsId = "";
+      } catch (Error) {
+        toasts.error("通过ID获取图床图片失败!");
       }
-      for (const pic of pics) {
-        this.current.thought!.pics.push({
-          byHash: false,
-          type: "UNKNOWN!!!",
-          extName: pic.substring(pic.lastIndexOf(".") + 1),
-          base64: CryptoJS.enc.Base64.stringify(
-            ArrayBufferToWordArray(await (await fetch(pic)).arrayBuffer())
-          ),
-          key: Date.now() + "",
-        });
-      }
-      this.picsId = "";
     },
     async uploadImg(files: File[]) {
       const newFile = files[0];
@@ -400,7 +400,8 @@ export default {
       if (
         !this.isJoiner &&
         this.current.vol.signable &&
-        this.current.vol.status === VolStatus.Audited
+        this.current.vol.status === VolStatus.Audited &&
+        this.infoStore.permission & Categ.Student
       ) {
         result.push({
           text: "报名",

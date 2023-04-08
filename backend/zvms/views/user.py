@@ -1,3 +1,5 @@
+import datetime
+
 from zvms.models import *
 from zvms.apilib import Api
 from zvms.util import *
@@ -9,14 +11,20 @@ def check(token_data):
     '''检查登录状态'''
     return success('获取成功', token_data)
 
+def get_user_real_id(fake_id: str) -> int:
+    '''获取用户真实id'''
+    if fake_id.isdecimal():
+        return int(fake_id)
+    return UserMapping.query.get_or_error(fake_id, '账户不存在').real_id
 
 @Api(rule='/user/login', method='POST', params='Login', response='UserLoginResponse', auth=Categ.NONE)
 def login(id, pwd, token_data):
     '''登录'''
-    user = User.query.get(id)
+    real_id = get_user_real_id(id)
+    user = User.query.get(real_id)
     if not user or user.pwd != pwd:
         return error('用户名或密码错误')
-    return success('登录成功', token=tk.generate(**user.select('id', 'auth', cls='cls_id')))
+    return success('登录成功', token=tk.generate(**user.select('id', 'auth', cls='cls_id')), id=real_id)
 
 
 @Api(rule='/user/logout', method='POST')

@@ -1,24 +1,28 @@
 <template>
   <v-card>
     <v-card-title class="headline primary white--text">
-      &nbsp;&nbsp;<span style="color: #777">镇海中学义工管理系统</span> ZVMS
-    </v-card-title>
-    <v-card-text>
+      登录&nbsp;&nbsp;<span style="color: #888; font-weight: bolder"
+        >镇海中学义工管理系统</span
+      >
+      ZVMS
       <div
         style="
           font-size: x-large;
           color: gray;
           text-align: right;
-          margin-bottom: 2px;
+          margin-bottom: -6px;
           padding-top: 14px;
+          margin-top: -34px;
         "
       >
         励志&nbsp;&nbsp;进取&nbsp;&nbsp;勤奋&nbsp;&nbsp;健美
       </div>
+    </v-card-title>
+    <v-card-text>
       <v-form v-model="isFormValid">
         <v-text-field
           type="text"
-          v-model="form.userid"
+          v-model="form.userId"
           :rules="rules"
           label="学号/ID"
         />
@@ -29,9 +33,7 @@
           label="密码"
           @keyup.native.enter="login"
         />
-        <v-btn class="me-4" color="primary" type="submit" @click="login"
-          >登录
-        </v-btn>
+        <v-btn class="me-4 submit" @click="login">登录 </v-btn>
       </v-form>
     </v-card-text>
   </v-card>
@@ -52,7 +54,7 @@ export default {
   data() {
     return {
       form: {
-        userid: "",
+        userId: "",
         password: "",
       },
       rules: [NOTEMPTY()],
@@ -68,12 +70,10 @@ export default {
     login() {
       if (this.isFormValid) {
         const pwd = this.form.password;
-        //this.form.password = "";
-        const id = parseInt(this.form.userid);
         fApi.login(
-          id,
+          this.form.userId,
           md5(pwd)
-        )(({ token }) => {
+        )(({ token, id }) => {
           this.infoStore.token = token;
           fApi.skipOkToast.getUserInfo(id)(({ name, cls, auth, clsName }) => {
             this.infoStore.$patch({

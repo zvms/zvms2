@@ -20,14 +20,15 @@
 参数: 
 ```json
 {
-    "id": "number",
+    "id": "string",
     "pwd": "string"
 }
 ```
 响应:  
 ```json
 {
-    "token": "string"
+    "token": "string",
+    "id": "number"
 }
 ```
 

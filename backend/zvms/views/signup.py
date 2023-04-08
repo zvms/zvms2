@@ -53,6 +53,15 @@ def signup(students, volId, token_data):
                 vol_id=volId,
                 status=ThoughtStatus.UNSUBMITTED#ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT
             ).insert()
+    UserNotice(
+        user_id=vol.holder_id,
+        notice_id=Notice(
+            title='义工报名',
+            content=f'学生{token_data["name"]}报名了你的义工{vol.name}',
+            deadtime=datetime.datetime.now() + datetime.timedelta(days=1),
+            sender=0
+        ).insert().id
+    )
     return success('报名成功')
 
 

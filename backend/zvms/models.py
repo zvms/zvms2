@@ -184,3 +184,8 @@ class Log(ModelMixIn, db.Model):
     __tablename__ = 'log'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+
+class UserMapping(ModelMixIn, db.Model):
+    __tablename__ = 'user_mapping'
+    fake_id = Column(String(32), primary_key=True)
+    real_id = Column(Integer)

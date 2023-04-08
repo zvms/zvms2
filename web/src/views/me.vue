@@ -16,7 +16,7 @@
       </span>
     </v-card-title>
     <v-card-text>
-      <v-chip v-for="chip in chips" v-bind:key="chip.id" class="ma-2">
+      <v-chip v-for="chip in chips" :key="chip.id" class="ma-2">
         <v-icon left>{{ chip.icon }}</v-icon>
         {{ chip.content }}
       </v-chip>
@@ -26,7 +26,17 @@
       <v-btn @click="logout">登出</v-btn>
     </v-card-actions>
   </v-card>
-
+  <v-card v-if="timeStatVisible">
+    <v-card-title> 您在系统上的义工时间 </v-card-title>
+    <v-card-text style="font-size: medium">
+      校内义工：{{ insideTime }} 分钟
+      <br />
+      校外义工：{{ outsideTime }} 分钟
+      <br />
+      大型义工：{{ largeTime }} 分钟
+      <p style="font-size: small">注：不包括纸质义工本上的时间哦。</p>
+    </v-card-text>
+  </v-card>
   <v-card>
     <v-card-title> 通知 </v-card-title>
     <v-list shaped>
@@ -60,7 +70,7 @@
 <script lang="ts">
 import { useInfoStore } from "@/stores";
 import { fApi, type SingleNotice, type NoticeBody } from "@/apis";
-import { getCategName, Categ } from "@/apis/types/enums";
+import { Categ, getCategName } from "@/apis/types/enums";
 import { mapStores } from "pinia";
 import router from "@/router";
 import { applyNavItems } from "@/utils/nav";
@@ -73,6 +83,9 @@ export default {
       curNoticeTitle: "",
       curNoticeText: "",
       notices: [] as SingleNotice[],
+      insideTime: NaN,
+      outsideTime: NaN,
+      largeTime: NaN,
     };
   },
   mounted() {
@@ -81,6 +94,13 @@ export default {
     })((result) => {
       this.notices = result;
     });
+    if (this.timeStatVisible) {
+      fApi.skipOkToast.getStudentStat(this.infoStore.userId)((stat) => {
+        this.insideTime = stat.inside;
+        this.outsideTime = stat.outside;
+        this.largeTime = stat.large;
+      });
+    }
   },
   methods: {
     showNotice(notice: NoticeBody) {
@@ -97,10 +117,11 @@ export default {
       this.noticeDialog = true;
     },
     logout() {
-      fApi.logout()();
-      useInfoStore().$reset();
-      applyNavItems();
-      router.push("/login");
+      fApi.logout()(() => {
+        useInfoStore().$reset();
+        applyNavItems();
+        router.push("/login");
+      });
     },
     modifyPwd() {
       router.push("/modifyPwd");
@@ -123,6 +144,9 @@ export default {
             content: getCategName(id),
           })),
       ];
+    },
+    timeStatVisible() {
+      return this.infoStore.permission & Categ.Student;
     },
   },
 };

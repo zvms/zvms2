@@ -89,7 +89,7 @@
             label="记录的时长（分钟）"
             prepend-icon="mdi-clock-time-three-outline"
           />
-          <v-btn color="primary" type="submit" @click="recordVolunteer">
+          <v-btn color="primary" class="submit" @click="recordVolunteer">
             记录义工
           </v-btn>
         </v-form>
@@ -134,7 +134,6 @@ export default {
       isFormValid: false,
     };
   },
-  mounted() {},
   methods: {
     recordVolunteer() {
       if (this.isFormValid) {

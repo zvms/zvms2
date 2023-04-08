@@ -24,6 +24,7 @@ class ClassInfoResponse(Object):
 
 class UserLoginResponse(Object):
     token = String
+    id = Int
 
 SearchUsersResponse = Array(SingleUser())
 
@@ -141,7 +142,7 @@ class Thought(Object):
     pictures = Array(Picture())
 
 class Login(Object):
-    id = Int
+    id = String
     pwd = Len(String, 32, 33)
 
 class SearchUsers(Optional):

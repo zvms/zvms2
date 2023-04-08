@@ -184,4 +184,13 @@ def audit_volunteer(token_data, id):
     Volunteer.query.get_or_error(id).update(
         status=VolStatus.AUDITED
     )
+    UserNotice(
+        user_id=vol.holder_id,
+        notice_id=Notice(
+            title='义工过审',
+            content=f'您的义工{vol.name}已过审',
+            time=datetime.datetime.now() + datetime.timedelta(days=1),
+            sender=0
+        ).insert().id
+    ).insert()
     return success('审核成功')

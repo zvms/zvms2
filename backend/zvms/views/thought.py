@@ -1,4 +1,5 @@
 from base64 import b64decode
+import datetime
 import hashlib
 import os.path
 
@@ -139,6 +140,15 @@ def first_audit(token_data, volId, stuId):
     thought.update(
         status=ThoughtStatus.WAITING_FOR_FINAL_AUDIT
     )
+    UserNotice(
+        user_id=thought.stu_id,
+        notice_id=Notice(
+            title='感想终审',
+            content=f'您的关于{thought.vol.name}的感想已通过初审',
+            time=datetime.datetime.now() + datetime.timedelta(days=1),
+            sender=0
+        )
+    )
     return success('审核成功')
 
 
@@ -151,6 +161,15 @@ def final_audit(token_data, reward, volId, stuId):
     thought.update(
         reward=reward,
         status=ThoughtStatus.ACCEPTED
+    )
+    UserNotice(
+        user_id=thought.stu_id,
+        notice_id=Notice(
+            title='感想终审',
+            content=f'您的关于{thought.vol.name}的感想已通过终审, 获得{reward}义工时间',
+            time=datetime.datetime.now() + datetime.timedelta(days=1),
+            sender=0
+        )
     )
     return success('审核成功')
 
@@ -165,5 +184,14 @@ def repulse(token_data, volId, stuId, reason):
     thought.update(
         status=ThoughtStatus.UNSUBMITTED,
         reason=reason
+    )
+    UserNotice(
+        user_id=thought.stu_id,
+        notice_id=Notice(
+            title='感想终审',
+            content=f'您的关于{thought.vol.name}的感想已被打回终审',
+            time=datetime.datetime.now() + datetime.timedelta(days=1),
+            sender=0
+        )
     )
     return success('打回成功')

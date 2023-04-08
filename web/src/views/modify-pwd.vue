@@ -25,7 +25,7 @@
             prepend-icon="mdi-lock-outline"
             :rules="rules"
           />
-          <v-btn class="me-4" type="submit" color="primary" @click="modifyPwd">
+          <v-btn class="me-4 submit" color="primary" @click="modifyPwd">
             确定
           </v-btn>
           <v-btn class="me-4" @click="$router.push('/')"> 取消 </v-btn>
@@ -40,6 +40,7 @@ import { toasts } from "@/utils/dialogs";
 import { fApi } from "@/apis";
 import { md5 } from "@/utils/md5";
 import { NOTEMPTY } from "@/utils/validation";
+import router from "@/router";
 
 export default {
   data() {
@@ -56,12 +57,16 @@ export default {
     modifyPwd() {
       if (this.isFormValid) {
         if (this.newPwd !== this.confirmPwd) {
-          console.log("1111");
           toasts.error("两次密码不一致");
           this.confirmPwd = "";
           return;
         }
-        fApi.modifyPassword(md5(this.oldPwd), md5(this.newPwd))();
+        fApi.modifyPassword(
+          md5(this.oldPwd),
+          md5(this.newPwd)
+        )(() => {
+          router.push("/");
+        });
       }
     },
   },

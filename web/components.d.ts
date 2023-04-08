@@ -34,6 +34,7 @@ declare module '@vue/runtime-core' {
     VNavigationDrawer: typeof import('vuetify/components')['VNavigationDrawer']
     VolInfo: typeof import('./src/components/vol-info.vue')['default']
     VProgressCircular: typeof import('vuetify/components')['VProgressCircular']
+    VProgressLinear: typeof import('vuetify/components')['VProgressLinear']
     VRow: typeof import('vuetify/components')['VRow']
     VSe: typeof import('vuetify/components')['VSe']
     VSelect: typeof import('vuetify/components')['VSelect']

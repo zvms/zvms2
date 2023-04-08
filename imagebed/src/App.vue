@@ -57,27 +57,32 @@ export default {
       return CryptoJS.MD5(this.ArrayBufferToWordArray(await file.arrayBuffer())).toString()
     },
     async submit() {
-      if(this.files.length ===0) {
-        this.msg = '不能为空，请先在上方输入框上传图片';
-        return
+      try {
+        if (this.files.length === 0) {
+          this.msg = '不能为空，请先在上方输入框上传图片'
+          return
+        }
+        if (this.msg === '请上传图片') {
+          this.msg = '开始上传...<br/>'
+        } else {
+          this.msg += '开始上传...<br/>'
+        }
+        const remoteUrls = [] as string[]
+        for (const file of this.files) {
+          this.msg += `开始上传${file.name}...<br/>`
+          const remoteUrl = await this.uploadImage(file)
+
+          remoteUrls.push(remoteUrl)
+          this.msg += `&emsp;&emsp;&emsp;&emsp;> 上传至图床成功<br/>`
+        }
+        this.msg += `正在生成ID<br/>`
+        const shortKey = await this.updateKeyTable(remoteUrls)
+        this.shortKey = shortKey
+        this.msg += `ID生成成功：${shortKey}<br/><BR/>`
+        this.showPopup = true
+      } catch (Error) {
+        this.msg = '上传失败!!!'
       }
-      if (this.msg === '请上传图片') {
-        this.msg = '开始上传...<br/>'
-      } else {
-        this.msg += '开始上传...<br/>'
-      }
-      const remoteUrls = [] as string[]
-      for (const file of this.files) {
-        this.msg += `开始上传${file.name}...<br/>`
-        const remoteUrl = await this.uploadImage(file)
-        remoteUrls.push(remoteUrl)
-        this.msg += `&emsp;&emsp;&emsp;&emsp;> 上传至图床成功<br/>`
-      }
-      this.msg += `正在生成ID<br/>`
-      const shortKey = await this.updateKeyTable(remoteUrls)
-      this.shortKey = shortKey
-      this.msg += `ID生成成功：${shortKey}<br/><BR/>`
-      this.showPopup = true
     },
     async uploadImage(file: File) {
       const formData = new FormData()

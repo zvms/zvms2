@@ -26,7 +26,7 @@ code {
 }
 
 
-button[type="submit"] {
+button.submit {
   border: solid 1px currentColor;
 }
 
@@ -46,7 +46,7 @@ button[type="submit"] {
   max-width: unset !important;
 }
 
-.bg-primary[type="submit"] {
+.bg-primary.submit {
   background: unset !important;
   border: rgb(var(--v-theme-color3)) solid 1px !important;
   color: black !important;
