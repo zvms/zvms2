@@ -76,6 +76,7 @@ class Notice(ModelMixIn, db.Model):
     title = Column(String(32))
     content = Column(String(1024))
     sender = Column(Integer)
+    sendtime = Column(DateTime)
     deadtime = Column(DateTime)
 
     @property

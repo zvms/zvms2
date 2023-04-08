@@ -145,8 +145,7 @@ export default {
      * @param status `true` for ok.
      */
     async audit(status: boolean) {
-      let value = await confirm();
-      if (value) {
+      if (await confirm()) {
         if (status) {
           fApi.finalAudit(
             this.currentThoughtInfo!.volId,

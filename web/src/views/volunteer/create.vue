@@ -77,10 +77,10 @@
           />
           <!---->
           <v-text-field
-            v-model="form.date"
-            :rules="[DATE(), ...rules]"
+            v-model="form.time"
+            :rules="[TIME(), ...rules]"
             type="text"
-            label="日期（e.g. 23-9-1）"
+            label="时间（e.g. 23-9-1 10:30）"
             prepend-icon="mdi-calendar-range"
           />
           <v-textarea
@@ -109,16 +109,18 @@
 
 <script lang="ts">
 import { fApi, type ClassVol, type SingleClass, VolType } from "@/apis";
-import { NOTEMPTY, DATE } from "@/utils/validation.js";
+import { NOTEMPTY, TIME } from "@/utils/validation.js";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { toasts } from "@/utils/dialogs";
+import router from "@/router";
+
 
 export default {
   data() {
     return {
-      DATE,
+      TIME,
       VolType,
       Categ,
       countNew: "" as any as number,
@@ -126,7 +128,7 @@ export default {
       classes: [] as (SingleClass & { selcted?: boolean })[],
       form: {
         name: "",
-        date: "",
+        time: "",
         description: "",
         reward: "" as any as number,
         classSelected: [] as ClassVol[],
@@ -165,11 +167,11 @@ export default {
               ],
           this.form.name,
           this.form.description,
-          this.form.date,
+          this.form.time,
           this.form.type,
           this.form.reward
         )((result) => {
-          this.$router.push("/");
+          router.push("/");
         });
       }
     },

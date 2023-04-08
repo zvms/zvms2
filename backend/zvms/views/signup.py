@@ -58,10 +58,11 @@ def signup(students, volId, token_data):
         notice_id=Notice(
             title='义工报名',
             content=f'学生{token_data["name"]}报名了你的义工{vol.name}',
-            deadtime=datetime.datetime.now() + datetime.timedelta(days=1),
+            sendtime=datetime.datetime.now(),
+            deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0
         ).insert().id
-    )
+    ).insert()
     return success('报名成功')
 
 

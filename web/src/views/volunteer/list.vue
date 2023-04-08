@@ -90,7 +90,9 @@
               <v-window v-if="isThoughtModifiable" v-model="tab">
                 <v-window-item value="one">
                   <v-text-field label="图片ID" v-model="picsId" />
-                  <v-btn @click="uploadFromId"> 上传 </v-btn>
+                  <v-btn @click="uploadFromId" style="border: 1px gray solid">
+                    上传
+                  </v-btn>
                 </v-window-item>
                 <v-window-item value="two">
                   <v-file-input
@@ -120,19 +122,21 @@
                       v-if="isThoughtModifiable"
                       color="white"
                       @click="current.thought!.pics.splice(i, 1)"
-                      >删除</v-btn
                     >
+                      删除
+                    </v-btn>
                   </v-col>
                 </v-row>
               </v-container>
             </v-form>
           </v-card-text>
           <v-card-actions>
-            <v-btn v-if="isThoughtModifiable" @click="saveThought">保存</v-btn>
             <v-btn v-if="isThoughtModifiable" @click="submitThought"
               >提交</v-btn
             >
-            <v-btn @click="thoughtDlg = false">关闭</v-btn>
+            <v-btn @click="saveThoughtAndClose"
+              >{{ isThoughtModifiable ? "保存并" : "" }}关闭</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -194,7 +198,7 @@ export default {
           key: "status",
         },
         {
-          title: "时间",
+          title: "进行时间",
           value: "time",
           key: "time",
         },
@@ -349,24 +353,16 @@ export default {
         key: Date.now() + "",
       });
     },
-    async saveThought() {
+    async saveThought(then = () => {}) {
       fApi.saveThought(
         this.current.singleVol.id,
         this.infoStore.userId,
         this.current.thought!.data.thought ?? "",
         await this.picsForUpload
-      )();
+      )(then);
     },
     async submitThought() {
-      // this.saveThought(async () => {
-      //   if (await confirm("确定提交？")) {
-      //     fApi.submitThought(
-      //       this.current.thought!.volId,
-      //       this.current.thought!.stuId
-      //     );
-      //   }
-      // });
-      confirm("确定提交？提交后不可修改").then(async () => {
+      if (await confirm("确定提交？提交后不可修改！")) {
         fApi.submitThought(
           this.current.singleVol.id,
           this.infoStore.userId,
@@ -375,7 +371,16 @@ export default {
         )(() => {
           this.thoughtDlg = false;
         });
-      });
+      }
+    },
+    async saveThoughtAndClose() {
+      if (this.isThoughtModifiable) {
+        this.saveThought(() => {
+          this.thoughtDlg = false;
+        });
+      } else {
+        this.thoughtDlg = false;
+      }
     },
   },
   computed: {
@@ -405,16 +410,14 @@ export default {
       ) {
         result.push({
           text: "报名",
-          onclick: () => {
-            confirm("确定报名？").then((ok) => {
-              if (ok) {
-                fApi.signup(this.current.singleVol.id, [this.infoStore.userId])(
-                  () => {
-                    this.fetchVols();
-                  }
-                );
-              }
-            });
+          onclick: async () => {
+            if (await confirm("确定报名？")) {
+              fApi.signup(this.current.singleVol.id, [this.infoStore.userId])(
+                () => {
+                  this.fetchVols();
+                }
+              );
+            }
           },
         });
       }
@@ -425,14 +428,12 @@ export default {
       ) {
         result.push({
           text: "允许报名",
-          onclick: () => {
-            confirm("确定？").then((ok) => {
-              if (ok) {
-                fApi.auditVolunteer(this.current.singleVol.id)(() => {
-                  this.fetchVols();
-                });
-              }
-            });
+          onclick: async () => {
+            if (await confirm("确定？")) {
+              fApi.auditVolunteer(this.current.singleVol.id)(() => {
+                this.fetchVols();
+              });
+            }
           },
         });
       }

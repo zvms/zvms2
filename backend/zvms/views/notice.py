@@ -1,3 +1,4 @@
+import datetime
 from zvms.models import *
 from zvms.util import *
 from zvms.res import *
@@ -7,12 +8,12 @@ from zvms.apilib import Api
 @Api(rule='/notice/search', params='SearchNotices', response='SearchNoticesResponse')
 def search_notices(token_data, **kwargs):
     '''搜索通知'''
-    conds = []
-    if 'from' in kwargs:
-        conds.append(Notice.sender == int(kwargs['from']))
-    if 'to' in kwargs:
+    conds = [Notice.deadtime > datetime.datetime.now()]
+    if 'sender' in kwargs:
+        conds.append(Notice.sender == int(kwargs['sender']))
+    if 'receiver' in kwargs:
         conds.append(Notice.id.in_(UserNotice.query.filter_by(
-            user_id=int(kwargs['to'])).select_value('notice_id')))
+            user_id=int(kwargs['receiver'])).select_value('notice_id')))
     if 'cls' in kwargs:
         conds.append(Notice.id.in_(ClassNotice.query.filter_by(
             cls_id=int(kwargs['cls'])).select_value('notice_id')))
@@ -21,8 +22,10 @@ def search_notices(token_data, **kwargs):
     return success('获取成功', list_or_error(Notice.query.filter(*conds).select(
         'id',
         'title',
+        'content',
         'sender',
-        sender_name='senderName',
+        senderName='sender_name',
+        sendtime=str,
         deadtime=str
     )))
 
@@ -31,6 +34,7 @@ def _save_notice(title, content, deadtime, token_data):
     return Notice(
         title=title,
         content=content,
+        sendtime=datetime.datetime.now(),
         deadtime=deadtime,
         sender=token_data['id']
     ).insert().id

@@ -15,11 +15,6 @@ const router = createRouter({
       name: "me",
       component: () => import("../views/me.vue"),
     },
-    {
-      path: "/modifyPwd",
-      name: "modifyPwd",
-      component: () => import("../views/modify-pwd.vue"),
-    },
     // {
     //   path: "/class/list",
     //   name: "classList",
@@ -65,16 +60,21 @@ const router = createRouter({
     //   name: "volunteerThought",
     //   component: () => import("../views/volunteer/thought.vue"),
     // },
-    // {
-    //   path: "/sendNotice",
-    //   name: "sendNotice",
-    //   component: () => import("../views/send_notice.vue"),
-    // },
+    {
+      path: "/notice/create",
+      name: "noticeCreate",
+      component: () => import("../views/notice/create.vue"),
+    },
     {
       path: "/about",
       name: "about",
       component: () => import("../views/about.vue"),
     },
+    {
+      path:"/system/ttyd",
+      name:"systemTtyd",
+      component:()=>import("../views/system/ttyd.vue")
+    }
   ],
 });
 

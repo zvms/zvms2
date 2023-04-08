@@ -39,11 +39,11 @@ export function getNavItems(permission: Categ) {
       to: "/volunteer/list",
       icon: "mdi-format-list-text",
     },
-    // notice: {
-    //   title: "创建通知",
-    //   to: "/sendNotice",
-    //   icon: "mdi-message-draw",
-    // },
+    createNotice: {
+      title: "创建通知",
+      to: "/notice/create",
+      icon: "mdi-message-draw",
+    },
     createVol: {
       title: "创建义工",
       to: "/volunteer/create",
@@ -79,6 +79,11 @@ export function getNavItems(permission: Categ) {
       to: "/about",
       icon: "mdi-information",
     },
+    ttyd: {
+      title: "TTYD",
+      to: "/system/ttyd",
+      icon: "mdi-powershell",
+    },
   } as const satisfies Record<string, NavItem>;
 
   const items: NavItem[] = [];
@@ -91,6 +96,9 @@ export function getNavItems(permission: Categ) {
     items.push(navItems.recordVol);
   if (permission & (Categ.System | Categ.Auditor | Categ.Manager))
     items.push(navItems.finalAuditVol);
+  if (permission & (Categ.System | Categ.Manager))
+    items.push(navItems.createNotice);
+  if (permission & Categ.System) items.push(navItems.ttyd);
   items.push(navItems.about);
   return items;
 }

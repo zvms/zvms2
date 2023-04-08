@@ -61,6 +61,7 @@ class SingleNotice(Object):
     title = String
     content = String
     sender = Int
+    sendtime = DateTime
     deadtime = DateTime
     senderName = String
     
@@ -100,7 +101,7 @@ class VolunteerInfoResponse(Object):
 
 class SearchNotices(Optional):
     sender = Parsable(Int)
-    user = Parsable(Int)
+    receiver = Parsable(Int)
     cls = Parsable(Int)
     school = Parsable(Int)
 

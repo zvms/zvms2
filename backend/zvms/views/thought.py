@@ -58,7 +58,7 @@ def get_thought_info(volId, stuId, token_data):
         'reason',
         'reward',
         'pics',
-        thought=render_markdown
+        'thought'
     ).items() if v is not None})
 
 
@@ -91,7 +91,7 @@ def _submit_thought(volId, stuId, thought, pictures, status):
             thought=thought
         )
     hashes = [md5ify(pic['base64']) for pic in pictures]
-    Picture.query.filter_by(stu_id=stuId, vol_id=volId).filter(Picture.hash.in_(hashes)).delete()
+    Picture.query.filter_by(stu_id=stuId, vol_id=volId).filter(Picture.hash.not_in(hashes)).delete()
     for i, pic in enumerate(pictures):
         if not Picture.query.get((volId, stuId, hashes[i])):
             with open(os.path.join(STATIC_FOLDER, 'pics', f'{hashes[i]}.{pic["type"]}'), 'wb') as f:
@@ -145,10 +145,11 @@ def first_audit(token_data, volId, stuId):
         notice_id=Notice(
             title='感想终审',
             content=f'您的关于{thought.vol.name}的感想已通过初审',
-            time=datetime.datetime.now() + datetime.timedelta(days=1),
+            sendtime=datetime.datetime.now(),
+            deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0
-        )
-    )
+        ).insert().id
+    ).insert()
     return success('审核成功')
 
 
@@ -167,10 +168,11 @@ def final_audit(token_data, reward, volId, stuId):
         notice_id=Notice(
             title='感想终审',
             content=f'您的关于{thought.vol.name}的感想已通过终审, 获得{reward}义工时间',
-            time=datetime.datetime.now() + datetime.timedelta(days=1),
+            sendtime=datetime.datetime.now(),
+            deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0
-        )
-    )
+        ).insert().id
+    ).insert()
     return success('审核成功')
 
 
@@ -189,9 +191,10 @@ def repulse(token_data, volId, stuId, reason):
         user_id=thought.stu_id,
         notice_id=Notice(
             title='感想终审',
-            content=f'您的关于{thought.vol.name}的感想已被打回终审',
-            time=datetime.datetime.now() + datetime.timedelta(days=1),
+            content=f'您的关于{thought.vol.name}的感想已被终审打回，可以在义工列表中点击该义工，修改感想后重新提交。',
+            sendtime=datetime.datetime.now(),
+            deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0
-        )
-    )
+        ).insert().id
+    ).insert()
     return success('打回成功')

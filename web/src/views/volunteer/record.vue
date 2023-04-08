@@ -69,10 +69,10 @@
           </v-container>
           <!---->
           <v-text-field
-            v-model="form.date"
-            :rules="[DATE(), ...rules]"
+            v-model="form.time"
+            :rules="[TIME(), ...rules]"
             type="text"
-            label="日期（e.g. 23-9-1）"
+            label="时间（e.g. 23-9-1 10:30）"
             prepend-icon="mdi-calendar-range"
           />
           <v-textarea
@@ -107,17 +107,18 @@ import {
   VolType,
   type SingleUserWithoutAuth,
 } from "@/apis";
-import { NOTEMPTY, DATE } from "@/utils/validation.js";
+import { NOTEMPTY, TIME } from "@/utils/validation.js";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { toasts } from "@/utils/dialogs";
 import { ForegroundApi } from "@/apis/fApi";
+import router from "@/router";
 
 export default {
   data() {
     return {
-      DATE,
+      TIME,
       VolType,
       Categ,
       userNew: "" as any as number,
@@ -125,7 +126,7 @@ export default {
       form: {
         joiners: [] as SingleUserWithoutAuth[],
         name: "",
-        date: "",
+        time: "",
         description: "",
         reward: "" as any as number,
         type: VolType.Outside,
@@ -141,11 +142,11 @@ export default {
           this.form.joiners.map((v) => v.id),
           this.form.name,
           this.form.description,
-          this.form.date,
+          this.form.time,
           this.form.type,
           this.form.reward
         )(() => {
-          this.$router.push("/");
+          router.push("/");
         });
       }
     },

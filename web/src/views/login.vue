@@ -85,7 +85,7 @@ export default {
             });
 
             applyNavItems();
-            this.$router.push("/");
+            router.push("/");
           });
         });
       }

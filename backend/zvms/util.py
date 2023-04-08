@@ -222,10 +222,10 @@ class ZvmsError(Exception):
 
 def try_parse_time(s):
     try:
-        if dateparser.parse(s) == None:
+        if dateparser.parse(s) is None:
             raise
     except:
-        raise ZvmsError('时间格式不正确。输入的时间：{s}')
+        raise ZvmsError(f'时间格式不正确. 输入的时间: {s}')
 
 def auth_self(id, token_data, message):
     if id != token_data['id'] and not (token_data['auth'] & Categ.SYSTEM):

@@ -24,7 +24,7 @@ def login(id, pwd, token_data):
     user = User.query.get(real_id)
     if not user or user.pwd != pwd:
         return error('用户名或密码错误')
-    return success('登录成功', token=tk.generate(**user.select('id', 'auth', cls='cls_id')), id=real_id)
+    return success('登录成功', token=tk.generate(**user.select('id', 'name', 'auth', cls='cls_id')), id=real_id)
 
 
 @Api(rule='/user/logout', method='POST')
@@ -89,9 +89,7 @@ def create_user(users, token_data):
             name=user['name'],
             cls_id=user['cls'],
             auth=user['auth'],
-            pwd=user['pwd'],
-            exp=0,
-            last_sign_date=datetime.date.today()
+            pwd=user['pwd']
         ).insert()
     return success('创建成功')
 

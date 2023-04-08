@@ -27,7 +27,7 @@ export const toasts = {
     });
   },
 };
-export const confirm = async (msg: string = "确定操作？") => {
+export async function confirm(msg: string = "确定操作？"): Promise<boolean> {
   const res = await Swal.fire({
     title: "三思而后行",
     text: msg,
@@ -38,4 +38,4 @@ export const confirm = async (msg: string = "确定操作？") => {
     cancelButtonText: "取消",
   });
   return res.value;
-};
+}

@@ -190,7 +190,7 @@
 ```json
 {
     "sender": "number",
-    "user": "number",
+    "receiver": "number",
     "cls": "number",
     "school": "number"
 }
@@ -203,6 +203,7 @@
         "title": "string",
         "content": "string",
         "sender": "number",
+        "sendtime": "string",
         "deadtime": "string",
         "senderName": "string"
     }

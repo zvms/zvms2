@@ -75,7 +75,7 @@ def get_volunteer_info(id, token_data):
         'joiners',
         'time',
         'status',
-        description=render_markdown,
+        'description',
         holder=rpartial(getattr, 'id'),
         holderName=('holder', rpartial(getattr, 'name'))
     )
@@ -189,7 +189,8 @@ def audit_volunteer(token_data, id):
         notice_id=Notice(
             title='义工过审',
             content=f'您的义工{vol.name}已过审',
-            time=datetime.datetime.now() + datetime.timedelta(days=1),
+            sendtime=datetime.datetime.now(),
+            deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0
         ).insert().id
     ).insert()

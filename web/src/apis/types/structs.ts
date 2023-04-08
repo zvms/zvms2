@@ -71,6 +71,7 @@ export interface SingleNotice {
     title: string,
     content: string,
     sender: number,
+    sendtime: string,
     deadtime: string,
     senderName: string
 }
@@ -114,7 +115,7 @@ export interface VolunteerInfoResponse {
 
 export interface SearchNotices {
     sender?: number,
-    user?: number,
+    receiver?: number,
     cls?: number,
     school?: number
 }
