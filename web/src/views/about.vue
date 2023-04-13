@@ -19,11 +19,11 @@
           <br />
           新版由 qnc &amp; _Kerman_xtr &amp; clc 开发。
           <br />
-          特别感谢 7086cmd的前端初始化配置。以及zsz同学的新版图标设计。
+          特别感谢: 7086cmd的前端初始化配置, 以及zsz同学的新版图标设计。
         </p>
       </v-card-text>
     </v-card>
-    <v-card>
+    <v-card v-if="!(infoStore.permission&Categ.None)">
       <v-card-title>反馈错误</v-card-title>
       <v-card-text>
         <v-form v-model="isFormValid">
@@ -45,13 +45,17 @@
 
 <script lang="ts">
 import { NOTEMPTY } from "../utils/validation";
-import { fApi } from "../apis";
-import axios from "axios";
+import { Categ, fApi } from "../apis";
+import { mapStores } from "pinia";
+import { useInfoStore } from "@/stores";
+import { toasts } from "@/utils/dialogs";
+import router from "@/router";
 
 export default {
   name: "report",
   data() {
     return {
+      Categ,
       report: "",
       rules: [NOTEMPTY()],
       isFormValid: false,
@@ -60,14 +64,20 @@ export default {
   methods: {
     submitReport() {
       if (this.isFormValid) {
+        if(this.report.length>199){
+          toasts.error("抱歉，反馈长度过长！");
+          return;
+        }
         fApi.report(this.report)(() => {
-          this.isFormValid = true;
-          this.report = "";
+          router.push("/");
         });
       }
     },
   },
-};
+  computed:{
+    ...mapStores(useInfoStore)
+  }
+} ;
 </script>
 <style scoped>
 .f {

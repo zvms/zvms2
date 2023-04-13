@@ -30,20 +30,20 @@ def search_notices(token_data, **kwargs):
     )))
 
 
-def _save_notice(title, content, deadtime, token_data):
+def _save_notice(title, content, deadtime, id):
     return Notice(
         title=title,
         content=content,
         sendtime=datetime.datetime.now(),
         deadtime=deadtime,
-        sender=token_data['id']
+        sender=id
     ).insert().id
 
 
 @Api(rule='/notice/send/user', method='POST', params='Notice', auth=Categ.MANAGER | Categ.TEACHER)
 def send_user_notice(title, content, deadtime, targets, token_data):
     '''发送用户通知'''
-    id = _save_notice(title, content, deadtime, token_data)
+    id = _save_notice(title, content, deadtime, token_data['id'])
     for i in targets:
         if User.query.get_or_error(i, '未找到目标用户').auth == Categ.STUDENT and not (token_data['auth'] & Categ.SYSTEM):
             return error('不能对普通学生发通知')
@@ -54,18 +54,18 @@ def send_user_notice(title, content, deadtime, targets, token_data):
 @Api(rule='/notice/send/class', method='POST', params='Notice', auth=Categ.MANAGER | Categ.TEACHER)
 def send_class_notice(title, content, deadtime, targets, token_data):
     '''发送班级通知'''
-    id = _save_notice(title, content, deadtime, token_data)
+    id = _save_notice(title, content, deadtime, token_data['id'])
     for i in targets:
         Class.query.get_or_error(i, '未找到目标班级')
         ClassNotice(cls_id=i, notice_id=id).insert()
     return success('发送成功')
 
 
-@Api(rule='/notice/send/school', method='POST', params='NoticeBody', auth=Categ.MANAGER | Categ.TEACHER)
-def send_school_notice(title, content, deadtime, token_data):
+@Api(rule='/notice/send/school', method='POST', params='SchoolNotice', auth=Categ.MANAGER | Categ.TEACHER)
+def send_school_notice(title, content, deadtime, anonymous, token_data):
     '''发送学校通知'''
     SchoolNotice(
-        notice_id=_save_notice(title, content, deadtime, token_data)
+        notice_id=_save_notice(title, content, deadtime, 0 if anonymous else token_data['id'])
     ).insert()
     return success('发送成功')
 

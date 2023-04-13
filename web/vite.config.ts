@@ -1,5 +1,6 @@
 import { fileURLToPath, URL } from "node:url";
 
+import legacy from "@vitejs/plugin-legacy";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
@@ -17,6 +18,9 @@ export default defineConfig({
     }),
     autoImport({
       resolvers: [Vuetify3Resolver()],
+    }),
+    legacy({
+      targets: ["defaults"],
     }),
   ],
   resolve: {

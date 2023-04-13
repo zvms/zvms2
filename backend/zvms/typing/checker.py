@@ -1,18 +1,35 @@
+from contextlib import contextmanager
 import datetime
+
+class CheckerError(Exception):
+    message: str
 
 class Checker:
     def __call__(self):
         return self
 
-    def render(self): pass
+    def render(self): ...
 
     def stringify(self):
         return self.render()
 
-    def check(self, json): pass
+    def check(self, json): ...
 
     def as_json(self):
         return self.stringify()
+    
+    where = []
+
+    @contextmanager
+    def path(s: str):
+        Checker.where.append(s)
+        yield
+        Checker.where.pop()
+
+    def error(expected: 'Checker', found):
+        where = '.'.join(Checker.where)
+        Checker.where.clear()
+        raise CheckerError(where, expected.as_json(), found)
 
 class Any(Checker):
     def render(self):
@@ -20,9 +37,6 @@ class Any(Checker):
 
     def stringify(self):
         return 'any'
-
-    def check(self, json):
-        return True
 
     def as_params(self):
         return {}
@@ -45,11 +59,12 @@ class Object(Checker):
 
     def check(self, json):
         if not isinstance(json, dict):
-            return False
+            Checker.error(self, json)
         for k, v in self.fields():
-            if k not in json or not(v.check(json[k])):
-                return False
-        return True
+            with Checker.path(k):
+                if k not in json:
+                    Checker.error(v, None)
+                v.check(json[k])
 
     def as_params(self):
         return {k: v.render() for k, v in self.fields()}
@@ -70,7 +85,8 @@ class Simple(Checker):
         return self.name
 
     def check(self, json):
-        return isinstance(json, self.type)
+        if not isinstance(json, self.type):
+            Checker.error(self, json)
 
 String = Simple(str, 'string')
 Int = Simple(int, 'number', 'int')
@@ -88,11 +104,11 @@ class Parsable(Checker):
     def check(self, json):
         try:
             self.simple.type(json)
-            return True
         except (ValueError, TypeError):
-            return False
+            print('!!!')
+            Checker.error(self, json)
 
-DateTime = Parsable(Simple(datetime.datetime, 'string', 'datetime'))
+DateTime = String
 
 class Array(Checker):
     def __init__(self, item):
@@ -103,11 +119,10 @@ class Array(Checker):
 
     def check(self, json):
         if not isinstance(json, (list, tuple)):
-            return False
-        for item in json:
-            if not self.item.check(item):
-                return False
-        return True
+            Checker.error(self, json)
+        for i, item in enumerate(json):
+            with Checker.path(f'[{i}]'):
+                self.item.check(item)
 
     def as_json(self):
         return [self.item.as_json()]
@@ -125,8 +140,8 @@ class Union(Checker):
     def check(self, json):
         for elem in self.elems:
             if elem.check(json):
-                return True
-        return False
+                return
+        Checker.error(self, json)
 
     def as_json(self):
         return [i.as_json() for i in self.elems]
@@ -146,7 +161,9 @@ class Range(Checker):
         return f'{self.simple.stringify()}({self.min}...{self.max})'
 
     def check(self, json):
-        return self.simple.check(json) and (self.min == '' or json >= self.min) and (self.max == '' or json < self.max)
+        self.simple.check(json)
+        if not (self.min == '' or json >= self.min) and (self.max == '' or json < self.max):
+            Checker.error(self, json)
 
     def as_json(self):
         return self.simple.as_json()
@@ -164,7 +181,9 @@ class Len(Checker):
         return f'{self.simple.stringify()}({self.min}, {self.max})'
 
     def check(self, json):
-        return self.simple.check(json) and (self.min == '' or len(json) >= self.min) and (self.max == '' or len(json) < self.max)
+        self.simple.check(json) 
+        if not (self.min == '' or len(json) >= self.min) and (self.max == '' or len(json) < self.max):
+            Checker.error(self, json)
 
     def as_json(self):
         return self.simple.as_json()
@@ -182,23 +201,24 @@ class Enum(Checker):
     def check(self, json):
         try:
             self.enum(json)
-            return True
         except (ValueError, TypeError):
-            return False
+            Checker.error(self, json)
 
 class ParsableEnum(Enum):
     def check(self, json):
-        return isinstance(json, int) and super().check(self, int(json))
+        if not isinstance(json, int):
+            Checker.error(self, json)
+        super().check(self, int(json))
 
 class Optional(Object):
     def check(self, json):
         fields = dict(self.fields())
         if not isinstance(json, dict):
-            return False
+            Checker.error(self, json)
         for k, v in json.items():
-            if k in fields and not fields[k].check(v):
-                return False
-        return True
+            with Checker.path(k):
+                if k in fields:
+                    fields[k].check(v)
 
     def as_params(self):
         return {'kwargs': self.render()}

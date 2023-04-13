@@ -329,6 +329,14 @@ export class ForegroundApi {
     );
   }
   /**
+   * ## 获取反馈
+   * ### [GET] /report/fetch
+   * #### 权限: System
+   */
+  fetchReport(): ForegroundApiRunner<Array<structs.SingleReport>> {
+    return createForegroundApiRunner(this, "GET", `/report/fetch`);
+  }
+  /**
    * ## 搜索通知
    * ### [GET] /notice/search
    * #### 权限: Any
@@ -399,11 +407,13 @@ export class ForegroundApi {
    * ## 发送学校通知
    * ### [POST] /notice/send/school
    * #### 权限: Manager | Teacher
+   * @param anonymous
    * @param title
    * @param content
    * @param deadtime
    */
   sendSchoolNotice(
+    anonymous: boolean,
     title: string,
     content: string,
     deadtime: string
@@ -412,7 +422,8 @@ export class ForegroundApi {
       this,
       "POST",
       `/notice/send/school`, {
-              title,
+              anonymous,
+      title,
       content,
       deadtime
       }

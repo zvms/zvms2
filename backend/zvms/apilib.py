@@ -1,5 +1,5 @@
 from functools import wraps
-import traceback
+from pprint import pprint
 import datetime
 import json
 import re
@@ -10,6 +10,7 @@ from jwt.exceptions import InvalidSignatureError
 from zvms.typing.checker import Any
 from zvms.res import Categ
 from zvms.util import *
+from zvms.typing.checker import CheckerError
 import zvms.tokenlib as tk
 import zvms.typing.structs as structs
 
@@ -70,13 +71,13 @@ def deco(impl, params, response, auth):
                 token_data = tk.read(token_data)
                 if not tk.exists(token_data):
                     print('Token失效')
-                    return json.dumps({'type': 'ERROR', 'message': "Token失效, 请重新登陆"}),jsonHeader
+                    return json.dumps({'type': 'ERROR', 'message': "Token失效, 请重新登陆"}), jsonHeader
                 if not auth.authorized(token_data['auth']):
                     print('权限不足')
-                    return json.dumps({'type': 'ERROR', 'message': '权限不足'}),jsonHeader
+                    return json.dumps({'type': 'ERROR', 'message': '权限不足'}), jsonHeader
             except InvalidSignatureError as ex:
                 print('未获取到Token')
-                return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"}),jsonHeader
+                return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"}), jsonHeader
         try:
             with open('log.txt', 'a', encoding='utf-8') as f:
                 if auth != Categ.NONE:
@@ -85,14 +86,24 @@ def deco(impl, params, response, auth):
                 # print(f'[{datetime.datetime.now()}] {request.method} {request.url}')
                 f.write(f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
             # if not params.check(json_data):
-            #     print('expected', json.loads(interface_error(params, json_data)))
-            #     print('found', json_data)
             #     return interface_error(params, json_data), jsonHeader
+            check(params, json_data, '请求接口错误')
             ret = impl(*args, **kwargs, **json_data, token_data=token_data)
             result = ret.get('result')
             # if ret['type'] == 'SUCCESS' and not response.check(result):
             #     return {'type': 'ERROR', 'message': '响应返回错误', 'expected': response.as_json(), 'found': parse(result)}, jsonHeader
+            if ret['type'] == 'SUCCESS':
+                check(response, result, '响应返回错误')
             return json.dumps(ret), jsonHeader
         except ZvmsError as ex:
             return json.dumps(error(ex.message)), jsonHeader
+        except CheckerError as ex:
+            dict = {
+                'where': ex.args[0],
+                'expected': ex.args[1],
+                'found': ex.args[2]
+            }
+            print(ex.message, ':', sep='', end=' ')
+            pprint(dict)
+            return json.dumps(error(ex.message) | dict)
     return wrapper

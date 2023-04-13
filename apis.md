@@ -177,6 +177,25 @@
 "any"
 ```
 
+#### 2.2 fetchReport
+[GET] /report/fetch  
+**获取反馈**  
+参数: 
+```json
+"any"
+```
+响应:  
+```json
+[
+    {
+        "content": "string",
+        "reporter": "number",
+        "reporterName": "string",
+        "time": "string"
+    }
+]
+```
+
 
 ---
 
@@ -254,6 +273,7 @@
 参数: 
 ```json
 {
+    "anonymous": "boolean",
     "title": "string",
     "content": "string",
     "deadtime": "string"

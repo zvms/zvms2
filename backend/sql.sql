@@ -7,10 +7,9 @@ CREATE TABLE user(
     name VARCHAR(5),
     class INT, 
     pwd CHAR(32), 
-    auth INT,
-    exp INT,
-    last_sign_date DATE
+    auth INT
 );
+-- 注意添加一个id为0, 密码为空的账号
 CREATE TABLE notice(
     id INT PRIMARY KEY auto_increment, 
     title VARCHAR(32), 
@@ -79,6 +78,12 @@ CREATE TABLE user_tie(
 CREATE TABLE log(
     id INT PRIMARY KEY
 );
+CREATE TABLE report(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    time DATETIME,
+    reported INT,
+    content VARCHAR(255)
+)
 SET @none = 1;
 SET @student = 2;
 SET @teacher = 4;
@@ -86,4 +91,3 @@ SET @class = 8;
 SET @manager = 16;
 SET @auditor = 32;
 SET @system = 64;
--- 顺便, 班级也是手动加的

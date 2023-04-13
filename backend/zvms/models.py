@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, SmallInteger, DateTime, Date
 from flask_sqlalchemy import SQLAlchemy
 
 from zvms.res import *
-from zvms.util import ModelMixIn, render_markdown, select_value, count, init_util, list_or_error
+from zvms.util import ModelMixIn, select_value, count, init_util, list_or_error
 
 db = SQLAlchemy()
 
@@ -188,5 +188,14 @@ class Log(ModelMixIn, db.Model):
 
 class UserMapping(ModelMixIn, db.Model):
     __tablename__ = 'user_mapping'
+
     fake_id = Column(String(32), primary_key=True)
     real_id = Column(Integer)
+
+class Report(ModelMixIn, db.Model):
+    __tablename__ ='report'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    time = Column(DateTime)
+    reporter = Column(Integer)
+    content = Column(String(255))

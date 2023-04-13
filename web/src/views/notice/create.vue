@@ -25,9 +25,14 @@
             label="通知自动消失时间（e.g. 23-9-1 10:30）"
             prepend-icon="mdi-calendar-range"
           />
-          <v-btn color="primary" class="submit" @click="createNotice"
-            >创建全校通知</v-btn
-          >
+          <v-switch
+            label="匿名（以“系统”名义发布）"
+            v-model="form.anonymous"
+            prepend-icon="mdi-incognito"
+          />
+          <v-btn color="primary" class="submit" @click="createNotice">
+            创建全校通知
+          </v-btn>
         </v-form>
       </v-card-text>
     </v-card>
@@ -49,6 +54,7 @@ export default {
         title: "",
         content: "",
         deadtime: "",
+        anonymous: true,
       },
       rules: [NOTEMPTY()],
       isFormValid: false,
@@ -61,6 +67,7 @@ export default {
         (await confirm("确定创建？一旦创建，全校所有人都会看见。请慎重！"))
       ) {
         fApi.sendSchoolNotice(
+          this.form.anonymous,
           this.form.title,
           this.form.content,
           this.form.deadtime
@@ -72,4 +79,3 @@ export default {
   },
 };
 </script>
-<style scoped></style>

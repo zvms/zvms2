@@ -71,10 +71,15 @@ const router = createRouter({
       component: () => import("../views/about.vue"),
     },
     {
-      path:"/system/ttyd",
-      name:"systemTtyd",
-      component:()=>import("../views/system/ttyd.vue")
-    }
+      path: "/system/ttyd",
+      name: "systemTtyd",
+      component: () => import("../views/system/ttyd.vue"),
+    },
+    {
+      path: "/system/view-report",
+      name: "systemViewReport",
+      component: () => import("../views/system/view-report.vue"),
+    },
   ],
 });
 

@@ -130,9 +130,22 @@ export interface Notice extends NoticeBody {
     targets: Array<number>
 }
 
+export interface SchoolNotice extends NoticeBody {
+    anonymous: boolean
+}
+
 export interface Report {
     report: string
 }
+
+export interface SingleReport {
+    content: string,
+    reporter: number,
+    reporterName: string,
+    time: string
+}
+
+export type FetchReportsResponse = Array<SingleReport>
 
 export interface Signup {
     students: Array<number>

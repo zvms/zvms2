@@ -113,8 +113,19 @@ class NoticeBody(Object):
 class Notice(NoticeBody):
     targets = Array(Int)
 
+class SchoolNotice(NoticeBody):
+    anonymous = Boolean
+
 class Report(Object):
-    report = String
+    report = Len(String, 1, 256)
+
+class SingleReport(Object):
+    content = String
+    reporter = Int
+    reporterName = String
+    time = String
+
+FetchReportsResponse = Array(SingleReport())
     
 class Signup(Object):
     students = Array(Int)

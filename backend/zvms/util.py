@@ -9,12 +9,16 @@ import re
 
 from sqlalchemy import Column
 from sqlalchemy.orm import InstrumentedAttribute, Query as _Query
-from mistune import Markdown, HTMLRenderer
+from zvms.typing.checker import Checker, CheckerError
 
 from zvms.res import *
 
-markdown = Markdown(HTMLRenderer())
-rule_remove_links = re.compile(r'<a.*?>(.*?)</a>', re.S)
+def check(checker: Checker, json, msg: str):
+    try:
+        checker.check(json)
+    except CheckerError as ex:
+        ex.message = msg
+        raise ex
 
 db = None
 
@@ -24,9 +28,6 @@ def init_util(_db):
 
 def select_value(self, col=None, **kwargs):
     return [v(getattr(self, k)) for k, v in kwargs.items()][0] if col is None else (getattr(i, col) for i in self)
-
-def render_markdown(md):
-    return rule_remove_links.sub(r'<a>\1</a>', markdown.parse(md))
 
 def md5ify(str):
     md5 = hashlib.md5()

@@ -3,9 +3,9 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
-    "deploy":"powershell ../scripts/deploy.ps1",
+    "deploy": "powershell ../scripts/deploy.ps1",
     "preview": "vite preview",
     "test:unit": "vitest --environment jsdom --root src/",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
@@ -15,6 +15,7 @@
   "dependencies": {
     "@commitlint/format": "^17.0.0",
     "@mdi/font": "^7.1.96",
+    "@vitejs/plugin-legacy": "^4.0.2",
     "crypto-js": "^4.1.1",
     "lxgw-wenkai-lite-webfont": "^1.7.0",
     "pinia": "^2.0.26",

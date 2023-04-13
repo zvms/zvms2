@@ -84,6 +84,11 @@ export function getNavItems(permission: Categ) {
       to: "/system/ttyd",
       icon: "mdi-powershell",
     },
+    viewReport: {
+      title: "查看反馈",
+      to: "/system/view-report",
+      icon: "mdi-comment-quote",
+    }
   } as const satisfies Record<string, NavItem>;
 
   const items: NavItem[] = [];
@@ -99,6 +104,7 @@ export function getNavItems(permission: Categ) {
   if (permission & (Categ.System | Categ.Manager))
     items.push(navItems.createNotice);
   if (permission & Categ.System) items.push(navItems.ttyd);
+  if (permission & Categ.System) items.push(navItems.viewReport);
   items.push(navItems.about);
   return items;
 }
