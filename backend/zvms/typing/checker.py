@@ -206,9 +206,11 @@ class Enum(Checker):
 
 class ParsableEnum(Enum):
     def check(self, json):
-        if not isinstance(json, int):
+        try:
+            int(json)
+        except ValueError:
             Checker.error(self, json)
-        super().check(self, int(json))
+        super().check(int(json))
 
 class Optional(Object):
     def check(self, json):
