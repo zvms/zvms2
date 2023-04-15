@@ -121,7 +121,10 @@ class StuVol(ModelMixIn, db.Model):
 
     @property
     def pics(self):
-        return list_or_error(Picture.query.filter_by(stu_id=self.stu_id, vol_id=self.vol_id).select('hash', type='extension'))
+        res = list_or_error(Picture.query.filter_by(stu_id=self.stu_id, vol_id=self.vol_id).select('hash', type='extension'))
+        print(res)
+        return res
+        # return list_or_error(Picture.query.filter_by(stu_id=self.stu_id, vol_id=self.vol_id).select('hash', type='extension'))
 
     @property
     def stu(self):
@@ -183,6 +186,7 @@ class SchoolNotice(ModelMixIn, db.Model):
 
 class Log(ModelMixIn, db.Model):
     __tablename__ = 'log'
+    sqlite_autoincrement = True
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 

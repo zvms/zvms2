@@ -21,9 +21,7 @@ def is_joiner(joiners:list, me:int):
 @Api(rule='/volunteer/search', params='SearchVolunteers', response='SearchVolunteersResponse')
 def search_volunteers(token_data, **kwargs):
     '''搜索义工'''
-
-    see_all = token_data['auth']&(Categ.AUDITOR|Categ.MANAGER|Categ.SYSTEM)
-
+    see_all = token_data['auth'] & (Categ.AUDITOR | Categ.MANAGER | Categ.SYSTEM)
     conds = []
 
     def filter_(v):

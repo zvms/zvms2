@@ -39,7 +39,12 @@ CREATE TABLE picture(
     stu_id INT, 
     vol_id INT, 
     hash CHAR(32), 
+    extension VARCHAR(32),
     PRIMARY KEY(stu_id, vol_id, hash)
+);
+CREATE TABLE user_mapping(
+    real_id INT,
+    fake_id VARCHAR(32) PRIMARY KEY 
 );
 CREATE TABLE class_vol(
     class_id INT, 
@@ -62,18 +67,6 @@ CREATE TABLE school_notice(
 );
 CREATE TABLE log(
     id INT PRIMARY KEY auto_increment
-);
-CREATE TABLE tie(
-    id INT PRIMARY KEY auto_increment,
-    title TEXT,
-    content TEXT,
-    sender INT,
-    parent INT
-);
-CREATE TABLE user_tie(
-    user_id INT,
-    tie_id INT,
-    attitude INT
 );
 CREATE TABLE log(
     id INT PRIMARY KEY

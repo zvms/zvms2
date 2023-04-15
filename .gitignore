@@ -1,3 +1,5 @@
+backend/instance/*
+
 .DS_Store
 node_modules
 dist

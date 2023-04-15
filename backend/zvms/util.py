@@ -74,15 +74,19 @@ def select(self, *cols, **aliases):
 
 @bar
 def update(self, /, on=True, **updates):
-    self.query_self().update({getattr(type(self), k): v for k, v in updates.items()})
+    self.query_self().update({getattr(type(self), k): str(v) for k, v in updates.items()})
     if on:
         self.on_update()
     return self
 
 
 def insert(self, on=True):
+    db.session.flush()
+    print('before-insert', vars(self))
+    db.session.flush()
     db.session.add(self)
     db.session.flush()
+    print('insert', vars(self))
     if on:
         self.on_insert()
     return self
@@ -157,6 +161,17 @@ class ModelMixIn:
     select = select
     update = update
     insert = insert
+
+    sqlite_autoincrement = True
+
+    def __init__(self, **kwargs):
+        from sqlalchemy import func
+        db.Model.__init__(self, **{k: str(v) for k, v in kwargs.items()})
+        autoincrement_key = [i for i in type(self).__table__.columns if isinstance(i, Column) and i.autoincrement]
+        print(autoincrement_key, type(self).__table__.columns)
+        if autoincrement_key:
+            max = db.session.query(func.max(autoincrement_key[0])).scalar()
+            setattr(self, autoincrement_key[0].key, 1 if max is None else max + 1)
 
     def query_self(self):
         return db.session.query(type(self)).filter_by(**{k: v.__get__(self, None) for k, v in type(self).__dict__.items() if isinstance(v, InstrumentedAttribute)})
