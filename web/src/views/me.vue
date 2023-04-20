@@ -68,7 +68,7 @@
   <v-dialog v-model="noticeDialog">
     <v-card>
       <v-card-title>{{ curNoticeTitle }}</v-card-title>
-      <v-card-text v-html="curNoticeText"></v-card-text>
+      <v-card-text>{{ curNoticeText }}</v-card-text>
     </v-card>
   </v-dialog>
 
@@ -107,7 +107,7 @@
 </template>
 
 <script lang="ts">
-import { useInfoStore, useNavStore, useLoadingStore } from "@/stores";
+import { useInfoStore } from "@/stores";
 import { fApi, type SingleNotice, type NoticeBody } from "@/apis";
 import { Categ, getCategName } from "@/apis/types/enums";
 import { mapStores } from "pinia";
@@ -116,6 +116,7 @@ import { applyNavItems } from "@/utils/nav";
 import { md5 } from "@/utils/md5";
 import { NOTEMPTY } from "@/utils/validation";
 import { toasts } from "@/utils/dialogs";
+import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
 
 export default {
   name: "me",
@@ -162,7 +163,6 @@ export default {
     showNotice(notice: NoticeBody) {
       this.curNoticeTitle = notice.title;
       let s = "";
-      console.log(notice.content);
       for (const c of notice.content) {
         if (c == "\n") {
           s += "<br />";
@@ -174,7 +174,9 @@ export default {
       this.noticeDialog = true;
     },
     logout() {
-      fApi.logout()();
+      fApi.logout()(() => {
+        setCurrentAxiosToken("");
+      });
       useInfoStore().$reset();
       applyNavItems();
       router.push("/login");

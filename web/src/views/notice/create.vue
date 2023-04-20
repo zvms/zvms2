@@ -26,7 +26,7 @@
             prepend-icon="mdi-calendar-range"
           />
           <v-switch
-            label="匿名（以“系统”名义发布）"
+            label="`匿名（以“系统”名义发布）：${anonymous.form.toString()}`"
             v-model="form.anonymous"
             prepend-icon="mdi-incognito"
           />

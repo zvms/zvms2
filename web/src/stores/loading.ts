@@ -4,6 +4,7 @@ export const useLoadingStore = defineStore("loading", {
   state: () => {
     return {
       loadingNum: 0,
+      noretryStart: NaN, // start time
     };
   },
   actions: {
@@ -19,6 +20,19 @@ export const useLoadingStore = defineStore("loading", {
   },
   getters: {
     isLoading: (state) => state.loadingNum > 0,
+    noretry: (state) =>
+      isFinite(state.noretryStart) &&
+      state.noretryStart + 1000 * 60 * 5 >= Date.now(),
+  },
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        storage: sessionStorage,
+        key: "zvms/v2/noretryStart",
+        paths: ["noretryStart"],
+      },
+    ],
   },
 });
 

@@ -836,4 +836,22 @@
 
 ---
 
+## 8.zvms.views.system
+### **...**
+
+#### 8.1 restartTtyd
+[POST] /system/ttyd/restart  
+**...**  
+参数: 
+```json
+"any"
+```
+响应:  
+```json
+"any"
+```
+
+
+---
+
 

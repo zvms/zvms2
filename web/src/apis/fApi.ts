@@ -1,7 +1,7 @@
 import { toasts } from "@/utils/dialogs";
-import { useLoadingStore } from "@/stores";
+import { useInfoStore, useLoadingStore } from "@/stores";
 import { type AxiosResponse } from "axios";
-import axios from "@/plugins/axios";
+import axios, { currentToken, setCurrentToken } from "@/plugins/axios";
 import * as structs from "./types/structs";
 import * as enums from "./types/enums";
 
@@ -83,6 +83,9 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
     try {
       let res;
       try {
+        if(currentToken===""){
+          setCurrentToken(useInfoStore().token)
+        }
         res = await func(url, ...args); //axios
       } catch (e: any) {
         if (config.defaultFailedToast) {
@@ -936,6 +939,13 @@ export class ForegroundApi {
               name
       }
     );
+  }
+  /**
+   * ### [POST] /system/ttyd/restart
+   * #### 权限: System
+   */
+  restartTtyd(): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(this, "POST", `/system/ttyd/restart`);
   }
 
 

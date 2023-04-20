@@ -22,12 +22,14 @@
       <v-form v-model="isFormValid">
         <v-text-field
           type="text"
+          autocomplete="userid"
           v-model="form.userId"
           :rules="rules"
           label="学号/ID"
         />
         <v-text-field
           type="password"
+          autocomplete="password"
           v-model="form.password"
           :rules="rules"
           label="密码"
@@ -40,14 +42,17 @@
 </template>
 
 <script lang="ts">
-import { fApi } from "../apis";
-import { NOTEMPTY } from "../utils/validation.js"; //校验表单完整性
-import { applyNavItems } from "../utils/nav";
-import { useInfoStore, useHeartbeatStore } from "@/stores";
-import { md5 } from "@/utils/md5";
-import { mapStores } from "pinia";
+import { fApi } from "@/apis";
+import { ForegroundApi } from "@/apis/fApi";
 import { Categ } from "@/apis/types/enums";
+import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
 import router from "@/router";
+import { useInfoStore, useLoadingStore } from "@/stores";
+import { toasts } from "@/utils/dialogs";
+import { md5 } from "@/utils/md5";
+import { applyNavItems } from "@/utils/nav";
+import { NOTEMPTY } from "@/utils/validation.js"; //校验表单完整性
+import { mapStores } from "pinia";
 
 export default {
   name: "login",
@@ -69,12 +74,32 @@ export default {
   methods: {
     login() {
       if (this.isFormValid) {
+        if (this.loadingStore.noretry) {
+          toasts.error("密码错误次数过多，请稍等！");
+          return;
+        }
         const pwd = this.form.password;
-        fApi.login(
+        const sepcialFApi = new ForegroundApi({
+          beforeReq(info) {},
+          errorReq(e: Error, info) {},
+          successedRes(res, info) {},
+          failedRes: (res, info) => {
+            if (res?.data?.noretry) {
+              this.loadingStore.noretryStart = Date.now();
+            }
+          },
+          afterProcess(info) {},
+          errorProcess(e, info) {},
+          cleanup(info) {},
+          defaultFailedToast: true,
+          defaultOkToast: true,
+        });
+        sepcialFApi.login(
           this.form.userId,
           md5(pwd)
         )(({ token, id }) => {
           this.infoStore.token = token;
+          setCurrentAxiosToken(token);
           fApi.skipOkToast.getUserInfo(id)(({ name, cls, auth, clsName }) => {
             this.infoStore.$patch({
               userId: id,
@@ -83,7 +108,6 @@ export default {
               classId: cls,
               className: clsName,
             });
-
             applyNavItems();
             router.push("/");
           });
@@ -92,7 +116,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore, useHeartbeatStore),
+    ...mapStores(useInfoStore, useLoadingStore),
   },
 };
 </script>
