@@ -92,7 +92,7 @@
           />
           <v-text-field
             v-model.number="form.reward"
-            :rules="rules"
+            :rules="[IS_DECIMAL(), IS_POSITIVE(), ...rules]"
             type="text"
             label="预期时长（分钟）"
             prepend-icon="mdi-clock-time-three-outline"
@@ -109,7 +109,7 @@
 
 <script lang="ts">
 import { fApi, type ClassVol, type SingleClass, VolType } from "@/apis";
-import { NOTEMPTY, TIME } from "@/utils/validation.js";
+import { IS_DECIMAL, IS_NUMBER, IS_POSITIVE, NOT_EMPTY, TIME } from "@/utils/validation.js";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
@@ -121,6 +121,8 @@ export default {
   data() {
     return {
       TIME,
+      IS_DECIMAL,
+      IS_POSITIVE,
       VolType,
       Categ,
       countNew: "" as any as number,
@@ -134,7 +136,7 @@ export default {
         classSelected: [] as ClassVol[],
         type: VolType.Outside,
       },
-      rules: [NOTEMPTY()],
+      rules: [NOT_EMPTY()],
       isFormValid: false,
     };
   },

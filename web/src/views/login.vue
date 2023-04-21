@@ -51,7 +51,7 @@ import { useInfoStore, useLoadingStore } from "@/stores";
 import { toasts } from "@/utils/dialogs";
 import { md5 } from "@/utils/md5";
 import { applyNavItems } from "@/utils/nav";
-import { NOTEMPTY } from "@/utils/validation.js"; //校验表单完整性
+import { NOT_EMPTY } from "@/utils/validation.js"; //校验表单完整性
 import { mapStores } from "pinia";
 
 export default {
@@ -62,7 +62,7 @@ export default {
         userId: "",
         password: "",
       },
-      rules: [NOTEMPTY()],
+      rules: [NOT_EMPTY()],
       isFormValid: false,
     };
   },

@@ -114,7 +114,7 @@ import { mapStores } from "pinia";
 import router from "@/router";
 import { applyNavItems } from "@/utils/nav";
 import { md5 } from "@/utils/md5";
-import { NOTEMPTY } from "@/utils/validation";
+import { NOT_EMPTY } from "@/utils/validation";
 import { toasts } from "@/utils/dialogs";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
 
@@ -134,7 +134,7 @@ export default {
       oldPwd: "",
       newPwd: "",
       confirmPwd: "",
-      rules: [NOTEMPTY()],
+      rules: [NOT_EMPTY()],
       isFormValid: false,
     };
   },

@@ -107,7 +107,7 @@ import {
   VolType,
   type SingleUserWithoutAuth,
 } from "@/apis";
-import { NOTEMPTY, TIME } from "@/utils/validation.js";
+import { NOT_EMPTY, TIME } from "@/utils/validation.js";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
@@ -131,7 +131,7 @@ export default {
         reward: "" as any as number,
         type: VolType.Outside,
       },
-      rules: [NOTEMPTY()],
+      rules: [NOT_EMPTY()],
       isFormValid: false,
     };
   },
