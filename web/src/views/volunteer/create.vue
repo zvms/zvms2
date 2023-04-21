@@ -80,7 +80,7 @@
             v-model="form.time"
             :rules="[TIME(), ...rules]"
             type="text"
-            label="时间（e.g. 23-9-1 10:30）"
+            label="时间（e.g. 23-9-1-10-30表示23年9月1日10时30分）"
             prepend-icon="mdi-calendar-range"
           />
           <v-textarea

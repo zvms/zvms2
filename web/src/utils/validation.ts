@@ -61,10 +61,25 @@ export function validate(
 
 export const NOTEMPTY = () => (v: any) => !!v || "此处不能为空";
 
-/**
- * e.g. 22-9-1 10:30
- */
-const TimeRegex = /^\d{1,4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}$/;
 export const TIME = () => (v: any) => {
-  return TimeRegex.test(v) || "格式不正确！";
+  try {
+    if (!(typeof v === "string")) {
+      throw new Error();
+    }
+    let x = v.split("-");
+    if (x.length !== 5) throw new Error();
+    let [ys, ms, ds, hs, mins] = x.map((v) => {
+      let i = parseInt(v);
+      if (!Number.isFinite(i)) {
+        throw new Error();
+      }
+      return i;
+    });
+    if (!Number.isFinite(new Date(ys, ms, ds, hs, mins).getTime())) {
+      throw new Error();
+    }
+  } catch (e: any) {
+    return "时间格式错误或不完整";
+  }
+  return true;
 };

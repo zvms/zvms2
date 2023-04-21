@@ -3,7 +3,7 @@
     <v-list>
       <v-list-item>
         <v-list-item-title>简介</v-list-item-title>
-        <div v-html="vol.name"></div>
+        <div v-html="vol.description"></div>
       </v-list-item>
       <v-list-item>
         <v-list-item-title>时间</v-list-item-title>

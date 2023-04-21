@@ -22,11 +22,11 @@
             v-model="form.deadtime"
             :rules="[TIME(), ...rules]"
             type="text"
-            label="通知自动消失时间（e.g. 23-9-1 10:30）"
+            label="通知自动消失时间（e.g. 23-9-1-10-30表示23年9月1日10时30分）"
             prepend-icon="mdi-calendar-range"
           />
           <v-switch
-            label="`匿名（以“系统”名义发布）：${anonymous.form.toString()}`"
+            :label="`匿名（以“系统”名义发布）：${form.anonymous ? '是' : '否'}`"
             v-model="form.anonymous"
             prepend-icon="mdi-incognito"
           />

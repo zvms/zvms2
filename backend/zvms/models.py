@@ -186,7 +186,6 @@ class SchoolNotice(ModelMixIn, db.Model):
 
 class Log(ModelMixIn, db.Model):
     __tablename__ = 'log'
-    sqlite_autoincrement = True
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 

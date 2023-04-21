@@ -1,9 +1,6 @@
 flask
 flask_sqlalchemy
 flask_cors
-pymysql
 cryptography
 pyjwt
 tornado
-mistune
-dateparser

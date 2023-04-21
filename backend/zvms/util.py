@@ -1,11 +1,10 @@
+import datetime
 from functools import wraps, partial
 from types import NoneType
 from typing import Iterable
 from itertools import chain
 import hashlib
-import dateparser
 import json
-import re
 
 from sqlalchemy import Column
 from sqlalchemy.orm import InstrumentedAttribute, Query as _Query
@@ -82,11 +81,9 @@ def update(self, /, on=True, **updates):
 
 def insert(self, on=True):
     db.session.flush()
-    print('before-insert', vars(self))
     db.session.flush()
     db.session.add(self)
     db.session.flush()
-    print('insert', vars(self))
     if on:
         self.on_insert()
     return self
@@ -166,10 +163,9 @@ class ModelMixIn:
 
     def __init__(self, **kwargs):
         from sqlalchemy import func
-        db.Model.__init__(self, **{k: str(v) for k, v in kwargs.items()})
+        db.Model.__init__(self, **{k: v for k, v in kwargs.items()})
         autoincrement_key = [i for i in type(self).__table__.columns if isinstance(i, Column) and i.autoincrement]
-        print(autoincrement_key, type(self).__table__.columns)
-        if autoincrement_key:
+        if autoincrement_key and getattr(self, autoincrement_key[0].key) is None:
             max = db.session.query(func.max(autoincrement_key[0])).scalar()
             setattr(self, autoincrement_key[0].key, 1 if max is None else max + 1)
 
@@ -238,8 +234,10 @@ class ZvmsError(Exception):
 
 def try_parse_time(s):
     try:
-        if dateparser.parse(s) is None:
+        result = datetime.datetime.strptime(s,"%y-%m-%d-%H-%M")
+        if result is None:
             raise
+        return result
     except:
         raise ZvmsError(f'时间格式不正确. 输入的时间: {s}')
 

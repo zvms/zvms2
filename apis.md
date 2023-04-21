@@ -742,6 +742,41 @@
 "any"
 ```
 
+#### 6.9 uploadPicure
+[POST] /thought/upload-picture  
+**上传图片**  
+参数: 
+```json
+{
+    "base64": "string",
+    "type": "string"
+}
+```
+响应:  
+```json
+{
+    "hash": "string",
+    "type": "string"
+}
+```
+
+#### 6.10 fetchPicture
+[POST] /thought/<int:volId>/<int:stuId>/fetch-picture  
+**拉取感想图片**  
+参数: 
+```json
+{
+    "url": "string"
+}
+```
+响应:  
+```json
+{
+    "hash": "string",
+    "type": "string"
+}
+```
+
 
 ---
 

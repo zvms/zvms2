@@ -6,6 +6,7 @@ Categ:
   Student: 学生
   System: 系统
   Teacher: 教师
+  Inspecter: 监督员
   Any: 任意
 
 NoticeType:

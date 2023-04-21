@@ -147,10 +147,10 @@ SearchThoughtsResponse = Array(SingleThought())
 
 class Picture(Object):
     base64 = String
-    type = Len(String, 4, 6)
+    type = Len(String, 3, 6)
     
 class Thought(Object):
-    thought = Len(String, 1, 1025)
+    thought = Len(String, 0, 1025)
     pictures = Array(Picture())
 
 class Login(Object):
@@ -207,3 +207,6 @@ class Repulse(Object):
 
 class Accept(Object):
     reward = Int
+
+class FetchPicture(Object):
+    url = String

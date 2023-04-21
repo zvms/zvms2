@@ -35,7 +35,7 @@ def _save_notice(title, content, deadtime, id):
         title=title,
         content=content,
         sendtime=datetime.datetime.now(),
-        deadtime=deadtime,
+        deadtime=try_parse_time(deadtime),
         sender=id
     ).insert().id
 

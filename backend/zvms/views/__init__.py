@@ -5,3 +5,4 @@ import zvms.views.signup
 import zvms.views.volunteer
 import zvms.views.thought
 import zvms.views.class_
+import zvms.views.system

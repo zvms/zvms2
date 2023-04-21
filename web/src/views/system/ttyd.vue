@@ -1,11 +1,11 @@
 <template>
   <v-btn small @click="restart">Restart ttyd</v-btn>
+  <v-btn small @click="reload">Reload iframe</v-btn>
   <iframe :key="key" class="ttyd" :src="`http://${serverIP}:7681`"></iframe>
 </template>
 <script lang="ts">
 import { fApi } from "@/apis";
 import { serverIP } from "@/plugins/axios";
-import { toasts } from "@/utils/dialogs";
 export default {
   data() {
     return {
@@ -17,6 +17,9 @@ export default {
     restart() {
       fApi.restartTtyd()();
     },
+    reload(){
+      this.key++;
+    }
   },
 };
 </script>

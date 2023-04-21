@@ -3,6 +3,8 @@ import datetime
 import hashlib
 import os.path
 
+import requests
+
 from zvms.models import *
 from zvms.util import *
 from zvms.res import *
@@ -62,9 +64,9 @@ def get_thought_info(volId, stuId, token_data):
     ).items() if v is not None})
 
 
-def md5ify(raw):
+def md5ify(raw: bytes):
     md5 = hashlib.md5()
-    md5.update(raw.encode())
+    md5.update(raw)
     return md5.hexdigest()
 
 
@@ -90,7 +92,7 @@ def _submit_thought(volId, stuId, thought, pictures, status):
             status=status,
             thought=thought
         )
-    hashes = [md5ify(pic['base64']) for pic in pictures]
+    hashes = [md5ify(pic['base64'].encode()) for pic in pictures]
     Picture.query.filter_by(stu_id=stuId, vol_id=volId).filter(Picture.hash.not_in(hashes)).delete()
     for i, pic in enumerate(pictures):
         if not Picture.query.get((volId, stuId, hashes[i])):
@@ -198,3 +200,29 @@ def repulse(token_data, volId, stuId, reason):
         ).insert().id
     ).insert()
     return success('打回成功')
+
+@Api(rule='/thought/upload-picture', method='POST', params='Picture', response='PictureResponse')
+def upload_picure(token_data):
+    '''上传图片'''
+
+@Api(rule='/thought/<int:volId>/<int:stuId>/fetch-picture', method='POST', params='FetchPicture', response='PictureResponse')
+def fetch_picture(token_data, volId, stuId, url: str):
+    '''拉取感想图片'''
+    try:
+        pic_data = requests.get(url).content
+        pic_type = url.split('.')[-1]
+        hash = md5ify(pic_data)
+        with open(os.path.join(STATIC_FOLDER, 'pics', f'{hash}.{pic_type}'), 'wb') as f:
+            f.write(pic_data)
+        Picture(
+            vol_id=volId,
+            stu_id=stuId,
+            hash=hash,
+            extension=pic_type
+        ).insert()
+        return success('图片上传成功', {
+            'hash': hash,
+            'type': pic_type
+        })
+    except requests.exceptions.RequestException:
+        return error('图片上传失败')

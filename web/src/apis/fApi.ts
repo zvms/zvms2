@@ -865,6 +865,47 @@ export class ForegroundApi {
     );
   }
   /**
+   * ## 上传图片
+   * ### [POST] /thought/upload-picture
+   * #### 权限: Any
+   * @param base64
+   * @param type
+   */
+  uploadPicure(
+    base64: string,
+    type: string
+  ): ForegroundApiRunner<structs.PictureResponse> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/thought/upload-picture`, {
+              base64,
+      type
+      }
+    );
+  }
+  /**
+   * ## 拉取感想图片
+   * ### [POST] /thought/<int:volId>/<int:stuId>/fetch-picture
+   * #### 权限: Any
+   * @param volId
+   * @param stuId
+   * @param url
+   */
+  fetchPicture(
+    volId: number,
+    stuId: number,
+    url: string
+  ): ForegroundApiRunner<structs.PictureResponse> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/thought/${volId}/${stuId}/fetch-picture`, {
+              url
+      }
+    );
+  }
+  /**
    * ## 列出所有班级
    * ### [GET] /class/list
    * #### 权限: Any

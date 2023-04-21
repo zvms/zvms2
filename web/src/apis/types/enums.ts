@@ -94,7 +94,8 @@ export enum Categ {
     Manager = 16,
     Auditor = 32,
     System = 64,
-    Any = 127
+    Inspecter = 128,
+    Any = 255
 }
 
 export function getCategName(id: Categ): string {
@@ -113,6 +114,8 @@ export function getCategName(id: Categ): string {
             return "审计部";
         case Categ.System:
             return "系统";
+        case Categ.Inspecter:
+            return "监督员";
         case Categ.Any:
             return "任意";
         default:

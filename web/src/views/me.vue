@@ -206,7 +206,7 @@ export default {
           icon: "mdi-account-multiple",
           content: this.infoStore.className,
         },
-        ...[2, 4, 8, 16, 32, 64]
+        ...[2, 4, 8, 16, 32, 64, 128]
           .filter((id) => id & this.infoStore.permission)
           .map((id) => ({
             id,

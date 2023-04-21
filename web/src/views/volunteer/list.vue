@@ -103,11 +103,7 @@
                 </v-window-item>
               </v-window>
 
-              <!-- <template v-slot:selection="{ fileNames }">
-                <template v-for="fileName in fileNames" :key="fileName">
-                  <v-img :src="fileName" />
-                </template>
-              </template> -->
+              <v-img :src="test" />
               <v-container>
                 <v-row>
                   <v-col v-for="p,i in current.thought!.pics" :key="p.key">
@@ -165,6 +161,8 @@ import CryptoJS from "crypto-js";
 import { ArrayBufferToWordArray, getPicsById } from "@/utils/pics.js";
 import { getVolStatusNameForUser } from "@/utils/calc";
 import { baseURL } from "@/plugins/axios";
+import axios from "axios";
+import { resumeScroll, saveScroll } from "@/utils/scrollCtrl";
 
 interface Action {
   text: string;
@@ -178,6 +176,7 @@ export default {
   },
   data() {
     return {
+      test: "",
       Categ,
       getThoughtStatusName,
       ThoughtStatus,
@@ -317,19 +316,42 @@ export default {
           return;
         }
         for (const pic of pics) {
-          this.current.thought!.pics.push({
-            byHash: false,
-            type: "UNKNOWN!!!",
-            extName: pic.substring(pic.lastIndexOf(".") + 1),
-            base64: CryptoJS.enc.Base64.stringify(
-              ArrayBufferToWordArray(await (await fetch(pic)).arrayBuffer())
-            ),
-            key: Date.now() + "",
+          fApi.fetchPicture(
+            this.current.singleVol.id,
+            this.infoStore.userId,
+            pic
+          )((result) => {
+            this.current.thought!.pics.push({
+              byHash: true,
+              type: result.type,
+              url: `${baseURL}/static/pics/${result.hash}.${result.type}`,
+              key: result.hash,
+            });
           });
+          // try {
+          //   this.current.thought!.pics.push({
+          //     byHash: false,
+          //     type: "UNKNOWN!!!",
+          //     extName: pic.substring(pic.lastIndexOf(".") + 1),
+          //     base64: CryptoJS.enc.Base64.stringify(
+          //       CryptoJS.enc.Utf8.parse(
+          //         (
+          //           await axios.get(pic, {
+          //             timeout: 10000,
+          //           })
+          //         ).data as string
+          //       )
+          //     ),
+          //     key: Date.now() + "",
+          //   });
+          // } catch (err: any) {
+          //   this.test = pic;
+          //   throw new Error(`在上传图片${pic}时，错误：${err?.message}`);
+          // }
         }
         this.picsId = "";
-      } catch (Error) {
-        toasts.error("通过ID获取图床图片失败!");
+      } catch (err: any) {
+        toasts.error("通过ID获取图床图片失败! " + err?.message);
       }
     },
     async uploadImg(files: File[]) {
@@ -480,6 +502,16 @@ export default {
   watch: {
     "filter.class"() {
       this.fetchVols();
+    },
+    infoDlg(v, ov) {
+      if (!ov && v) {
+        saveScroll();
+        return;
+      }
+      if (ov && !v) {
+        resumeScroll();
+        return;
+      }
     },
   },
 };

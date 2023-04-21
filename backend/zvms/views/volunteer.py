@@ -1,5 +1,4 @@
 import datetime
-import dateparser
 
 from zvms.models import *
 from zvms.res import *
@@ -7,12 +6,12 @@ from zvms.util import *
 from zvms.apilib import Api
 
 def is_outdated(time):
+    if time is None:
+        return True
     return time < datetime.datetime.now()
 
 def is_signable(id, time, token_data)->bool:
     cv = ClassVol.query.get((id, token_data['cls']))
-    # if not isinstance(time,datetime.datetime):
-    #     time = dateparser.parse(time)
     return not is_outdated(time) and (cv is not None) and (cv.now < cv.max)
 
 def is_joiner(joiners:list, me:int):
@@ -86,7 +85,7 @@ def get_volunteer_info(id, token_data):
 
 
 def _create_volunteer(token_data, kwargs):
-    try_parse_time(kwargs['time'])
+    kwargs['time'] = try_parse_time(kwargs['time'])
     if token_data['auth'] == Categ.STUDENT and kwargs['type'] != VolType.OUTSIDE:
         raise ZvmsError('权限不足: 只能创建校外义工')
     return Volunteer(
@@ -100,7 +99,7 @@ def _create_volunteer(token_data, kwargs):
 def create_volunteer(token_data, classes, **kwargs):
     '''创建一个义工'''
     id = _create_volunteer(token_data, kwargs)
-    if (Categ.CLASS | Categ.TEACHER).authorized(token_data['auth']):
+    if (Categ.CLASS | Categ.TEACHER | Categ.MANAGER | Categ.SYSTEM).authorized(token_data['auth']):
         for cls in classes:
             cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
             if cls['max'] > cls_.members.count():
@@ -135,8 +134,9 @@ def create_appointed_volunteer(token_data, joiners, **kwargs):
         if user.auth & Categ.TEACHER:
             return error(f'不可报名教师{joiner}')
         StuVol(
-            stu_id=joiner['id'],
-            vol_id=id
+            stu_id=joiner,
+            vol_id=id,
+            status=ThoughtStatus.UNSUBMITTED
         ).insert()
     return success('创建成功')
 

@@ -246,3 +246,7 @@ export interface Accept {
     reward: number
 }
 
+export interface FetchPicture {
+    url: string
+}
+

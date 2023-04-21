@@ -7,7 +7,7 @@ from zvms.apilib import Api
 @Api(rule='/class/list', response='ListClassesResponse')
 def list_classes(token_data):
     '''列出所有班级'''
-    return success('获取成功', list_or_error(Class.query.select('id', 'name')))
+    return success('获取成功', list_or_error(Class.query.filter(Class.id != 0).select('id', 'name')))
 
 
 @Api(rule='/class/<int:id>', response='ClassInfoResponse')

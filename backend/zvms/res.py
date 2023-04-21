@@ -33,11 +33,16 @@ class Categ(IntFlag):
     MANAGER = 16
     AUDITOR = 32
     SYSTEM = 64
-    ANY = 127
+    INSPECTER = 128
+
+    ANY = 255
 
     def authorized(self, auth):
         return (Categ.SYSTEM | self) & auth
+    
 if sys.platform == 'win32':
     STATIC_FOLDER = 'C:\\zvms_backend'
 elif sys.platform == 'linux':
     STATIC_FOLDER = '/tmp/zvms_backend'
+
+TTYD_PATH = r'start powershell C:\Users\Public\workspace\ttyd\start.ps1'

@@ -1,4 +1,3 @@
-import { useInfoStore } from "@/stores";
 import Axios from "axios";
 
 export const serverIP = "172.31.2.4";
@@ -11,6 +10,7 @@ const axios = Axios.create({
     "Content-type": "application/json",
   },
   timeout: 10000,
+  timeoutErrorMessage:"服务器连接超时，请检查网络状态，也有可能是正在维护服务器。",
 });
 
 let currentToken: string = "";

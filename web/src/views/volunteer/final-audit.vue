@@ -31,7 +31,7 @@
           <v-spacer />
           发放的{{ getVolTypeName(currentVol!.type) }}时长（分钟）
           <v-text-field
-            v-model="currentReward"
+            v-model.number="currentReward"
             prepend-icon="mdi-clock-time-three-outline"
           />
         </v-card-text>
@@ -62,10 +62,8 @@ import {
   type ThoughtInfoResponse,
   ThoughtStatus,
   type SingleThought,
-  VolType,
-  VolStatus,
 } from "@/apis";
-import { mapIsLoading, useInfoStore } from "@/stores";
+import { useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
