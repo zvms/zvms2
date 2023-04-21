@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { NOTEMPTY } from "../utils/validation";
+import { NOT_EMPTY } from "../utils/validation";
 import { Categ, fApi } from "../apis";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
@@ -57,7 +57,7 @@ export default {
     return {
       Categ,
       report: "",
-      rules: [NOTEMPTY()],
+      rules: [NOT_EMPTY()],
       isFormValid: false,
     };
   },

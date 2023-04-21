@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { fApi } from "@/apis";
-import { NOTEMPTY, TIME } from "@/utils/validation.js";
+import { NOT_EMPTY, TIME } from "@/utils/validation.js";
 import { confirm } from "@/utils/dialogs";
 import router from "@/router";
 
@@ -56,7 +56,7 @@ export default {
         deadtime: "",
         anonymous: true,
       },
-      rules: [NOTEMPTY()],
+      rules: [NOT_EMPTY()],
       isFormValid: false,
     };
   },
