@@ -57,37 +57,30 @@
       </v-card>
       <v-dialog v-model="thoughtDlg" persistent fullscreen>
         <v-card>
-          <v-card-title>
-            您在义工 {{ current.vol.name }} 的感想
-          </v-card-title>
+          <v-card-title> 您在义工 {{ current.vol.name }} 的感想 </v-card-title>
           <v-card-text>
             感想状态：
             <br />
-            <strong>
-              {{ getThoughtStatusName(current.thought!.data.status!!) }}
+            <strong style="font-size: larger">
+              {{ getThoughtStatusName(current.thought!.data.status) }}
             </strong>
             <span v-if="current.thought!.data.status===ThoughtStatus.Accepted">
-              时长{{ current.thought!.data.reward!! }}分钟
+              时长{{ current.thought!.data.reward }}分钟
             </span>
             <span v-if="current.thought!.data.reason">
               上次的提交被打回的原因：
               <br />
-              {{ current.thought!.data.reason!! }}
+              {{ current.thought!.data.reason }}
             </span>
-            <div
-              style="width: 100%; border-bottom: 1px grey solid; height: 1px"
-              class="my-3"
-            ></div>
+            <div class="my-3"></div>
             <v-form>
-              <v-textarea
-                :class="isThoughtModifiable ? '' : 'disabled-input'"
-                v-model="current.thought!.data.thought"
+              <markdown-editor v-if="isThoughtModifiable" v-model="current.thought!.data.thought"/>
+              <markdown-viewer
+                v-else
+                :markdown="current.thought!.data.thought"
                 label="感想文字"
               />
-              <div
-                style="width: 100%; border-bottom: 1px grey solid; height: 1px"
-                class="my-3"
-              ></div>
+              <div class="my-3 divider"></div>
               感想图片
               <v-tabs v-if="isThoughtModifiable" v-model="tab">
                 <v-tab value="one"> 通过图片ID上传 </v-tab>
@@ -147,27 +140,29 @@
 </template>
 
 <script lang="ts">
-import { confirm, toasts } from "@/utils/dialogs";
-import { Categ } from "@/apis/types/enums";
-import VolInfo from "@/components/vol-info.vue";
 import {
-  fApi,
+  ThoughtStatus,
   VolStatus,
+  fApi,
+  getThoughtStatusName,
   type SingleClass,
   type SingleVolunteer,
   type ThoughtInfoResponse,
   type VolunteerInfoResponse,
-  ThoughtStatus,
-  getThoughtStatusName,
 } from "@/apis";
+import { Categ } from "@/apis/types/enums";
+import MarkdownEditor from "@/components/markdown/editor.vue";
+import MarkdownViewer from "@/components/markdown/viewer.vue";
+import VolInfo from "@/components/vol-info.vue";
+import { baseURL } from "@/plugins/axios";
 import { useInfoStore } from "@/stores";
+import { getVolStatusNameForUser } from "@/utils/calc";
+import { confirm, toasts } from "@/utils/dialogs";
+import { ArrayBufferToWordArray, getPicsById } from "@/utils/pics";
+import { resumeScroll, saveScroll } from "@/utils/scrollCtrl";
+import CryptoJS from "crypto-js";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
-import CryptoJS from "crypto-js";
-import { ArrayBufferToWordArray, getPicsById } from "@/utils/pics";
-import { getVolStatusNameForUser } from "@/utils/calc";
-import { baseURL } from "@/plugins/axios";
-import { resumeScroll, saveScroll } from "@/utils/scrollCtrl";
 
 interface Action {
   text: string;
@@ -178,6 +173,8 @@ export default {
   components: {
     VolInfo,
     DataTable,
+    MarkdownEditor,
+    MarkdownViewer,
   },
   data() {
     return {
@@ -540,5 +537,11 @@ export default {
 
 .disabled-input {
   pointer-events: none;
+}
+
+.divider {
+  width: 100%;
+  border-bottom: 1px grey solid;
+  height: 1px;
 }
 </style>

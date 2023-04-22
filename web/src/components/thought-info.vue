@@ -1,17 +1,17 @@
 <template>
   <v-list>
     <v-list-item>
-      <v-list-item-title
-        >感想
-        <span v-if="showWordCount" style="font-size: medium"
-          >&emsp;&emsp;中文字数：{{ getWordCount(thought.thought ?? "") }}</span
-        ></v-list-item-title
-      >
-      <div class="disable-click">{{ thought.thought }}</div>
+      <v-list-item-title>
+        感想
+        <span v-if="showWordCount" style="font-size: medium">
+          &emsp;&emsp;中文字数：{{ getWordCount(thought.thought ?? "") }}
+        </span>
+      </v-list-item-title>
+      <markdown-viewer :markdown="thought.thought" />
     </v-list-item>
     <v-list-item v-if="thought.pics">
       <v-list-item-title>图片</v-list-item-title>
-      <v-container v-if="thought.pics.length>0">
+      <v-container v-if="thought.pics.length > 0">
         <v-row>
           <v-col v-for="(img, i) in thought.pics" :key="i">
             <v-img
@@ -26,9 +26,7 @@
           </v-col>
         </v-row>
       </v-container>
-      <p v-else>
-        没有提交图片
-      </p>
+      <p v-else>没有提交图片</p>
     </v-list-item>
     <v-dialog v-model="showImage" scrollable @click="showImage = false">
       <v-list>
@@ -45,9 +43,13 @@ import { timeToHint } from "@/utils/calc";
 import { getVolTypeName, type ThoughtInfoResponse } from "@/apis";
 import type { PropType } from "vue";
 import { baseURL } from "@/plugins/axios";
+import MarkdownViewer from "@/components/markdown/viewer.vue";
 
 export default {
   name: "thought-info",
+  components: {
+    MarkdownViewer,
+  },
   props: {
     thought: {
       type: Object as PropType<ThoughtInfoResponse>,
