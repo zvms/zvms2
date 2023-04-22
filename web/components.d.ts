@@ -7,7 +7,9 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    Mdeditor: typeof import('./src/components/mdeditor.vue')['default']
+    Editor: typeof import('./src/components/markdown/editor.vue')['default']
+    MarkdownEditor: typeof import('./src/components/markdown/markdown-editor.vue')['default']
+    MarkdownViewer: typeof import('./src/components/markdown/markdown-viewer.vue')['default']
     PermissionChips: typeof import('./src/components/permission-chips.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -27,6 +29,7 @@ declare module '@vue/runtime-core' {
     VFileInput: typeof import('vuetify/components')['VFileInput']
     VForm: typeof import('vuetify/components')['VForm']
     VIcon: typeof import('vuetify/components')['VIcon']
+    Viewer: typeof import('./src/components/markdown/viewer.vue')['default']
     VImg: typeof import('vuetify/components')['VImg']
     VList: typeof import('vuetify/components')['VList']
     VListItem: typeof import('vuetify/components')['VListItem']

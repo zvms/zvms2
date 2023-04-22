@@ -46,11 +46,11 @@ export interface PictureResponse {
 }
 
 export interface ThoughtInfoResponse {
-    status?: enums.ThoughtStatus,
-    reason?: string,
-    thought?: string,
-    reward?: number,
-    pics?: Array<PictureResponse>
+    status: enums.ThoughtStatus,
+    reason: string,
+    thought: string,
+    reward: number,
+    pics: Array<PictureResponse>
 }
 
 export interface StudentThoughtsResponse {

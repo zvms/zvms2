@@ -162,6 +162,8 @@ class Union(Checker):
     def as_json(self):
         return [i.as_json() for i in self.elems]
 
+def Nullable(simple):
+    return Union(simple, Null)
 
 class Range(Checker):
     def __init__(self, simple, min='', max=''):

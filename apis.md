@@ -733,7 +733,7 @@
 
 #### 6.7 finalAudit
 [POST] /thought/<int:volId>/<int:stuId>/audit/final  
-**审核感想(义管会)**  
+**终审感想(义管会)**  
 参数: 
 ```json
 {

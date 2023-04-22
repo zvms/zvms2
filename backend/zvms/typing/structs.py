@@ -38,7 +38,7 @@ class PictureResponse(Object):
     hash = String
     type = String
 
-class ThoughtInfoResponse(Optional):
+class ThoughtInfoResponse(Object):
     status = Enum(ThoughtStatus)
     reason = String
     thought = String
@@ -214,4 +214,4 @@ class PublicNoticeNotNone(Object):
     title = String
     content = String
 
-PublicNotice =  Union(PublicNoticeNotNone(), Null)
+PublicNotice =  Nullable(PublicNoticeNotNone())

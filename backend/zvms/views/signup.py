@@ -41,18 +41,16 @@ def signup(students, volId, token_data):
             return error('不能报名教师')
         if (Categ.TEACHER | Categ.CLASS).authorized(token_data['auth']):
             auth_cls(User.query.get(stuId).cls_id, token_data, '不能报名其他班级')
-            StuVol(
-                stu_id=stuId,
-                vol_id=volId,
-                status=ThoughtStatus.UNSUBMITTED,
-            ).insert()
         else:
             auth_self(stuId, token_data, '不能给其他人报名')
-            StuVol(
-                stu_id=stuId,
-                vol_id=volId,
-                status=ThoughtStatus.UNSUBMITTED#ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT
-            ).insert()
+        StuVol(
+            stu_id=stuId,
+            vol_id=volId,
+            status=ThoughtStatus.UNSUBMITTED,#ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT
+            thought='',
+            reason='',
+            reward=-1,
+        ).insert()
     UserNotice(
         user_id=vol.holder_id,
         notice_id=Notice(

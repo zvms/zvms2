@@ -831,7 +831,7 @@ export class ForegroundApi {
     );
   }
   /**
-   * ## 审核感想(义管会)
+   * ## 终审感想(义管会)
    * ### [POST] /thought/<int:volId>/<int:stuId>/audit/final
    * #### 权限: Auditor
    * @param volId

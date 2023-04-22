@@ -73,11 +73,12 @@ def _submit_thought(volId: int, stuId: int, thought: str, pictures, status):
     _thought = StuVol.query.get((volId, stuId))
     if not _thought:
         StuVol(
-            reason='',
             vol_id=volId,
             stu_id=stuId,
             status=status,
-            thought=thought
+            thought=thought,
+            reward=-1,
+            reason='',
         ).insert()
     else:
         match _thought.status:
