@@ -167,14 +167,21 @@ export interface SingleThought {
 
 export type SearchThoughtsResponse = Array<SingleThought>
 
-export interface Picture {
+export interface ExistedPicture {
+    hash: string,
+    type: string
+}
+
+export interface Base64Picture {
     base64: string,
     type: string
 }
 
+export type Picture = ExistedPicture | Base64Picture
+
 export interface Thought {
     thought: string,
-    pictures: Array<Picture>
+    pictures: Array<ExistedPicture | Base64Picture>
 }
 
 export interface Login {

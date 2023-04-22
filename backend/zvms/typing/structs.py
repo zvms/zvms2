@@ -144,13 +144,19 @@ class SingleThought(Object):
 
 SearchThoughtsResponse = Array(SingleThought())
 
-class Picture(Object):
+class ExistedPicture(Object):
+    hash = String
+    type = Len(String, 3, 6)
+
+class Base64Picture(Object):
     base64 = String
     type = Len(String, 3, 6)
-    
+
+Picture = Union(ExistedPicture(), Base64Picture())
+
 class Thought(Object):
     thought = Len(String, 0, 1025)
-    pictures = Array(Picture())
+    pictures = Array(Picture)
 
 class Login(Object):
     id = String

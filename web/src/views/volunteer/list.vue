@@ -74,7 +74,10 @@
             </span>
             <div class="my-3"></div>
             <v-form>
-              <markdown-editor v-if="isThoughtModifiable" v-model="current.thought!.data.thought"/>
+              <markdown-editor
+                v-if="isThoughtModifiable"
+                v-model="current.thought!.data.thought"
+              />
               <markdown-viewer
                 v-else
                 :markdown="current.thought!.data.thought"
@@ -149,6 +152,7 @@ import {
   type SingleVolunteer,
   type ThoughtInfoResponse,
   type VolunteerInfoResponse,
+  type Picture
 } from "@/apis";
 import { Categ } from "@/apis/types/enums";
 import MarkdownEditor from "@/components/markdown/editor.vue";
@@ -224,6 +228,7 @@ export default {
               }
             | {
                 byHash: true;
+                hash: string;
                 type: string;
                 url: string;
                 key: string;
@@ -297,6 +302,7 @@ export default {
           pics:
             thought.pics?.map((v) => ({
               byHash: true,
+              hash:v.hash,
               type: v.type,
               url: `${baseURL}/static/pics/${v.hash}.${v.type}`,
               key: v.hash,
@@ -325,31 +331,12 @@ export default {
           )((result) => {
             this.current.thought!.pics.push({
               byHash: true,
+              hash:result.hash,
               type: result.type,
               url: `${baseURL}/static/pics/${result.hash}.${result.type}`,
               key: result.hash,
             });
           });
-          // try {
-          //   this.current.thought!.pics.push({
-          //     byHash: false,
-          //     type: "UNKNOWN!!!",
-          //     extName: pic.substring(pic.lastIndexOf(".") + 1),
-          //     base64: CryptoJS.enc.Base64.stringify(
-          //       CryptoJS.enc.Utf8.parse(
-          //         (
-          //           await axios.get(pic, {
-          //             timeout: 10000,
-          //           })
-          //         ).data as string
-          //       )
-          //     ),
-          //     key: Date.now() + "",
-          //   });
-          // } catch (err: any) {
-          //   this.test = pic;
-          //   throw new Error(`在上传图片${pic}时，错误：${err?.message}`);
-          // }
         }
         this.picsId = "";
       } catch (err: any) {
@@ -477,14 +464,12 @@ export default {
     },
     async picsForUpload() {
       try {
-        const pics = [];
+        const pics:Picture[] = [];
         for (const v of this.current.thought!.pics) {
           if (v.byHash) {
             pics.push({
               type: v.type,
-              base64: CryptoJS.enc.Base64.stringify(
-                ArrayBufferToWordArray(await (await fetch(v.url)).arrayBuffer())
-              ),
+              hash: v.hash
             });
           } else {
             pics.push({

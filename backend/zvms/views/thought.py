@@ -59,7 +59,7 @@ def get_thought_info(volId: int, stuId: int, token_data):
         'reason',
         'reward',
         'pics',
-        'thought'
+        'thought',
     ).items() if v is not None})
 
 
@@ -92,18 +92,24 @@ def _submit_thought(volId: int, stuId: int, thought: str, pictures, status):
             status=status,
             thought=thought
         )
-    hashes = [md5ify(pic['base64'].encode()) for pic in pictures]
-    Picture.query.filter_by(stu_id=stuId, vol_id=volId).filter(Picture.hash.not_in(hashes)).delete()
-    for i, pic in enumerate(pictures):
-        if not Picture.query.get((volId, stuId, hashes[i])):
-            with open(os.path.join(STATIC_FOLDER, 'pics', f'{hashes[i]}.{pic["type"]}'), 'wb') as f:
-                f.write(b64decode(pic['base64']))
+    hashes = set()
+    for pic in pictures:
+        if 'hash' in pic:
+            hash = pic['hash']
+        else:
+            hash = md5ify(pic['base64'].encode())
+            if not Picture.query.get((volId, stuId, hash)):
+                with open(os.path.join(STATIC_FOLDER, 'pics', f'{hash}.{pic["type"]}'), 'wb') as f:
+                    f.write(b64decode(pic['base64']))
             Picture(
                 vol_id=volId,
                 stu_id=stuId,
-                hash=hashes[i],
+                hash=hash,
                 extension=pic['type']
             ).insert()
+        hashes.add(hash)
+    Picture.query.filter_by(stu_id=stuId, vol_id=volId).filter(Picture.hash.not_in(hashes)).delete()
+
 
 
 def _auth_thought(stuId: int, operation: str, token_data):
@@ -201,11 +207,6 @@ def repulse(token_data, volId: int, stuId: int, reason: str):
     ).insert()
     return success('打回成功')
 
-@Api(rule='/thought/upload-picture', method='POST', params='Picture', response='PictureResponse')
-def upload_picure(token_data, base64: str, type: str):
-    '''上传图片'''
-
-    
 
 @Api(rule='/thought/<int:volId>/<int:stuId>/fetch-picture', method='POST', params='FetchPicture', response='PictureResponse')
 def fetch_picture(token_data, volId: int, stuId: int, url: str):
@@ -214,14 +215,15 @@ def fetch_picture(token_data, volId: int, stuId: int, url: str):
         pic_data = requests.get(url).content
         pic_type = url.split('.')[-1]
         hash = md5ify(pic_data)
-        with open(os.path.join(STATIC_FOLDER, 'pics', f'{hash}.{pic_type}'), 'wb') as f:
-            f.write(pic_data)
-        Picture(
-            vol_id=volId,
-            stu_id=stuId,
-            hash=hash,
-            extension=pic_type
-        ).insert()
+        if Picture.query.filter_by(stu_id=stuId, vol_id=volId,hash=hash).count()==0:
+            with open(os.path.join(STATIC_FOLDER, 'pics', f'{hash}.{pic_type}'), 'wb') as f:
+                f.write(pic_data)
+            Picture(
+                vol_id=volId,
+                stu_id=stuId,
+                hash=hash,
+                extension=pic_type
+            ).insert()
         return success('图片上传成功', {
             'hash': hash,
             'type': pic_type

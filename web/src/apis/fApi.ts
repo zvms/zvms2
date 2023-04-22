@@ -776,7 +776,7 @@ export class ForegroundApi {
     volId: number,
     stuId: number,
     thought: string,
-    pictures: Array<structs.Picture>
+    pictures: Array<structs.ExistedPicture | structs.Base64Picture>
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
       this,
@@ -800,7 +800,7 @@ export class ForegroundApi {
     volId: number,
     stuId: number,
     thought: string,
-    pictures: Array<structs.Picture>
+    pictures: Array<structs.ExistedPicture | structs.Base64Picture>
   ): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(
       this,
@@ -869,26 +869,6 @@ export class ForegroundApi {
       "POST",
       `/thought/${volId}/${stuId}/repulse`, {
               reason
-      }
-    );
-  }
-  /**
-   * ## 上传图片
-   * ### [POST] /thought/upload-picture
-   * #### 权限: Any
-   * @param base64
-   * @param type
-   */
-  uploadPicure(
-    base64: string,
-    type: string
-  ): ForegroundApiRunner<structs.PictureResponse> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/thought/upload-picture`, {
-              base64,
-      type
       }
     );
   }
