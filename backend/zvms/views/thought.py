@@ -144,7 +144,7 @@ def first_audit(token_data, volId: int, stuId: int):
     UserNotice(
         user_id=thought.stu_id,
         notice_id=Notice(
-            title='感想审核',
+            title='感想终审',
             content=f'您在义工 {thought.vol.name} 提交的感想已通过团支书审核，请等待审计部审核后发放时长。',
             sendtime=datetime.datetime.now(),
             deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
@@ -156,10 +156,10 @@ def first_audit(token_data, volId: int, stuId: int):
 
 @Api(rule='/thought/<int:volId>/<int:stuId>/audit/final', method='POST', auth=Categ.AUDITOR, params='Accept')
 def final_audit(token_data, reward: int, volId: int, stuId: int):
-    '''审核感想(义管会)'''
+    '''终审感想(义管会)'''
     thought = StuVol.query.get((volId, stuId))
     if thought.status != ThoughtStatus.WAITING_FOR_FINAL_AUDIT:
-        return error('该感想目前不可审核')
+        return error('该感想不可终审')
     thought.update(
         reward=reward,
         status=ThoughtStatus.ACCEPTED
@@ -167,7 +167,7 @@ def final_audit(token_data, reward: int, volId: int, stuId: int):
     UserNotice(
         user_id=thought.stu_id,
         notice_id=Notice(
-            title='感想审核',
+            title='感想终审',
             content=f'您在义工 {thought.vol.name} 提交的感想已通过审计部审核, 获得 {reward}分钟 义工时间。',
             sendtime=datetime.datetime.now(),
             deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
@@ -191,7 +191,7 @@ def repulse(token_data, volId: int, stuId: int, reason: str):
     UserNotice(
         user_id=thought.stu_id,
         notice_id=Notice(
-            title='感想审核',
+            title='感想终审',
             content=f'您在义工 {thought.vol.name} 提交的感想已被审计部打回，可以在义工列表中点击该义工，修改感想后重新提交。',
             sendtime=datetime.datetime.now(),
             deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
