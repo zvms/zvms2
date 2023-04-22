@@ -94,7 +94,6 @@ export interface SingleVolunteer {
     status: number,
     signable: boolean,
     joiners: Array<SingleUserWithoutAuth>,
-    holder: number,
     holderName: string
 }
 
@@ -249,4 +248,11 @@ export interface Accept {
 export interface FetchPicture {
     url: string
 }
+
+export interface PublicNoticeNotNone {
+    title: string,
+    content: string
+}
+
+export type PublicNotice = PublicNoticeNotNone | null
 

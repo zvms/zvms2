@@ -7,8 +7,11 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    Mdeditor: typeof import('./src/components/mdeditor.vue')['default']
+    PermissionChips: typeof import('./src/components/permission-chips.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StuInfo: typeof import('./src/components/stu-info.vue')['default']
     ThoughtInfo: typeof import('./src/components/thought-info.vue')['default']
     VApp: typeof import('vuetify/components')['VApp']
     VBtn: typeof import('vuetify/components')['VBtn']

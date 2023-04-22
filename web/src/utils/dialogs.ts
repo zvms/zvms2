@@ -11,7 +11,7 @@ export const toasts = {
       toast: true,
       position: "bottom-end",
       showConfirmButton: false,
-      timer: 3000,
+      timer: 4000,
     });
   },
   success: async (msg: string) => {
@@ -23,7 +23,7 @@ export const toasts = {
       toast: true,
       position: "bottom-end",
       showConfirmButton: false,
-      timer: 3000,
+      timer: 4000,
     });
   },
 };

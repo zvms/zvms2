@@ -7,25 +7,28 @@
           >&emsp;&emsp;中文字数：{{ getWordCount(thought.thought ?? "") }}</span
         ></v-list-item-title
       >
-      <div v-html="thought.thought" class="disable-click"></div>
+      <div class="disable-click">{{ thought.thought }}</div>
     </v-list-item>
     <v-list-item v-if="thought.pics">
       <v-list-item-title>图片</v-list-item-title>
-      <v-container>
+      <v-container v-if="thought.pics.length>0">
         <v-row>
           <v-col v-for="(img, i) in thought.pics" :key="i">
             <v-img
-              :src="`${baseURL}/static/pics/${img.hash}${img.type}`"
+              :src="`${baseURL}/static/pics/${img.hash}.${img.type}`"
               max-width="10em"
               outlined
               @click="
                 showImage = true;
-                currentImage = `${baseURL}/static/pics/${img.hash}${img.type}`;
+                currentImage = `${baseURL}/static/pics/${img.hash}.${img.type}`;
               "
             />
           </v-col>
         </v-row>
       </v-container>
+      <p v-else>
+        没有提交图片
+      </p>
     </v-list-item>
     <v-dialog v-model="showImage" scrollable @click="showImage = false">
       <v-list>

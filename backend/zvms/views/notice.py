@@ -90,3 +90,11 @@ def modify_notice(id, title, content, deadtime, token_data):
         deadtime=deadtime
     )
     return success('修改成功')
+
+@Api(rule='/notice/public', method='GET', response='PublicNotice', auth=Categ.NONE)
+def get_public_notice(token_data):
+    '''获取公开通知'''
+    with open(PUBLIC_NOTICE_PATH,'rt') as f:
+        title = f.readline()
+        content = f.read()
+        return success('获取公开通知成功', title=title, content=content)

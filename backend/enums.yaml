@@ -18,8 +18,8 @@ ThoughtStatus:
   Accepted: 已通过
   Draft: 草稿
   Unsubmitted: 未填写
-  WaitingForFinalAudit: 等待终审
-  WaitingForFirstAudit: 等待初审
+  WaitingForFinalAudit: 等待审计部审核
+  WaitingForFirstAudit: 等待团支书审核
   WaitingForSignupAudit: 等待报名审核
 
 VolStatus:

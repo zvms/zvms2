@@ -1,0 +1,8 @@
+const content=`
+Nice to meet you
+<a href='/volunteer/list'>Goto here</a>
+`
+
+export {
+    content
+}

@@ -109,7 +109,7 @@
 
 <script lang="ts">
 import { fApi, type ClassVol, type SingleClass, VolType } from "@/apis";
-import { IS_DECIMAL, IS_NUMBER, IS_POSITIVE, NOT_EMPTY, TIME } from "@/utils/validation.js";
+import { IS_DECIMAL, IS_NUMBER, IS_POSITIVE, NOT_EMPTY, TIME } from "@/utils/validation";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";

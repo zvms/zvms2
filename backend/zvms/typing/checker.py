@@ -1,8 +1,10 @@
 from contextlib import contextmanager
 import datetime
 
+
 class CheckerError(Exception):
     message: str
+
 
 class Checker:
     def __call__(self):
@@ -17,7 +19,7 @@ class Checker:
 
     def as_json(self):
         return self.stringify()
-    
+
     where = []
 
     @contextmanager
@@ -31,6 +33,7 @@ class Checker:
         Checker.where.clear()
         raise CheckerError(where, expected.as_json(), found)
 
+
 class Any(Checker):
     def render(self):
         return '{}'
@@ -41,9 +44,11 @@ class Any(Checker):
     def as_params(self):
         return {}
 
+
 def all(cls):
     return {} if cls is None else cls.__dict__ | cls.__base__.__dict__
-        
+
+
 class Object(Checker):
     module = ''
 
@@ -72,6 +77,7 @@ class Object(Checker):
     def as_json(self):
         return dict(((k, v.as_json()) for k, v in self.fields()))
 
+
 class Simple(Checker):
     def __init__(self, type, tsname, name=None):
         self.type = type
@@ -88,11 +94,13 @@ class Simple(Checker):
         if not isinstance(json, self.type):
             Checker.error(self, json)
 
+
 String = Simple(str, 'string')
 Int = Simple(int, 'number', 'int')
 Float = Simple(float, 'number', 'float')
 Boolean = Simple(bool, 'boolean')
 Null = Simple(type(None), 'null')
+
 
 class Parsable(Checker):
     def __init__(self, simple):
@@ -105,10 +113,11 @@ class Parsable(Checker):
         try:
             self.simple.type(json)
         except (ValueError, TypeError):
-            print('!!!')
             Checker.error(self, json)
 
+
 DateTime = String
+
 
 class Array(Checker):
     def __init__(self, item):
@@ -127,6 +136,7 @@ class Array(Checker):
     def as_json(self):
         return [self.item.as_json()]
 
+
 class Union(Checker):
     def __init__(self, *elems):
         self.elems = elems
@@ -139,14 +149,19 @@ class Union(Checker):
 
     def check(self, json):
         for elem in self.elems:
-            if elem.check(json):
+            try:
+                elem.check(json)
+                # Run to here means ok
                 return
+            except CheckerError as e:
+                pass
+            except:
+                raise
         Checker.error(self, json)
 
     def as_json(self):
         return [i.as_json() for i in self.elems]
 
-number = Union(Int, Float)
 
 class Range(Checker):
     def __init__(self, simple, min='', max=''):
@@ -181,12 +196,13 @@ class Len(Checker):
         return f'{self.simple.stringify()}({self.min}, {self.max})'
 
     def check(self, json):
-        self.simple.check(json) 
+        self.simple.check(json)
         if not (self.min == '' or len(json) >= self.min) and (self.max == '' or len(json) < self.max):
             Checker.error(self, json)
 
     def as_json(self):
         return self.simple.as_json()
+
 
 class Enum(Checker):
     def __init__(self, enum):
@@ -204,6 +220,7 @@ class Enum(Checker):
         except (ValueError, TypeError):
             Checker.error(self, json)
 
+
 class ParsableEnum(Enum):
     def check(self, json):
         try:
@@ -211,6 +228,7 @@ class ParsableEnum(Enum):
         except ValueError:
             Checker.error(self, json)
         super().check(int(json))
+
 
 class Optional(Object):
     def check(self, json):

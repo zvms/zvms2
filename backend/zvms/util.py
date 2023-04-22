@@ -283,4 +283,4 @@ def parse(json):
 
 
 def interface_error(expected, found):
-    return json.dumps({'type': 'ERROR', 'message': '请求接口错误', 'expected': expected.as_json(), 'found': parse(found)})
+    return json.dumps({'type': 'ERROR', 'message': '传入的数据错误', 'expected': expected.as_json(), 'found': parse(found)})

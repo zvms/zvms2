@@ -1,8 +1,11 @@
 def create_app():
+    import datetime
+
     from flask import Flask
     from flask_cors import CORS
 
     from zvms.res import STATIC_FOLDER
+    from zvms.models import Report
 
     app = Flask(__name__)
     CORS(app, supports_credentials=True, resources={r"/*", "*"}, max_age=600)
@@ -13,11 +16,11 @@ def create_app():
 
     @app.errorhandler(404)
     def handle_404(e):
-        return {'type': 'ERROR', 'message': 'Not Found'}, 404
+        return {'type': 'ERROR', 'message': '请求地址错误'}, 404
 
     @app.errorhandler(500)
     def handle_500(e):
-        return {'type': 'ERROR', 'message': 'Internal Server Error'}, 500
+        return {'type': 'ERROR', 'message': '服务器内部错误'}, 500
 
     import zvms.tokenlib as tk
     import zvms.views

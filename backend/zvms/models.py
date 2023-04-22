@@ -122,7 +122,6 @@ class StuVol(ModelMixIn, db.Model):
     @property
     def pics(self):
         res = list_or_error(Picture.query.filter_by(stu_id=self.stu_id, vol_id=self.vol_id).select('hash', type='extension'))
-        print(res)
         return res
         # return list_or_error(Picture.query.filter_by(stu_id=self.stu_id, vol_id=self.vol_id).select('hash', type='extension'))
 

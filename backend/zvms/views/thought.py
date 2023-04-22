@@ -35,10 +35,9 @@ def search_thoughts(**kwargs):
         if 'volunteer' in kwargs:
             conds.append(StuVol.vol_id == int(kwargs['volunteer']))
     except ValueError:
-        return error('请求接口错误: 非法的URL参数')
+        return error('传入的数据错误: 非法的URL参数')
 
     def process_query(query):
-        print(conds)
         return success('获取成功', list_or_error(query.select(
             'status',
             stuId='stu_id',
@@ -50,7 +49,7 @@ def search_thoughts(**kwargs):
 
 
 @Api(rule='/thought/<int:volId>/<int:stuId>', response='ThoughtInfoResponse')
-def get_thought_info(volId, stuId, token_data):
+def get_thought_info(volId: int, stuId: int, token_data):
     '''获取一个感想的详细信息'''
     thought = StuVol.query.get_or_error((volId, stuId))
     if thought.status == ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
@@ -70,7 +69,7 @@ def md5ify(raw: bytes):
     return md5.hexdigest()
 
 
-def _submit_thought(volId, stuId, thought, pictures, status):
+def _submit_thought(volId: int, stuId: int, thought: str, pictures, status):
     _thought = StuVol.query.get((volId, stuId))
     if not _thought:
         StuVol(
@@ -106,9 +105,9 @@ def _submit_thought(volId, stuId, thought, pictures, status):
             ).insert()
 
 
-def _auth_thought(stuId, operation, token_data):
+def _auth_thought(stuId: int, operation: str, token_data):
     if (Categ.TEACHER | Categ.CLASS) & token_data['auth']:
-        auth_cls(User.query.get_or_error(stuId), token_data, f'权限不足: 不能{operation}其他班级的感想')
+        auth_cls(User.query.get_or_error(stuId).cls_id, token_data, f'权限不足: 不能{operation}其他班级的感想')
         return True
     else:
         auth_self(stuId, token_data, f'权限不足: 不能{operation}其他人的感想')
@@ -116,7 +115,7 @@ def _auth_thought(stuId, operation, token_data):
     
 
 @Api(rule='/thought/<int:volId>/<int:stuId>/save', method='POST', params='Thought')
-def save_thought(token_data, volId, stuId, thought, pictures):
+def save_thought(token_data, volId: int, stuId: int, thought: str, pictures):
     '''保存感想草稿'''
     _auth_thought(stuId, '修改', token_data)
     _submit_thought(volId, stuId, thought, pictures, ThoughtStatus.DRAFT)
@@ -124,7 +123,7 @@ def save_thought(token_data, volId, stuId, thought, pictures):
 
 
 @Api(rule='/thought/<int:volId>/<int:stuId>/submit', method='POST', params='Thought')
-def submit_thought(token_data, volId, stuId, thought, pictures):
+def submit_thought(token_data, volId: int, stuId: int, thought: int, pictures):
     '''提交感想'''
     is_common = not _auth_thought(stuId, '提交', token_data)
     # 临时由WAITING_FOR_FIRST_AUDIT修改为WAITING_FOR_FINAL_AUDIT
@@ -133,7 +132,7 @@ def submit_thought(token_data, volId, stuId, thought, pictures):
 
 
 @Api(rule='/thought/<int:volId>/<int:stuId>/audit/first', method='POST', auth=Categ.CLASS | Categ.TEACHER)
-def first_audit(token_data, volId, stuId):
+def first_audit(token_data, volId: int, stuId: int):
     '''初审感想(班内)'''
     auth_cls(User.query.get(stuId), token_data)
     thought = StuVol.query.get((volId, stuId))
@@ -145,8 +144,8 @@ def first_audit(token_data, volId, stuId):
     UserNotice(
         user_id=thought.stu_id,
         notice_id=Notice(
-            title='感想终审',
-            content=f'您的关于{thought.vol.name}的感想已通过初审',
+            title='感想审核',
+            content=f'您在义工 {thought.vol.name} 提交的感想已通过团支书审核，请等待审计部审核后发放时长。',
             sendtime=datetime.datetime.now(),
             deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0
@@ -156,11 +155,11 @@ def first_audit(token_data, volId, stuId):
 
 
 @Api(rule='/thought/<int:volId>/<int:stuId>/audit/final', method='POST', auth=Categ.AUDITOR, params='Accept')
-def final_audit(token_data, reward, volId, stuId):
-    '''终审感想(义管会)'''
+def final_audit(token_data, reward: int, volId: int, stuId: int):
+    '''审核感想(义管会)'''
     thought = StuVol.query.get((volId, stuId))
     if thought.status != ThoughtStatus.WAITING_FOR_FINAL_AUDIT:
-        return error('该感想不可终审')
+        return error('该感想目前不可审核')
     thought.update(
         reward=reward,
         status=ThoughtStatus.ACCEPTED
@@ -168,8 +167,8 @@ def final_audit(token_data, reward, volId, stuId):
     UserNotice(
         user_id=thought.stu_id,
         notice_id=Notice(
-            title='感想终审',
-            content=f'您的关于{thought.vol.name}的感想已通过终审, 获得{reward}义工时间',
+            title='感想审核',
+            content=f'您在义工 {thought.vol.name} 提交的感想已通过审计部审核, 获得 {reward}分钟 义工时间。',
             sendtime=datetime.datetime.now(),
             deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0
@@ -179,7 +178,7 @@ def final_audit(token_data, reward, volId, stuId):
 
 
 @Api(rule='/thought/<int:volId>/<int:stuId>/repulse', method='POST', params='Repulse')
-def repulse(token_data, volId, stuId, reason):
+def repulse(token_data, volId: int, stuId: int, reason: str):
     '''打回感想'''
     auth_cls(User.query.get(stuId), token_data)
     thought = StuVol.query.get_or_error((volId, stuId))
@@ -192,8 +191,8 @@ def repulse(token_data, volId, stuId, reason):
     UserNotice(
         user_id=thought.stu_id,
         notice_id=Notice(
-            title='感想终审',
-            content=f'您的关于{thought.vol.name}的感想已被终审打回，可以在义工列表中点击该义工，修改感想后重新提交。',
+            title='感想审核',
+            content=f'您在义工 {thought.vol.name} 提交的感想已被审计部打回，可以在义工列表中点击该义工，修改感想后重新提交。',
             sendtime=datetime.datetime.now(),
             deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0
@@ -202,11 +201,13 @@ def repulse(token_data, volId, stuId, reason):
     return success('打回成功')
 
 @Api(rule='/thought/upload-picture', method='POST', params='Picture', response='PictureResponse')
-def upload_picure(token_data):
+def upload_picure(token_data, base64: str, type: str):
     '''上传图片'''
 
+    
+
 @Api(rule='/thought/<int:volId>/<int:stuId>/fetch-picture', method='POST', params='FetchPicture', response='PictureResponse')
-def fetch_picture(token_data, volId, stuId, url: str):
+def fetch_picture(token_data, volId: int, stuId: int, url: str):
     '''拉取感想图片'''
     try:
         pic_data = requests.get(url).content

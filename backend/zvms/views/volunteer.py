@@ -37,10 +37,10 @@ def search_volunteers(token_data, **kwargs):
             conds.append(Volunteer.holder_id == int(kwargs['holder']))
         if 'student' in kwargs:
             conds.append(Volunteer.id.in_(StuVol.query.filter_by(
-                stu_id=int(kwargs['student'])).select_value('notice_id')))
+                stu_id=int(kwargs['student'])).select_value('vol_id')))
         if 'cls' in kwargs:
             conds.append(Volunteer.id.in_(ClassVol.query.filter_by(
-                cls_id=int(kwargs['cls'])).select_value('notice_id')))
+                cls_id=int(kwargs['cls'])).select_value('vol_id')))
         if 'name' in kwargs:
             conds.append(Volunteer.name.like(f'%{kwargs["name"]}%'))
         if 'status' in kwargs:
@@ -48,7 +48,7 @@ def search_volunteers(token_data, **kwargs):
         if 'signable' in kwargs and kwargs['signable']:
             filter_ = filter_signable
     except ValueError:
-        return error('请求接口错误: 非法的URL参数')
+        return error('传入的数据错误: 非法的URL参数')
 
     def process_query(query):
         ret = list_or_error(query.select('id', 'name', 'status', 'time', 'joiners', holder=rpartial(getattr, 'id'), holderName=('holder', rpartial(getattr, 'name'))))
@@ -80,7 +80,6 @@ def get_volunteer_info(id, token_data):
     if is_outdated(ret['time']):
         ret['status'] = VolStatus.FINISHED if ret['status'] == VolStatus.AUDITED else VolStatus.DEPRECATED
     ret['time'] = str(ret['time'])
-    print(ret['joiners'])
     return success('获取成功', **ret)
 
 
@@ -127,16 +126,24 @@ def create_volunteer(token_data, classes, **kwargs):
 def create_appointed_volunteer(token_data, joiners, **kwargs):
     '''创建一个成员全部指定的义工'''
     id = _create_volunteer(token_data, kwargs)
+    clses = set()
     for joiner in joiners:
         user = User.query.get(joiner)
         if user is None:
             return error(f'学生{joiner}不存在')
         if user.auth & Categ.TEACHER:
             return error(f'不可报名教师{joiner}')
+        clses.add(user.cls_id)
         StuVol(
             stu_id=joiner,
             vol_id=id,
             status=ThoughtStatus.UNSUBMITTED
+        ).insert()
+    for cls in clses:
+        ClassVol(
+            cls_id=cls,
+            vol_id=id,
+            max=0
         ).insert()
     return success('创建成功')
 
@@ -186,7 +193,7 @@ def audit_volunteer(token_data, id):
         user_id=vol.holder_id,
         notice_id=Notice(
             title='义工过审',
-            content=f'您的义工{vol.name}已过审',
+            content=f'您的义工 {vol.name} 已过审，属于报名范围内的学生可以在义工列表看到并报名。',
             sendtime=datetime.datetime.now(),
             deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0

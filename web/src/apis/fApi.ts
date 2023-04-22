@@ -475,6 +475,14 @@ export class ForegroundApi {
     );
   }
   /**
+   * ## 获取公开通知
+   * ### [GET] /notice/public
+   * #### 权限: None
+   */
+  getPublicNotice(): ForegroundApiRunner<structs.PublicNoticeNotNone | null> {
+    return createForegroundApiRunner(this, "GET", `/notice/public`);
+  }
+  /**
    * ## 列出一个班级的报名
    * ### [GET] /signup/list/<int:cls>
    * #### 权限: Any
@@ -823,7 +831,7 @@ export class ForegroundApi {
     );
   }
   /**
-   * ## 终审感想(义管会)
+   * ## 审核感想(义管会)
    * ### [POST] /thought/<int:volId>/<int:stuId>/audit/final
    * #### 权限: Auditor
    * @param volId

@@ -1,2 +1,2 @@
-export * from "./structs.js";
-export * from "./enums.js";
+export * from "./structs";
+export * from "./enums";

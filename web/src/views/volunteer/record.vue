@@ -107,7 +107,7 @@ import {
   VolType,
   type SingleUserWithoutAuth,
 } from "@/apis";
-import { NOT_EMPTY, TIME } from "@/utils/validation.js";
+import { NOT_EMPTY, TIME } from "@/utils/validation";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";

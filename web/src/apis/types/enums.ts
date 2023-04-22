@@ -57,9 +57,9 @@ export function getThoughtStatusName(id: ThoughtStatus): string {
         case ThoughtStatus.Draft:
             return "草稿";
         case ThoughtStatus.WaitingForFirstAudit:
-            return "等待初审";
+            return "等待团支书审核";
         case ThoughtStatus.WaitingForFinalAudit:
-            return "等待终审";
+            return "等待审计部审核";
         case ThoughtStatus.Accepted:
             return "已通过";
         default:

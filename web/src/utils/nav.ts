@@ -60,7 +60,7 @@ export function getNavItems(permission: Categ) {
     //   icon: "mdi-check-circle",
     // },
     finalAuditVol: {
-      title: "终审感想",
+      title: "审核感想",
       to: "/volunteer/finalAudit",
       icon: "mdi-check-circle",
     },

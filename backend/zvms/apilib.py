@@ -10,6 +10,7 @@ from jwt.exceptions import InvalidSignatureError
 from zvms.typing.checker import Any
 from zvms.res import Categ
 from zvms.util import *
+from zvms.models import *
 from zvms.typing.checker import CheckerError
 import zvms.tokenlib as tk
 import zvms.typing.structs as structs
@@ -81,19 +82,19 @@ def deco(impl, params, response, auth):
         try:
             with open('log.txt', 'a', encoding='utf-8') as f:
                 if auth != Categ.NONE:
-                    # print(f'({token_data["id"]})', end=' ')
+                    print(f'({token_data["id"]})', end=' ')
                     f.write(f'({token_data["id"]}) ')
-                # print(f'[{datetime.datetime.now()}] {request.method} {request.url}')
+                print(f'[{datetime.datetime.now()}] {request.method} {request.url}')
                 f.write(f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
             # if not params.check(json_data):
             #     return interface_error(params, json_data), jsonHeader
-            check(params, json_data, '请求接口错误')
+            check(params, json_data, '传入的数据错误')
             ret = impl(*args, **kwargs, **json_data, token_data=token_data)
             result = ret.get('result')
             # if ret['type'] == 'SUCCESS' and not response.check(result):
-            #     return {'type': 'ERROR', 'message': '响应返回错误', 'expected': response.as_json(), 'found': parse(result)}, jsonHeader
+            #     return {'type': 'ERROR', 'message': '服务器返回的数据错误', 'expected': response.as_json(), 'found': parse(result)}, jsonHeader
             if ret['type'] == 'SUCCESS':
-                check(response, result, '响应返回错误')
+                check(response, result, '服务器返回的数据错误')
             return json.dumps(ret), jsonHeader
         except ZvmsError as ex:
             return json.dumps(error(ex.message)), jsonHeader
@@ -103,7 +104,10 @@ def deco(impl, params, response, auth):
                 'expected': ex.args[1],
                 'found': ex.args[2]
             }
-            print(ex.message, ':', sep='', end=' ')
-            pprint(dict)
+            Report(
+                time=datetime.datetime.now(),
+                reporter=0,
+                content='(用户: {}) {}: {}'.format(token_data['id'] if id in token_data else '<未登录>', ex.message, json.dumps(dict, indent=4))
+            ).insert()
             return json.dumps(error(ex.message) | dict)
     return wrapper

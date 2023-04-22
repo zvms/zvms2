@@ -39,10 +39,14 @@
       </v-form>
     </v-card-text>
   </v-card>
+  <v-card v-if="publicNotice">
+    <v-card-title> 公告：{{ publicNotice.title }} </v-card-title>
+    <v-card-text v-html="publicNotice.content"> </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts">
-import { fApi } from "@/apis";
+import { fApi, type PublicNotice } from "@/apis";
 import { ForegroundApi } from "@/apis/fApi";
 import { Categ } from "@/apis/types/enums";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
@@ -51,7 +55,7 @@ import { useInfoStore, useLoadingStore } from "@/stores";
 import { toasts } from "@/utils/dialogs";
 import { md5 } from "@/utils/md5";
 import { applyNavItems } from "@/utils/nav";
-import { NOT_EMPTY } from "@/utils/validation.js"; //校验表单完整性
+import { NOT_EMPTY } from "@/utils/validation";
 import { mapStores } from "pinia";
 
 export default {
@@ -64,12 +68,16 @@ export default {
       },
       rules: [NOT_EMPTY()],
       isFormValid: false,
+      publicNotice: null as PublicNotice,
     };
   },
   mounted() {
     if (this.infoStore.token && !(this.infoStore.permission & Categ.None)) {
       router.push("/");
     }
+    fApi.skipOkToast.getPublicNotice()((result) => {
+      this.publicNotice = result;
+    });
   },
   methods: {
     login() {

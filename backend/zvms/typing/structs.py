@@ -82,7 +82,6 @@ class SingleVolunteer(Object):
     status = Int
     signable = Boolean
     joiners = Array(SingleUserWithoutAuth())
-    holder = Int
     holderName = String
     
 SearchVolunteersResponse = Array(SingleVolunteer())
@@ -203,10 +202,16 @@ class AppointedVolunteer(VolunteerBody):
     joiners = Array(Int)
 
 class Repulse(Object):
-    reason = Len(String, 1, 65)
+    reason = Len(String, 0, 65)
 
 class Accept(Object):
     reward = Int
 
 class FetchPicture(Object):
     url = String
+
+class PublicNoticeNotNone(Object):
+    title = String
+    content = String
+
+PublicNotice =  Union(PublicNoticeNotNone(), Null)

@@ -1,3 +1,3 @@
-export { fApi } from "./fApi.js";
+export { fApi } from "./fApi";
 
 export * from "./types";

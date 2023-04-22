@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { fApi } from "@/apis";
-import { NOT_EMPTY, TIME } from "@/utils/validation.js";
+import { NOT_EMPTY, TIME } from "@/utils/validation";
 import { confirm } from "@/utils/dialogs";
 import router from "@/router";
 

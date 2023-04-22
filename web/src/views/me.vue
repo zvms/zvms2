@@ -16,10 +16,10 @@
       </span>
     </v-card-title>
     <v-card-text>
-      <v-chip v-for="chip in chips" :key="chip.id" class="ma-2">
-        <v-icon left>{{ chip.icon }}</v-icon>
-        {{ chip.content }}
-      </v-chip>
+      <permission-chips
+        :permission="infoStore.permission"
+        :className="infoStore.className"
+      />
     </v-card-text>
     <v-card-actions>
       <v-btn @click="pwdDialog = true">修改密码</v-btn>
@@ -68,7 +68,9 @@
   <v-dialog v-model="noticeDialog">
     <v-card>
       <v-card-title>{{ curNoticeTitle }}</v-card-title>
-      <v-card-text>{{ curNoticeText }}</v-card-text>
+      <v-card-text>
+        <pre>{{ curNoticeText }}</pre>
+      </v-card-text>
     </v-card>
   </v-dialog>
 
@@ -109,7 +111,7 @@
 <script lang="ts">
 import { useInfoStore } from "@/stores";
 import { fApi, type SingleNotice, type NoticeBody } from "@/apis";
-import { Categ, getCategName } from "@/apis/types/enums";
+import { Categ } from "@/apis/types/enums";
 import { mapStores } from "pinia";
 import router from "@/router";
 import { applyNavItems } from "@/utils/nav";
@@ -117,9 +119,13 @@ import { md5 } from "@/utils/md5";
 import { NOT_EMPTY } from "@/utils/validation";
 import { toasts } from "@/utils/dialogs";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
+import PermissionChips from "@/components/permission-chips.vue";
 
 export default {
   name: "me",
+  components: {
+    PermissionChips,
+  },
   data() {
     return {
       noticeDialog: false,
@@ -162,15 +168,7 @@ export default {
     },
     showNotice(notice: NoticeBody) {
       this.curNoticeTitle = notice.title;
-      let s = "";
-      for (const c of notice.content) {
-        if (c == "\n") {
-          s += "<br />";
-        } else {
-          s += c;
-        }
-      }
-      this.curNoticeText = s;
+      this.curNoticeText = notice.content;
       this.noticeDialog = true;
     },
     logout() {
@@ -192,6 +190,8 @@ export default {
           md5(this.oldPwd),
           md5(this.newPwd)
         )(() => {
+          this.oldPwd = "";
+          this.newPwd = "";
           this.pwdDialog = false;
         });
       }
@@ -199,22 +199,6 @@ export default {
   },
   computed: {
     ...mapStores(useInfoStore),
-    chips(): { id: number; icon: string; content: string }[] {
-      return [
-        {
-          id: 0,
-          icon: "mdi-account-multiple",
-          content: this.infoStore.className,
-        },
-        ...[2, 4, 8, 16, 32, 64, 128]
-          .filter((id) => id & this.infoStore.permission)
-          .map((id) => ({
-            id,
-            icon: "mdi-check-decagram",
-            content: getCategName(id),
-          })),
-      ];
-    },
     timeStatVisible() {
       return this.infoStore.permission & Categ.Student;
     },

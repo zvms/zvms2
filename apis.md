@@ -312,6 +312,24 @@
 "any"
 ```
 
+#### 3.7 getPublicNotice
+[GET] /notice/public  
+**获取公开通知**  
+参数: 
+```json
+"any"
+```
+响应:  
+```json
+[
+    {
+        "title": "string",
+        "content": "string"
+    },
+    "null"
+]
+```
+
 
 ---
 
@@ -412,7 +430,6 @@
                 "name": "string"
             }
         ],
-        "holder": "number",
         "holderName": "string"
     }
 ]
@@ -716,7 +733,7 @@
 
 #### 6.7 finalAudit
 [POST] /thought/<int:volId>/<int:stuId>/audit/final  
-**终审感想(义管会)**  
+**审核感想(义管会)**  
 参数: 
 ```json
 {
