@@ -38,7 +38,9 @@
     </v-card>
     <v-dialog v-if="infoDlg" v-model="infoDlg" persistent fullscreen scrollable>
       <v-card>
-        <v-card-title variant="outlined">{{ current.vol.name }}</v-card-title>
+        <v-card-title variant="outlined"
+          >义工 {{ current.vol.name }} 的详细信息</v-card-title
+        >
 
         <v-card-text>
           <vol-info :vol="current.vol" class="pa-14" />
@@ -55,11 +57,15 @@
       </v-card>
       <v-dialog v-model="thoughtDlg" persistent fullscreen>
         <v-card>
-          <v-card-title outlined>义工感想</v-card-title>
+          <v-card-title>
+            您在义工 {{ current.vol.name }} 的感想
+          </v-card-title>
           <v-card-text>
             感想状态：
             <br />
-            {{ getThoughtStatusName(current.thought!.data.status!!) }}
+            <strong>
+              {{ getThoughtStatusName(current.thought!.data.status!!) }}
+            </strong>
             <span v-if="current.thought!.data.status===ThoughtStatus.Accepted">
               时长{{ current.thought!.data.reward!! }}分钟
             </span>
@@ -130,7 +136,7 @@
             <v-btn v-if="isThoughtModifiable" @click="submitThought"
               >提交</v-btn
             >
-            <v-btn @click="saveThoughtAndClose"
+            <v-btn @click="maySaveThoughtAndClose"
               >{{ isThoughtModifiable ? "保存并" : "" }}关闭</v-btn
             >
           </v-card-actions>
@@ -141,7 +147,7 @@
 </template>
 
 <script lang="ts">
-import { confirm, toasts } from "@/utils/dialogs.js";
+import { confirm, toasts } from "@/utils/dialogs";
 import { Categ } from "@/apis/types/enums";
 import VolInfo from "@/components/vol-info.vue";
 import {
@@ -158,10 +164,9 @@ import { useInfoStore } from "@/stores";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import CryptoJS from "crypto-js";
-import { ArrayBufferToWordArray, getPicsById } from "@/utils/pics.js";
+import { ArrayBufferToWordArray, getPicsById } from "@/utils/pics";
 import { getVolStatusNameForUser } from "@/utils/calc";
 import { baseURL } from "@/plugins/axios";
-import axios from "axios";
 import { resumeScroll, saveScroll } from "@/utils/scrollCtrl";
 
 interface Action {
@@ -395,7 +400,7 @@ export default {
         });
       }
     },
-    async saveThoughtAndClose() {
+    async maySaveThoughtAndClose() {
       if (this.isThoughtModifiable) {
         this.saveThought(() => {
           this.thoughtDlg = false;
@@ -474,23 +479,28 @@ export default {
       }));
     },
     async picsForUpload() {
-      const pics = [];
-      for (const v of this.current.thought!.pics) {
-        if (v.byHash) {
-          pics.push({
-            type: v.type,
-            base64: CryptoJS.enc.Base64.stringify(
-              ArrayBufferToWordArray(await (await fetch(v.url)).arrayBuffer())
-            ),
-          });
-        } else {
-          pics.push({
-            type: v.extName,
-            base64: v.base64,
-          });
+      try {
+        const pics = [];
+        for (const v of this.current.thought!.pics) {
+          if (v.byHash) {
+            pics.push({
+              type: v.type,
+              base64: CryptoJS.enc.Base64.stringify(
+                ArrayBufferToWordArray(await (await fetch(v.url)).arrayBuffer())
+              ),
+            });
+          } else {
+            pics.push({
+              type: v.extName,
+              base64: v.base64,
+            });
+          }
         }
+        return pics;
+      } catch (e: any) {
+        toasts.error(`图片上传失败！原因：${e.message}`);
+        throw e;
       }
-      return pics;
     },
     isThoughtModifiable() {
       return (

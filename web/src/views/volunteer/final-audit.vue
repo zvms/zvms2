@@ -32,13 +32,14 @@
           发放的{{ getVolTypeName(currentVol!.type) }}时长（分钟）
           <v-text-field
             v-model.number="currentReward"
+            type="text"
             prepend-icon="mdi-clock-time-three-outline"
           />
         </v-card-text>
         <v-card-actions>
-          <v-btn color="green" class="action" @click="audit(true)">通过 </v-btn>
-          <v-btn color="red" class="action" @click="audit(false)">打回 </v-btn>
-          <v-btn color="black" class="action" @click="dialog = false">
+          <v-btn color="green" class="action" @click.prevent="audit(true)">通过 </v-btn>
+          <v-btn color="red" class="action" @click.prevent="audit(false)">打回 </v-btn>
+          <v-btn color="black" class="action" @click.prevent="dialog = false">
             关闭
           </v-btn>
         </v-card-actions>
