@@ -1,6 +1,7 @@
 <template>
-  <v-btn small @click="restart">Restart ttyd</v-btn>
-  <v-btn small @click="reload">Reload iframe</v-btn>
+  <v-btn  @click="restart">Restart ttyd</v-btn>
+  <v-btn  @click="reload">Reload iframe</v-btn>
+  <br/>
   <iframe :key="key" class="ttyd" :src="`http://${serverIP}:7681`"></iframe>
 </template>
 <script lang="ts">

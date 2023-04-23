@@ -25,12 +25,12 @@
           <v-divider></v-divider>
           <v-list-item
             v-for="item in navStore.items"
-            :key="item.title"
+            :key="item.info.title"
             :to="item.to"
             link
           >
-            <v-icon :icon="item.icon" small></v-icon>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-icon :icon="item.info.icon" small></v-icon>
+            <v-list-item-title>{{ item.info.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
         <template v-slot:append>

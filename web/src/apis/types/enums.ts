@@ -107,7 +107,7 @@ export function getCategName(id: Categ): string {
         case Categ.Teacher:
             return "教师";
         case Categ.Class:
-            return "班级";
+            return "团支书";
         case Categ.Manager:
             return "管理员";
         case Categ.Auditor:

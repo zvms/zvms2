@@ -192,6 +192,7 @@ export default {
         )(() => {
           this.oldPwd = "";
           this.newPwd = "";
+          this.confirmPwd = "";
           this.pwdDialog = false;
         });
       }

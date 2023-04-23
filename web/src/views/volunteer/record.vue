@@ -102,8 +102,6 @@
 <script lang="ts">
 import {
   fApi,
-  type ClassVol,
-  type SingleClass,
   VolType,
   type SingleUserWithoutAuth,
 } from "@/apis";
@@ -111,7 +109,6 @@ import { NOT_EMPTY, TIME } from "@/utils/validation";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
-import { toasts } from "@/utils/dialogs";
 import { ForegroundApi } from "@/apis/fApi";
 import router from "@/router";
 

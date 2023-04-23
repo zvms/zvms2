@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title> 创建{{advancedOptionsPermission?"":"校内"}}义工 </v-card-title>
+      <v-card-title> 创建{{advancedOptionsPermission?"":"校外"}}义工 </v-card-title>
       <v-card-text>
         <v-form v-model="isFormValid">
           <v-text-field

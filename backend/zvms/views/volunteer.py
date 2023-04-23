@@ -137,7 +137,10 @@ def create_appointed_volunteer(token_data, joiners, **kwargs):
         StuVol(
             stu_id=joiner,
             vol_id=id,
-            status=ThoughtStatus.UNSUBMITTED
+            status=ThoughtStatus.UNSUBMITTED,
+            thought='',
+            reward=-1,
+            reason='',
         ).insert()
     for cls in clses:
         ClassVol(

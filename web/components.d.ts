@@ -8,8 +8,6 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Editor: typeof import('./src/components/markdown/editor.vue')['default']
-    MarkdownEditor: typeof import('./src/components/markdown/markdown-editor.vue')['default']
-    MarkdownViewer: typeof import('./src/components/markdown/markdown-viewer.vue')['default']
     PermissionChips: typeof import('./src/components/permission-chips.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
