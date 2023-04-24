@@ -29,5 +29,8 @@ export default {
     toasts.error(`找不到文档 ${docId}`);
     router.back();
   },
+  computed:{
+    
+  }
 };
 </script>

@@ -242,7 +242,7 @@ export default {
       tab: "one",
     };
   },
-  mounted() {
+  beforeMount() {
     fApi.skipOkToast.listClasses()((classes) => {
       this.classes = [
         {

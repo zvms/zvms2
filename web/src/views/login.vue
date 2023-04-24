@@ -71,7 +71,7 @@ export default {
       publicNotice: null as PublicNotice,
     };
   },
-  mounted() {
+  beforeMount() {
     if (this.infoStore.token && !(this.infoStore.permission & Categ.None)) {
       router.push("/");
     }

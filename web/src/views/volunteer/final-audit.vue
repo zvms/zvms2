@@ -109,7 +109,7 @@ export default {
       currentReward: NaN,
     };
   },
-  mounted() {
+  beforeMount() {
     this.fetchThoughts();
   },
   methods: {

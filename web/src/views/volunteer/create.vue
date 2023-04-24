@@ -140,7 +140,7 @@ export default {
       isFormValid: false,
     };
   },
-  mounted() {
+  beforeMount() {
     if (this.advancedOptionsPermission) {
       fApi.skipOkToast.listClasses()((classes) => {
         this.classes = classes;

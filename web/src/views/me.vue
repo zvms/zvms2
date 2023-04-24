@@ -144,7 +144,7 @@ export default {
       isFormValid: false,
     };
   },
-  mounted() {
+  beforeMount() {
     this.fetchNotices();
     if (this.timeStatVisible) {
       fApi.skipOkToast.getStudentStat(this.infoStore.userId)((stat) => {

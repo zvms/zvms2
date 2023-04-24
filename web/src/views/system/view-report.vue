@@ -58,7 +58,7 @@ export default {
       dialog: false,
     };
   },
-  mounted() {
+  beforeMount() {
     fApi.skipOkToast.fetchReport()((reports) => {
       this.reports = reports.reverse().map((v, i) => ({
         ...v,

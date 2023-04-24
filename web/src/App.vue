@@ -60,7 +60,7 @@ import { mapStores } from "pinia";
 
 export default {
   name: "App",
-  mounted() {
+  beforeMount() {
     applyNavItems();
   },
   computed: {
