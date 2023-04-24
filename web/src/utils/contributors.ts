@@ -30,7 +30,7 @@ Star every repo you find!`,
   },
   {
     displayName: "Solecour",
-    infoHtml: `2021级 黄瀚庭`,
+    infoHtml: `2021级 黄瀚霆`,
   },
   {
     displayName: "dblark",
@@ -62,6 +62,12 @@ export const contributorsV2 = [
 export const contributorsOther = {
   zsz: {
     displayName: "zsz",
-    infoHtml: ``,
+    infoHtml: `2022级 张圣泽
+政宣部成员`,
   },
+  _7086cmd:{
+    displayName:"7086cmd",
+    infoHtml:`蛟川书院 初三 吴承宇<br/>
+github.com/7086cmd`
+  }
 } satisfies Record<string, Contributor>;

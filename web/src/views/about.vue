@@ -38,7 +38,17 @@
           </v-chip>
           开发。
           <br />
-          特别感谢: 7086cmd的前端初始化配置, 以及zsz同学的新版图标设计。
+          特别感谢: <v-chip
+            label
+            small
+            class="ma-1"
+            @click="showContributorInfo(contributorsOther._7086cmd)"
+          >7086cmd</v-chip>的前端初始化配置, 以及<v-chip
+            label
+            small
+            class="ma-1"
+            @click="showContributorInfo(contributorsOther.zsz)"
+          >zsz</v-chip>的新版图标设计。
         </p>
       </v-card-text>
     </v-card>
@@ -80,6 +90,7 @@ import router from "@/router";
 import {
   contributorsV1,
   contributorsV2,
+  contributorsOther,
   type Contributor,
 } from "@/utils/contributors";
 
@@ -95,6 +106,7 @@ export default {
       contributorInfo: undefined as any as Contributor,
       contributorsV1,
       contributorsV2,
+      contributorsOther
     };
   },
   methods: {

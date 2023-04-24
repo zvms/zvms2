@@ -16,10 +16,12 @@ def create_app():
 
     @app.errorhandler(404)
     def handle_404(e):
+        print(e,404)
         return {'type': 'ERROR', 'message': '请求地址错误'}, 404
 
     @app.errorhandler(500)
     def handle_500(e):
+        print(e,500)
         return {'type': 'ERROR', 'message': '服务器内部错误'}, 500
 
     import zvms.tokenlib as tk
