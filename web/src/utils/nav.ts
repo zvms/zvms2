@@ -11,11 +11,13 @@ export function getNavItems(permission: Categ) {
   for (const route of router.getRoutes()) {
     if (route.meta.nav && route.meta.authed(permission))
       items.push({
-        to: route.path,
+        to: route.meta.nav.specifiedPath ?? route.path,
         info: route.meta.nav,
       });
   }
-  return items;
+  return items.sort((v1, v2) => {
+    return v1.info.priority - v2.info.priority;
+  });
 }
 
 export function applyNavItems() {

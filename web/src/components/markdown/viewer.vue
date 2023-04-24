@@ -1,5 +1,5 @@
 <template>
-  <p class="disable-click markdown-viewer" v-html="renderedHTML"></p>
+  <p class="disable-click markdown-viewer" v-html="renderedHtml"></p>
 </template>
 
 <script lang="ts">
@@ -15,7 +15,7 @@ export default {
     },
   },
   computed: {
-    renderedHTML() {
+    renderedHtml() {
       return sanitize(marked(this.markdown));
     },
   },

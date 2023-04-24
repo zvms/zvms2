@@ -3,8 +3,10 @@ import { useInfoStore } from "@/stores";
 import { createRouter, createWebHistory } from "vue-router";
 
 export interface NavItemInfo {
+  priority: number;
   title: string;
   icon: string;
+  specifiedPath?: string; //Overrides route.path
 }
 
 type AuthedFunc = (permission: Categ) => boolean;
@@ -38,8 +40,9 @@ const router = createRouter({
       meta: {
         authed: loginedAuth,
         nav: {
+          priority: 0,
           title: "我的",
-          icon: "mdi-account-circle",
+          icon: "mdi-account-box",
         },
       },
     },
@@ -50,8 +53,9 @@ const router = createRouter({
       meta: {
         authed: unloginedAuth,
         nav: {
+          priority: 0,
           title: "登录",
-          icon: "mdi-account-circle",
+          icon: "mdi-account-box",
         },
       },
     },
@@ -62,6 +66,7 @@ const router = createRouter({
       meta: {
         authed: loginedAuth,
         nav: {
+          priority: 1,
           title: "义工列表",
           icon: "mdi-format-list-text",
         },
@@ -74,6 +79,7 @@ const router = createRouter({
       meta: {
         authed: loginedAuth,
         nav: {
+          priority: 2,
           title: "创建义工",
           icon: "mdi-folder-multiple-plus",
         },
@@ -86,6 +92,7 @@ const router = createRouter({
       meta: {
         authed: createHasAuth(Categ.Manager | Categ.System | Categ.Auditor),
         nav: {
+          priority: 3,
           title: "记录义工",
           icon: "mdi-folder-multiple-plus",
         },
@@ -98,8 +105,9 @@ const router = createRouter({
       meta: {
         authed: createHasAuth(Categ.System | Categ.Auditor),
         nav: {
+          priority: 4,
           title: "审核感想",
-          icon: "mdi-check-circle",
+          icon: "mdi-checkbox-multiple-marked",
         },
       },
     },
@@ -110,8 +118,23 @@ const router = createRouter({
       meta: {
         authed: createHasAuth(Categ.System | Categ.Manager),
         nav: {
+          priority: 5,
           title: "创建通知",
           icon: "mdi-message-draw",
+        },
+      },
+    },
+    {
+      path: "/docs/:docId",
+      name: "docs",
+      component: () => import("../views/docs/index.vue"),
+      meta: {
+        authed: anyAuth,
+        nav: {
+          priority: 100,
+          title: "帮助",
+          icon: "mdi-help-box-multiple",
+          specifiedPath:"/docs/index"
         },
       },
     },
@@ -122,8 +145,9 @@ const router = createRouter({
       meta: {
         authed: anyAuth,
         nav: {
+          priority: 100,
           title: "关于我们",
-          icon: "mdi-information",
+          icon: "mdi-information-box",
         },
       },
     },
@@ -134,6 +158,7 @@ const router = createRouter({
       meta: {
         authed: createHasAuth(Categ.System),
         nav: {
+          priority: 20,
           title: "TTYD",
           icon: "mdi-powershell",
         },
@@ -146,6 +171,7 @@ const router = createRouter({
       meta: {
         authed: createHasAuth(Categ.System),
         nav: {
+          priority: 21,
           title: "查看反馈",
           icon: "mdi-comment-quote",
         },

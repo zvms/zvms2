@@ -14,16 +14,35 @@
       <v-card-title>关于开发者</v-card-title>
       <v-card-text>
         <p style="font-size: larger">
-          本项目初版由 neko_moyi &amp; Zecyel &amp; fpc5719 &amp; So1aric &amp;
-          Solecour &amp; dblark 开发。
+          本项目初版由
+          <v-chip
+            label
+            small
+            class="ma-1"
+            v-for="c in contributorsV1"
+            @click="showContributorInfo(c)"
+          >
+            {{ c.displayName }}
+          </v-chip>
+          开发。
           <br />
-          新版由 qnc &amp; _Kerman_xtr &amp; clc 开发。
+          新版由
+          <v-chip
+            label
+            small
+            class="ma-1"
+            v-for="c in contributorsV2"
+            @click="showContributorInfo(c)"
+          >
+            {{ c.displayName }}
+          </v-chip>
+          开发。
           <br />
           特别感谢: 7086cmd的前端初始化配置, 以及zsz同学的新版图标设计。
         </p>
       </v-card-text>
     </v-card>
-    <v-card v-if="!(infoStore.permission&Categ.None)">
+    <v-card v-if="!(infoStore.permission & Categ.None)">
       <v-card-title>反馈错误</v-card-title>
       <v-card-text>
         <v-form v-model="isFormValid">
@@ -41,6 +60,14 @@
       </v-card-text>
     </v-card>
   </v-container>
+  <v-dialog v-model="contributorInfoDlg">
+    <v-card>
+      <v-card-title>
+        关于 {{ contributorInfo.displayName  }}
+      </v-card-title>
+      <v-card-text v-html="contributorInfo.infoHtml"></v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -50,6 +77,11 @@ import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { toasts } from "@/utils/dialogs";
 import router from "@/router";
+import {
+  contributorsV1,
+  contributorsV2,
+  type Contributor,
+} from "@/utils/contributors";
 
 export default {
   name: "report",
@@ -59,12 +91,16 @@ export default {
       report: "",
       rules: [NOT_EMPTY()],
       isFormValid: false,
+      contributorInfoDlg: false,
+      contributorInfo: undefined as any as Contributor,
+      contributorsV1,
+      contributorsV2,
     };
   },
   methods: {
     submitReport() {
       if (this.isFormValid) {
-        if(this.report.length>199){
+        if (this.report.length > 199) {
           toasts.error("抱歉，反馈长度过长！");
           return;
         }
@@ -73,11 +109,15 @@ export default {
         });
       }
     },
+    showContributorInfo(c: Contributor) {
+      this.contributorInfo = c;
+      this.contributorInfoDlg = true;
+    },
   },
-  computed:{
-    ...mapStores(useInfoStore)
-  }
-} ;
+  computed: {
+    ...mapStores(useInfoStore),
+  },
+};
 </script>
 <style scoped>
 .f {

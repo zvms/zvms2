@@ -91,10 +91,19 @@ def modify_notice(id, title, content, deadtime, token_data):
     )
     return success('修改成功')
 
+public_notice_title = ""
+public_notice_content = ""
+
+def load_public_notice():
+    global public_notice_title, public_notice_content
+    with open(PUBLIC_NOTICE_PATH,'rt',-1,'utf-8') as f:
+        public_notice_title = f.readline()
+        public_notice_content = f.read()
+        print("Public notice loaded.")
+
+load_public_notice()
+
 @Api(rule='/notice/public', method='GET', response='PublicNotice', auth=Categ.NONE)
 def get_public_notice(token_data):
     '''获取公开通知'''
-    with open(PUBLIC_NOTICE_PATH,'rt') as f:
-        title = f.readline()
-        content = f.read()
-        return success('获取公开通知成功', title=title, content=content)
+    return success('获取公开通知成功', title=public_notice_title, content=public_notice_content)

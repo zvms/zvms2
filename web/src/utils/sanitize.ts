@@ -89,6 +89,6 @@ export function sanitize(dirtyContent: string) {
       "meta",
     ],
   };
-  const cleanHTML = sanitizeHtml(dirtyContent, rule);
-  return cleanHTML;
+  const cleanHtml = sanitizeHtml(dirtyContent, rule);
+  return cleanHtml;
 }
