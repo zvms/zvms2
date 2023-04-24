@@ -131,7 +131,7 @@ const router = createRouter({
       meta: {
         authed: anyAuth,
         nav: {
-          priority: 100,
+          priority: 99,
           title: "帮助",
           icon: "mdi-help-box-multiple",
           specifiedPath:"/docs/index"
