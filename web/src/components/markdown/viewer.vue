@@ -1,10 +1,14 @@
 <template>
-  <p class="disable-click markdown-viewer" v-html="renderedHtml"></p>
+  <article
+    class="markdown-body disable-click markdown-viewer"
+    v-html="renderedHtml"
+  ></article>
 </template>
 
 <script lang="ts">
 import { sanitize } from "@/utils/sanitize";
 import { marked } from "marked";
+import "github-markdown-css";
 
 export default {
   name: "markdown-viewer",

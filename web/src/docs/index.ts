@@ -1,18 +1,11 @@
-import index from "./content";
+import * as content from './content';
 
 export type DocContent = string;
-
-// Raw doc data
-export interface Doc {
-  name: string;
-  title: string;
-  content: DocContent;
-  children: Doc[];
-}
 
 export interface DocItem {
   name: string;
   path: string[];
+  urlPath: string;
   title: string;
   content: DocContent;
   children: DocItem[];
@@ -20,27 +13,28 @@ export interface DocItem {
 
 type DocIndex = Record<string, DocItem>;
 
-export function generateDoc(
-  doc: Doc,
+function generateDoc(
+  doc: DocModule,
   currentPath: string[],
-  index: DocIndex
+  docIndex: DocIndex
 ): DocItem {
   const docItem = {
-    name: doc.name,
+    name: doc.attributes.name,
     path: currentPath,
-    title: doc.title,
-    content: doc.content,
-    children: doc.children.map((c) =>
-      generateDoc(c, currentPath.concat([doc.name]), index)
-    ),
+    urlPath: `/docs/${doc.attributes.name}`,
+    title: doc.attributes.title,
+    content: doc.html,
+    children: doc.children?.map((c) =>
+      generateDoc(c, currentPath.concat([doc.attributes.name]), docIndex)
+    ) ?? [],
   } satisfies DocItem;
-  index[doc.name] = docItem;
+  docIndex[doc.attributes.name] = docItem;
   return docItem;
 }
 
 export function generateDocs(): DocIndex {
   let docIndex: DocIndex = {};
-  generateDoc(index, [], docIndex);
+  generateDoc(content, [], docIndex);
   return docIndex;
 }
 

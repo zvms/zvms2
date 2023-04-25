@@ -4,6 +4,7 @@
     @update:modelValue="updateModelValue"
     :toolbars="toolbars"
     :sanitize="sanitize"
+    previewTheme="github"
   />
 </template>
 

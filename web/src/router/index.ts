@@ -127,7 +127,7 @@ const router = createRouter({
     {
       path: "/docs/:docId",
       name: "docs",
-      component: () => import("../views/docs/index.vue"),
+      component: () => import("../views/docs.vue"),
       meta: {
         authed: anyAuth,
         nav: {

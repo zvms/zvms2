@@ -1,13 +1,5 @@
-import type { Doc } from "@/docs";
-import auditor from "./auditor";
+export * from "./content.md";
 
-const index = {
-    name: "index",
-  title: "帮助文档",
-  content: "1222",
-  children: [
-    auditor
-  ],
-} satisfies Doc;
+import * as auditor from "./auditor";
 
-export default index;
+export const children = [auditor];
