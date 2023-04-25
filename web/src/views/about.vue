@@ -48,7 +48,12 @@
             small
             class="ma-1"
             @click="showContributorInfo(contributorsOther.zsz)"
-          >zsz</v-chip>的新版图标设计。
+          >zsz</v-chip>的新版图标设计和<v-chip
+            label
+            small
+            class="ma-1"
+            @click="showContributorInfo(contributorsOther.zjr)"
+          >zjr</v-chip>的疯狂测试。
         </p>
       </v-card-text>
     </v-card>

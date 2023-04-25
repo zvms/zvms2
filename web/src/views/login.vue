@@ -25,7 +25,7 @@
           autocomplete="userid"
           v-model="form.userId"
           :rules="rules"
-          label="学号/ID"
+          label="ID/学号 &nbsp;&nbsp; e.g. 20221145"
         />
         <v-text-field
           type="password"

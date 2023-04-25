@@ -11,7 +11,7 @@ export const toasts = {
       toast: true,
       position: "bottom-end",
       showConfirmButton: false,
-      timer: 4000,
+      timer: 7000,
     });
   },
   success: async (msg: string) => {

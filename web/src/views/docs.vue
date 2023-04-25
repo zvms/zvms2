@@ -5,18 +5,19 @@
 
     <v-list class="pl-10">
       <v-list-item
-        v-if="hasParent"
+        v-if="currentDoc.parent"
         prepend-icon="mdi-file-document-outline"
         @click="goBack"
       >
-        返回
+        <span class="link-tip">返回</span> {{ currentDoc.parent!.title }}
       </v-list-item>
       <v-list-item
         prepend-icon="mdi-file-document-outline"
         v-for="c in currentDoc.children"
         @click="gotoDoc(c.urlPath)"
-        >{{ c.title }}</v-list-item
       >
+        <span class="link-tip">继续阅读</span> {{ c.title }}
+      </v-list-item>
     </v-list>
   </v-sheet>
 </template>
@@ -34,29 +35,33 @@ export default {
     };
   },
   beforeMount() {
-    this.load();
+    this.load(this.$route.params.docId);
   },
   methods: {
-    load() {
-      const docId = this.$route.params.docId;
+    load(docId: string | string[]): boolean {
       if (
         typeof docId === "string" &&
         docs[docId as keyof typeof docs] !== undefined
       ) {
         this.currentDoc = docs[docId as keyof typeof docs];
-        return;
+        return true;
       }
-      toasts.error(`找不到文档 ${docId}`);
-      router.back();
+      toasts.error(`找不到文档 "${docId}"`);
+      return false;
     },
     gotoDoc(path: string) {
       this.$router.push(path);
-      this.load();
     },
     goBack() {
-      this.$router.back();
-      this.load();
+      this.$router.push(this.currentDoc.parent!.urlPath);
     },
+  },
+  beforeRouteUpdate(to, _from, next) {
+    if (this.load(to.params.docId)) {
+      next();
+    } else {
+      next("/docs");
+    }
   },
   computed: {
     breadcrumbs() {
@@ -64,17 +69,21 @@ export default {
         .map((p) => ({
           title: docs[p].title,
           disabled: false,
-          href: docs[p].urlPath,
+          to: docs[p].urlPath,
         }))
         .concat({
           title: this.currentDoc.title,
           disabled: true,
-          href: "<NULL>",
+          to: "<NULL>",
         });
-    },
-    hasParent() {
-      return this.currentDoc.path.length > 0;
     },
   },
 };
 </script>
+
+<style scoped>
+.link-tip {
+  color: #555;
+  font-size: smaller;
+}
+</style>

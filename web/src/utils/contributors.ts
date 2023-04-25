@@ -55,7 +55,7 @@ export const contributorsV2 = [
   },
   {
     displayName: "clc",
-    infoHtml: `2022级 陈浏畅`,
+    infoHtml: `2022级 陈浏畅<br/>一只蒟蒻`,
   },
 ] satisfies Contributor[];
 
@@ -65,9 +65,13 @@ export const contributorsOther = {
     infoHtml: `2022级 张圣泽
 政宣部成员`,
   },
-  _7086cmd:{
-    displayName:"7086cmd",
-    infoHtml:`蛟川书院 初三 吴承宇<br/>
-github.com/7086cmd`
-  }
+  _7086cmd: {
+    displayName: "7086cmd",
+    infoHtml: `蛟川书院 初三 吴承宇<br/>
+github.com/7086cmd`,
+  },
+  zjr: {
+    displayName: "zjr",
+    infoHtml: `是周济睿，我想应该不用介绍了、`,
+  },
 } satisfies Record<string, Contributor>;

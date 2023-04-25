@@ -15,6 +15,7 @@ declare module '@vue/runtime-core' {
     ThoughtInfo: typeof import('./src/components/thought-info.vue')['default']
     VApp: typeof import('vuetify/components')['VApp']
     VBreadcrumbs: typeof import('vuetify/components')['VBreadcrumbs']
+    VBreadcrumbsItem: typeof import('vuetify/components')['VBreadcrumbsItem']
     VBtn: typeof import('vuetify/components')['VBtn']
     VCard: typeof import('vuetify/components')['VCard']
     VCardActions: typeof import('vuetify/components')['VCardActions']
