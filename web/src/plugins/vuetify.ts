@@ -3,16 +3,8 @@ import { createVuetify } from "vuetify";
 import { pl, zhHans } from "vuetify/locale";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-import { md1 } from "vuetify/blueprints";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 import "@mdi/font/css/materialdesignicons.css";
-//import { VDataTable } from "vuetify/labs/VDataTable";
-
-/*
-function decToHex(r: number,g: number,b: number) {
-  return '#'+;
-}
-*/
 
 export default createVuetify({
   components: {
