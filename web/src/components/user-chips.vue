@@ -9,7 +9,7 @@
 import { getCategName } from "@/apis";
 
 export default {
-  name: "permission-chips",
+  name: "user-chips",
   props: {
     className: {
       type: String,

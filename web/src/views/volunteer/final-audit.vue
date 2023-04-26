@@ -25,6 +25,7 @@
           <vol-info v-if="currentVol" :vol="currentVol" />
           <thought-info
             v-if="currentThoughtData"
+            :stu-name="currentThoughtInfo!.stuName"
             :thought="currentThoughtData"
             :showWordCount="true"
           />

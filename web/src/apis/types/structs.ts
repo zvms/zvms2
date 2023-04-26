@@ -35,6 +35,7 @@ export type SearchUsersResponse = Array<SingleUser>
 
 export interface UserInfoResponse {
     name: string,
+    school_id: number,
     cls: number,
     auth: number,
     clsName: string
@@ -98,19 +99,6 @@ export interface SingleVolunteer {
 }
 
 export type SearchVolunteersResponse = Array<SingleVolunteer>
-
-export interface VolunteerInfoResponse {
-    name: string,
-    description: string,
-    time: string,
-    status: enums.VolStatus,
-    type: enums.VolType,
-    reward: number,
-    signable: boolean,
-    joiners: Array<SingleUserWithoutAuth>,
-    holder: number,
-    holderName: string
-}
 
 export interface SearchNotices {
     sender?: number,
@@ -219,6 +207,10 @@ export interface ClassVol {
     max: number
 }
 
+export interface ClassVolWithName extends ClassVol {
+    name: string
+}
+
 export interface SearchVolunteers {
     holder?: number,
     student?: number,
@@ -238,6 +230,20 @@ export interface VolunteerBody {
 
 export interface Volunteer extends VolunteerBody {
     classes: Array<ClassVol>
+}
+
+export interface VolunteerInfoResponse {
+    name: string,
+    description: string,
+    time: string,
+    status: enums.VolStatus,
+    type: enums.VolType,
+    reward: number,
+    signable: boolean,
+    classes: Array<ClassVolWithName>,
+    joiners: Array<SingleUserWithoutAuth>,
+    holder: number,
+    holderName: string
 }
 
 export interface AppointedVolunteer extends VolunteerBody {

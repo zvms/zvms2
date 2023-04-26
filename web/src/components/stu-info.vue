@@ -1,14 +1,12 @@
 <template>
-  <p>
-  {{ student.name }}
-</p>
-  <permission-chips :permission="student.auth" :className="student.clsName" />
+  <p>{{ student.name }} （{{ student.school_id }}）</p>
+  <user-chips :permission="student.auth" :className="student.clsName" />
 </template>
 
 <script lang="ts">
 import type { PropType } from "vue";
 import type { UserInfoResponse } from "@/apis";
-import PermissionChips from "./permission-chips.vue";
+import PermissionChips from "./user-chips.vue";
 
 export default {
   name: "stu-info",
@@ -18,10 +16,7 @@ export default {
       type: Object as PropType<UserInfoResponse>,
       required: true,
     },
-  },
-  data() {
-    return {};
-  },
+  }
 };
 </script>
 <style scoped>

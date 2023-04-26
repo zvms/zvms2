@@ -49,7 +49,7 @@ class User(ModelMixIn, db.Model):
     def __filter_thoughts(self, type):
         return sum(select_value(filter(lambda sv: Volunteer.query.get(sv.vol_id).
             type == type,
-            StuVol.query.filter_by(stu_id=self.id, status=VolStatus.AUDITED)), 'reward'))
+            StuVol.query.filter_by(stu_id=self.id, status=ThoughtStatus.ACCEPTED)), 'reward'))
 
     @property
     def inside(self):
@@ -107,6 +107,10 @@ class Volunteer(ModelMixIn, db.Model):
     @property
     def holder(self):
         return User.query.get(self.holder_id)
+    
+    @property
+    def classes(self):
+        return list(ClassVol.query.filter_by(vol_id=self.id).select('max', id='cls_id'))
 
 
 class StuVol(ModelMixIn, db.Model):

@@ -83,9 +83,9 @@ def deco(impl, params, response, auth):
             with open('log.txt', 'a', encoding='utf-8') as f:
                 if auth != Categ.NONE:
                     print(f'({token_data["id"]})', end=' ')
-                    f.write(f'({token_data["id"]}) ')
+                    f.write(f'USER{token_data["id"]} ')
                 print(f'[{datetime.datetime.now()}] {request.method} {request.url}')
-                f.write(f'[{datetime.datetime.now()}] {request.method} {request.url}\n')
+                f.write(f'IP{request.remote_addr} [{datetime.datetime.now()}] {request.method} {request.path}\n')
             # if not params.check(json_data):
             #     return interface_error(params, json_data), jsonHeader
             check(params, json_data, '传入的数据错误')

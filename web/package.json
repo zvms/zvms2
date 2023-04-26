@@ -17,6 +17,7 @@
     "lxgw-wenkai-lite-webfont": "^1.7.0",
     "marked": "^4.3.0",
     "md-editor-v3": "^2.11.2",
+    "mermaid": "^10.1.0",
     "pinia": "^2.0.35",
     "pinia-plugin-persist": "^1.0.0",
     "sanitize-html": "^1.27.5",

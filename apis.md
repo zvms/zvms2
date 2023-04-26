@@ -71,6 +71,7 @@
 ```json
 {
     "name": "string",
+    "school_id": "number",
     "cls": "number",
     "auth": "number",
     "clsName": "string"
@@ -452,6 +453,13 @@
     "type": "VolType",
     "reward": "number",
     "signable": "boolean",
+    "classes": [
+        {
+            "name": "string",
+            "id": "number",
+            "max": "number"
+        }
+    ],
     "joiners": [
         {
             "id": "number",

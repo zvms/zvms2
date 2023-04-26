@@ -103,7 +103,7 @@ const router = createRouter({
       name: "volunteerFinalAudit",
       component: () => import("../views/volunteer/final-audit.vue"),
       meta: {
-        authed: createHasAuth(Categ.System | Categ.Auditor),
+        authed: createHasAuth(Categ.System | Categ.Manager | Categ.Auditor),
         nav: {
           priority: 4,
           title: "审核感想",
@@ -134,7 +134,7 @@ const router = createRouter({
           priority: 99,
           title: "帮助",
           icon: "mdi-help-box-multiple",
-          specifiedPath:"/docs/index"
+          specifiedPath: "/docs/index",
         },
       },
     },

@@ -447,6 +447,16 @@ export default {
             }
           },
         });
+        // result.push({
+        //   text: "禁止报名",
+        //   onclick: async () => {
+        //     if (await confirm("确定？")) {
+        //       fApi.repulseVolunteer(this.current.singleVol.id)(() => {
+        //         this.fetchVols();
+        //       });
+        //     }
+        //   },
+        // });
       }
       result.push({
         text: "关闭",

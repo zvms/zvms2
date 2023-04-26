@@ -53,7 +53,7 @@ export function getThoughtStatusName(id: ThoughtStatus): string {
         case ThoughtStatus.WaitingForSignupAudit:
             return "等待报名审核";
         case ThoughtStatus.Unsubmitted:
-            return "未填写";
+            return "未提交";
         case ThoughtStatus.Draft:
             return "草稿";
         case ThoughtStatus.WaitingForFirstAudit:

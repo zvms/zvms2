@@ -82,7 +82,7 @@ def search_users(token_data, name=None, cls=None, auth=None):
 def get_user_info(id, token_data):
     '''获取一个用户的详细详细信息'''
     user = User.query.get_or_error(id)
-    return success('获取成功', **user.select('name', 'auth', cls='cls_id'), clsName=user.cls.name)
+    return success('获取成功', **user.select('name', 'auth', cls='cls_id'), clsName=user.cls.name, school_id=id)
 
 @Api(rule='/user/<int:id>/time', response='StudentStatResponse')
 def get_student_stat(id, token_data):

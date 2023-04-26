@@ -6,7 +6,7 @@
       <span
         style="
           font-size: x-large;
-          color: #999;
+          color: #AAA;
           text-align: right;
           float: right;
           transform: translateY(5px);
@@ -16,7 +16,7 @@
       </span>
     </v-card-title>
     <v-card-text>
-      <permission-chips
+      <user-chips
         :permission="infoStore.permission"
         :className="infoStore.className"
       />
@@ -119,7 +119,7 @@ import { md5 } from "@/utils/md5";
 import { NOT_EMPTY } from "@/utils/validation";
 import { toasts } from "@/utils/dialogs";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
-import PermissionChips from "@/components/permission-chips.vue";
+import PermissionChips from "@/components/user-chips.vue";
 
 export default {
   name: "me",

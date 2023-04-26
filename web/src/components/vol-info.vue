@@ -10,7 +10,7 @@
         <div>{{ vol.description }}</div>
       </v-list-item>
       <v-list-item>
-        <v-list-item-title>时间</v-list-item-title>
+        <v-list-item-title>进行时间</v-list-item-title>
         {{ vol.time }}
       </v-list-item>
       <v-list-item>
@@ -28,14 +28,16 @@
           vol.holderName
         }}</v-chip>
       </v-list-item>
-      <!-- <v-list-item>
-        <v-list-item-title>参与者（{{ vol.joiners.length }}人）</v-list-item-title>
-        <v-list-item-title v-for="j in vol.joiners">{{ j.name }}</v-list-item-title>
-      </v-list-item> -->
-      <!-- <v-list-item>
-          <v-list-item-title>人数</v-list-item-title>
-          {{ vol.maxJoiner }}
-        </v-list-item> -->
+      <v-list-item>
+        <v-list-item-title>报名情况</v-list-item-title>
+        <p
+          v-if="volClassesNormalized.length > 0"
+          v-for="c in volClassesNormalized"
+        >
+          {{ c.name }} : {{ c.max }}
+        </p>
+        <p v-else>是已经确定成员的义工，无需报名</p>
+      </v-list-item>
       <v-list-item>
         <v-list-item-title>
           已报名（{{ vol.joiners.length }}人）
@@ -110,6 +112,9 @@ export default {
   },
   computed: {
     ...mapStores(useInfoStore),
+    volClassesNormalized() {
+      return this.vol.classes.filter((v) => v.max > 0);
+    },
   },
 };
 </script>

@@ -23,7 +23,9 @@ export default defineConfig({
     legacy({
       targets: ["defaults"],
     }),
-    mdPlugin({ mode: [Mode.HTML] }),
+    mdPlugin({ 
+      mode: [Mode.HTML]
+     }),
   ],
   resolve: {
     alias: {

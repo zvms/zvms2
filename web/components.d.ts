@@ -8,14 +8,13 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Editor: typeof import('./src/components/markdown/editor.vue')['default']
-    PermissionChips: typeof import('./src/components/permission-chips.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StuInfo: typeof import('./src/components/stu-info.vue')['default']
     ThoughtInfo: typeof import('./src/components/thought-info.vue')['default']
+    UserChips: typeof import('./src/components/user-chips.vue')['default']
     VApp: typeof import('vuetify/components')['VApp']
     VBreadcrumbs: typeof import('vuetify/components')['VBreadcrumbs']
-    VBreadcrumbsItem: typeof import('vuetify/components')['VBreadcrumbsItem']
     VBtn: typeof import('vuetify/components')['VBtn']
     VCard: typeof import('vuetify/components')['VCard']
     VCardActions: typeof import('vuetify/components')['VCardActions']

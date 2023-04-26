@@ -24,9 +24,9 @@
 
 <script lang="ts">
 import { docs, type DocItem } from "@/docs";
-import router from "@/router";
 import { toasts } from "@/utils/dialogs";
 import "github-markdown-css";
+import mermaid from "mermaid";
 
 export default {
   data() {
@@ -36,6 +36,12 @@ export default {
   },
   beforeMount() {
     this.load(this.$route.params.docId);
+  },
+  mounted() {
+    this.renderMermaid();
+  },
+  updated() {
+    this.renderMermaid();
   },
   methods: {
     load(docId: string | string[]): boolean {
@@ -48,6 +54,11 @@ export default {
       }
       toasts.error(`找不到文档 "${docId}"`);
       return false;
+    },
+    renderMermaid() {
+      mermaid.run({
+        querySelector: ".language-mermaid",
+      });
     },
     gotoDoc(path: string) {
       this.$router.push(path);

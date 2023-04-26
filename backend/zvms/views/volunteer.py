@@ -73,6 +73,7 @@ def get_volunteer_info(id, token_data):
         'time',
         'status',
         'description',
+        'classes',
         holder=rpartial(getattr, 'id'),
         holderName=('holder', rpartial(getattr, 'name'))
     )
@@ -80,6 +81,13 @@ def get_volunteer_info(id, token_data):
     if is_outdated(ret['time']):
         ret['status'] = VolStatus.FINISHED if ret['status'] == VolStatus.AUDITED else VolStatus.DEPRECATED
     ret['time'] = str(ret['time'])
+    classes = []
+    for cls in ret['classes']:
+        classes.append({
+            **cls,
+            'name': Class.query.get_or_error(cls['id']).name
+        })
+    ret['classes'] = classes
     return success('获取成功', **ret)
 
 

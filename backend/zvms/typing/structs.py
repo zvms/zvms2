@@ -30,6 +30,7 @@ SearchUsersResponse = Array(SingleUser())
 
 class UserInfoResponse(Object):
     name = String
+    school_id = Int
     cls = Int
     auth = Int
     clsName = String
@@ -85,18 +86,6 @@ class SingleVolunteer(Object):
     holderName = String
     
 SearchVolunteersResponse = Array(SingleVolunteer())
-
-class VolunteerInfoResponse(Object):
-    name = String
-    description = String
-    time = String
-    status = Enum(VolStatus)
-    type = Enum(VolType)
-    reward = Int
-    signable = Boolean
-    joiners = Array(SingleUserWithoutAuth())
-    holder = Int
-    holderName = String
 
 class SearchNotices(Optional):
     sender = Parsable(Int)
@@ -185,7 +174,10 @@ class Users(Object):
 class ClassVol(Object):
     id = Int
     max = Int
-    
+
+class ClassVolWithName(ClassVol):
+    name = String
+
 class SearchVolunteers(Optional):
     holder = Parsable(Int)
     student = Parsable(Int)
@@ -203,6 +195,20 @@ class VolunteerBody(Object):
 
 class Volunteer(VolunteerBody):
     classes = Array(ClassVol())
+
+class VolunteerInfoResponse(Object):
+    name = String
+    description = String
+    time = String
+    status = Enum(VolStatus)
+    type = Enum(VolType)
+    reward = Int
+    signable = Boolean
+    classes = Array(ClassVolWithName())
+    joiners = Array(SingleUserWithoutAuth())
+    holder = Int
+    holderName = String
+
 
 class AppointedVolunteer(VolunteerBody):
     joiners = Array(Int)

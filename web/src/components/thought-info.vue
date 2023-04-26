@@ -2,7 +2,7 @@
   <v-list>
     <v-list-item>
       <v-list-item-title>
-        感想
+        {{stuName}} 的感想
         <span v-if="showWordCount" style="font-size: medium">
           &emsp;&emsp;中文字数：{{ getWordCount(thought.thought ?? "") }}
         </span>
@@ -51,6 +51,10 @@ export default {
     MarkdownViewer,
   },
   props: {
+    stuName: {
+      type: String,
+      required: true,
+    },
     thought: {
       type: Object as PropType<ThoughtInfoResponse>,
       required: true,
