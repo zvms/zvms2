@@ -26,7 +26,10 @@ Star every repo you find!`,
   },
   {
     displayName: "So1aric",
-    infoHtml: `2021级 沈乐宸`,
+    infoHtml: `<span>2021级 沈乐宸</span><br/>
+    Linux enthusiast.<br/>
+    <img src="https://img.shields.io/badge/-@So1aric-181717?style=for-the-badge&logo=github&logoColor=white"/><br/>
+    <img src="src/assets/slcw.webp" width="130"/>`,
   },
   {
     displayName: "Solecour",
