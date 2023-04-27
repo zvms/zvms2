@@ -19,6 +19,9 @@ def check(checker: Checker, json, msg: str):
         ex.message = msg
         raise ex
 
+def is_outdated(time):
+    return time is None or time < datetime.datetime.now()
+
 db = None
 
 def init_util(_db):

@@ -700,7 +700,7 @@ export class ForegroundApi {
     );
   }
   /**
-   * ## 审核义工(班内)
+   * ## 审核通过义工
    * ### [POST] /volunteer/<int:id>/audit
    * #### 权限: Class | Teacher
    * @param id
@@ -712,6 +712,23 @@ export class ForegroundApi {
       this,
       "POST",
       `/volunteer/${id}/audit`, {
+        
+      }
+    );
+  }
+  /**
+   * ## 审核打回义工
+   * ### [POST] /volunteer/<int:id>/repulse
+   * #### 权限: Class | Teacher
+   * @param id
+   */
+  repulseVolunteer(
+    id: number
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/volunteer/${id}/repulse`, {
         
       }
     );
@@ -859,7 +876,7 @@ export class ForegroundApi {
    * @param stuId
    * @param reason
    */
-  repulse(
+  repulseThought(
     volId: number,
     stuId: number,
     reason: string

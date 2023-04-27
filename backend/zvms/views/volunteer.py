@@ -5,14 +5,9 @@ from zvms.res import *
 from zvms.util import *
 from zvms.apilib import Api
 
-def is_outdated(time):
-    if time is None:
-        return True
-    return time < datetime.datetime.now()
-
 def is_signable(id, time, token_data)->bool:
     cv = ClassVol.query.get((id, token_data['cls']))
-    return not is_outdated(time) and (cv is not None) and (cv.now < cv.max)
+    return not is_outdated(time) and cv is not None and cv.now < cv.max
 
 def is_joiner(joiners:list, me:int):
     return any(x['id']==me for x in joiners)
@@ -21,9 +16,9 @@ def is_joiner(joiners:list, me:int):
 def search_volunteers(token_data, **kwargs):
     '''搜索义工'''
     see_all = token_data['auth'] & (Categ.AUDITOR | Categ.MANAGER | Categ.SYSTEM)
-    conds = []
+    conds = [Volunteer.status != VolStatus.REJECTED]
 
-    def filter_(v):
+    def filter_(_):
         return True
     def filter_2(v):
         if see_all:
@@ -45,19 +40,24 @@ def search_volunteers(token_data, **kwargs):
             conds.append(Volunteer.name.like(f'%{kwargs["name"]}%'))
         if 'status' in kwargs:
             conds.append(Volunteer.status == int(kwargs['status']))
-        if 'signable' in kwargs and kwargs['signable']:
+        if kwargs.get('signable'):
             filter_ = filter_signable
     except ValueError:
         return error('传入的数据错误: 非法的URL参数')
 
     def process_query(query):
-        ret = list_or_error(query.select('id', 'name', 'status', 'time', 'joiners', holder=rpartial(getattr, 'id'), holderName=('holder', rpartial(getattr, 'name'))))
+        ret = list_or_error(query.select(
+            'id',
+            'name',
+            'joiners',
+            time=str,
+            status='calculated_status',
+            holder=rpartial(getattr, 'id'),
+            holderName=('holder', rpartial(getattr, 'name'))
+        ))
         ret = list(filter(filter_, filter(filter_2, ret)))
         for i in ret:
             i['signable'] = is_signable(i['id'], i['time'], token_data)
-            if is_outdated(i['time']):
-                i['status'] = VolStatus.FINISHED if i['status'] == VolStatus.AUDITED else VolStatus.DEPRECATED
-            i['time'] = str(i['time'])
         return success('获取成功', ret)
     return process_query(Volunteer.query.filter(*conds).order_by(Volunteer.id.desc()))
 
@@ -71,15 +71,13 @@ def get_volunteer_info(id, token_data):
         'reward',
         'joiners',
         'time',
-        'status',
         'description',
         'classes',
+        status='calculated_status',
         holder=rpartial(getattr, 'id'),
         holderName=('holder', rpartial(getattr, 'name'))
     )
     ret['signable'] = is_signable(id, ret['time'], token_data)
-    if is_outdated(ret['time']):
-        ret['status'] = VolStatus.FINISHED if ret['status'] == VolStatus.AUDITED else VolStatus.DEPRECATED
     ret['time'] = str(ret['time'])
     classes = []
     for cls in ret['classes']:
@@ -193,7 +191,7 @@ def delete_volunteer(token_data, id):
 
 @Api(rule='/volunteer/<int:id>/audit', method='POST', auth=Categ.CLASS | Categ.TEACHER)
 def audit_volunteer(token_data, id):
-    '''审核义工(班内)'''
+    '''审核通过义工'''
     vol = Volunteer.query.get_or_error(id)
     if (Categ.TEACHER | Categ.CLASS) & token_data['auth']:
         auth_cls(vol.holder.cls_id, token_data)
@@ -211,3 +209,25 @@ def audit_volunteer(token_data, id):
         ).insert().id
     ).insert()
     return success('审核成功')
+
+
+@Api(rule='/volunteer/<int:id>/repulse', method='POST', auth=Categ.CLASS | Categ.TEACHER)
+def repulse_volunteer(token_data, id):
+    '''审核打回义工'''
+    vol = Volunteer.query.get_or_error(id)
+    if (Categ.TEACHER | Categ.CLASS) & token_data['auth']:
+        auth_cls(vol.holder.cls_id, token_data)
+    Volunteer.query.get_or_error(id).update(
+        status=VolStatus.REJECTED
+    )
+    UserNotice(
+        user_id=vol.holder_id,
+        notice_id=Notice(
+            title='义工过审',
+            content=f'您的义工 {vol.name} 已被打回，其他学生无法将看见和报名该义工。',
+            sendtime=datetime.datetime.now(),
+            deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
+            sender=0
+        ).insert().id
+    ).insert()
+    return success('打回成功')

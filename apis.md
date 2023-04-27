@@ -554,7 +554,19 @@
 
 #### 5.7 auditVolunteer
 [POST] /volunteer/<int:id>/audit  
-**审核义工(班内)**  
+**审核通过义工**  
+参数: 
+```json
+"any"
+```
+响应:  
+```json
+"any"
+```
+
+#### 5.8 repulseVolunteer
+[POST] /volunteer/<int:id>/repulse  
+**审核打回义工**  
 参数: 
 ```json
 "any"
@@ -765,7 +777,7 @@
 "any"
 ```
 
-#### 6.8 repulse
+#### 6.8 repulseThought
 [POST] /thought/<int:volId>/<int:stuId>/repulse  
 **打回感想**  
 参数: 

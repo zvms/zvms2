@@ -34,7 +34,7 @@
           v-if="volClassesNormalized.length > 0"
           v-for="c in volClassesNormalized"
         >
-          {{ c.name }} : {{ c.max }}
+          {{ c.name }}：最多可报名{{ c.max }}人
         </p>
         <p v-else>是已经确定成员的义工，无需报名</p>
       </v-list-item>
@@ -54,7 +54,9 @@
       </v-list-item>
       <v-list-item>
         <v-list-item-title>状态</v-list-item-title>
-        {{ getVolStatusNameForUser(infoStore.userId, vol) }}
+        <v-chip :color="getVolStatusDisplayForUser(infoStore.userId, vol)[1]">
+          {{ getVolStatusDisplayForUser(infoStore.userId, vol)[0] }}
+        </v-chip>
         <!-- {{ getVolArrangedName(vol.isArranged) }} -->
       </v-list-item>
     </v-list>
@@ -70,7 +72,7 @@
 </template>
 
 <script lang="ts">
-import { getVolStatusNameForUser, timeToHint } from "@/utils/calc";
+import { getVolStatusDisplayForUser, timeToHint } from "@/utils/calc";
 import {
   fApi,
   type VolunteerInfoResponse,
@@ -97,7 +99,7 @@ export default {
     return {
       timeToHint,
       getVolTypeName,
-      getVolStatusNameForUser,
+      getVolStatusDisplayForUser,
       stuInfoDlg: false,
       stuInfoData: undefined as any as UserInfoResponse,
     };

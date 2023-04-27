@@ -48,17 +48,30 @@ export function timeToHint(a: number) {
   else return mi + "分钟";
 }
 
-export function getVolStatusNameForUser(
+export function getStatusDisplayColor(status: VolStatus) {
+  return {
+    [VolStatus.Unaudited]: "black",
+    [VolStatus.Audited]: "#007700",
+    [VolStatus.Rejected]: "red",
+    [VolStatus.Finished]: "#004400",
+    [VolStatus.Deprecated]: "grey",
+  }[status];
+}
+
+export function getVolStatusDisplayForUser(
   userId: number,
   volunteer: SingleVolunteer | VolunteerInfoResponse
 ) {
   if (volunteer.joiners.findIndex((v) => v.id === userId) !== -1) {
     if (volunteer.status === VolStatus.Audited) {
-      return "已报名";
+      return ["已报名", "brown"];
     }
     if (volunteer.status === VolStatus.Finished) {
-      return "已参与";
+      return ["已参与", "#00FF00"];
     }
   }
-  return getVolStatusName(volunteer.status);
+  return [
+    getVolStatusName(volunteer.status),
+    getStatusDisplayColor(volunteer.status),
+  ];
 }

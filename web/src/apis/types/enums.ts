@@ -20,8 +20,9 @@ export function getVolTypeName(id: VolType): string {
 export enum VolStatus {
     Unaudited = 1,
     Audited = 2,
-    Finished = 3,
-    Deprecated = 4
+    Rejected = 3,
+    Finished = 4,
+    Deprecated = 5
 }
 
 export function getVolStatusName(id: VolStatus): string {
@@ -30,6 +31,8 @@ export function getVolStatusName(id: VolStatus): string {
             return "审核后可报名";
         case VolStatus.Audited:
             return "可报名";
+        case VolStatus.Rejected:
+            return "不可报名";
         case VolStatus.Finished:
             return "已结束";
         case VolStatus.Deprecated:

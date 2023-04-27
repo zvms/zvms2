@@ -23,8 +23,9 @@ ThoughtStatus:
   WaitingForSignupAudit: 等待报名审核
 
 VolStatus:
-  Audited: 可报名
   Unaudited: 审核后可报名
+  Audited: 可报名
+  Rejected: 不可报名
   Finished: 已结束
   Deprecated: 过期未审核
 

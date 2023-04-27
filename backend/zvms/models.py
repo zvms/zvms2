@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, SmallInteger, DateTime, Date
 from flask_sqlalchemy import SQLAlchemy
 
 from zvms.res import *
-from zvms.util import ModelMixIn, select_value, count, init_util, list_or_error
+from zvms.util import ModelMixIn, select_value, count, init_util, list_or_error, is_outdated
 
 db = SQLAlchemy()
 
@@ -111,6 +111,12 @@ class Volunteer(ModelMixIn, db.Model):
     @property
     def classes(self):
         return list(ClassVol.query.filter_by(vol_id=self.id).select('max', id='cls_id'))
+    
+    @property
+    def calculated_status(self):
+        if is_outdated(self.time):
+            return VolStatus.FINISHED if self.status == VolStatus.AUDITED else VolStatus.DEPRECATED
+        return self.status
 
 
 class StuVol(ModelMixIn, db.Model):

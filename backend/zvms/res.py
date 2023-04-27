@@ -9,8 +9,9 @@ class VolType(IntEnum):
 class VolStatus(IntEnum):
     UNAUDITED = 1
     AUDITED = 2
-    FINISHED = 3
-    DEPRECATED = 4
+    REJECTED = 3
+    FINISHED = 4 # Never stored in the database, calculated at runtime
+    DEPRECATED = 5 # Never stored in the database, calculated at runtime
 
 class ThoughtStatus(IntEnum):
     WAITING_FOR_SIGNUP_AUDIT = 1

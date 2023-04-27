@@ -34,6 +34,11 @@
         <template v-slot:body v-if="vols.length === 0">
           <p class="text-center">是空的~</p>
         </template>
+        <template v-slot:item.status="{ item }">
+          <v-chip :color="item.raw.statusColor">
+            {{ item.raw.statusText }}
+          </v-chip>
+        </template>
       </data-table>
     </v-card>
     <v-dialog v-if="infoDlg" v-model="infoDlg" persistent fullscreen scrollable>
@@ -152,7 +157,7 @@ import {
   type SingleVolunteer,
   type ThoughtInfoResponse,
   type VolunteerInfoResponse,
-  type Picture
+  type Picture,
 } from "@/apis";
 import { Categ } from "@/apis/types/enums";
 import MarkdownEditor from "@/components/markdown/editor.vue";
@@ -160,7 +165,7 @@ import MarkdownViewer from "@/components/markdown/viewer.vue";
 import VolInfo from "@/components/vol-info.vue";
 import { baseURL } from "@/plugins/axios";
 import { useInfoStore } from "@/stores";
-import { getVolStatusNameForUser } from "@/utils/calc";
+import { getVolStatusDisplayForUser } from "@/utils/calc";
 import { confirm, toasts } from "@/utils/dialogs";
 import { ArrayBufferToWordArray, getPicsById } from "@/utils/pics";
 import { resumeScroll, saveScroll } from "@/utils/scrollCtrl";
@@ -199,7 +204,6 @@ export default {
         },
         {
           title: "状态",
-          value: "status",
           key: "status",
         },
         {
@@ -302,7 +306,7 @@ export default {
           pics:
             thought.pics?.map((v) => ({
               byHash: true,
-              hash:v.hash,
+              hash: v.hash,
               type: v.type,
               url: `${baseURL}/static/pics/${v.hash}.${v.type}`,
               key: v.hash,
@@ -331,7 +335,7 @@ export default {
           )((result) => {
             this.current.thought!.pics.push({
               byHash: true,
-              hash:result.hash,
+              hash: result.hash,
               type: result.type,
               url: `${baseURL}/static/pics/${result.hash}.${result.type}`,
               key: result.hash,
@@ -447,16 +451,16 @@ export default {
             }
           },
         });
-        // result.push({
-        //   text: "禁止报名",
-        //   onclick: async () => {
-        //     if (await confirm("确定？")) {
-        //       fApi.repulseVolunteer(this.current.singleVol.id)(() => {
-        //         this.fetchVols();
-        //       });
-        //     }
-        //   },
-        // });
+        result.push({
+          text: "禁止报名",
+          onclick: async () => {
+            if (await confirm("确定？")) {
+              fApi.repulseVolunteer(this.current.singleVol.id)(() => {
+                this.fetchVols();
+              });
+            }
+          },
+        });
       }
       result.push({
         text: "关闭",
@@ -469,17 +473,18 @@ export default {
     volsForTable() {
       return this.vols.map((vol) => ({
         ...vol,
-        status: getVolStatusNameForUser(this.infoStore.userId, vol),
+        statusText: getVolStatusDisplayForUser(this.infoStore.userId, vol)[0],
+        statusColor: getVolStatusDisplayForUser(this.infoStore.userId, vol)[1],
       }));
     },
     async picsForUpload() {
       try {
-        const pics:Picture[] = [];
+        const pics: Picture[] = [];
         for (const v of this.current.thought!.pics) {
           if (v.byHash) {
             pics.push({
               type: v.type,
-              hash: v.hash
+              hash: v.hash,
             });
           } else {
             pics.push({

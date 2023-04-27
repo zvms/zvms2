@@ -7,6 +7,31 @@
           <v-icon icon="mdi-reload" size="xsmall" />
         </v-btn>
       </v-card-title>
+      <v-container>
+        <v-row>
+          <v-select
+            x-small
+            prepend-icon=""
+            v-model="status"
+            label="状态筛选"
+            :items="
+              [
+                ThoughtStatus.Accepted,
+                ThoughtStatus.Draft,
+                ThoughtStatus.Unsubmitted,
+                ThoughtStatus.WaitingForFinalAudit,
+              ].map((v) => ({
+                name: getThoughtStatusName(v),
+                id: v,
+              }))
+            "
+            item-title="name"
+            item-value="id"
+            class="pl-5 pr-20"
+            @update:model-value="fetchThoughts"
+          />
+        </v-row>
+      </v-container>
       <data-table
         fixed-header
         :headers="headers"
@@ -38,8 +63,12 @@
           />
         </v-card-text>
         <v-card-actions>
-          <v-btn color="green" class="action" @click.prevent="audit(true)">通过 </v-btn>
-          <v-btn color="red" class="action" @click.prevent="audit(false)">打回 </v-btn>
+          <v-btn color="green" class="action" @click.prevent="audit(true)"
+            >通过
+          </v-btn>
+          <v-btn color="red" class="action" @click.prevent="audit(false)"
+            >打回
+          </v-btn>
           <v-btn color="black" class="action" @click.prevent="dialog = false">
             关闭
           </v-btn>
@@ -64,6 +93,7 @@ import {
   type ThoughtInfoResponse,
   ThoughtStatus,
   type SingleThought,
+  getThoughtStatusName,
 } from "@/apis";
 import { useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
@@ -82,7 +112,8 @@ export default {
     return {
       timeToHint,
       getVolTypeName,
-
+      ThoughtStatus,
+      getThoughtStatusName,
       headers: [
         {
           key: "volName",
@@ -108,6 +139,7 @@ export default {
       currentThoughtInfo: undefined as SingleThought | undefined,
       currentThoughtData: undefined as ThoughtInfoResponse | undefined,
       currentReward: NaN,
+      status: ThoughtStatus.WaitingForFinalAudit,
     };
   },
   beforeMount() {
@@ -115,8 +147,10 @@ export default {
   },
   methods: {
     fetchThoughts() {
+      //
       fApi.skipOkToast.searchThoughts({
-        status: ThoughtStatus.WaitingForFinalAudit,
+        status: this.status,
+        /*status: ThoughtStatus.WaitingForFinalAudit,*/
       })((result: SingleThought[]) => {
         this.thoughts = result;
       });
@@ -156,7 +190,7 @@ export default {
             this.dialog = false;
           });
         } else {
-          fApi.repulse(
+          fApi.repulseThought(
             this.currentThoughtInfo!.volId,
             this.currentThoughtInfo!.stuId,
             ""

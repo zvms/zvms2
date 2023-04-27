@@ -152,7 +152,7 @@ def first_audit(token_data, volId: int, stuId: int):
         user_id=thought.stu_id,
         notice_id=Notice(
             title='感想终审',
-            content=f'您在义工 {thought.vol.name} 提交的感想已通过团支书审核，请等待审计部审核后发放时长。',
+            content=f'您在义工{thought.vol.name}提交的感想已通过团支书审核, 请等待审计部审核后发放时长',
             sendtime=datetime.datetime.now(),
             deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0
@@ -175,7 +175,7 @@ def final_audit(token_data, reward: int, volId: int, stuId: int):
         user_id=thought.stu_id,
         notice_id=Notice(
             title='感想终审',
-            content=f'您在义工 {thought.vol.name} 提交的感想已通过审计部审核, 获得 {reward}分钟 义工时间。',
+            content=f'您在义工{thought.vol.name}提交的感想已通过审计部审核, 获得{reward}分钟义工时间',
             sendtime=datetime.datetime.now(),
             deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0
@@ -185,7 +185,7 @@ def final_audit(token_data, reward: int, volId: int, stuId: int):
 
 
 @Api(rule='/thought/<int:volId>/<int:stuId>/repulse', method='POST', params='Repulse')
-def repulse(token_data, volId: int, stuId: int, reason: str):
+def repulse_thought(token_data, volId: int, stuId: int, reason: str):
     '''打回感想'''
     auth_cls(User.query.get(stuId), token_data)
     thought = StuVol.query.get_or_error((volId, stuId))
@@ -199,7 +199,7 @@ def repulse(token_data, volId: int, stuId: int, reason: str):
         user_id=thought.stu_id,
         notice_id=Notice(
             title='感想终审',
-            content=f'您在义工 {thought.vol.name} 提交的感想已被审计部打回，可以在义工列表中点击该义工，修改感想后重新提交。',
+            content=f'您在义工{thought.vol.name}提交的感想已被审计部打回, 可以在义工列表中点击该义工, 修改感想后重新提交',
             sendtime=datetime.datetime.now(),
             deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0

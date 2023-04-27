@@ -1,3 +1,5 @@
+import slcImage from "@/assets/slcw.webp"
+
 export interface Contributor {
   displayName: string;
   infoHtml: string;
@@ -29,7 +31,7 @@ Star every repo you find!`,
     infoHtml: `<span>2021级 沈乐宸</span><br/>
     Linux enthusiast.<br/>
     <img src="https://img.shields.io/badge/-@So1aric-181717?style=for-the-badge&logo=github&logoColor=white"/><br/>
-    <img src="src/assets/slcw.webp" width="130"/>`,
+    <img src="${slcImage}" width="130"/>`,
   },
   {
     displayName: "Solecour",
@@ -44,7 +46,7 @@ Star every repo you find!`,
 export const contributorsV2 = [
   {
     displayName: "qnc",
-    infoHtml: `2022级 邱念楚`,
+    infoHtml: `2022级 邱念楚 <br/> 关注<a href="http://172.31.2.4:19198">define-syntax.org</a>`,
   },
   {
     displayName: "_Kerman_xtr",
