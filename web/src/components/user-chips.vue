@@ -1,5 +1,5 @@
 <template>
-  <v-chip v-for="chip in chips" :key="chip.id" class="ma-2">
+  <v-chip label v-for="chip in chips" :key="chip.id" class="ma-2">
     <v-icon left>{{ chip.icon }}</v-icon>
     {{ chip.content }}
   </v-chip>

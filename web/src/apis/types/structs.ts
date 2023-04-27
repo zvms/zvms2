@@ -211,6 +211,10 @@ export interface ClassVolWithName extends ClassVol {
     name: string
 }
 
+export interface ListVolunteers {
+    cls?: number
+}
+
 export interface SearchVolunteers {
     holder?: number,
     student?: number,

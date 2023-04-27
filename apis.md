@@ -402,7 +402,36 @@
 ## 5.zvms.views.volunteer
 ### **...**
 
-#### 5.1 searchVolunteers
+#### 5.1 listVolunteers
+[GET] /volunteer/list  
+**列出义工**  
+参数: 
+```json
+{
+    "cls": "number"
+}
+```
+响应:  
+```json
+[
+    {
+        "id": "number",
+        "name": "string",
+        "time": "string",
+        "status": "number",
+        "signable": "boolean",
+        "joiners": [
+            {
+                "id": "number",
+                "name": "string"
+            }
+        ],
+        "holderName": "string"
+    }
+]
+```
+
+#### 5.2 searchVolunteers
 [GET] /volunteer/search  
 **搜索义工**  
 参数: 
@@ -436,7 +465,7 @@
 ]
 ```
 
-#### 5.2 getVolunteerInfo
+#### 5.3 getVolunteerInfo
 [GET] /volunteer/<int:id>  
 **获取一个义工的详细信息**  
 参数: 
@@ -471,7 +500,7 @@
 }
 ```
 
-#### 5.3 createVolunteer
+#### 5.4 createVolunteer
 [POST] /volunteer/create  
 **创建一个义工**  
 参数: 
@@ -495,7 +524,7 @@
 "any"
 ```
 
-#### 5.4 createAppointedVolunteer
+#### 5.5 createAppointedVolunteer
 [POST] /volunteer/create/appointed  
 **创建一个成员全部指定的义工**  
 参数: 
@@ -516,7 +545,7 @@
 "any"
 ```
 
-#### 5.5 modifyVolunteer
+#### 5.6 modifyVolunteer
 [POST] /volunteer/<int:id>/modify  
 **修改义工**  
 参数: 
@@ -540,7 +569,7 @@
 "any"
 ```
 
-#### 5.6 deleteVolunteer
+#### 5.7 deleteVolunteer
 [POST] /volunteer/<int:id>/delete  
 **删除义工**  
 参数: 
@@ -552,7 +581,7 @@
 "any"
 ```
 
-#### 5.7 auditVolunteer
+#### 5.8 auditVolunteer
 [POST] /volunteer/<int:id>/audit  
 **审核通过义工**  
 参数: 
@@ -564,7 +593,7 @@
 "any"
 ```
 
-#### 5.8 repulseVolunteer
+#### 5.9 repulseVolunteer
 [POST] /volunteer/<int:id>/repulse  
 **审核打回义工**  
 参数: 

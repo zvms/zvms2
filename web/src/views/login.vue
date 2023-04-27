@@ -8,7 +8,7 @@
       <div
         style="
           font-size: x-large;
-          color: #AAA;
+          color: #aaa;
           text-align: right;
           margin-bottom: -6px;
           padding-top: 14px;

@@ -5,12 +5,59 @@ from zvms.res import *
 from zvms.util import *
 from zvms.apilib import Api
 
-def is_signable(id, time, token_data)->bool:
+def is_signable(id, time, token_data, now = datetime.datetime.now())->bool:
     cv = ClassVol.query.get((id, token_data['cls']))
-    return not is_outdated(time) and cv is not None and cv.now < cv.max
+    return not is_outdated(time, now) and cv is not None and cv.now < cv.max
 
-def is_joiner(joiners:list, me:int):
+def is_joiner(joiners: list, me: int):
     return any(x['id']==me for x in joiners)
+
+
+@Api(rule='/volunteer/list', params='ListVolunteers', response='SearchVolunteersResponse')
+def list_volunteers(token_data, **kwargs):
+    '''列出义工'''
+    see_all = token_data['auth'] & (Categ.AUDITOR | Categ.MANAGER | Categ.SYSTEM) #type: bool
+
+    def process_query(query):
+        ret = list_or_error(query.select(
+            'id',
+            'name',
+            'joiners',
+            'time',
+            status='calculated_status',
+            holder=rpartial(getattr, 'id'),
+            holderName=('holder', rpartial(getattr, 'name'))
+        ))
+        result = []
+        now  = datetime.datetime.now()
+        for vol in ret:
+            signable = is_signable(vol['id'], vol['time'], token_data, now)
+            if see_all:
+                result.append({
+                    **vol,
+                    'time': str(vol['time']),
+                    'signable': signable
+                })
+            else:
+                myid = token_data['id']
+                if signable or vol['holder']==myid or any(x['id']==myid for x in vol['joiners']):
+                    result.append({
+                        **vol,
+                        'time': str(vol['time']),
+                        'signable': signable
+                    })
+        return success('获取成功', result)
+    
+    conds = []
+    try:
+        if 'cls' in kwargs:
+            conds = [Volunteer.id.in_(ClassVol.query.filter_by(
+                cls_id=int(kwargs['cls'])).select_value('vol_id'))]
+    except ValueError:
+        return error('传入的数据错误: 非法的URL参数')
+    
+    return process_query(Volunteer.query.filter(*conds).order_by(Volunteer.id.desc()))
+
 
 @Api(rule='/volunteer/search', params='SearchVolunteers', response='SearchVolunteersResponse')
 def search_volunteers(token_data, **kwargs):

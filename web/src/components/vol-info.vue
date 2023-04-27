@@ -54,7 +54,7 @@
       </v-list-item>
       <v-list-item>
         <v-list-item-title>状态</v-list-item-title>
-        <v-chip :color="getVolStatusDisplayForUser(infoStore.userId, vol)[1]">
+        <v-chip label :color="getVolStatusDisplayForUser(infoStore.userId, vol)[1]">
           {{ getVolStatusDisplayForUser(infoStore.userId, vol)[0] }}
         </v-chip>
         <!-- {{ getVolArrangedName(vol.isArranged) }} -->

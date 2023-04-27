@@ -35,7 +35,7 @@
           <p class="text-center">是空的~</p>
         </template>
         <template v-slot:item.status="{ item }">
-          <v-chip :color="item.raw.statusColor">
+          <v-chip label :color="item.raw.statusColor">
             {{ item.raw.statusText }}
           </v-chip>
         </template>
@@ -265,23 +265,13 @@ export default {
     fetchVols() {
       this.infoDlg = false;
       this.thoughtDlg = false;
-      fApi.skipOkToast.searchVolunteers({
-        // student:
-        //   this.infoStore.permission &
-        //   (Categ.Class |
-        //     Categ.Manager |
-        //     Categ.Teacher |
-        //     Categ.System |
-        //     Categ.Auditor)
-        //     ? undefined
-        //     : this.infoStore.userId,
+      fApi.skipOkToast.listVolunteers({
         cls:
           this.infoStore.permission &
-          (Categ.Manager | Categ.System | Categ.Auditor)
-            ? this.filter.class === -1
-              ? undefined
-              : this.filter.class
-            : undefined /*this.infoStore.classId*/,
+            (Categ.Manager | Categ.System | Categ.Auditor) &&
+          this.filter.class !== -1
+            ? this.filter.class
+            : undefined,
       })((result) => {
         this.vols = result;
       });

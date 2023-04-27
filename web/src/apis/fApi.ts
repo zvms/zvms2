@@ -555,6 +555,21 @@ export class ForegroundApi {
     );
   }
   /**
+   * ## 列出义工
+   * ### [GET] /volunteer/list
+   * #### 权限: Any
+   * @param kwargs
+   */
+  listVolunteers(
+    kwargs: structs.ListVolunteers
+  ): ForegroundApiRunner<Array<structs.SingleVolunteer>> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/volunteer/list?`+ toURLSearchParams(      kwargs)
+    );
+  }
+  /**
    * ## 搜索义工
    * ### [GET] /volunteer/search
    * #### 权限: Any

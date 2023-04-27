@@ -178,6 +178,9 @@ class ClassVol(Object):
 class ClassVolWithName(ClassVol):
     name = String
 
+class ListVolunteers(Optional):
+    cls = Parsable(Int)
+
 class SearchVolunteers(Optional):
     holder = Parsable(Int)
     student = Parsable(Int)
