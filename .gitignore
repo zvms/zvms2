@@ -7,6 +7,8 @@ dist
 /.backup
 **/venv
 
+web/public/students.txt
+
 # local env files
 .env.local
 .env.*.local

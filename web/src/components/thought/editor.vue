@@ -10,7 +10,7 @@
       <span v-if="thought.status === ThoughtStatus.Accepted">
         时长{{ thought.reward }}分钟
       </span>
-      <span v-if="thought.everRepulsed">
+      <span v-if="thought.everRepulsed&&thought.status == ThoughtStatus.Draft" style="color:red">
         （上次提交被打回，请修改感想后重新提交
         <span v-if="thought.reason">
           ，打回原因：
@@ -20,17 +20,18 @@
       </span>
       <div class="my-3"></div>
       <v-form>
+        感想文字：
         <markdown-editor v-if="isThoughtModifiable" v-model="thought.thought" />
         <markdown-viewer v-else :markdown="thought.thought" label="感想文字" />
         <div class="my-3 divider"></div>
-        感想图片
+        感想图片：
         <v-tabs v-if="isThoughtModifiable" v-model="tab">
           <v-tab value="from-image-bed"> 通过图片ID上传 </v-tab>
           <v-tab value="from-upload"> 从本地上传（学海平板无效） </v-tab>
         </v-tabs>
         <v-window v-if="isThoughtModifiable" v-model="tab">
           <v-window-item value="from-image-bed">
-            <v-text-field label="图片ID" v-model="picsId" />
+            <v-text-field label="图片ID" v-model.trim="picsId" />
             <v-btn @click="uploadFromId" style="border: 1px gray solid">
               上传
             </v-btn>

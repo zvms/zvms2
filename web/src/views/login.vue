@@ -19,18 +19,19 @@
       </div>
     </v-card-title>
     <v-card-text>
-      <v-form v-model="isFormValid">
+      <v-form v-model.trim="isFormValid">
         <v-text-field
           type="text"
           autocomplete="userid"
-          v-model="form.userId"
+          v-model.trim="form.userId"
           :rules="rules"
           label="ID/学号 &nbsp;&nbsp; e.g. 20221145"
         />
+        {{ currentUserName }}
         <v-text-field
           type="password"
           autocomplete="password"
-          v-model="form.password"
+          v-model.trim="form.password"
           :rules="rules"
           label="密码"
           @keyup.native.enter="login"
@@ -69,6 +70,7 @@ export default {
       rules: [NOT_EMPTY()],
       isFormValid: false,
       publicNotice: null as PublicNotice,
+      students: {} as Record<string, string>,
     };
   },
   beforeMount() {
@@ -78,6 +80,9 @@ export default {
     fApi.skipOkToast.getPublicNotice()((result) => {
       this.publicNotice = result;
     });
+    // (async () => {
+    //   this.students = ;
+    // })();
   },
   methods: {
     login() {
@@ -125,6 +130,9 @@ export default {
   },
   computed: {
     ...mapStores(useInfoStore, useLoadingStore),
+    currentUserName() {
+      return "";
+    },
   },
 };
 </script>

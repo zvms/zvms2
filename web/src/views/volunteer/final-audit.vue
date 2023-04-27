@@ -7,7 +7,7 @@
           <v-icon icon="mdi-reload" size="xsmall" />
         </v-btn>
       </v-card-title>
-      <v-container>
+      <v-container class="pb-0">
         <v-row>
           <v-select
             x-small

@@ -7,7 +7,7 @@
           <v-icon icon="mdi-reload" size="xsmall" />
         </v-btn>
       </v-card-title>
-      <v-container>
+      <v-container class="pb-0">
         <v-row>
           <v-select
             v-model="filter.status"
@@ -48,92 +48,6 @@
         "
       />
     </v-dialog>
-    <!-- <v-dialog v-model="thoughtDlg" persistent fullscreen>
-        <v-card>
-          <v-card-title> 您在义工 {{ current.vol.name }} 的感想 </v-card-title>
-          <v-card-text>
-            感想状态：
-            <br />
-            <strong style="font-size: larger">
-              {{ getThoughtStatusName(current.thought!.data.status) }}
-            </strong>
-            <span v-if="current.thought!.data.status===ThoughtStatus.Accepted">
-              时长{{ current.thought!.data.reward }}分钟
-            </span>
-            <span v-if="current.thought!.data.everRepulsed">
-              （上次提交被打回，请修改感想后重新提交
-              <span v-if="current.thought!.data.reason">
-                ，打回原因：
-                {{ current.thought!.data.reason }}
-              </span>
-              ）
-            </span>
-            <div class="my-3"></div>
-            <v-form>
-              <markdown-editor
-                v-if="isThoughtModifiable"
-                v-model="current.thought!.data.thought"
-              />
-              <markdown-viewer
-                v-else
-                :markdown="current.thought!.data.thought"
-                label="感想文字"
-              />
-              <div class="my-3 divider"></div>
-              感想图片
-              <v-tabs v-if="isThoughtModifiable" v-model="tab">
-                <v-tab value="one"> 通过图片ID上传 </v-tab>
-                <v-tab value="two"> 从本地上传（学海平板无效） </v-tab>
-              </v-tabs>
-              <v-window v-if="isThoughtModifiable" v-model="tab">
-                <v-window-item value="one">
-                  <v-text-field label="图片ID" v-model="picsId" />
-                  <v-btn @click="uploadFromId" style="border: 1px gray solid">
-                    上传
-                  </v-btn>
-                </v-window-item>
-                <v-window-item value="two">
-                  <v-file-input
-                    accept="image/*"
-                    @update:model-value="uploadImg"
-                    label="感想图片，支持拖入"
-                  />
-                </v-window-item>
-              </v-window>
-
-              
-              <v-container>
-                <v-row>
-                  <v-col v-for="p,i in current.thought!.pics" :key="p.key">
-                    <v-img
-                      :src="
-                        p.byHash ? p.url : `data:${p.type};base64,${p.base64}`
-                      "
-                      max-width="10em"
-                      outlined
-                    />
-                    <v-btn
-                      v-if="isThoughtModifiable"
-                      color="white"
-                      @click="current.thought!.pics.splice(i, 1)"
-                    >
-                      删除
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn v-if="isThoughtModifiable" @click="submitThought"
-              >提交</v-btn
-            >
-            <v-btn @click="maySaveThoughtAndClose"
-              >{{ isThoughtModifiable ? "保存并" : "" }}关闭</v-btn
-            >
-          </v-card-actions>
-        </v-card>
-      </v-dialog> -->
   </v-container>
 </template>
 

@@ -68,7 +68,7 @@ const router = createRouter({
         nav: {
           priority: 1,
           title: "义工列表",
-          icon: "mdi-format-list-text",
+          icon: "mdi-list-box",
         },
       },
     },
@@ -77,11 +77,11 @@ const router = createRouter({
       name: "myThoughts",
       component: () => import("../views/volunteer/my-thoughts.vue"),
       meta: {
-        authed: createHasAuth(Categ.System),
+        authed: createHasAuth(Categ.Student),
         nav: {
-          priority: 1,
+          priority: 2,
           title: "我的感想",
-          icon: "mdi-format-list-text",
+          icon: "mdi-message-bulleted",
         },
       },
     },
@@ -92,9 +92,9 @@ const router = createRouter({
       meta: {
         authed: loginedAuth,
         nav: {
-          priority: 2,
+          priority: 3,
           title: "创建义工",
-          icon: "mdi-folder-multiple-plus",
+          icon: "mdi-file-document-plus",
         },
       },
     },
@@ -105,7 +105,7 @@ const router = createRouter({
       meta: {
         authed: createHasAuth(Categ.Manager | Categ.System | Categ.Auditor),
         nav: {
-          priority: 3,
+          priority: 4,
           title: "记录义工",
           icon: "mdi-folder-multiple-plus",
         },
@@ -118,7 +118,7 @@ const router = createRouter({
       meta: {
         authed: createHasAuth(Categ.System | Categ.Manager | Categ.Auditor),
         nav: {
-          priority: 4,
+          priority: 5,
           title: "审核感想",
           icon: "mdi-checkbox-multiple-marked",
         },
@@ -131,7 +131,7 @@ const router = createRouter({
       meta: {
         authed: createHasAuth(Categ.System | Categ.Manager),
         nav: {
-          priority: 5,
+          priority: 6,
           title: "创建通知",
           icon: "mdi-message-draw",
         },

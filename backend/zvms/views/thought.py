@@ -30,7 +30,7 @@ def list_student_thoughts(id: int, **kwargs):
             volName='vol_name',
             volTime=('vol_time', str)
         )))
-    return process_query(StuVol.query.filter(*conds))
+    return process_query(StuVol.query.filter(*conds).order_by(StuVol.vol_id.desc()))
 
 
 @Api(rule='/thought/search', params='SearchThoughts', response='SearchThoughtsResponse')
@@ -61,7 +61,7 @@ def search_thoughts(**kwargs):
             volId='vol_id',
             stuName='stu_name',
             volName='vol_name',
-            volTime='vol_time'
+            volTime=('vol_time', str)
         )))
     return process_query(filter(lambda sv: filter_(sv) and sv.vol.status == VolStatus.AUDITED, StuVol.query.filter(*conds)))
 

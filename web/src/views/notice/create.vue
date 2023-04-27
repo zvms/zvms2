@@ -3,23 +3,23 @@
     <v-card>
       <v-card-title> 创建全校通知 </v-card-title>
       <v-card-text>
-        <v-form v-model="isFormValid">
+        <v-form v-model.trim="isFormValid">
           <v-text-field
-            v-model="form.title"
+            v-model.trim="form.title"
             :rules="rules"
             type="text"
             label="通知标题"
             prepend-icon="mdi-pen"
           />
           <v-textarea
-            v-model="form.content"
+            v-model.trim="form.content"
             :rules="rules"
             type="text"
             label="通知内容"
             prepend-icon="mdi-text"
           />
           <v-text-field
-            v-model="form.deadtime"
+            v-model.trim="form.deadtime"
             :rules="[TIME(), ...rules]"
             type="text"
             label="通知自动消失时间（e.g. 23-9-1-10-30表示23年9月1日10时30分）"

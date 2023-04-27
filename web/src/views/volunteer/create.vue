@@ -5,7 +5,7 @@
       <v-card-text>
         <v-form v-model="isFormValid">
           <v-text-field
-            v-model="form.name"
+            v-model.trim="form.name"
             :rules="rules"
             type="text"
             label="义工名称"
@@ -29,9 +29,9 @@
             item-value="value"
             v-model="form.type"
           />
-          <v-container v-if="advancedOptionsPermission" class="p-0">
+          <v-container v-if="advancedOptionsPermission" style="margin-left: -15px;">
             <v-row v-if="unselctedClasses.length > 0">
-              <v-col cols="3">
+              <v-col cols="4">
                 <v-select
                   prepend-icon="mdi-account-group"
                   v-model="classNew"
@@ -41,7 +41,7 @@
                   item-value="id"
                 />
               </v-col>
-              <v-col cols="3">
+              <v-col cols="4">
                 <v-text-field
                   v-model.number="countNew"
                   type="text"
@@ -77,14 +77,14 @@
           />
           <!---->
           <v-text-field
-            v-model="form.time"
+            v-model.trim="form.time"
             :rules="[TIME(), ...rules]"
             type="text"
             label="时间（e.g. 23-9-1-10-30表示23年9月1日10时30分）"
             prepend-icon="mdi-calendar-range"
           />
           <v-textarea
-            v-model="form.description"
+            v-model.trim="form.description"
             :rules="rules"
             type="text"
             label="义工描述"

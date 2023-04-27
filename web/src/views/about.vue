@@ -62,7 +62,7 @@
       <v-card-text>
         <v-form v-model="isFormValid">
           <v-textarea
-            v-model="report"
+            v-model.trim="report"
             :rules="rules"
             label="问题的描述"
             type="text"
