@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, SmallInteger, DateTime, Date
+from sqlalchemy import Column, Integer, String, SmallInteger, DateTime, Boolean
 from flask_sqlalchemy import SQLAlchemy
 
 from zvms.res import *
@@ -127,6 +127,7 @@ class StuVol(ModelMixIn, db.Model):
     status = Column(SmallInteger)
     thought = Column(String(1024))
     reason = Column(String(64))
+    ever_repulsed = Column(Boolean)
     reward = Column(Integer)
 
     @property
@@ -150,6 +151,10 @@ class StuVol(ModelMixIn, db.Model):
     @property
     def vol_name(self):
         return self.vol.name
+    
+    @property
+    def vol_time(self):
+        return self.vol.time
 
 
 class ClassVol(ModelMixIn, db.Model):

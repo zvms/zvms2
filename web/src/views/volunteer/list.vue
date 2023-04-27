@@ -14,7 +14,6 @@
               infoStore.permission &
               (Categ.Manager | Categ.Auditor | Categ.System)
             "
-            x-small
             prepend-icon="mdi-account-group"
             v-model="filter.class"
             label="限定班级"
@@ -43,9 +42,9 @@
     </v-card>
     <v-dialog v-if="infoDlg" v-model="infoDlg" persistent fullscreen scrollable>
       <v-card>
-        <v-card-title variant="outlined"
-          >义工 {{ current.vol.name }} 的详细信息</v-card-title
-        >
+        <v-card-title variant="outlined">
+          义工 {{ current.vol.name }} 的详细信息
+        </v-card-title>
 
         <v-card-text>
           <vol-info :vol="current.vol" class="pa-14" />
@@ -56,8 +55,9 @@
             v-for="(item, index) in actions"
             :key="index"
             @click="item.onclick"
-            >{{ item.text }}</v-btn
           >
+            {{ item.text }}
+          </v-btn>
         </v-card-actions>
       </v-card>
       <v-dialog v-model="thoughtDlg" persistent fullscreen>
@@ -72,10 +72,13 @@
             <span v-if="current.thought!.data.status===ThoughtStatus.Accepted">
               时长{{ current.thought!.data.reward }}分钟
             </span>
-            <span v-if="current.thought!.data.reason">
-              上次的提交被打回的原因：
-              <br />
-              {{ current.thought!.data.reason }}
+            <span v-if="current.thought!.data.everRepulsed">
+              （上次提交被打回，请修改感想后重新提交
+              <span v-if="current.thought!.data.reason">
+                ，打回原因：
+                {{ current.thought!.data.reason }}
+              </span>
+              ）
             </span>
             <div class="my-3"></div>
             <v-form>
@@ -110,7 +113,7 @@
                 </v-window-item>
               </v-window>
 
-              <v-img :src="test" />
+              
               <v-container>
                 <v-row>
                   <v-col v-for="p,i in current.thought!.pics" :key="p.key">
@@ -165,7 +168,7 @@ import MarkdownViewer from "@/components/markdown/viewer.vue";
 import VolInfo from "@/components/vol-info.vue";
 import { baseURL } from "@/plugins/axios";
 import { useInfoStore } from "@/stores";
-import { getVolStatusDisplayForUser } from "@/utils/calc";
+import { getVolStatusDisplayText } from "@/utils/calc";
 import { confirm, toasts } from "@/utils/dialogs";
 import { ArrayBufferToWordArray, getPicsById } from "@/utils/pics";
 import { resumeScroll, saveScroll } from "@/utils/scrollCtrl";
@@ -187,7 +190,6 @@ export default {
   },
   data() {
     return {
-      test: "",
       Categ,
       getThoughtStatusName,
       ThoughtStatus,
@@ -463,8 +465,8 @@ export default {
     volsForTable() {
       return this.vols.map((vol) => ({
         ...vol,
-        statusText: getVolStatusDisplayForUser(this.infoStore.userId, vol)[0],
-        statusColor: getVolStatusDisplayForUser(this.infoStore.userId, vol)[1],
+        statusText: getVolStatusDisplayText(this.infoStore.userId, vol)[0],
+        statusColor: getVolStatusDisplayText(this.infoStore.userId, vol)[1],
       }));
     },
     async picsForUpload() {
@@ -490,10 +492,7 @@ export default {
       }
     },
     isThoughtModifiable() {
-      return (
-        this.current.thought!.data.status == ThoughtStatus.Unsubmitted ||
-        this.current.thought!.data.status == ThoughtStatus.Draft
-      );
+      return this.current.thought!.data.status == ThoughtStatus.Draft;
     },
   },
   watch: {

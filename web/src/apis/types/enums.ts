@@ -44,8 +44,7 @@ export function getVolStatusName(id: VolStatus): string {
 
 export enum ThoughtStatus {
     WaitingForSignupAudit = 1,
-    Unsubmitted = 2,
-    Draft = 3,
+    Draft = 2,
     WaitingForFirstAudit = 4,
     WaitingForFinalAudit = 5,
     Accepted = 6
@@ -55,8 +54,6 @@ export function getThoughtStatusName(id: ThoughtStatus): string {
     switch (id) {
         case ThoughtStatus.WaitingForSignupAudit:
             return "等待报名审核";
-        case ThoughtStatus.Unsubmitted:
-            return "未提交";
         case ThoughtStatus.Draft:
             return "草稿";
         case ThoughtStatus.WaitingForFirstAudit:

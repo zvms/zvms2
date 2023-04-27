@@ -356,19 +356,7 @@
 ]
 ```
 
-#### 4.2 auditSignup
-[POST] /signup/<int:volId>/<int:stuId>/audit  
-**审核一个报名**  
-参数: 
-```json
-"any"
-```
-响应:  
-```json
-"any"
-```
-
-#### 4.3 signup
+#### 4.2 signup
 [POST] /signup/<int:volId>  
 **报名一个义工**  
 参数: 
@@ -384,7 +372,7 @@
 "any"
 ```
 
-#### 4.4 rollback
+#### 4.3 rollback
 [POST] /signup/<int:volId>/<int:stuId>/rollback  
 **撤回一个报名**  
 参数: 
@@ -611,73 +599,27 @@
 ## 6.zvms.views.thought
 ### **...**
 
-#### 6.1 getStudentThoughts
+#### 6.1 listStudentThoughts
 [GET] /thought/student/<int:id>  
-**获取某个学生的感想**  
+**搜索学生感想**  
 参数: 
 ```json
-"any"
+{
+    "status": "ThoughtStatus"
+}
 ```
 响应:  
 ```json
-{
-    "accepted": [
-        {
-            "status": "ThoughtStatus",
-            "reason": "string",
-            "thought": "string",
-            "reward": "number",
-            "pics": [
-                {
-                    "hash": "string",
-                    "type": "string"
-                }
-            ]
-        }
-    ],
-    "unsubmitted": [
-        {
-            "status": "ThoughtStatus",
-            "reason": "string",
-            "thought": "string",
-            "reward": "number",
-            "pics": [
-                {
-                    "hash": "string",
-                    "type": "string"
-                }
-            ]
-        }
-    ],
-    "draft": [
-        {
-            "status": "ThoughtStatus",
-            "reason": "string",
-            "thought": "string",
-            "reward": "number",
-            "pics": [
-                {
-                    "hash": "string",
-                    "type": "string"
-                }
-            ]
-        }
-    ],
-    "unaudited": [
-        {
-            "status": "ThoughtStatus",
-            "reason": "string",
-            "thought": "string",
-            "reward": "number",
-            "pics": [
-                {
-                    "hash": "string",
-                    "type": "string"
-                }
-            ]
-        }
-    ]
-}
+[
+    {
+        "volId": "number",
+        "stuId": "number",
+        "status": "ThoughtStatus",
+        "stuName": "string",
+        "volName": "string",
+        "volTime": "string"
+    }
+]
 ```
 
 #### 6.2 searchThoughts
@@ -700,7 +642,8 @@
         "stuId": "number",
         "status": "ThoughtStatus",
         "stuName": "string",
-        "volName": "string"
+        "volName": "string",
+        "volTime": "string"
     }
 ]
 ```
@@ -716,15 +659,16 @@
 ```json
 {
     "status": "ThoughtStatus",
-    "reason": "string",
     "thought": "string",
-    "reward": "number",
     "pics": [
         {
             "hash": "string",
             "type": "string"
         }
-    ]
+    ],
+    "reward": "number",
+    "everRepulsed": "boolean",
+    "reason": "string"
 }
 ```
 

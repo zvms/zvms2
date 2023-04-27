@@ -73,6 +73,19 @@ const router = createRouter({
       },
     },
     {
+      path: "/volunteer/my-thoughts",
+      name: "myThoughts",
+      component: () => import("../views/volunteer/my-thoughts.vue"),
+      meta: {
+        authed: createHasAuth(Categ.System),
+        nav: {
+          priority: 1,
+          title: "我的感想",
+          icon: "mdi-format-list-text",
+        },
+      },
+    },
+    {
       path: "/volunteer/create",
       name: "volunteerCreate",
       component: () => import("../views/volunteer/create.vue"),

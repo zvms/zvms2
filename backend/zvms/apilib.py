@@ -81,11 +81,13 @@ def deco(impl, params, response, auth):
                 return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"}), jsonHeader
         try:
             with open('log.txt', 'a', encoding='utf-8') as f:
+                t = datetime.datetime.now().replace(microsecond=0)
+                s = f'{t}[{request.remote_addr}]'
                 if auth != Categ.NONE:
-                    print(f'({token_data["id"]})', end=' ')
-                    f.write(f'USER{token_data["id"]} ')
-                print(f'[{datetime.datetime.now()}] {request.method} {request.url}')
-                f.write(f'IP{request.remote_addr} [{datetime.datetime.now()}] {request.method} {request.path}\n')
+                    s+=f'({token_data["id"]})'
+                s+= f'[{request.method}]{request.path}'
+                print(s)
+                f.write(s+'\n')
             # if not params.check(json_data):
             #     return interface_error(params, json_data), jsonHeader
             check(params, json_data, '传入的数据错误')

@@ -3,6 +3,8 @@ import {
   type SingleVolunteer,
   type VolunteerInfoResponse,
   getVolStatusName,
+ThoughtStatus,
+getThoughtStatusName,
 } from "@/apis";
 
 export function timeToHint(a: number) {
@@ -14,7 +16,7 @@ export function timeToHint(a: number) {
   else return mi + "分钟";
 }
 
-export function getStatusDisplayColor(status: VolStatus) {
+export function getVolStatusDisplayColor(status: VolStatus) {
   return {
     [VolStatus.Unaudited]: "black",
     [VolStatus.Audited]: "#007700",
@@ -24,7 +26,7 @@ export function getStatusDisplayColor(status: VolStatus) {
   }[status];
 }
 
-export function getVolStatusDisplayForUser(
+export function getVolStatusDisplayText(
   userId: number,
   volunteer: SingleVolunteer | VolunteerInfoResponse
 ) {
@@ -38,6 +40,17 @@ export function getVolStatusDisplayForUser(
   }
   return [
     getVolStatusName(volunteer.status),
-    getStatusDisplayColor(volunteer.status),
+    getVolStatusDisplayColor(volunteer.status),
   ];
+}
+
+
+export function getThoughtStatusDisplayColor(status: ThoughtStatus) {
+  return {
+    [ThoughtStatus.Draft]: "#007700",
+    [ThoughtStatus.Accepted]: "brown",
+    [ThoughtStatus.WaitingForFinalAudit]: "#33AA33",
+    [ThoughtStatus.WaitingForFirstAudit]: "null",
+    [ThoughtStatus.WaitingForSignupAudit]: "null",
+  }[status];
 }

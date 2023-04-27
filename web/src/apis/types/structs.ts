@@ -48,10 +48,11 @@ export interface PictureResponse {
 
 export interface ThoughtInfoResponse {
     status: enums.ThoughtStatus,
-    reason: string,
     thought: string,
+    pics: Array<PictureResponse>,
     reward: number,
-    pics: Array<PictureResponse>
+    everRepulsed: boolean,
+    reason: string
 }
 
 export interface StudentThoughtsResponse {
@@ -145,22 +146,31 @@ export interface SearchThoughts {
     volunteer?: number
 }
 
+export interface SearchStudentThoughts {
+    status?: enums.ThoughtStatus
+}
+
 export interface SingleThought {
     volId: number,
     stuId: number,
     status: enums.ThoughtStatus,
     stuName: string,
-    volName: string
+    volName: string,
+    volTime: string
 }
 
 export type SearchThoughtsResponse = Array<SingleThought>
 
-export interface ExistedPicture {
+export interface BasePictrure {
+    type: string
+}
+
+export interface ExistedPicture extends BasePictrure {
     hash: string,
     type: string
 }
 
-export interface Base64Picture {
+export interface Base64Picture extends BasePictrure {
     base64: string,
     type: string
 }

@@ -11,15 +11,15 @@ def list_signup(cls, token_data):
     return success('获取成功', list_or_error((sv.select(stu_id='stuId', vol_id='volId', stu_name='stuName', vol_name='volName') for sv in StuVol.query if sv.stu.cls_id == cls)))
 
 
-@Api(rule='/signup/<int:volId>/<int:stuId>/audit', method='POST', auth=Categ.CLASS | Categ.TEACHER)
-def audit_signup(volId, stuId, token_data):
-    '''审核一个报名'''
-    stu_vol = StuVol.query.get((volId, stuId))
-    if not stu_vol:
-        return error('学生未报名该义工')
-    auth_cls(User.query.get(stuId).cls_id, token_data)
-    stu_vol.status = ThoughtStatus.UNSUBMITTED
-    return success('审核成功')
+# @Api(rule='/signup/<int:volId>/<int:stuId>/audit', method='POST', auth=Categ.CLASS | Categ.TEACHER)
+# def audit_signup(volId, stuId, token_data):
+#     '''审核一个报名'''
+#     stu_vol = StuVol.query.get((volId, stuId))
+#     if not stu_vol:
+#         return error('学生未报名该义工')
+#     auth_cls(User.query.get(stuId).cls_id, token_data)
+#     stu_vol.status = ThoughtStatus.DRAFT
+#     return success('审核成功')
 
 
 @Api(rule='/signup/<int:volId>', method='POST', params='Signup')
@@ -46,10 +46,11 @@ def signup(students, volId, token_data):
         StuVol(
             stu_id=stuId,
             vol_id=volId,
-            status=ThoughtStatus.UNSUBMITTED,#ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT
+            status=ThoughtStatus.DRAFT, #ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT
             thought='',
             reason='',
             reward=-1,
+            ever_repulsed=False,
         ).insert()
     UserNotice(
         user_id=vol.holder_id,

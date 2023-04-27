@@ -72,7 +72,7 @@
 </template>
 
 <script lang="ts">
-import { getVolStatusDisplayForUser, timeToHint } from "@/utils/calc";
+import { getVolStatusDisplayText, timeToHint } from "@/utils/calc";
 import {
   fApi,
   type VolunteerInfoResponse,
@@ -99,7 +99,7 @@ export default {
     return {
       timeToHint,
       getVolTypeName,
-      getVolStatusDisplayForUser,
+      getVolStatusDisplayForUser: getVolStatusDisplayText,
       stuInfoDlg: false,
       stuInfoData: undefined as any as UserInfoResponse,
     };

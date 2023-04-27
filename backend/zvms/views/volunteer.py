@@ -5,7 +5,9 @@ from zvms.res import *
 from zvms.util import *
 from zvms.apilib import Api
 
-def is_signable(id, time, token_data, now = datetime.datetime.now())->bool:
+def is_signable(id, status, time, token_data, now = datetime.datetime.now())->bool:
+    if status != VolStatus.AUDITED:
+        return False
     cv = ClassVol.query.get((id, token_data['cls']))
     return not is_outdated(time, now) and cv is not None and cv.now < cv.max
 
@@ -31,7 +33,7 @@ def list_volunteers(token_data, **kwargs):
         result = []
         now  = datetime.datetime.now()
         for vol in ret:
-            signable = is_signable(vol['id'], vol['time'], token_data, now)
+            signable = is_signable(vol['id'], vol['status'], vol['time'], token_data, now)
             if see_all:
                 result.append({
                     **vol,
@@ -71,9 +73,9 @@ def search_volunteers(token_data, **kwargs):
         if see_all:
             return True
         else:
-            return is_joiner(v['joiners'], token_data['id']) or is_signable(v['id'], v['time'], token_data)
+            return is_joiner(v['joiners'], token_data['id']) or is_signable(v['id'], v['status'], v['time'], token_data)
     def filter_signable(v):
-        return is_signable(v['id'], v['time'], token_data)
+        return is_signable(v['id'], v['status'], v['time'], token_data)
     try:
         if 'holder' in kwargs:
             conds.append(Volunteer.holder_id == int(kwargs['holder']))
@@ -104,7 +106,7 @@ def search_volunteers(token_data, **kwargs):
         ))
         ret = list(filter(filter_, filter(filter_2, ret)))
         for i in ret:
-            i['signable'] = is_signable(i['id'], i['time'], token_data)
+            i['signable'] = is_signable(i['id'], i['status'], i['time'], token_data)
         return success('获取成功', ret)
     return process_query(Volunteer.query.filter(*conds).order_by(Volunteer.id.desc()))
 
@@ -124,7 +126,7 @@ def get_volunteer_info(id, token_data):
         holder=rpartial(getattr, 'id'),
         holderName=('holder', rpartial(getattr, 'name'))
     )
-    ret['signable'] = is_signable(id, ret['time'], token_data)
+    ret['signable'] = is_signable(id, ret['status'], ret['time'], token_data)
     ret['time'] = str(ret['time'])
     classes = []
     for cls in ret['classes']:
@@ -190,7 +192,7 @@ def create_appointed_volunteer(token_data, joiners, **kwargs):
         StuVol(
             stu_id=joiner,
             vol_id=id,
-            status=ThoughtStatus.UNSUBMITTED,
+            status=ThoughtStatus.DRAFT,
             thought='',
             reward=-1,
             reason='',

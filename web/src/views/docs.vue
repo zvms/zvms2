@@ -1,9 +1,10 @@
 <template>
   <v-sheet>
     <v-breadcrumbs :items="breadcrumbs"></v-breadcrumbs>
-    <article class="markdown-body" v-html="currentDoc.content"></article>
 
-    <v-list class="pl-10">
+    <h1>{{ currentDoc.title }}</h1>
+
+    <v-list density="compact">
       <v-list-item
         v-if="currentDoc.parent"
         prepend-icon="mdi-file-document-outline"
@@ -16,9 +17,11 @@
         v-for="c in currentDoc.children"
         @click="gotoDoc(c.urlPath)"
       >
-        <span class="link-tip">继续阅读</span> {{ c.title }}
+        <span class="link-tip"></span> {{ c.title }}
       </v-list-item>
     </v-list>
+
+    <article class="markdown-body" v-html="currentDoc.content"></article>
   </v-sheet>
 </template>
 

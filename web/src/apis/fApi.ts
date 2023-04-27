@@ -498,25 +498,6 @@ export class ForegroundApi {
     );
   }
   /**
-   * ## 审核一个报名
-   * ### [POST] /signup/<int:volId>/<int:stuId>/audit
-   * #### 权限: Class | Teacher
-   * @param volId
-   * @param stuId
-   */
-  auditSignup(
-    volId: number,
-    stuId: number
-  ): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(
-      this,
-      "POST",
-      `/signup/${volId}/${stuId}/audit`, {
-        
-      }
-    );
-  }
-  /**
    * ## 报名一个义工
    * ### [POST] /signup/<int:volId>
    * #### 权限: Any
@@ -749,18 +730,20 @@ export class ForegroundApi {
     );
   }
   /**
-   * ## 获取某个学生的感想
+   * ## 搜索学生感想
    * ### [GET] /thought/student/<int:id>
    * #### 权限: Any
    * @param id
+   * @param kwargs
    */
-  getStudentThoughts(
-    id: number
-  ): ForegroundApiRunner<structs.StudentThoughtsResponse> {
+  listStudentThoughts(
+    id: number,
+    kwargs: structs.SearchStudentThoughts
+  ): ForegroundApiRunner<Array<structs.SingleThought>> {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/thought/student/${id}?`+ toURLSearchParams()
+      `/thought/student/${id}?`+ toURLSearchParams(      kwargs)
     );
   }
   /**

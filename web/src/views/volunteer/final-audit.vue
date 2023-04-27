@@ -18,7 +18,6 @@
               [
                 ThoughtStatus.Accepted,
                 ThoughtStatus.Draft,
-                ThoughtStatus.Unsubmitted,
                 ThoughtStatus.WaitingForFinalAudit,
               ].map((v) => ({
                 name: getThoughtStatusName(v),
@@ -48,7 +47,7 @@
         <v-card-title>详细信息</v-card-title>
         <v-card-text>
           <vol-info v-if="currentVol" :vol="currentVol" />
-          <thought-info
+          <thought-viewer
             v-if="currentThoughtData"
             :stu-name="currentThoughtInfo!.stuName"
             :thought="currentThoughtData"
@@ -99,14 +98,14 @@ import { useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
-import ThoughtInfo from "@/components/thought-info.vue";
+import ThoughtViewer from "@/components/thought/viewer.vue";
 import VolInfo from "@/components/vol-info.vue";
 
 export default {
   components: {
     DataTable,
     VolInfo,
-    ThoughtInfo,
+    ThoughtViewer,
   },
   data() {
     return {

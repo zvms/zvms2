@@ -17,9 +17,8 @@ export const contributorsV1 = [
   {
     displayName: "Zecyel",
     infoHtml: `2020级 朱程炀<br/>
-Zecyel, SOF-Architect,<br/>
-Zest Programmer.<br/>
-See: github.com/zecyel<br/>
+Zecyel, SOF-Architect, Zest Programmer.<br/>
+See: github.com/zecyel <img src="https://img.shields.io/badge/-@zecyel-181717?style=for-the-badge&logo=github&logoColor=white"/><br/>
 Star every repo you find!`,
   },
   {

@@ -11,9 +11,26 @@ from zvms.res import *
 from zvms.apilib import Api
 
 
-@Api(rule='/thought/student/<int:id>', response='StudentThoughtsResponse')
-def get_student_thoughts():
-    '''获取某个学生的感想'''
+@Api(rule='/thought/student/<int:id>', params='SearchStudentThoughts', response='SearchThoughtsResponse')
+def list_student_thoughts(id: int, **kwargs):
+    '''搜索学生感想'''
+
+    conds=[StuVol.stu_id == id]
+    try:
+        if 'status' in kwargs:
+            conds.append(StuVol.status == int(kwargs['status']))
+    except ValueError:
+        return error('传入的数据错误: 非法的URL参数')
+    def process_query(query):
+        return success('获取成功', list_or_error(query.select(
+            'status',
+            stuId='stu_id',
+            volId='vol_id',
+            stuName='stu_name',
+            volName='vol_name',
+            volTime=('vol_time', str)
+        )))
+    return process_query(StuVol.query.filter(*conds))
 
 
 @Api(rule='/thought/search', params='SearchThoughts', response='SearchThoughtsResponse')
@@ -43,7 +60,8 @@ def search_thoughts(**kwargs):
             stuId='stu_id',
             volId='vol_id',
             stuName='stu_name',
-            volName='vol_name'
+            volName='vol_name',
+            volTime='vol_time'
         )))
     return process_query(filter(lambda sv: filter_(sv) and sv.vol.status == VolStatus.AUDITED, StuVol.query.filter(*conds)))
 
@@ -60,6 +78,7 @@ def get_thought_info(volId: int, stuId: int, token_data):
         'reward',
         'pics',
         'thought',
+        everRepulsed = 'ever_repulsed'
     ).items() if v is not None})
 
 
@@ -69,38 +88,41 @@ def md5ify(raw: bytes):
     return md5.hexdigest()
 
 
-def _submit_thought(volId: int, stuId: int, thought: str, pictures, status):
+def _save_thought(volId: int, stuId: int, thought: str, pictures, status):
     _thought = StuVol.query.get((volId, stuId))
-    if not _thought:
-        StuVol(
-            vol_id=volId,
-            stu_id=stuId,
-            status=status,
-            thought=thought,
-            reward=-1,
-            reason='',
-        ).insert()
-    else:
-        match _thought.status:
-            case ThoughtStatus.UNSUBMITTED | ThoughtStatus.DRAFT:
-                pass
-            case ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
-                raise ZvmsError('该感想不可提交')
-            case _:
-                raise ZvmsError('不可重复提交')
-        _thought.update(
-            status=status,
-            thought=thought
-        )
+    # if not _thought:
+    #     StuVol(
+    #         vol_id=volId,
+    #         stu_id=stuId,
+    #         status=status,
+    #         thought=thought,
+    #         reward=-1,
+    #         reason='',
+    #     ).insert()
+    # else:
+    match _thought.status:
+        case ThoughtStatus.DRAFT:
+            pass
+        case ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
+            raise ZvmsError('该感想不可提交')
+        case _:
+            raise ZvmsError('不可重复提交')
+    _thought.update(
+        status=status,
+        thought=thought
+    )
     hashes = set()
     for pic in pictures:
         if 'hash' in pic:
             hash = pic['hash']
+            exists = Picture.query.filter_by(vol_id = volId,stu_id =  stuId, hash = hash).count()>0
         else:
             hash = md5ify(pic['base64'].encode())
-            if not Picture.query.get((volId, stuId, hash)):
+            exists = Picture.query.filter_by(vol_id = volId,stu_id =  stuId, hash = hash).count()>0
+            if not exists:
                 with open(os.path.join(STATIC_FOLDER, 'pics', f'{hash}.{pic["type"]}'), 'wb') as f:
                     f.write(b64decode(pic['base64']))
+        if not exists:
             Picture(
                 vol_id=volId,
                 stu_id=stuId,
@@ -125,7 +147,7 @@ def _auth_thought(stuId: int, operation: str, token_data):
 def save_thought(token_data, volId: int, stuId: int, thought: str, pictures):
     '''保存感想草稿'''
     _auth_thought(stuId, '修改', token_data)
-    _submit_thought(volId, stuId, thought, pictures, ThoughtStatus.DRAFT)
+    _save_thought(volId, stuId, thought, pictures, ThoughtStatus.DRAFT)
     return success('保存成功')
 
 
@@ -134,7 +156,7 @@ def submit_thought(token_data, volId: int, stuId: int, thought: int, pictures):
     '''提交感想'''
     is_common = not _auth_thought(stuId, '提交', token_data)
     # 临时由WAITING_FOR_FIRST_AUDIT修改为WAITING_FOR_FINAL_AUDIT
-    _submit_thought(volId, stuId, thought, pictures, ThoughtStatus.WAITING_FOR_FINAL_AUDIT if is_common else ThoughtStatus.WAITING_FOR_FINAL_AUDIT)
+    _save_thought(volId, stuId, thought, pictures, ThoughtStatus.WAITING_FOR_FINAL_AUDIT if is_common else ThoughtStatus.WAITING_FOR_FINAL_AUDIT)
     return success('提交成功')
 
 
@@ -169,7 +191,9 @@ def final_audit(token_data, reward: int, volId: int, stuId: int):
         return error('该感想不可终审')
     thought.update(
         reward=reward,
-        status=ThoughtStatus.ACCEPTED
+        status=ThoughtStatus.ACCEPTED,
+        reason='',
+        ever_repulsed = False
     )
     UserNotice(
         user_id=thought.stu_id,
@@ -192,8 +216,9 @@ def repulse_thought(token_data, volId: int, stuId: int, reason: str):
     if thought.status not in (ThoughtStatus.WAITING_FOR_FINAL_AUDIT, ThoughtStatus.WAITING_FOR_FIRST_AUDIT):
         return error('该感想不可打回')
     thought.update(
-        status=ThoughtStatus.UNSUBMITTED,
-        reason=reason
+        status=ThoughtStatus.DRAFT,
+        reason=reason,
+        ever_repulsed=True
     )
     UserNotice(
         user_id=thought.stu_id,

@@ -41,10 +41,11 @@ class PictureResponse(Object):
 
 class ThoughtInfoResponse(Object):
     status = Enum(ThoughtStatus)
-    reason = String
     thought = String
-    reward = Int
     pics = Array(PictureResponse())
+    reward = Int
+    everRepulsed = Boolean
+    reason = String
 
 class StudentThoughtsResponse(Object):
     accepted = Array(ThoughtInfoResponse())
@@ -124,20 +125,27 @@ class SearchThoughts(Optional):
     student = Parsable(Int)
     volunteer = Parsable(Int)
 
+class SearchStudentThoughts(Optional):
+    status = ParsableEnum(ThoughtStatus)
+
 class SingleThought(Object):
     volId = Int
     stuId = Int
     status = Enum(ThoughtStatus)
     stuName = String
     volName = String
+    volTime = String
 
 SearchThoughtsResponse = Array(SingleThought())
 
-class ExistedPicture(Object):
+class BasePictrure(Object):
+    type = Len(String, 3, 6)
+
+class ExistedPicture(BasePictrure):
     hash = String
     type = Len(String, 3, 6)
 
-class Base64Picture(Object):
+class Base64Picture(BasePictrure):
     base64 = String
     type = Len(String, 3, 6)
 

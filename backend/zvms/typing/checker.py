@@ -148,16 +148,17 @@ class Union(Checker):
         return f'({self.render()})'
 
     def check(self, json):
-        for elem in self.elems:
-            try:
-                elem.check(json)
-                # Run to here means ok
-                return
-            except CheckerError as e:
-                pass
-            except:
-                raise
-        Checker.error(self, json)
+        # for elem in self.elems:
+        #     try:
+        #         elem.check(json)
+        #         # Run to here means ok
+        #         return
+        #     except CheckerError as e:
+        #         pass
+        #     except:
+        #         raise
+        # Checker.error(self, json)
+        pass
 
     def as_json(self):
         return [i.as_json() for i in self.elems]

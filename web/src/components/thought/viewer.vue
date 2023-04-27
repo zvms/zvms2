@@ -2,7 +2,7 @@
   <v-list>
     <v-list-item>
       <v-list-item-title>
-        {{stuName}} 的感想
+        {{ stuName }} 的感想
         <span v-if="showWordCount" style="font-size: medium">
           &emsp;&emsp;中文字数：{{ getWordCount(thought.thought ?? "") }}
         </span>
@@ -46,7 +46,7 @@ import { baseURL } from "@/plugins/axios";
 import MarkdownViewer from "@/components/markdown/viewer.vue";
 
 export default {
-  name: "thought-info",
+  name: "thought-editor",
   components: {
     MarkdownViewer,
   },
