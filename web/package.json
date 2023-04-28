@@ -16,7 +16,7 @@
     "github-markdown-css": "^5.2.0",
     "lxgw-wenkai-lite-webfont": "^1.7.0",
     "marked": "^4.3.0",
-    "md-editor-v3": "^2.11.2",
+    "md-editor-v3": "^3.0.0",
     "mermaid": "^10.1.0",
     "pinia": "^2.0.35",
     "pinia-plugin-persist": "^1.0.0",
