@@ -32,10 +32,10 @@
             <v-row>
               <v-col cols="4">
                 <v-text-field
-                  prepend-icon="mdi-account-group"
+                  prepend-icon="mdi-account-multiple"
                   v-model.number="userNew"
                   label="学生学号"
-                  @update:model-value="updateUserName"
+                  @update:model-value="updateCurrentUserName"
                 />
               </v-col>
               <v-col cols="4" class="pl-7 pt-8" style="font-size: larger">
@@ -57,10 +57,10 @@
               </v-col>
             </v-row>
             <v-row v-for="(user, i) in form.joiners" :key="user.id">
-              <v-col cols="3" class="pl-16" style="font-size: larger">
+              <v-col cols="4" class="pl-16" style="font-size: larger">
                 {{ user.id }}
               </v-col>
-              <v-col cols="3" class="pl-7" style="font-size: larger">
+              <v-col cols="4" class="pl-7" style="font-size: larger">
                 {{ user.name }}</v-col
               >
               <v-col cols="2">
@@ -108,7 +108,7 @@ import { NOT_EMPTY, TIME } from "@/utils/validation";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
-import { ForegroundApi } from "@/apis/fApi";
+import { fApiNotLoading } from "@/apis/fApi";
 import router from "@/router";
 import { toasts } from "@/utils/dialogs";
 
@@ -164,25 +164,12 @@ export default {
     delFromList(i: number) {
       this.form.joiners.splice(i, 1);
     },
-    updateUserName() {
+    updateCurrentUserName() {
       if (!Number.isFinite(this.userNew) || ("" + this.userNew).length !== 8) {
         this.userNewName = "";
         return;
       }
-      const sepcialFApi = new ForegroundApi({
-        beforeReq(info) {},
-        errorReq(e: Error, info) {},
-        successedRes(res, info) {},
-        failedRes: (res, info) => {
-          this.userNewName = "";
-        },
-        afterProcess(info) {},
-        errorProcess(e, info) {},
-        cleanup(info) {},
-        defaultFailedToast: false,
-        defaultOkToast: false,
-      });
-      sepcialFApi.skipOkToast.getUserInfo(this.userNew)((info) => {
+      fApiNotLoading.skipOkToast.getUserInfo(this.userNew)((info) => {
         this.userNewName = info.name;
       });
     },

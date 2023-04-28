@@ -10,12 +10,11 @@ import * as studentsUnion from "./students_union";
 import * as teacher from "./teacher";
 
 export const children = [
-  appendix,
-  rule,
   flowchart,
   commonStudents,
   classleader,
   studentsUnion,
   auditor,
-  teacher,
+  appendix,
+  rule,
 ];

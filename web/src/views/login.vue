@@ -20,14 +20,17 @@
     </v-card-title>
     <v-card-text>
       <v-form v-model.trim="isFormValid">
+        <div style="height:20px">
+        {{ currentUserInfo }}
+        </div>
         <v-text-field
           type="text"
           autocomplete="userid"
           v-model.trim="form.userId"
           :rules="rules"
           label="ID/学号 &nbsp;&nbsp; e.g. 20221145"
+          @update:model-value="updateCurrentUserInfo"
         />
-        {{ currentUserName }}
         <v-text-field
           type="password"
           autocomplete="password"
@@ -48,7 +51,7 @@
 
 <script lang="ts">
 import { fApi, type PublicNotice } from "@/apis";
-import { ForegroundApi } from "@/apis/fApi";
+import { fApiNotLoading } from "@/apis/fApi";
 import { Categ } from "@/apis/types/enums";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
 import router from "@/router";
@@ -67,6 +70,7 @@ export default {
         userId: "",
         password: "",
       },
+      currentUserInfo: "",
       rules: [NOT_EMPTY()],
       isFormValid: false,
       publicNotice: null as PublicNotice,
@@ -85,6 +89,16 @@ export default {
     // })();
   },
   methods: {
+    updateCurrentUserInfo() {
+      const userId = parseInt(this.form.userId);
+      if (!Number.isFinite(userId) || ("" + userId).length !== 8) {
+        this.currentUserInfo = "";
+        return;
+      }
+      fApiNotLoading.skipOkToast.getUserBasicInfo(userId)(({clsName,userName}) => {
+        this.currentUserInfo = `${clsName} ${userName}`;
+      });
+    },
     login() {
       if (this.isFormValid) {
         if (this.loadingStore.noretry) {
@@ -92,25 +106,16 @@ export default {
           return;
         }
         const pwd = this.form.password;
-        const sepcialFApi = new ForegroundApi({
-          beforeReq(info) {},
-          errorReq(e: Error, info) {},
-          successedRes(res, info) {},
-          failedRes: (res, info) => {
+        fApi
+          .setFailedRes((res, info) => {
             if (res?.data?.noretry) {
               this.loadingStore.noretryStart = Date.now();
             }
-          },
-          afterProcess(info) {},
-          errorProcess(e, info) {},
-          cleanup(info) {},
-          defaultFailedToast: true,
-          defaultOkToast: true,
-        });
-        sepcialFApi.login(
-          this.form.userId,
-          md5(pwd)
-        )(({ token, id }) => {
+          })
+          .login(
+            this.form.userId,
+            md5(pwd)
+          )(({ token, id }) => {
           this.infoStore.token = token;
           setCurrentAxiosToken(token);
           fApi.skipOkToast.getUserInfo(id)(({ name, cls, auth, clsName }) => {
@@ -130,9 +135,6 @@ export default {
   },
   computed: {
     ...mapStores(useInfoStore, useLoadingStore),
-    currentUserName() {
-      return "";
-    },
   },
 };
 </script>

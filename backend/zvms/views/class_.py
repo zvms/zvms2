@@ -10,6 +10,14 @@ def list_classes(token_data):
     return success('获取成功', list_or_error(Class.query.filter(Class.id != 0).select('id', 'name')))
 
 
+@Api(rule='/class/<int:id>/student_num', response='ClassStudentNum')
+def get_class_student_num(id, token_data):
+    '''获取一个班级的学生人数'''
+    return success('获取成功',
+        num=len(list(filter(lambda m: (m.auth & Categ.STUDENT), Class.query.get_or_error(id).members)))
+    )
+
+
 @Api(rule='/class/<int:id>', response='ClassInfoResponse')
 def get_class_info(id, token_data):
     '''获取一个班级的详细信息'''

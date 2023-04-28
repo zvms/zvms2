@@ -7,21 +7,32 @@
           <v-icon icon="mdi-reload" size="xsmall" />
         </v-btn>
       </v-card-title>
-      <v-container class="pb-0">
+      <v-container class="table-filter">
         <v-row>
-          <v-select
-            v-if="
-              infoStore.permission &
-              (Categ.Manager | Categ.Auditor | Categ.System)
-            "
-            prepend-icon="mdi-account-group"
-            v-model="filter.class"
-            label="限定班级"
-            :items="classes"
-            item-title="name"
-            item-value="id"
-            class="pl-5 pr-20"
-          />
+          <v-col cols="4">
+            <v-select
+              v-model="filter.status"
+              label="筛选状态"
+              :items="statusSelectorItems"
+              prepend-icon="mdi-list-status"
+              item-title="name"
+              item-value="id"
+            />
+          </v-col>
+          <v-col cols="4">
+            <v-select
+              v-if="
+                infoStore.permission &
+                (Categ.Manager | Categ.Auditor | Categ.System)
+              "
+              prepend-icon="mdi-account-multiple"
+              v-model="filter.class"
+              label="限定班级"
+              :items="classes"
+              item-title="name"
+              item-value="id"
+            />
+          </v-col>
         </v-row>
       </v-container>
       <data-table
@@ -85,7 +96,7 @@ import {
   type ThoughtInfoResponse,
   type VolunteerInfoResponse,
 } from "@/apis";
-import { Categ } from "@/apis/types/enums";
+import { Categ, getVolStatusName } from "@/apis/types/enums";
 import VolInfo from "@/components/vol-info.vue";
 import { useInfoStore } from "@/stores";
 import { getVolStatusDisplayText } from "@/utils/calc";
@@ -133,6 +144,7 @@ export default {
       ],
       vols: [] as SingleVolunteer[],
       filter: {
+        status: -1 /** any */ as VolStatus | -1,
         class: -1 /** any */,
       },
       classes: [] as SingleClass[],
@@ -275,6 +287,24 @@ export default {
         statusText: getVolStatusDisplayText(this.infoStore.userId, vol)[0],
         statusColor: getVolStatusDisplayText(this.infoStore.userId, vol)[1],
       }));
+    },
+    statusSelectorItems() {
+      return [
+        {
+          id: -1,
+          name: "查看全部",
+        },
+        ...[
+          VolStatus.Unaudited,
+          VolStatus.Audited,
+          VolStatus.Rejected,
+          VolStatus.Finished,
+          VolStatus.Deprecated,
+        ].map((v) => ({
+          id: v,
+          name: getVolStatusName(v),
+        })),
+      ];
     },
   },
   watch: {

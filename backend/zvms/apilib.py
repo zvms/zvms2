@@ -77,7 +77,7 @@ def deco(impl, params, response, auth):
                     print('权限不足')
                     return json.dumps({'type': 'ERROR', 'message': '权限不足'}), jsonHeader
             except InvalidSignatureError as ex:
-                print('未获取到Token')
+                print('未获取到Token', auth, request.path)
                 return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"}), jsonHeader
         try:
             with open('log.txt', 'a', encoding='utf-8') as f:

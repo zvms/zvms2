@@ -78,6 +78,12 @@ def search_users(token_data, name=None, cls=None, auth=None):
     return success('获取成功', list_or_error(select(filter(filter_, query), 'id', 'name')))
 
 
+@Api(rule='/user/<int:id>/name', method='GET', response='UserBasicInfoResponse', auth=Categ.NONE)
+def get_user_basic_info(id, token_data):
+    '''获取一个用户的最基础信息(用于登录页面)'''
+    user = User.query.get_or_error(id)
+    return success('获取成功', **user.select(userName='name'), clsName=user.cls.name)
+
 @Api(rule='/user/<int:id>', response='UserInfoResponse')
 def get_user_info(id, token_data):
     '''获取一个用户的详细详细信息'''

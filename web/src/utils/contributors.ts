@@ -34,7 +34,7 @@ Star every repo you find!`,
   },
   {
     displayName: "Solecour",
-    infoHtml: `2021级 黄瀚霆`,
+    infoHtml: `<p>2021级 黄瀚霆</p>`,
   },
   {
     displayName: "dblark",
@@ -76,6 +76,64 @@ github.com/7086cmd`,
   },
   zjr: {
     displayName: "zjr",
-    infoHtml: `是周济睿，我想应该不用介绍了、`,
+    infoHtml: `
+    <h2><p>是周济睿，我想应该不用介绍了、</p>
+    <p>文档编写以及流程测试纯合致死</p>
+    <p>不啻微芒，造炬成阳</p></h2>
+
+    <style>
+   h2 {
+  font-size: 40px;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  position: relative;
+  background: linear-gradient(90deg, #1d2128, #787878);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glitch 3s ease-in-out infinite;
+}
+
+@keyframes glitch {
+  0% {
+    transform: skew(0.5deg, 0.1deg) translate(0, 0);
+  }
+  10% {
+    transform: skew(0.5deg, -0.05deg) translate(5px, -5px);
+  }
+  20% {
+    transform: skew(0.1deg, 0.2deg) translate(-5px, 5px);
+  }
+  30% {
+    transform: skew(-0.2deg, 0.4deg) translate(10px, -10px);
+  }
+  40% {
+    transform: skew(-0.7deg, -0.5deg) translate(-10px, 10px);
+  }
+  50% {
+    transform: skew(0.55deg, -0.15deg) translate(15px, -15px);
+  }
+  60% {
+    transform: skew(-0.25deg, 0.3deg) translate(-15px, 15px);
+  }
+  70% {
+    transform: skew(0.35deg, -0.45deg) translate(20px, -20px);
+  }
+  80% {
+    transform: skew(-0.15deg, 0.1deg) translate(-20px, 20px);
+  }
+  90% {
+    transform: skew(0.2deg, -0.3deg) translate(25px, -25px);
+  }
+  100% {
+    transform: skew(0.5deg, -0.1deg) translate(-25px, 25px);
+  }
+}
+
+  
+    </style>
+    
+` ,
   },
 } satisfies Record<string, Contributor>;

@@ -26,12 +26,21 @@ export interface ClassInfoResponse {
     teachers: Array<SingleUser>
 }
 
+export interface ClassStudentNum {
+    num: number
+}
+
 export interface UserLoginResponse {
     token: string,
     id: number
 }
 
 export type SearchUsersResponse = Array<SingleUser>
+
+export interface UserBasicInfoResponse {
+    clsName: string,
+    userName: string
+}
 
 export interface UserInfoResponse {
     name: string,

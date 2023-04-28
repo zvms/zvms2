@@ -54,7 +54,7 @@
         @click="showNotice(notice)"
       >
         <v-list-item-title>
-          <v-icon>mdi-message</v-icon>
+          <v-icon>mdi-message-text</v-icon>
           {{ notice.title }}
         </v-list-item-title>
         <v-list-item-subtitle>

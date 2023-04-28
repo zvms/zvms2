@@ -153,6 +153,13 @@ export class ForegroundApi {
     });
   }
 
+  setFailedRes(onFailedRes:(res: AxiosResponse<any> | undefined, info: ReqInfo)=>void){
+    return new ForegroundApi({
+      ...this.config,
+      failedRes:onFailedRes
+    });
+  }
+
   //--METHODS START----
   /**
    * ## 检查登录状态
@@ -203,6 +210,21 @@ export class ForegroundApi {
       this,
       "GET",
       `/user/search?`+ toURLSearchParams(      kwargs)
+    );
+  }
+  /**
+   * ## 获取一个用户的最基础信息(用于登录页面)
+   * ### [GET] /user/<int:id>/name
+   * #### 权限: None
+   * @param id
+   */
+  getUserBasicInfo(
+    id: number
+  ): ForegroundApiRunner<structs.UserBasicInfoResponse> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/user/${id}/name?`+ toURLSearchParams()
     );
   }
   /**
@@ -917,6 +939,21 @@ export class ForegroundApi {
     return createForegroundApiRunner(this, "GET", `/class/list`);
   }
   /**
+   * ## 获取一个班级的学生人数
+   * ### [GET] /class/<int:id>/student_num
+   * #### 权限: Any
+   * @param id
+   */
+  getClassStudentNum(
+    id: number
+  ): ForegroundApiRunner<structs.ClassStudentNum> {
+    return createForegroundApiRunner(
+      this,
+      "GET",
+      `/class/${id}/student_num?`+ toURLSearchParams()
+    );
+  }
+  /**
    * ## 获取一个班级的详细信息
    * ### [GET] /class/<int:id>
    * #### 权限: Any
@@ -997,7 +1034,7 @@ export class ForegroundApi {
 
 }
 
-export const fApi = new ForegroundApi({
+export const fApiNotLoading = new ForegroundApi({
   beforeReq(info: ReqInfo) {},
   errorReq(e: Error, info: ReqInfo) {},
 
@@ -1011,4 +1048,6 @@ export const fApi = new ForegroundApi({
 
   defaultFailedToast: true,
   defaultOkToast: true,
-}).loadingState;
+});
+
+export const fApi = fApiNotLoading.loadingState;

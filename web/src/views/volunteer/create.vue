@@ -1,7 +1,9 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title> 创建{{advancedOptionsPermission?"":"校外"}}义工 </v-card-title>
+      <v-card-title>
+        创建{{ advancedOptionsPermission ? "" : "校外" }}义工
+      </v-card-title>
       <v-card-text>
         <v-form v-model="isFormValid">
           <v-text-field
@@ -29,11 +31,14 @@
             item-value="value"
             v-model="form.type"
           />
-          <v-container v-if="advancedOptionsPermission" style="margin-left: -15px;">
+          <v-container
+            v-if="advancedOptionsPermission"
+            style="margin-left: -15px"
+          >
             <v-row v-if="unselctedClasses.length > 0">
               <v-col cols="4">
                 <v-select
-                  prepend-icon="mdi-account-group"
+                  prepend-icon="mdi-account-multiple"
                   v-model="classNew"
                   label="限定班级"
                   :items="unselctedClasses"
@@ -55,10 +60,10 @@
               </v-col>
             </v-row>
             <v-row v-for="(cls, i) in form.classSelected" :key="cls.id">
-              <v-col cols="3" class="pl-16" style="font-size: larger">
+              <v-col cols="4" class="pl-16" style="font-size: larger">
                 {{ classes.find((v) => v.id == cls.id)?.name }}
               </v-col>
-              <v-col cols="3" class="pl-7" style="font-size: larger">{{
+              <v-col cols="4" class="pl-7" style="font-size: larger">{{
                 cls.max
               }}</v-col>
               <v-col cols="2">
@@ -73,7 +78,7 @@
             v-model.number="countNew"
             :label="`允许${infoStore.className}报名的人数`"
             type="text"
-            prepend-icon="mdi-account-group"
+            prepend-icon="mdi-account-multiple"
           />
           <!---->
           <v-text-field
@@ -93,13 +98,13 @@
           <v-text-field
             v-model.number="form.reward"
             :rules="[IS_DECIMAL(), IS_POSITIVE(), ...rules]"
-            type="text"
+            type.trim="text"
             label="预期时长（分钟）"
             prepend-icon="mdi-clock-time-three-outline"
           />
-          <v-btn color="primary" class="submit" @click="createVolunteer"
-            >创建义工</v-btn
-          >
+          <v-btn color="primary" class="submit" @click="createVolunteer">
+            创建义工
+          </v-btn>
         </v-form>
       </v-card-text>
     </v-card>
@@ -109,13 +114,12 @@
 
 <script lang="ts">
 import { fApi, type ClassVol, type SingleClass, VolType } from "@/apis";
-import { IS_DECIMAL, IS_NUMBER, IS_POSITIVE, NOT_EMPTY, TIME } from "@/utils/validation";
+import { IS_DECIMAL, IS_POSITIVE, NOT_EMPTY, TIME } from "@/utils/validation";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { toasts } from "@/utils/dialogs";
 import router from "@/router";
-
 
 export default {
   data() {
@@ -172,7 +176,7 @@ export default {
           this.form.time,
           this.form.type,
           this.form.reward
-        )((result) => {
+        )((_result) => {
           router.push("/");
         });
       }
@@ -181,13 +185,19 @@ export default {
       if (!Number.isFinite(this.countNew)) {
         return;
       }
-      const idx = this.classes.findIndex((v) => v.id == this.classNew);
-      this.form.classSelected.unshift({
-        id: this.classNew,
-        max: this.countNew,
+      fApi.skipOkToast.getClassStudentNum(this.classNew)(({ num: maxNum }) => {
+        if (this.countNew > maxNum) {
+          toasts.error(`超过班级最大人数！最大人数：${maxNum}人。`);
+          this.countNew = maxNum;
+        }
+        const idx = this.classes.findIndex((v) => v.id == this.classNew);
+        this.form.classSelected.unshift({
+          id: this.classNew,
+          max: this.countNew,
+        });
+        this.classes[idx].selcted = true;
+        this.setDefaultClass();
       });
-      this.classes[idx].selcted = true;
-      this.setDefaultClass();
     },
     delFromList(i: number) {
       const id = this.form.classSelected.splice(i, 1)[0].id;

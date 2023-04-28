@@ -60,7 +60,22 @@
 "any"
 ```
 
-#### 1.5 getUserInfo
+#### 1.5 getUserBasicInfo
+[GET] /user/<int:id>/name  
+**获取一个用户的最基础信息(用于登录页面)**  
+参数: 
+```json
+"any"
+```
+响应:  
+```json
+{
+    "clsName": "string",
+    "userName": "string"
+}
+```
+
+#### 1.6 getUserInfo
 [GET] /user/<int:id>  
 **获取一个用户的详细详细信息**  
 参数: 
@@ -78,7 +93,7 @@
 }
 ```
 
-#### 1.6 getStudentStat
+#### 1.7 getStudentStat
 [GET] /user/<int:id>/time  
 **获取一个用户(学生)的义工分**  
 参数: 
@@ -94,7 +109,7 @@
 }
 ```
 
-#### 1.7 modifyPassword
+#### 1.8 modifyPassword
 [POST] /user/mod-pwd  
 **修改自己的密码**  
 参数: 
@@ -109,7 +124,7 @@
 "any"
 ```
 
-#### 1.8 createUser
+#### 1.9 createUser
 [POST] /user/create  
 **创建用户**  
 参数: 
@@ -130,7 +145,7 @@
 "any"
 ```
 
-#### 1.9 modifyUser
+#### 1.10 modifyUser
 [POST] /user/<int:id>/modify  
 **修改用户信息**  
 参数: 
@@ -146,7 +161,7 @@
 "any"
 ```
 
-#### 1.10 deleteUser
+#### 1.11 deleteUser
 [POST] /user/<int:id>/delete  
 **删除用户**  
 参数: 
@@ -804,7 +819,21 @@
 ]
 ```
 
-#### 7.2 getClassInfo
+#### 7.2 getClassStudentNum
+[GET] /class/<int:id>/student_num  
+**获取一个班级的学生人数**  
+参数: 
+```json
+"any"
+```
+响应:  
+```json
+{
+    "num": "number"
+}
+```
+
+#### 7.3 getClassInfo
 [GET] /class/<int:id>  
 **获取一个班级的详细信息**  
 参数: 
@@ -832,7 +861,7 @@
 }
 ```
 
-#### 7.3 deleteClass
+#### 7.4 deleteClass
 [POST] /class/<int:id>/delete  
 **删除一个班级**  
 参数: 
@@ -844,7 +873,7 @@
 "any"
 ```
 
-#### 7.4 createClass
+#### 7.5 createClass
 [POST] /class/create  
 **创建一个班级**  
 参数: 
@@ -858,7 +887,7 @@
 "any"
 ```
 
-#### 7.5 modifyClass
+#### 7.6 modifyClass
 [POST] /class/<int:id>/modify  
 **修改一个班级的名称**  
 参数: 

@@ -153,12 +153,19 @@ export class ForegroundApi {
     });
   }
 
+  setFailedRes(onFailedRes:(res: AxiosResponse<any> | undefined, info: ReqInfo)=>void){
+    return new ForegroundApi({
+      ...this.config,
+      failedRes:onFailedRes
+    });
+  }
+
   //--METHODS START----
   //${METHODS}
   //--METHODS END----
 }
 
-export const fApi = new ForegroundApi({
+export const fApiNotLoading = new ForegroundApi({
   beforeReq(info: ReqInfo) {},
   errorReq(e: Error, info: ReqInfo) {},
 
@@ -172,4 +179,6 @@ export const fApi = new ForegroundApi({
 
   defaultFailedToast: true,
   defaultOkToast: true,
-}).loadingState;
+});
+
+export const fApi = fApiNotLoading.loadingState;

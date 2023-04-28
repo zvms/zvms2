@@ -21,12 +21,19 @@ class ClassInfoResponse(Object):
     name = String
     students=Array(SingleUser())
     teachers=Array(SingleUser())
+   
+class ClassStudentNum(Object):
+    num = Int
 
 class UserLoginResponse(Object):
     token = String
     id = Int
 
 SearchUsersResponse = Array(SingleUser())
+
+class UserBasicInfoResponse(Object):
+    clsName = String
+    userName = String
 
 class UserInfoResponse(Object):
     name = String

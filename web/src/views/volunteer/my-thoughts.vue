@@ -7,16 +7,18 @@
           <v-icon icon="mdi-reload" size="xsmall" />
         </v-btn>
       </v-card-title>
-      <v-container class="pb-0">
+      <v-container class="table-filter">
         <v-row>
-          <v-select
-            v-model="filter.status"
-            label="筛选状态"
-            :items="statusSelectorItems"
-            item-title="name"
-            item-value="id"
-            class="pl-5 pr-20"
-          />
+          <v-col cols="8">
+            <v-select
+              v-model="filter.status"
+              label="筛选状态"
+              :items="statusSelectorItems"
+              item-title="name"
+              item-value="id"
+              prepend-icon="mdi-list-status"
+            />
+          </v-col>
         </v-row>
       </v-container>
       <data-table

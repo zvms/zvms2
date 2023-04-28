@@ -25,7 +25,6 @@ code {
   border: solid 1px currentColor;
 }
 
-
 button.submit {
   border: solid 1px currentColor;
 }
@@ -54,7 +53,7 @@ button.submit {
   font-size: larger;
 }
 
-.disable-click{
+.disable-click {
   pointer-events: none;
 }
 
@@ -64,4 +63,11 @@ button.submit {
   max-width: 980px;
   margin: 0 auto;
   padding: 45px;
+}
+
+.table-filter {
+  margin-top: 0;
+  padding-top: 2px;
+  margin-bottom: -34px;
+  padding-bottom: 0;
 }

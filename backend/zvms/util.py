@@ -69,10 +69,15 @@ def foreach(func, iterable):
 
 @foo
 def select(self, *cols, **aliases):
-    return dict(chain(zip(cols, map(partial(getattr, self), cols)),
-        ((k, getattr(self, v)) if isinstance(v, str) else
-        (k, v[1](getattr(self, v[0]))) if isinstance(v, tuple) else
-        (k, v(getattr(self, k))) for k, v in aliases.items())))
+    return dict(
+        chain(
+            zip(cols, map(partial(getattr, self), cols)),
+            ((k, getattr(self, v)) if isinstance(v, str) else
+             (k, v[1](getattr(self, v[0]))) if isinstance(v, tuple) else
+             (k, v(getattr(self, k))) for k, v in aliases.items()
+             )
+        )
+    )
 
 @bar
 def update(self, /, on=True, **updates):
