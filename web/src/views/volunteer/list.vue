@@ -286,7 +286,8 @@ export default {
         ...vol,
         statusText: getVolStatusDisplayText(this.infoStore.userId, vol)[0],
         statusColor: getVolStatusDisplayText(this.infoStore.userId, vol)[1],
-      }));
+      })).filter(v => this.filter.status === -1 ||
+      v.status === this.filter.status);
     },
     statusSelectorItems() {
       return [

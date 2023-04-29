@@ -163,7 +163,7 @@ def submit_thought(token_data, volId: int, stuId: int, thought: int, pictures):
 @Api(rule='/thought/<int:volId>/<int:stuId>/audit/first', method='POST', auth=Categ.CLASS | Categ.TEACHER)
 def first_audit(token_data, volId: int, stuId: int):
     '''初审感想(班内)'''
-    auth_cls(User.query.get(stuId), token_data)
+    auth_cls(User.query.get(stuId).cls_id, token_data)
     thought = StuVol.query.get((volId, stuId))
     if thought.status != ThoughtStatus.WAITING_FOR_FIRST_AUDIT:
         return error('该感想不可初审')
@@ -193,7 +193,7 @@ def final_audit(token_data, reward: int, volId: int, stuId: int):
         reward=reward,
         status=ThoughtStatus.ACCEPTED,
         reason='',
-        ever_repulsed = False
+        ever_repulsed=False
     )
     UserNotice(
         user_id=thought.stu_id,
@@ -211,7 +211,7 @@ def final_audit(token_data, reward: int, volId: int, stuId: int):
 @Api(rule='/thought/<int:volId>/<int:stuId>/repulse', method='POST', params='Repulse')
 def repulse_thought(token_data, volId: int, stuId: int, reason: str):
     '''打回感想'''
-    auth_cls(User.query.get(stuId), token_data)
+    auth_cls(User.query.get(stuId).cls_id, token_data)
     thought = StuVol.query.get_or_error((volId, stuId))
     if thought.status not in (ThoughtStatus.WAITING_FOR_FINAL_AUDIT, ThoughtStatus.WAITING_FOR_FIRST_AUDIT):
         return error('该感想不可打回')

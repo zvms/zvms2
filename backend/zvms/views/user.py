@@ -142,3 +142,13 @@ def delete_user(id, token_data):
     '''删除用户'''
     User.query.filter_by(id=id).delete()
     return success('删除成功')
+
+@Api(rule='/user/<int:id>/mod-others-pwd', method='POST', auth=Categ.SYSTEM | Categ.MANAGER, params='ModOthersPwd')
+def modifyOthersPassword(token_data, id, pwd):
+    User.query.get_or_error(id).pwd = pwd
+    Report(
+        sender=0,
+        content=f'用户{token_data["name"]}将{id}的密码修改了',
+        time=datetime.datetime.now()
+    ).insert()
+    return success('修改成功')

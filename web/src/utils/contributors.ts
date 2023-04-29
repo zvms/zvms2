@@ -76,64 +76,47 @@ github.com/7086cmd`,
   },
   zjr: {
     displayName: "zjr",
-    infoHtml: `
-    <h2><p>是周济睿，我想应该不用介绍了、</p>
-    <p>文档编写以及流程测试纯合致死</p>
-    <p>不啻微芒，造炬成阳</p></h2>
+    infoHtml: `<style>
+		body {
+			background-color: #252525;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height:100vh;
+		}
 
-    <style>
-   h2 {
-  font-size: 40px;
-  color: #fff;
-  text-align: center;
-  text-transform: uppercase;
-  position: relative;
-  background: linear-gradient(90deg, #1d2128, #787878);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: glitch 3s ease-in-out infinite;
-}
+		h1 {
+			color: #000000;
+			font-family: "STKaiti", sans-serif;
+			font-weight: bold;
+			text-align: center;
+			font-size: 6vw;
+			padding: 0.25em;
+			line-height:1;
+			animation: pop-up 2s ease-out forwards infinite alternate;
+			text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      		cursor: pointer;
+      		border: none;
+      		outline:none;
+		}
 
-@keyframes glitch {
-  0% {
-    transform: skew(0.5deg, 0.1deg) translate(0, 0);
-  }
-  10% {
-    transform: skew(0.5deg, -0.05deg) translate(5px, -5px);
-  }
-  20% {
-    transform: skew(0.1deg, 0.2deg) translate(-5px, 5px);
-  }
-  30% {
-    transform: skew(-0.2deg, 0.4deg) translate(10px, -10px);
-  }
-  40% {
-    transform: skew(-0.7deg, -0.5deg) translate(-10px, 10px);
-  }
-  50% {
-    transform: skew(0.55deg, -0.15deg) translate(15px, -15px);
-  }
-  60% {
-    transform: skew(-0.25deg, 0.3deg) translate(-15px, 15px);
-  }
-  70% {
-    transform: skew(0.35deg, -0.45deg) translate(20px, -20px);
-  }
-  80% {
-    transform: skew(-0.15deg, 0.1deg) translate(-20px, 20px);
-  }
-  90% {
-    transform: skew(0.2deg, -0.3deg) translate(25px, -25px);
-  }
-  100% {
-    transform: skew(0.5deg, -0.1deg) translate(-25px, 25px);
-  }
-}
-
-  
-    </style>
-    
-` ,
+		h1:hover {
+			text-shadow:none;
+			transform: rotateY(360deg);
+		}
+		
+		@keyframes pop-up {
+			from {
+				transform: scale(0.5);
+				opacity: 0;
+			}
+			to {
+				transform: scale(1);
+				opacity: 1;
+			}
+		}
+	</style><h1>这是周济睿<br>文档编写以及流程测试<br>纯合致死<br>不啻微芒，造炬成阳</h1>` ,
   },
 } satisfies Record<string, Contributor>;

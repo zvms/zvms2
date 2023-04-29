@@ -109,6 +109,7 @@ import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { fApiNotLoading } from "@/apis/fApi";
+import { timeToHint } from "@/utils/calc";
 import router from "@/router";
 import { toasts } from "@/utils/dialogs";
 
@@ -137,6 +138,16 @@ export default {
       if (this.isFormValid) {
         if (this.form.joiners.length === 0) {
           toasts.error("需至少选择一名成员！");
+          return;
+        }
+        if (this.form.reward == 114514 || this.form.reward == 1919810) {
+          toasts.error("请不要恶意填写时间！");
+          return;
+        } else if (this.form.reward >= 600) {
+          toasts.error(`义工时间过长。有${timeToHint(this.form.reward)}。`);
+          return;
+        } else if (this.form.reward <= 0) {
+          toasts.error("义工时间小于等于0。");
           return;
         }
         fApi.createAppointedVolunteer(

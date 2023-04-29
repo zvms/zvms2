@@ -19,7 +19,7 @@ def is_joiner(joiners: list, me: int):
 def list_volunteers(token_data, **kwargs):
     '''列出义工'''
     see_all = token_data['auth'] & (Categ.AUDITOR | Categ.MANAGER | Categ.SYSTEM) #type: bool
-
+    see_class = token_data['auth'] & Categ.CLASS
     def process_query(query):
         ret = list_or_error(query.select(
             'id',
@@ -34,7 +34,8 @@ def list_volunteers(token_data, **kwargs):
         now  = datetime.datetime.now()
         for vol in ret:
             signable = is_signable(vol['id'], vol['status'], vol['time'], token_data, now)
-            if see_all:
+            if see_all or ( see_class and vol['id'] in (ClassVol.query.filter_by(
+                cls_id=int(token_data['cls'])).select_value('vol_id')) ):
                 result.append({
                     **vol,
                     'time': str(vol['time']),
@@ -196,6 +197,7 @@ def create_appointed_volunteer(token_data, joiners, **kwargs):
             thought='',
             reward=-1,
             reason='',
+            ever_repulsed=False
         ).insert()
     for cls in clses:
         ClassVol(

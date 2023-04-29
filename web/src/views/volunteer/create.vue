@@ -119,6 +119,7 @@ import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { toasts } from "@/utils/dialogs";
+import { timeToHint } from "@/utils/calc";
 import router from "@/router";
 
 export default {
@@ -160,6 +161,16 @@ export default {
           this.form.classSelected.length === 0
         ) {
           toasts.error("必须至少选择一个班级。请点击“+”号添加班级");
+          return;
+        }
+        if (this.form.reward == 114514 || this.form.reward == 1919810) {
+          toasts.error("请不要恶意填写时间！");
+          return;
+        } else if (this.form.reward >= 600) {
+          toasts.error(`义工时间过长。有${timeToHint(this.form.reward)}。`);
+          return;
+        } else if (this.form.reward <= 0) {
+          toasts.error("义工时间小于等于0。");
           return;
         }
         fApi.createVolunteer(

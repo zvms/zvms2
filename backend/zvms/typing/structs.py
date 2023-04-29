@@ -245,3 +245,6 @@ class PublicNoticeNotNone(Object):
     content = String
 
 PublicNotice =  Nullable(PublicNoticeNotNone())
+
+class ModOthersPwd(Object):
+    pwd = String
