@@ -173,6 +173,20 @@
 "any"
 ```
 
+#### 1.12 modifyotherspassword
+[POST] /user/<int:id>/mod-others-pwd  
+**...**  
+参数: 
+```json
+{
+    "pwd": "string"
+}
+```
+响应:  
+```json
+"any"
+```
+
 
 ---
 

@@ -337,6 +337,24 @@ export class ForegroundApi {
     );
   }
   /**
+   * ### [POST] /user/<int:id>/mod-others-pwd
+   * #### 权限: System | Manager
+   * @param id
+   * @param pwd
+   */
+  modifyotherspassword(
+    id: number,
+    pwd: string
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/user/${id}/mod-others-pwd`, {
+              pwd
+      }
+    );
+  }
+  /**
    * ## 发送反馈
    * ### [POST] /report
    * #### 权限: Any

@@ -2,4 +2,4 @@
 
 (setv start (perf_counter))
 
-(print )
+(print (- (perf_counter) start))

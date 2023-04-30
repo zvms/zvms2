@@ -1,53 +1,32 @@
 <template>
-  <v-card>
-    <v-card-title class="headline primary white--text">
-      登录&nbsp;&nbsp;<span style="color: #888; font-weight: bolder"
-        >镇海中学义工管理系统</span
-      >
-      ZVMS
-      <div
-        style="
-          font-size: x-large;
-          color: #aaa;
-          text-align: right;
-          margin-bottom: -6px;
-          padding-top: 14px;
-          margin-top: -34px;
-        "
-      >
-        励志&nbsp;&nbsp;进取&nbsp;&nbsp;勤奋&nbsp;&nbsp;健美
-      </div>
-    </v-card-title>
-    <v-card-text>
-      <v-form v-model.trim="isFormValid">
-        <div style="height:20px">
-        {{ currentUserInfo }}
-        </div>
-        <v-text-field
-          type="text"
-          autocomplete="userid"
-          v-model.trim="form.userId"
-          :rules="rules"
-          label="ID/学号 &nbsp;&nbsp; e.g. 20221145"
-          @update:model-value="updateCurrentUserInfo"
-        />
-        <v-text-field
-          type="password"
-          autocomplete="password"
-          v-model="form.password"
-          :rules="rules"
-          label="密码"
-          @keyup.native.enter="login"
-        />
-        <v-btn class="me-4 submit" @click="login">登录 </v-btn>
-      </v-form>
-    </v-card-text>
-  </v-card>
-  <v-card v-if="publicNotice">
-    <v-card-title> 公告：{{ publicNotice.title }} </v-card-title>
-    <v-card-text v-html="publicNotice.content"> </v-card-text>
-  </v-card>
-</template>
+    <v-card>
+      <v-card-title>修改他人密码</v-card-title>
+      <v-card-text>
+        <v-form v-model.trim="isFormValid">
+          <div style="height:20px">
+          {{ currentUserInfo }}
+          </div>
+          <v-text-field
+            type="text"
+            autocomplete="userid"
+            v-model.trim="form.userId"
+            :rules="rules"
+            label="ID/学号 &nbsp;&nbsp; e.g. 20221145"
+            @update:model-value="updateCurrentUserInfo"
+          />
+          <v-text-field
+            type="password"
+            autocomplete="password"
+            v-model="form.password"
+            :rules="rules"
+            label="密码"
+            @keyup.native.enter="modifyOthersPwd"
+          />
+          <v-btn class="me-4 submit" @click="modifyOthersPwd">修改密码</v-btn>
+        </v-form>
+      </v-card-text>
+    </v-card>
+  </template>
 
 <script lang="ts">
 import { fApi, type PublicNotice } from "@/apis";
@@ -73,7 +52,7 @@ export default {
       currentUserInfo: "",
       rules: [NOT_EMPTY()],
       isFormValid: false,
-      publicNotice: null as PublicNotice,
+      //publicNotice: null as PublicNotice,
       students: {} as Record<string, string>,
     };
   },
@@ -81,9 +60,11 @@ export default {
     if (this.infoStore.token && !(this.infoStore.permission & Categ.None)) {
       router.push("/");
     }
+    /*
     fApi.skipOkToast.getPublicNotice()((result) => {
       this.publicNotice = result;
     });
+    */
     // (async () => {
     //   this.students = ;
     // })();
@@ -99,7 +80,7 @@ export default {
         this.currentUserInfo = `${clsName} ${userName}`;
       });
     },
-    login() {
+    modifyOthersPwd() {
       if (this.isFormValid) {
         if (this.loadingStore.noretry) {
           toasts.error("密码错误次数过多，请稍等！");
@@ -112,7 +93,7 @@ export default {
               this.loadingStore.noretryStart = Date.now();
             }
           })
-          .login(
+          .modifyotherspassword(
             this.form.userId,
             md5(pwd)
           )(({ token, id }) => {

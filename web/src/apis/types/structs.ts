@@ -292,3 +292,7 @@ export interface PublicNoticeNotNone {
 
 export type PublicNotice = PublicNoticeNotNone | null
 
+export interface ModOthersPwd {
+    pwd: string
+}
+

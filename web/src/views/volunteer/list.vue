@@ -137,7 +137,7 @@ export default {
           key: "status",
         },
         {
-          title: "进行时间",
+          title: "预期进行时间",
           value: "time",
           key: "time",
         },
