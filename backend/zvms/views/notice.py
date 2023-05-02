@@ -101,8 +101,6 @@ def load_public_notice():
         public_notice_content = f.read()
         print("Public notice loaded.")
 
-load_public_notice()
-
 @Api(rule='/notice/public', method='GET', response='PublicNotice', auth=Categ.NONE)
 def get_public_notice(token_data):
     '''获取公开通知'''

@@ -1,30 +1,36 @@
 # 镇海中学义工管理系统API文档
+
 ## 1.zvms.views.user
+
 ### **...**
 
-#### 1.1 check
+#### 1.1 zvms.views.user
+
 [GET] /user/check  
 **检查登录状态**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 1.2 login
+#### 1.2 zvms.views.user
+
 [POST] /user/login  
 **登录**  
-参数: 
+
+参数:
 ```json
 {
     "id": "string",
     "pwd": "string"
 }
 ```
-响应:  
+响应:
 ```json
 {
     "token": "string",
@@ -32,22 +38,26 @@
 }
 ```
 
-#### 1.3 logout
+#### 1.3 zvms.views.user
+
 [POST] /user/logout  
 **登出**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 1.4 searchUsers
+#### 1.4 zvms.views.user
+
 [GET] /user/search  
 **搜索用户**  
-参数: 
+
+参数:
 ```json
 {
     "name": "string",
@@ -55,19 +65,21 @@
     "auth": "number"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 1.5 getUserBasicInfo
+#### 1.5 zvms.views.user
+
 [GET] /user/<int:id>/name  
 **获取一个用户的最基础信息(用于登录页面)**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 {
     "clsName": "string",
@@ -75,14 +87,16 @@
 }
 ```
 
-#### 1.6 getUserInfo
+#### 1.6 zvms.views.user
+
 [GET] /user/<int:id>  
 **获取一个用户的详细详细信息**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 {
     "name": "string",
@@ -93,14 +107,16 @@
 }
 ```
 
-#### 1.7 getStudentStat
+#### 1.7 zvms.views.user
+
 [GET] /user/<int:id>/time  
 **获取一个用户(学生)的义工分**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 {
     "inside": "number",
@@ -109,25 +125,29 @@
 }
 ```
 
-#### 1.8 modifyPassword
+#### 1.8 zvms.views.user
+
 [POST] /user/mod-pwd  
 **修改自己的密码**  
-参数: 
+
+参数:
 ```json
 {
     "old": "string",
     "neo": "string"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 1.9 createUser
+#### 1.9 zvms.views.user
+
 [POST] /user/create  
 **创建用户**  
-参数: 
+
+参数:
 ```json
 {
     "users": [
@@ -140,15 +160,17 @@
     ]
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 1.10 modifyUser
+#### 1.10 zvms.views.user
+
 [POST] /user/<int:id>/modify  
 **修改用户信息**  
-参数: 
+
+参数:
 ```json
 {
     "name": "string",
@@ -156,65 +178,70 @@
     "auth": "number"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 1.11 deleteUser
+#### 1.11 zvms.views.user
+
 [POST] /user/<int:id>/delete  
 **删除用户**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 1.12 modifyotherspassword
+#### 1.12 zvms.views.user
+
 [POST] /user/<int:id>/mod-others-pwd  
 **...**  
-参数: 
+
+参数:
 ```json
 {
     "pwd": "string"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
-
-
----
-
 ## 2.zvms.views.report
+
 ### **...**
 
-#### 2.1 report
+#### 2.1 zvms.views.report
+
 [POST] /report  
 **发送反馈**  
-参数: 
+
+参数:
 ```json
 {
     "report": "string"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 2.2 fetchReport
+#### 2.2 zvms.views.report
+
 [GET] /report/fetch  
 **获取反馈**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 [
     {
@@ -225,17 +252,16 @@
     }
 ]
 ```
-
-
----
-
 ## 3.zvms.views.notice
+
 ### **...**
 
-#### 3.1 searchNotices
+#### 3.1 zvms.views.notice
+
 [GET] /notice/search  
 **搜索通知**  
-参数: 
+
+参数:
 ```json
 {
     "sender": "number",
@@ -244,7 +270,7 @@
     "school": "number"
 }
 ```
-响应:  
+响应:
 ```json
 [
     {
@@ -259,10 +285,12 @@
 ]
 ```
 
-#### 3.2 sendUserNotice
+#### 3.2 zvms.views.notice
+
 [POST] /notice/send/user  
 **发送用户通知**  
-参数: 
+
+参数:
 ```json
 {
     "targets": [
@@ -273,15 +301,17 @@
     "deadtime": "string"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 3.3 sendClassNotice
+#### 3.3 zvms.views.notice
+
 [POST] /notice/send/class  
 **发送班级通知**  
-参数: 
+
+参数:
 ```json
 {
     "targets": [
@@ -292,15 +322,17 @@
     "deadtime": "string"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 3.4 sendSchoolNotice
+#### 3.4 zvms.views.notice
+
 [POST] /notice/send/school  
 **发送学校通知**  
-参数: 
+
+参数:
 ```json
 {
     "anonymous": "boolean",
@@ -309,27 +341,31 @@
     "deadtime": "string"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 3.5 deleteNotice
+#### 3.5 zvms.views.notice
+
 [POST] /notice/<int:id>/delete  
 **删除一个通知**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 3.6 modifyNotice
+#### 3.6 zvms.views.notice
+
 [POST] /notice/<int:id>/modify  
 **修改一个通知**  
-参数: 
+
+参数:
 ```json
 {
     "title": "string",
@@ -337,19 +373,21 @@
     "deadtime": "string"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 3.7 getPublicNotice
+#### 3.7 zvms.views.notice
+
 [GET] /notice/public  
 **获取公开通知**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 [
     {
@@ -359,21 +397,20 @@
     "null"
 ]
 ```
-
-
----
-
 ## 4.zvms.views.signup
+
 ### **...**
 
-#### 4.1 listSignup
+#### 4.1 zvms.views.signup
+
 [GET] /signup/list/<int:cls>  
 **列出一个班级的报名**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 [
     {
@@ -385,10 +422,12 @@
 ]
 ```
 
-#### 4.2 signup
+#### 4.2 zvms.views.signup
+
 [POST] /signup/<int:volId>  
 **报名一个义工**  
-参数: 
+
+参数:
 ```json
 {
     "students": [
@@ -396,39 +435,40 @@
     ]
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 4.3 rollback
+#### 4.3 zvms.views.signup
+
 [POST] /signup/<int:volId>/<int:stuId>/rollback  
 **撤回一个报名**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
-
-
----
-
 ## 5.zvms.views.volunteer
+
 ### **...**
 
-#### 5.1 listVolunteers
+#### 5.1 zvms.views.volunteer
+
 [GET] /volunteer/list  
 **列出义工**  
-参数: 
+
+参数:
 ```json
 {
     "cls": "number"
 }
 ```
-响应:  
+响应:
 ```json
 [
     {
@@ -448,10 +488,12 @@
 ]
 ```
 
-#### 5.2 searchVolunteers
+#### 5.2 zvms.views.volunteer
+
 [GET] /volunteer/search  
 **搜索义工**  
-参数: 
+
+参数:
 ```json
 {
     "holder": "number",
@@ -462,7 +504,7 @@
     "signable": "boolean"
 }
 ```
-响应:  
+响应:
 ```json
 [
     {
@@ -482,14 +524,16 @@
 ]
 ```
 
-#### 5.3 getVolunteerInfo
+#### 5.3 zvms.views.volunteer
+
 [GET] /volunteer/<int:id>  
 **获取一个义工的详细信息**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 {
     "name": "string",
@@ -517,10 +561,12 @@
 }
 ```
 
-#### 5.4 createVolunteer
+#### 5.4 zvms.views.volunteer
+
 [POST] /volunteer/create  
 **创建一个义工**  
-参数: 
+
+参数:
 ```json
 {
     "classes": [
@@ -536,15 +582,17 @@
     "reward": "number"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 5.5 createAppointedVolunteer
+#### 5.5 zvms.views.volunteer
+
 [POST] /volunteer/create/appointed  
 **创建一个成员全部指定的义工**  
-参数: 
+
+参数:
 ```json
 {
     "joiners": [
@@ -557,15 +605,17 @@
     "reward": "number"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 5.6 modifyVolunteer
+#### 5.6 zvms.views.volunteer
+
 [POST] /volunteer/<int:id>/modify  
 **修改义工**  
-参数: 
+
+参数:
 ```json
 {
     "classes": [
@@ -581,63 +631,68 @@
     "reward": "number"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 5.7 deleteVolunteer
+#### 5.7 zvms.views.volunteer
+
 [POST] /volunteer/<int:id>/delete  
 **删除义工**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 5.8 auditVolunteer
+#### 5.8 zvms.views.volunteer
+
 [POST] /volunteer/<int:id>/audit  
 **审核通过义工**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 5.9 repulseVolunteer
+#### 5.9 zvms.views.volunteer
+
 [POST] /volunteer/<int:id>/repulse  
 **审核打回义工**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
-
-
----
-
 ## 6.zvms.views.thought
+
 ### **...**
 
-#### 6.1 listStudentThoughts
+#### 6.1 zvms.views.thought
+
 [GET] /thought/student/<int:id>  
 **搜索学生感想**  
-参数: 
+
+参数:
 ```json
 {
     "status": "ThoughtStatus"
 }
 ```
-响应:  
+响应:
 ```json
 [
     {
@@ -651,10 +706,12 @@
 ]
 ```
 
-#### 6.2 searchThoughts
+#### 6.2 zvms.views.thought
+
 [GET] /thought/search  
 **搜索感想**  
-参数: 
+
+参数:
 ```json
 {
     "cls": "number",
@@ -663,7 +720,7 @@
     "volunteer": "number"
 }
 ```
-响应:  
+响应:
 ```json
 [
     {
@@ -677,14 +734,16 @@
 ]
 ```
 
-#### 6.3 getThoughtInfo
+#### 6.3 zvms.views.thought
+
 [GET] /thought/<int:volId>/<int:stuId>  
 **获取一个感想的详细信息**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 {
     "status": "ThoughtStatus",
@@ -701,10 +760,12 @@
 }
 ```
 
-#### 6.4 saveThought
+#### 6.4 zvms.views.thought
+
 [POST] /thought/<int:volId>/<int:stuId>/save  
 **保存感想草稿**  
-参数: 
+
+参数:
 ```json
 {
     "thought": "string",
@@ -722,15 +783,17 @@
     ]
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 6.5 submitThought
+#### 6.5 zvms.views.thought
+
 [POST] /thought/<int:volId>/<int:stuId>/submit  
 **提交感想**  
-参数: 
+
+参数:
 ```json
 {
     "thought": "string",
@@ -748,82 +811,89 @@
     ]
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 6.6 firstAudit
+#### 6.6 zvms.views.thought
+
 [POST] /thought/<int:volId>/<int:stuId>/audit/first  
 **初审感想(班内)**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 6.7 finalAudit
+#### 6.7 zvms.views.thought
+
 [POST] /thought/<int:volId>/<int:stuId>/audit/final  
 **终审感想(义管会)**  
-参数: 
+
+参数:
 ```json
 {
     "reward": "number"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 6.8 repulseThought
+#### 6.8 zvms.views.thought
+
 [POST] /thought/<int:volId>/<int:stuId>/repulse  
 **打回感想**  
-参数: 
+
+参数:
 ```json
 {
     "reason": "string"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 6.9 fetchPicture
+#### 6.9 zvms.views.thought
+
 [POST] /thought/<int:volId>/<int:stuId>/fetch-picture  
 **拉取感想图片**  
-参数: 
+
+参数:
 ```json
 {
     "url": "string"
 }
 ```
-响应:  
+响应:
 ```json
 {
     "hash": "string",
     "type": "string"
 }
 ```
-
-
----
-
 ## 7.zvms.views.class_
+
 ### **...**
 
-#### 7.1 listClasses
+#### 7.1 zvms.views.class_
+
 [GET] /class/list  
 **列出所有班级**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 [
     {
@@ -833,28 +903,32 @@
 ]
 ```
 
-#### 7.2 getClassStudentNum
+#### 7.2 zvms.views.class_
+
 [GET] /class/<int:id>/student_num  
 **获取一个班级的学生人数**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 {
     "num": "number"
 }
 ```
 
-#### 7.3 getClassInfo
+#### 7.3 zvms.views.class_
+
 [GET] /class/<int:id>  
 **获取一个班级的详细信息**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 {
     "name": "string",
@@ -875,65 +949,65 @@
 }
 ```
 
-#### 7.4 deleteClass
+#### 7.4 zvms.views.class_
+
 [POST] /class/<int:id>/delete  
 **删除一个班级**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 7.5 createClass
+#### 7.5 zvms.views.class_
+
 [POST] /class/create  
 **创建一个班级**  
-参数: 
+
+参数:
 ```json
 {
     "name": "string"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
 
-#### 7.6 modifyClass
+#### 7.6 zvms.views.class_
+
 [POST] /class/<int:id>/modify  
 **修改一个班级的名称**  
-参数: 
+
+参数:
 ```json
 {
     "name": "string"
 }
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
-
-
----
-
 ## 8.zvms.views.system
+
 ### **...**
 
-#### 8.1 restartTtyd
+#### 8.1 zvms.views.system
+
 [POST] /system/ttyd/restart  
 **...**  
-参数: 
+
+参数:
 ```json
 "any"
 ```
-响应:  
+响应:
 ```json
 "any"
 ```
-
-
----
-
-

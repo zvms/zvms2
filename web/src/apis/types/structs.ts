@@ -1,61 +1,49 @@
-import * as enums from "././enums";
+import * as enums from "./enums;";
 
-export interface Class {
+export interface Class{
     name: string
 }
-
-export interface SingleClass {
+export interface SingleClass{
     id: number,
     name: string
 }
-
-export interface SingleUserWithoutAuth {
+export interface SingleUserWithoutAuth{
     id: number,
     name: string
 }
-
-export interface SingleUser extends SingleUserWithoutAuth {
+export interface SingleUser extends SingleUserWithoutAuth{
     auth: number
 }
-
 export type ListClassesResponse = Array<SingleClass>
-
-export interface ClassInfoResponse {
+export interface ClassInfoResponse{
     name: string,
     students: Array<SingleUser>,
     teachers: Array<SingleUser>
 }
-
-export interface ClassStudentNum {
+export interface ClassStudentNum{
     num: number
 }
-
-export interface UserLoginResponse {
+export interface UserLoginResponse{
     token: string,
     id: number
 }
-
 export type SearchUsersResponse = Array<SingleUser>
-
-export interface UserBasicInfoResponse {
+export interface UserBasicInfoResponse{
     clsName: string,
     userName: string
 }
-
-export interface UserInfoResponse {
+export interface UserInfoResponse{
     name: string,
     school_id: number,
     cls: number,
     auth: number,
     clsName: string
 }
-
-export interface PictureResponse {
+export interface PictureResponse{
     hash: string,
     type: string
 }
-
-export interface ThoughtInfoResponse {
+export interface ThoughtInfoResponse{
     status: enums.ThoughtStatus,
     thought: string,
     pics: Array<PictureResponse>,
@@ -63,21 +51,18 @@ export interface ThoughtInfoResponse {
     everRepulsed: boolean,
     reason: string
 }
-
-export interface StudentThoughtsResponse {
+export interface StudentThoughtsResponse{
     accepted: Array<ThoughtInfoResponse>,
     unsubmitted: Array<ThoughtInfoResponse>,
     draft: Array<ThoughtInfoResponse>,
     unaudited: Array<ThoughtInfoResponse>
 }
-
-export interface StudentStatResponse {
+export interface StudentStatResponse{
     inside: number,
     outside: number,
     large: number
 }
-
-export interface SingleNotice {
+export interface SingleNotice{
     id: number,
     title: string,
     content: string,
@@ -86,19 +71,15 @@ export interface SingleNotice {
     deadtime: string,
     senderName: string
 }
-
 export type SearchNoticesResponse = Array<SingleNotice>
-
-export interface SingleSignup {
+export interface SingleSignup{
     volId: number,
     volName: string,
     stuId: number,
     stuName: string
 }
-
 export type ListSignupResponse = Array<SingleSignup>
-
-export interface SingleVolunteer {
+export interface SingleVolunteer{
     id: number,
     name: string,
     time: string,
@@ -107,59 +88,47 @@ export interface SingleVolunteer {
     joiners: Array<SingleUserWithoutAuth>,
     holderName: string
 }
-
 export type SearchVolunteersResponse = Array<SingleVolunteer>
-
-export interface SearchNotices {
+export interface SearchNotices{
     sender?: number,
     receiver?: number,
     cls?: number,
     school?: number
 }
-
-export interface NoticeBody {
+export interface NoticeBody{
     title: string,
     content: string,
     deadtime: string
 }
-
-export interface Notice extends NoticeBody {
+export interface Notice extends NoticeBody{
     targets: Array<number>
 }
-
-export interface SchoolNotice extends NoticeBody {
+export interface SchoolNotice extends NoticeBody{
     anonymous: boolean
 }
-
-export interface Report {
+export interface Report{
     report: string
 }
-
-export interface SingleReport {
+export interface SingleReport{
     content: string,
     reporter: number,
     reporterName: string,
     time: string
 }
-
 export type FetchReportsResponse = Array<SingleReport>
-
-export interface Signup {
+export interface Signup{
     students: Array<number>
 }
-
-export interface SearchThoughts {
+export interface SearchThoughts{
     cls?: number,
     status?: enums.ThoughtStatus,
     student?: number,
     volunteer?: number
 }
-
-export interface SearchStudentThoughts {
+export interface SearchStudentThoughts{
     status?: enums.ThoughtStatus
 }
-
-export interface SingleThought {
+export interface SingleThought{
     volId: number,
     stuId: number,
     status: enums.ThoughtStatus,
@@ -167,74 +136,58 @@ export interface SingleThought {
     volName: string,
     volTime: string
 }
-
 export type SearchThoughtsResponse = Array<SingleThought>
-
-export interface BasePictrure {
+export interface BasePictrure{
     type: string
 }
-
-export interface ExistedPicture extends BasePictrure {
+export interface ExistedPicture extends BasePictrure{
     hash: string,
     type: string
 }
-
-export interface Base64Picture extends BasePictrure {
+export interface Base64Picture extends BasePictrure{
     base64: string,
     type: string
 }
-
 export type Picture = ExistedPicture | Base64Picture
-
-export interface Thought {
+export interface Thought{
     thought: string,
     pictures: Array<ExistedPicture | Base64Picture>
 }
-
-export interface Login {
+export interface Login{
     id: string,
     pwd: string
 }
-
-export interface SearchUsers {
+export interface SearchUsers{
     name?: string,
     cls?: number,
     auth?: number
 }
-
-export interface ModPwd {
+export interface ModPwd{
     old: string,
     neo: string
 }
-
-export interface User {
+export interface User{
     name: string,
     cls: number,
     auth: number
 }
-
-export interface OneUser extends User {
+export interface OneUser extends User{
     id: number
 }
-
-export interface Users {
+export interface Users{
     users: Array<OneUser>
 }
-
-export interface ClassVol {
+export interface ClassVol{
     id: number,
     max: number
 }
-
-export interface ClassVolWithName extends ClassVol {
+export interface ClassVolWithName extends ClassVol{
     name: string
 }
-
-export interface ListVolunteers {
+export interface ListVolunteers{
     cls?: number
 }
-
-export interface SearchVolunteers {
+export interface SearchVolunteers{
     holder?: number,
     student?: number,
     cls?: number,
@@ -242,20 +195,17 @@ export interface SearchVolunteers {
     status?: enums.VolStatus,
     signable?: boolean
 }
-
-export interface VolunteerBody {
+export interface VolunteerBody{
     name: string,
     description: string,
     time: string,
     type: enums.VolType,
     reward: number
 }
-
-export interface Volunteer extends VolunteerBody {
+export interface Volunteer extends VolunteerBody{
     classes: Array<ClassVol>
 }
-
-export interface VolunteerInfoResponse {
+export interface VolunteerInfoResponse{
     name: string,
     description: string,
     time: string,
@@ -268,31 +218,23 @@ export interface VolunteerInfoResponse {
     holder: number,
     holderName: string
 }
-
-export interface AppointedVolunteer extends VolunteerBody {
+export interface AppointedVolunteer extends VolunteerBody{
     joiners: Array<number>
 }
-
-export interface Repulse {
+export interface Repulse{
     reason: string
 }
-
-export interface Accept {
+export interface Accept{
     reward: number
 }
-
-export interface FetchPicture {
+export interface FetchPicture{
     url: string
 }
-
-export interface PublicNoticeNotNone {
+export interface PublicNoticeNotNone{
     title: string,
     content: string
 }
-
 export type PublicNotice = PublicNoticeNotNone | null
-
-export interface ModOthersPwd {
+export interface ModOthersPwd{
     pwd: string
 }
-

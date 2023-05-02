@@ -33,7 +33,7 @@ class Categ(IntFlag):
     MANAGER = 16
     AUDITOR = 32
     SYSTEM = 64
-    INSPECTER = 128
+    INSPECTOR = 128
 
     ANY = 255
 

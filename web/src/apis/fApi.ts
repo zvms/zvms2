@@ -172,7 +172,7 @@ export class ForegroundApi {
   /**
    * ## 登录
    * ### [POST] /user/login
-   * #### 权限: None
+   * #### 权限: Any
    * @param id
    * @param pwd
    */
@@ -184,8 +184,8 @@ export class ForegroundApi {
       this,
       "POST",
       `/user/login`, {
-              id,
-      pwd
+        id,
+        pwd
       }
     );
   }
@@ -209,13 +209,15 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/user/search?`+ toURLSearchParams(      kwargs)
+      `/user/search?` + toURLSearchParams(
+        kwargs
+      )
     );
   }
   /**
    * ## 获取一个用户的最基础信息(用于登录页面)
    * ### [GET] /user/<int:id>/name
-   * #### 权限: None
+   * #### 权限: Any
    * @param id
    */
   getUserBasicInfo(
@@ -224,7 +226,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/user/${id}/name?`+ toURLSearchParams()
+      `/user/${id}/name`
     );
   }
   /**
@@ -239,7 +241,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/user/${id}?`+ toURLSearchParams()
+      `/user/${id}`
     );
   }
   /**
@@ -254,7 +256,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/user/${id}/time?`+ toURLSearchParams()
+      `/user/${id}/time`
     );
   }
   /**
@@ -272,15 +274,15 @@ export class ForegroundApi {
       this,
       "POST",
       `/user/mod-pwd`, {
-              old,
-      neo
+        old,
+        neo
       }
     );
   }
   /**
    * ## 创建用户
    * ### [POST] /user/create
-   * #### 权限: System
+   * #### 权限: Any
    * @param users
    */
   createUser(
@@ -290,14 +292,14 @@ export class ForegroundApi {
       this,
       "POST",
       `/user/create`, {
-              users
+        users
       }
     );
   }
   /**
    * ## 修改用户信息
    * ### [POST] /user/<int:id>/modify
-   * #### 权限: System
+   * #### 权限: Any
    * @param id
    * @param name
    * @param cls
@@ -313,16 +315,16 @@ export class ForegroundApi {
       this,
       "POST",
       `/user/${id}/modify`, {
-              name,
-      cls,
-      auth
+        name,
+        cls,
+        auth
       }
     );
   }
   /**
    * ## 删除用户
    * ### [POST] /user/<int:id>/delete
-   * #### 权限: System
+   * #### 权限: Any
    * @param id
    */
   deleteUser(
@@ -331,14 +333,13 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/user/${id}/delete`, {
-        
-      }
+      `/user/${id}/delete`,
+      {}
     );
   }
   /**
    * ### [POST] /user/<int:id>/mod-others-pwd
-   * #### 权限: System | Manager
+   * #### 权限: Any
    * @param id
    * @param pwd
    */
@@ -350,7 +351,7 @@ export class ForegroundApi {
       this,
       "POST",
       `/user/${id}/mod-others-pwd`, {
-              pwd
+        pwd
       }
     );
   }
@@ -367,14 +368,14 @@ export class ForegroundApi {
       this,
       "POST",
       `/report`, {
-              report
+        report
       }
     );
   }
   /**
    * ## 获取反馈
    * ### [GET] /report/fetch
-   * #### 权限: System
+   * #### 权限: Any
    */
   fetchReport(): ForegroundApiRunner<Array<structs.SingleReport>> {
     return createForegroundApiRunner(this, "GET", `/report/fetch`);
@@ -391,13 +392,15 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/notice/search?`+ toURLSearchParams(      kwargs)
+      `/notice/search?` + toURLSearchParams(
+        kwargs
+      )
     );
   }
   /**
    * ## 发送用户通知
    * ### [POST] /notice/send/user
-   * #### 权限: Manager | Teacher
+   * #### 权限: Any
    * @param targets
    * @param title
    * @param content
@@ -413,17 +416,17 @@ export class ForegroundApi {
       this,
       "POST",
       `/notice/send/user`, {
-              targets,
-      title,
-      content,
-      deadtime
+        targets,
+        title,
+        content,
+        deadtime
       }
     );
   }
   /**
    * ## 发送班级通知
    * ### [POST] /notice/send/class
-   * #### 权限: Manager | Teacher
+   * #### 权限: Any
    * @param targets
    * @param title
    * @param content
@@ -439,17 +442,17 @@ export class ForegroundApi {
       this,
       "POST",
       `/notice/send/class`, {
-              targets,
-      title,
-      content,
-      deadtime
+        targets,
+        title,
+        content,
+        deadtime
       }
     );
   }
   /**
    * ## 发送学校通知
    * ### [POST] /notice/send/school
-   * #### 权限: Manager | Teacher
+   * #### 权限: Any
    * @param anonymous
    * @param title
    * @param content
@@ -465,17 +468,17 @@ export class ForegroundApi {
       this,
       "POST",
       `/notice/send/school`, {
-              anonymous,
-      title,
-      content,
-      deadtime
+        anonymous,
+        title,
+        content,
+        deadtime
       }
     );
   }
   /**
    * ## 删除一个通知
    * ### [POST] /notice/<int:id>/delete
-   * #### 权限: Manager | Teacher
+   * #### 权限: Any
    * @param id
    */
   deleteNotice(
@@ -484,15 +487,14 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/notice/${id}/delete`, {
-        
-      }
+      `/notice/${id}/delete`,
+      {}
     );
   }
   /**
    * ## 修改一个通知
    * ### [POST] /notice/<int:id>/modify
-   * #### 权限: Manager | Teacher
+   * #### 权限: Any
    * @param id
    * @param title
    * @param content
@@ -508,16 +510,16 @@ export class ForegroundApi {
       this,
       "POST",
       `/notice/${id}/modify`, {
-              title,
-      content,
-      deadtime
+        title,
+        content,
+        deadtime
       }
     );
   }
   /**
    * ## 获取公开通知
    * ### [GET] /notice/public
-   * #### 权限: None
+   * #### 权限: Any
    */
   getPublicNotice(): ForegroundApiRunner<structs.PublicNoticeNotNone | null> {
     return createForegroundApiRunner(this, "GET", `/notice/public`);
@@ -534,7 +536,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/signup/list/${cls}?`+ toURLSearchParams()
+      `/signup/list/${cls}`
     );
   }
   /**
@@ -552,7 +554,7 @@ export class ForegroundApi {
       this,
       "POST",
       `/signup/${volId}`, {
-              students
+        students
       }
     );
   }
@@ -570,9 +572,8 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/signup/${volId}/${stuId}/rollback`, {
-        
-      }
+      `/signup/${volId}/${stuId}/rollback`,
+      {}
     );
   }
   /**
@@ -587,7 +588,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/volunteer/list?`+ toURLSearchParams(      kwargs)
+      `/volunteer/list?` + toURLSearchParams(
+        kwargs
+      )
     );
   }
   /**
@@ -602,7 +605,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/volunteer/search?`+ toURLSearchParams(      kwargs)
+      `/volunteer/search?` + toURLSearchParams(
+        kwargs
+      )
     );
   }
   /**
@@ -617,7 +622,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/volunteer/${id}?`+ toURLSearchParams()
+      `/volunteer/${id}`
     );
   }
   /**
@@ -643,12 +648,12 @@ export class ForegroundApi {
       this,
       "POST",
       `/volunteer/create`, {
-              classes,
-      name,
-      description,
-      time,
-      type,
-      reward
+        classes,
+        name,
+        description,
+        time,
+        type,
+        reward
       }
     );
   }
@@ -675,12 +680,12 @@ export class ForegroundApi {
       this,
       "POST",
       `/volunteer/create/appointed`, {
-              joiners,
-      name,
-      description,
-      time,
-      type,
-      reward
+        joiners,
+        name,
+        description,
+        time,
+        type,
+        reward
       }
     );
   }
@@ -709,12 +714,12 @@ export class ForegroundApi {
       this,
       "POST",
       `/volunteer/${id}/modify`, {
-              classes,
-      name,
-      description,
-      time,
-      type,
-      reward
+        classes,
+        name,
+        description,
+        time,
+        type,
+        reward
       }
     );
   }
@@ -730,15 +735,14 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/volunteer/${id}/delete`, {
-        
-      }
+      `/volunteer/${id}/delete`,
+      {}
     );
   }
   /**
    * ## 审核通过义工
    * ### [POST] /volunteer/<int:id>/audit
-   * #### 权限: Class | Teacher
+   * #### 权限: Any
    * @param id
    */
   auditVolunteer(
@@ -747,15 +751,14 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/volunteer/${id}/audit`, {
-        
-      }
+      `/volunteer/${id}/audit`,
+      {}
     );
   }
   /**
    * ## 审核打回义工
    * ### [POST] /volunteer/<int:id>/repulse
-   * #### 权限: Class | Teacher
+   * #### 权限: Any
    * @param id
    */
   repulseVolunteer(
@@ -764,9 +767,8 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/volunteer/${id}/repulse`, {
-        
-      }
+      `/volunteer/${id}/repulse`,
+      {}
     );
   }
   /**
@@ -783,7 +785,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/thought/student/${id}?`+ toURLSearchParams(      kwargs)
+      `/thought/student/${id}?` + toURLSearchParams(
+        kwargs
+      )
     );
   }
   /**
@@ -798,7 +802,9 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/thought/search?`+ toURLSearchParams(      kwargs)
+      `/thought/search?` + toURLSearchParams(
+        kwargs
+      )
     );
   }
   /**
@@ -815,7 +821,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/thought/${volId}/${stuId}?`+ toURLSearchParams()
+      `/thought/${volId}/${stuId}`
     );
   }
   /**
@@ -837,8 +843,8 @@ export class ForegroundApi {
       this,
       "POST",
       `/thought/${volId}/${stuId}/save`, {
-              thought,
-      pictures
+        thought,
+        pictures
       }
     );
   }
@@ -861,15 +867,15 @@ export class ForegroundApi {
       this,
       "POST",
       `/thought/${volId}/${stuId}/submit`, {
-              thought,
-      pictures
+        thought,
+        pictures
       }
     );
   }
   /**
    * ## 初审感想(班内)
    * ### [POST] /thought/<int:volId>/<int:stuId>/audit/first
-   * #### 权限: Class | Teacher
+   * #### 权限: Any
    * @param volId
    * @param stuId
    */
@@ -880,15 +886,14 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/thought/${volId}/${stuId}/audit/first`, {
-        
-      }
+      `/thought/${volId}/${stuId}/audit/first`,
+      {}
     );
   }
   /**
    * ## 终审感想(义管会)
    * ### [POST] /thought/<int:volId>/<int:stuId>/audit/final
-   * #### 权限: Auditor
+   * #### 权限: Any
    * @param volId
    * @param stuId
    * @param reward
@@ -902,7 +907,7 @@ export class ForegroundApi {
       this,
       "POST",
       `/thought/${volId}/${stuId}/audit/final`, {
-              reward
+        reward
       }
     );
   }
@@ -923,7 +928,7 @@ export class ForegroundApi {
       this,
       "POST",
       `/thought/${volId}/${stuId}/repulse`, {
-              reason
+        reason
       }
     );
   }
@@ -944,7 +949,7 @@ export class ForegroundApi {
       this,
       "POST",
       `/thought/${volId}/${stuId}/fetch-picture`, {
-              url
+        url
       }
     );
   }
@@ -968,7 +973,7 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/class/${id}/student_num?`+ toURLSearchParams()
+      `/class/${id}/student_num`
     );
   }
   /**
@@ -983,13 +988,13 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "GET",
-      `/class/${id}?`+ toURLSearchParams()
+      `/class/${id}`
     );
   }
   /**
    * ## 删除一个班级
    * ### [POST] /class/<int:id>/delete
-   * #### 权限: System
+   * #### 权限: Any
    * @param id
    */
   deleteClass(
@@ -998,15 +1003,14 @@ export class ForegroundApi {
     return createForegroundApiRunner(
       this,
       "POST",
-      `/class/${id}/delete`, {
-        
-      }
+      `/class/${id}/delete`,
+      {}
     );
   }
   /**
    * ## 创建一个班级
    * ### [POST] /class/create
-   * #### 权限: System
+   * #### 权限: Any
    * @param name
    */
   createClass(
@@ -1016,14 +1020,14 @@ export class ForegroundApi {
       this,
       "POST",
       `/class/create`, {
-              name
+        name
       }
     );
   }
   /**
    * ## 修改一个班级的名称
    * ### [POST] /class/<int:id>/modify
-   * #### 权限: System
+   * #### 权限: Any
    * @param id
    * @param name
    */
@@ -1035,13 +1039,13 @@ export class ForegroundApi {
       this,
       "POST",
       `/class/${id}/modify`, {
-              name
+        name
       }
     );
   }
   /**
    * ### [POST] /system/ttyd/restart
-   * #### 权限: System
+   * #### 权限: Any
    */
   restartTtyd(): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(this, "POST", `/system/ttyd/restart`);
