@@ -1,4 +1,4 @@
-import * as enums from "./enums;";
+import * as enums from "./enums";
 
 export interface Class{
     name: string

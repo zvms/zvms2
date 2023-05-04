@@ -56,6 +56,7 @@ export default {
       students: {} as Record<string, string>,
     };
   },
+  /*
   beforeMount() {
     if (this.infoStore.token && !(this.infoStore.permission & Categ.None)) {
       router.push("/");
@@ -64,11 +65,12 @@ export default {
     fApi.skipOkToast.getPublicNotice()((result) => {
       this.publicNotice = result;
     });
-    */
+    //
     // (async () => {
     //   this.students = ;
     // })();
   },
+  */
   methods: {
     updateCurrentUserInfo() {
       const userId = parseInt(this.form.userId);

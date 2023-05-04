@@ -138,6 +138,19 @@ const router = createRouter({
       },
     },
     {
+      path: "/modify/modifyOthersPwd",
+      name: "modifyOthersPwd",
+      component: () => import("../views/modify/modifyOthersPwd.vue"),
+      meta: {
+        authed: createHasAuth(Categ.System | Categ.Manager),
+        nav: {
+          priority: 7,
+          title: "修改他人密码",
+          icon: "mdi-pencil",
+        },
+      },
+    },
+    {
       path: "/docs/:docId",
       name: "docs",
       component: () => import("../views/docs.vue"),
