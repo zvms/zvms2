@@ -772,6 +772,13 @@ export class ForegroundApi {
     );
   }
   /**
+   * ### [POST] /volunteer/create/special
+   * #### 权限: Any
+   */
+  createSpecialVolunteer(): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(this, "POST", `/volunteer/create/special`);
+  }
+  /**
    * ## 搜索学生感想
    * ### [GET] /thought/student/<int:id>
    * #### 权限: Any

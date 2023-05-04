@@ -677,6 +677,20 @@
 ```json
 "any"
 ```
+
+#### 5.10 zvms.views.volunteer
+
+[POST] /volunteer/create/special  
+**...**  
+
+参数:
+```json
+"any"
+```
+响应:
+```json
+"any"
+```
 ## 6.zvms.views.thought
 
 ### **...**

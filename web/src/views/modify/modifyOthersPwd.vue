@@ -56,21 +56,20 @@ export default {
       students: {} as Record<string, string>,
     };
   },
-  /*
-  beforeMount() {
-    if (this.infoStore.token && !(this.infoStore.permission & Categ.None)) {
-      router.push("/");
-    }
-    /*
-    fApi.skipOkToast.getPublicNotice()((result) => {
-      this.publicNotice = result;
-    });
-    //
-    // (async () => {
-    //   this.students = ;
-    // })();
-  },
-  */
+  
+  // beforeMount() {
+  //   if (this.infoStore.token && !(this.infoStore.permission & Categ.None)) {
+  //     router.push("/");
+  //   }
+  //   fApi.skipOkToast.getPublicNotice()((result) => {
+  //     this.publicNotice = result;
+  //   });
+  //   //
+  //   // (async () => {
+  //   //   this.students = ;
+  //   // })();
+  // },
+  
   methods: {
     updateCurrentUserInfo() {
       const userId = parseInt(this.form.userId);
@@ -84,10 +83,10 @@ export default {
     },
     modifyOthersPwd() {
       if (this.isFormValid) {
-        if (this.loadingStore.noretry) {
-          toasts.error("密码错误次数过多，请稍等！");
-          return;
-        }
+        // if (this.loadingStore.noretry) {
+        //   toasts.error("密码错误次数过多，请稍等！");
+        //   return;
+        // }
         const pwd = this.form.password;
         fApi
           .setFailedRes((res, info) => {
@@ -96,7 +95,7 @@ export default {
             }
           })
           .modifyotherspassword(
-            this.form.userId,
+            parseInt(this.form.userId),
             md5(pwd)
           )(({ token, id }) => {
           this.infoStore.token = token;

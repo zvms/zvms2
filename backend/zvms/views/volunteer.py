@@ -275,10 +275,44 @@ def repulse_volunteer(token_data, id):
         user_id=vol.holder_id,
         notice_id=Notice(
             title='义工过审',
-            content=f'您的义工 {vol.name} 已被打回，其他学生无法将看见和报名该义工。',
+            content=f'您的义工{vol.name}已被打回, 其他学生无法将看见和报名该义.',
             sendtime=datetime.datetime.now(),
             deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0
         ).insert().id
     ).insert()
     return success('打回成功')
+
+@Api(rule='/volunteer/create/special', method='POST', auth=Categ.MANAGER)
+def create_special_volunteer(token_data, name: str, type: VolType, reward: int, joiners: list[int]):
+    vol_id = Volunteer(
+        name=name,
+        description='',
+        status=VolStatus.AUDITED,
+        holder_id=token_data['id'],
+        time=datetime.datetime.now(),
+        type=type,
+        reward=reward
+    ).insert().id
+    notice_id = Notice(
+        title='义工时间',
+        content=f'您由于{name}获得了{reward}义工时间',
+        sender=0,
+        sendtime=datetime.datetime.now(),
+        deadtime=datetime.datetime.now() + datetime.timedelta(days=3)
+    )
+    for joiner in joiners:
+        User.query.get_or_error(joiner, '学生不存在')
+        StuVol(
+            vol_id=vol_id,
+            stu_id=joiner,
+            status=ThoughtStatus.ACCEPTED,
+            thought=name,
+            reason='',
+            ever_repulsed=False,
+            reward=reward
+        ).insert()
+        UserNotice(
+            user_id=joiner,
+            notice_id=notice_id
+        ).insert()
