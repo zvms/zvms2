@@ -19,7 +19,7 @@
                   >镇海中学</span
                 ><br />义工管理系统</v-list-item-title
               >
-              <v-list-item-subtitle>v2.0.0</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ VERSION }}</v-list-item-subtitle>
             </v-list-item>
           </v-list-item>
           <v-divider></v-divider>
@@ -57,9 +57,15 @@
 import { applyNavItems } from "@/utils/nav";
 import { useNavStore, useLoadingStore } from "@/stores";
 import { mapStores } from "pinia";
+import { VERSION } from "./main";
 
 export default {
   name: "App",
+  data() {
+    return {
+      VERSION,
+    };
+  },
   beforeMount() {
     applyNavItems();
   },

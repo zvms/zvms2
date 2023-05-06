@@ -96,10 +96,13 @@ public_notice_content = ""
 
 def load_public_notice():
     global public_notice_title, public_notice_content
-    with open(PUBLIC_NOTICE_PATH,'rt',-1,'utf-8') as f:
-        public_notice_title = f.readline()
-        public_notice_content = f.read()
-        print("Public notice loaded.")
+    try:
+        with open(PUBLIC_NOTICE_PATH,'rt',-1,'utf-8') as f:
+            public_notice_title = f.readline()
+            public_notice_content = f.read()
+            print("Public notice loaded.")
+    except FileNotFoundError as err:
+        print(f"找不到public_notice: {PUBLIC_NOTICE_PATH}")
 
 @Api(rule='/notice/public', method='GET', response='PublicNotice', auth=Categ.NONE)
 def get_public_notice(token_data):

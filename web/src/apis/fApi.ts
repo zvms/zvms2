@@ -565,7 +565,7 @@ export class ForegroundApi {
    * @param volId
    * @param stuId
    */
-  rollback(
+  rollbackSignup(
     volId: number,
     stuId: number
   ): ForegroundApiRunner<{}> {

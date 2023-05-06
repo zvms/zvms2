@@ -66,7 +66,7 @@ with open(config['enums-mapping'], encoding='utf-8') as mapping_file, open(confi
     template = template_file.read()
     _hy_anon_var_9 = None
 write_file(config['enums'], str.join('\n', (str.join('', map(str, ('export enum ', enum.__name__, '{\n', str.join(',\n', (str.join('', map(str, ('    ', field, ' = ', value))) for [field, value] in valid_cons)), '\n}\n\nexport function get', enum.__name__, 'Name(id:', enum.__name__, '): string {\nswitch (id) {\n', str.join('', (str.join('', map(str, ('        case ', enum.__name__, '.', field, ':\n        return "', map_this[field], '";\n'))) for [field, _] in valid_cons)), '        default:\n        throw new Error("Invalid enum value");\n}\n}'))) for enum in res.__dict__.values() if isinstance(enum, type) and issubclass(enum, e.Enum) and (enum not in (IntEnum, IntFlag)) for map_this in (mapping[enum.__name__],) for valid_cons in ([(convert(field, hy.models.Symbol('upper_snake'), hy.models.Symbol('pascal')), value) for [field, value] in enum.__dict__.items() if type(value) == enum],))))
-write_file(config['structs'], 'import * as enums from "./enums;";\n\n', str.join('', (str.join('', map(str, ((f'/* {struct.__doc__} */\n' if struct.__doc__ is not None else '') + 'export interface ' + struct.__name__ + ('' if struct.__base__ in (Object, Optional) else f' extends {struct.__base__.__name__}') + '{\n' + str.join(',\n', (str.join('', map(str, ('    ' + field + ('?: ' if issubclass(struct, Optional) else ': ') + value.render(),))) for [field, value] in struct.__dict__.items() if isinstance(value, Checker))) + '\n}\n' if isinstance(struct, type) and issubclass(struct, Object) and (struct not in (Object, Optional)) else f'export type {name} = {struct.render()}\n' if isinstance(struct, Checker) and (not hasattr(checker, name)) else '' if True else None,))) for [name, struct] in structs.__dict__.items())))
+write_file(config['structs'], 'import * as enums from "./enums";\n\n', str.join('', (str.join('', map(str, ((f'/* {struct.__doc__} */\n' if struct.__doc__ is not None else '') + 'export interface ' + struct.__name__ + ('' if struct.__base__ in (Object, Optional) else f' extends {struct.__base__.__name__}') + '{\n' + str.join(',\n', (str.join('', map(str, ('    ' + field + ('?: ' if issubclass(struct, Optional) else ': ') + value.render(),))) for [field, value] in struct.__dict__.items() if isinstance(value, Checker))) + '\n}\n' if isinstance(struct, type) and issubclass(struct, Object) and (struct not in (Object, Optional)) else f'export type {name} = {struct.render()}\n' if isinstance(struct, Checker) and (not hasattr(checker, name)) else '' if True else None,))) for [name, struct] in structs.__dict__.items())))
 rule_methods_block = re.compile(str.format('{}.+{}', config['methods-flag']['start'], config['methods-flag']['end']), re.S)
 rule_to_url = re.compile('(.+?)\\<(?:int:)?(.+?)\\>')
 rule_to_url_sub = '\\1${\\2}'
@@ -78,7 +78,7 @@ def gen_url(api):
 def is_has_params(api):
     return api.url_params or not isinstance(api.params, Any)
 if False:
-    _hy_let_args_11, _hy_let_params_10 = None
+    (_hy_let_args_11, _hy_let_params_10) = None
 
 def _hy_anon_var_13():
     global _hy_let_args_11, _hy_let_params_10

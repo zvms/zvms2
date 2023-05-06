@@ -49,7 +49,7 @@
           class="ma-1"
           @click="showStuInfo(j.id)"
           closable
-          @click:close=" "
+          @click:close="rollbackSignup(j.id)"
         >
           {{ j.name }}
         </v-chip>
@@ -88,6 +88,7 @@ import { type PropType } from "vue";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import StuInfo from "./stu-info.vue";
+import { confirm } from "@/utils/dialogs";
 
 export default {
   name: "vol-info",
@@ -95,8 +96,16 @@ export default {
     StuInfo,
   },
   props: {
+    volId: {
+      type: Number,
+      required: true,
+    },
     vol: {
       type: Object as PropType<VolunteerInfoResponse>,
+      required: true,
+    },
+    signupRollupable: {
+      type: Boolean,
       required: true,
     },
   },
@@ -107,7 +116,6 @@ export default {
       getVolStatusDisplayForUser: getVolStatusDisplayText,
       stuInfoDlg: false,
       stuInfoData: undefined as any as UserInfoResponse,
-      
     };
   },
   methods: {
@@ -117,9 +125,11 @@ export default {
         this.stuInfoDlg = true;
       });
     },
-    rollbackSignup(){
-
-    }
+    async rollbackSignup(id: number) {
+      if (await confirm("确定要撤销报名吗？")) {
+        fApi.rollbackSignup(this.volId, id)();
+      }
+    },
   },
   computed: {
     ...mapStores(useInfoStore),

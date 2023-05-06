@@ -9,7 +9,7 @@ export function getNavItems(permission: Categ) {
   }[] = [];
 
   for (const route of router.getRoutes()) {
-    if (route.meta.nav && route.meta.authed(permission))
+    if (route.meta.nav && route.meta.authed(permission ?? Categ.None))
       items.push({
         to: route.meta.nav.specifiedPath ?? route.path,
         info: route.meta.nav,
@@ -22,6 +22,6 @@ export function getNavItems(permission: Categ) {
 
 export function applyNavItems() {
   return (useNavStore().items = getNavItems(
-    useInfoStore().permission || Categ.None
+    useInfoStore().permission ?? Categ.None
   ));
 }
