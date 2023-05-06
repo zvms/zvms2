@@ -138,15 +138,15 @@ const router = createRouter({
       },
     },
     {
-      path: "/modify/modifyOthersPwd",
-      name: "modifyOthersPwd",
-      component: () => import("../views/modify/modifyOthersPwd.vue"),
+      path: "/modify/management",
+      name: "management",
+      component: () => import("../views/backstage/management.vue"),
       meta: {
         authed: createHasAuth(Categ.System | Categ.Manager),
         nav: {
-          priority: 7,
-          title: "修改他人密码",
-          icon: "mdi-pencil",
+          priority: 19,
+          title: "后台管理",
+          icon: "mdi-table-cog",
         },
       },
     },

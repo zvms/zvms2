@@ -48,6 +48,8 @@
           v-for="j in vol.joiners"
           class="ma-1"
           @click="showStuInfo(j.id)"
+          closable
+          @click:close=" "
         >
           {{ j.name }}
         </v-chip>
@@ -105,6 +107,7 @@ export default {
       getVolStatusDisplayForUser: getVolStatusDisplayText,
       stuInfoDlg: false,
       stuInfoData: undefined as any as UserInfoResponse,
+      
     };
   },
   methods: {
@@ -114,6 +117,9 @@ export default {
         this.stuInfoDlg = true;
       });
     },
+    rollbackSignup(){
+
+    }
   },
   computed: {
     ...mapStores(useInfoStore),

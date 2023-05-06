@@ -32,17 +32,17 @@
 import { fApi, type PublicNotice } from "@/apis";
 import { fApiNotLoading } from "@/apis/fApi";
 import { Categ } from "@/apis/types/enums";
-import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
 import router from "@/router";
 import { useInfoStore, useLoadingStore } from "@/stores";
-import { toasts } from "@/utils/dialogs";
+import { toasts, confirm} from "@/utils/dialogs";
 import { md5 } from "@/utils/md5";
 import { applyNavItems } from "@/utils/nav";
 import { NOT_EMPTY } from "@/utils/validation";
 import { mapStores } from "pinia";
 
+
 export default {
-  name: "login",
+  name: "management",
   data() {
     return {
       form: {
@@ -52,24 +52,8 @@ export default {
       currentUserInfo: "",
       rules: [NOT_EMPTY()],
       isFormValid: false,
-      //publicNotice: null as PublicNotice,
-      students: {} as Record<string, string>,
     };
   },
-  
-  // beforeMount() {
-  //   if (this.infoStore.token && !(this.infoStore.permission & Categ.None)) {
-  //     router.push("/");
-  //   }
-  //   fApi.skipOkToast.getPublicNotice()((result) => {
-  //     this.publicNotice = result;
-  //   });
-  //   //
-  //   // (async () => {
-  //   //   this.students = ;
-  //   // })();
-  // },
-  
   methods: {
     updateCurrentUserInfo() {
       const userId = parseInt(this.form.userId);
@@ -81,36 +65,19 @@ export default {
         this.currentUserInfo = `${clsName} ${userName}`;
       });
     },
-    modifyOthersPwd() {
-      if (this.isFormValid) {
-        // if (this.loadingStore.noretry) {
-        //   toasts.error("密码错误次数过多，请稍等！");
-        //   return;
-        // }
-        const pwd = this.form.password;
-        fApi
-          .setFailedRes((res, info) => {
+    async modifyOthersPwd() {
+      if (this.isFormValid && (await confirm("确定修改？"))) {
+        fApi.setFailedRes((res, info) => {
             if (res?.data?.noretry) {
               this.loadingStore.noretryStart = Date.now();
             }
           })
           .modifyotherspassword(
             parseInt(this.form.userId),
-            md5(pwd)
-          )(({ token, id }) => {
-          this.infoStore.token = token;
-          setCurrentAxiosToken(token);
-          fApi.skipOkToast.getUserInfo(id)(({ name, cls, auth, clsName }) => {
-            this.infoStore.$patch({
-              userId: id,
-              username: name,
-              permission: auth,
-              classId: cls,
-              className: clsName,
-            });
-            applyNavItems();
-            router.push("/");
-          });
+            md5(this.form.password)
+          )(() => {
+          this.form.userId = "";
+          this.form.password = "";
         });
       }
     },

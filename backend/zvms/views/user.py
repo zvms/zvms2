@@ -147,7 +147,7 @@ def delete_user(id, token_data):
 def modifyOthersPassword(token_data, id, pwd):
     User.query.get_or_error(id).pwd = pwd
     Report(
-        sender=0,
+        reporter=0,
         content=f'用户{token_data["name"]}将{id}的密码修改了',
         time=datetime.datetime.now()
     ).insert()

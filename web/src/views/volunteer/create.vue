@@ -166,7 +166,7 @@ export default {
         if (this.form.reward == 114514 || this.form.reward == 1919810) {
           toasts.error("请不要恶意填写时间！");
           return;
-        } else if (this.form.reward >= 600) {
+        } else if (this.form.reward > 300) {
           toasts.error(`义工时间过长。有${timeToHint(this.form.reward)}。`);
           return;
         } else if (this.form.reward <= 0) {
