@@ -565,7 +565,7 @@ export class ForegroundApi {
    * @param volId
    * @param stuId
    */
-  rollback(
+  rollbackSignup(
     volId: number,
     stuId: number
   ): ForegroundApiRunner<{}> {
@@ -774,9 +774,27 @@ export class ForegroundApi {
   /**
    * ### [POST] /volunteer/create/special
    * #### 权限: Any
+   * @param name
+   * @param type
+   * @param reward
+   * @param joiners
    */
-  createSpecialVolunteer(): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(this, "POST", `/volunteer/create/special`);
+  createSpecialVolunteer(
+    name: string,
+    type: enums.VolType,
+    reward: number,
+    joiners: Array<number>
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/volunteer/create/special`, {
+        name,
+        type,
+        reward,
+        joiners
+      }
+    );
   }
   /**
    * ## 搜索学生感想

@@ -685,7 +685,14 @@
 
 参数:
 ```json
-"any"
+{
+    "name": "string",
+    "type": "VolType",
+    "reward": "number",
+    "joiners": [
+        "number"
+    ]
+}
 ```
 响应:
 ```json

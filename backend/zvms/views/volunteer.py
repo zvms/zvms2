@@ -283,7 +283,7 @@ def repulse_volunteer(token_data, id):
     ).insert()
     return success('打回成功')
 
-@Api(rule='/volunteer/create/special', method='POST', auth=Categ.MANAGER)
+@Api(rule='/volunteer/create/special', method='POST', auth=Categ.MANAGER, params='SpecialVolunteer')
 def create_special_volunteer(token_data, name: str, type: VolType, reward: int, joiners: list[int]):
     vol_id = Volunteer(
         name=name,
