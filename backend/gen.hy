@@ -95,7 +95,7 @@ export function get" enum.__name__ "Name(id: " enum.__name__ "): string {
 "))
 
 (write-file (get config "structs") 
-"import * as enums from \"./enums;\";
+"import * as enums from \"./enums\";
 
 "
   (for/join "" [[name struct] (structs.__dict__.items)]

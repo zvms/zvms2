@@ -58,7 +58,12 @@
         </v-card-title>
 
         <v-card-text>
-          <vol-info :vol="current.vol" class="pa-14" />
+          <vol-info
+            :vol-id="current.singleVol.id"
+            :vol="current.vol"
+            :signup-rollupable="signupRollupable"
+            class="pa-14"
+          />
         </v-card-text>
 
         <v-card-actions>
@@ -282,12 +287,15 @@ export default {
       return result;
     },
     volsForTable() {
-      return this.vols.map((vol) => ({
-        ...vol,
-        statusText: getVolStatusDisplayText(this.infoStore.userId, vol)[0],
-        statusColor: getVolStatusDisplayText(this.infoStore.userId, vol)[1],
-      })).filter(v => this.filter.status === -1 ||
-      v.status === this.filter.status);
+      return this.vols
+        .map((vol) => ({
+          ...vol,
+          statusText: getVolStatusDisplayText(this.infoStore.userId, vol)[0],
+          statusColor: getVolStatusDisplayText(this.infoStore.userId, vol)[1],
+        }))
+        .filter(
+          (v) => this.filter.status === -1 || v.status === this.filter.status
+        );
     },
     statusSelectorItems() {
       return [
@@ -306,6 +314,14 @@ export default {
           name: getVolStatusName(v),
         })),
       ];
+    },
+    signupRollupable(): boolean {
+      const enoughPermission = Boolean(
+        this.infoStore.permission & (Categ.Manager | Categ.System)
+      );
+      const isHolder = this.infoStore.userId === this.current!.vol!.holder;
+      const isThisClassSecretary = false; // (this.infoStore.permission&Categ.Class)&&this.currentVol!.joiners[0]..??;
+      return enoughPermission || isHolder || isThisClassSecretary;
     },
   },
   watch: {

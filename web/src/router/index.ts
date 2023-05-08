@@ -51,7 +51,7 @@ const router = createRouter({
       name: "login",
       component: () => import("../views/login.vue"),
       meta: {
-        authed: unloginedAuth,
+        authed: anyAuth,
         nav: {
           priority: 0,
           title: "登录",
@@ -140,7 +140,7 @@ const router = createRouter({
     {
       path: "/modify/management",
       name: "management",
-      component: () => import("../views/backstage/management.vue"),
+      component: () => import("../views/manage/index.vue"),
       meta: {
         authed: createHasAuth(Categ.System | Categ.Manager),
         nav: {

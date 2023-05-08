@@ -1,9 +1,9 @@
 <template>
   <v-card>
     <v-card-title class="headline primary white--text">
-      登录&nbsp;&nbsp;<span style="color: #888; font-weight: bolder"
-        >镇海中学义工管理系统</span
-      >
+      登录&nbsp;&nbsp;<span style="color: #888; font-weight: bolder">
+        镇海中学义工管理系统
+      </span>
       ZVMS
       <div
         style="
@@ -20,30 +20,29 @@
     </v-card-title>
     <v-card-text>
       <v-form v-model.trim="isFormValid">
-        <div style="height:20px">
-        {{ currentUserInfo }}
+        <div style="height: 20px">
+          {{ currentUserInfo }}
         </div>
-        <v-text-field
-          type="text"
-          autocomplete="userid"
-          v-model.trim="form.userId"
-          :rules="rules"
-          label="ID/学号 &nbsp;&nbsp; e.g. 20221145"
-          @update:model-value="updateCurrentUserInfo"
-        />
+        <userid-input v-model.trim="form.userId" />
         <v-text-field
           type="password"
           autocomplete="password"
           v-model="form.password"
           :rules="rules"
           label="密码"
+          prepend-icon="mdi-lock"
           @keyup.native.enter="login"
         />
         <v-btn class="me-4 submit" @click="login">登录 </v-btn>
       </v-form>
     </v-card-text>
   </v-card>
-  <v-card v-if="publicNotice">
+  <v-card
+    v-if="
+      publicNotice &&
+      (publicNotice.title.length > 0 || publicNotice.content.length > 0)
+    "
+  >
     <v-card-title> 公告：{{ publicNotice.title }} </v-card-title>
     <v-card-text v-html="publicNotice.content"> </v-card-text>
   </v-card>
@@ -61,9 +60,13 @@ import { md5 } from "@/utils/md5";
 import { applyNavItems } from "@/utils/nav";
 import { NOT_EMPTY } from "@/utils/validation";
 import { mapStores } from "pinia";
+import UseridInput from "@/components/userid-input.vue";
 
 export default {
   name: "login",
+  components: {
+    UseridInput,
+  },
   data() {
     return {
       form: {
@@ -77,28 +80,23 @@ export default {
       students: {} as Record<string, string>,
     };
   },
-  beforeMount() {
-    if (this.infoStore.token && !(this.infoStore.permission & Categ.None)) {
-      router.push("/");
+  beforeRouteEnter(to, from, next) {
+    const infoStore = useInfoStore();
+    if (
+      infoStore.token?.length > 0 &&
+      !(infoStore.permission & Categ.None)
+    ) {
+      next("/");
+    }else{
+      next()
     }
+  },
+  beforeMount() {
     fApi.skipOkToast.getPublicNotice()((result) => {
       this.publicNotice = result;
     });
-    // (async () => {
-    //   this.students = ;
-    // })();
   },
   methods: {
-    updateCurrentUserInfo() {
-      const userId = parseInt(this.form.userId);
-      if (!Number.isFinite(userId) || ("" + userId).length !== 8) {
-        this.currentUserInfo = "";
-        return;
-      }
-      fApiNotLoading.skipOkToast.getUserBasicInfo(userId)(({clsName,userName}) => {
-        this.currentUserInfo = `${clsName} ${userName}`;
-      });
-    },
     login() {
       if (this.isFormValid) {
         if (this.loadingStore.noretry) {

@@ -47,7 +47,12 @@
       <v-card>
         <v-card-title>详细信息</v-card-title>
         <v-card-text>
-          <vol-info v-if="currentVol" :vol="currentVol" />
+          <vol-info
+            v-if="currentVol"
+            :vol-id="currentThoughtInfo!.volId"
+            :vol="currentVol"
+            :signup-rollupable="signupRollupable"
+          />
           <thought-viewer
             v-if="currentThoughtData"
             :stu-name="currentThoughtInfo!.stuName"
@@ -94,6 +99,7 @@ import {
   ThoughtStatus,
   type SingleThought,
   getThoughtStatusName,
+  Categ,
 } from "@/apis";
 import { useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
@@ -203,6 +209,14 @@ export default {
     },
   },
   computed: {
+    signupRollupable(): boolean {
+      const enoughPermission = Boolean(
+        this.infoStore.permission & (Categ.Manager | Categ.System)
+      );
+      const isHolder = this.infoStore.userId === this.currentVol!.holder;
+      const isThisClassSecretary = false; // (this.infoStore.permission&Categ.Class)&&this.currentVol!.joiners[0]..??;
+      return enoughPermission || isHolder || isThisClassSecretary;
+    },
     ...mapStores(useInfoStore),
   },
 };

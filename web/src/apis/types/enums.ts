@@ -1,7 +1,7 @@
 export enum VolType{
-    Inside = 1,
-    Outside = 2,
-    Large = 3
+    Inside = VolType.INSIDE,
+    Outside = VolType.OUTSIDE,
+    Large = VolType.LARGE
 }
 export function getVolTypeName(id: VolType): string {
     switch (id) {
@@ -17,11 +17,11 @@ export function getVolTypeName(id: VolType): string {
 }
 
 export enum VolStatus{
-    Unaudited = 1,
-    Audited = 2,
-    Rejected = 3,
-    Finished = 4,
-    Deprecated = 5
+    Unaudited = VolStatus.UNAUDITED,
+    Audited = VolStatus.AUDITED,
+    Rejected = VolStatus.REJECTED,
+    Finished = VolStatus.FINISHED,
+    Deprecated = VolStatus.DEPRECATED
 }
 export function getVolStatusName(id: VolStatus): string {
     switch (id) {
@@ -41,11 +41,11 @@ export function getVolStatusName(id: VolStatus): string {
 }
 
 export enum ThoughtStatus{
-    WaitingForSignupAudit = 1,
-    Draft = 2,
-    WaitingForFirstAudit = 4,
-    WaitingForFinalAudit = 5,
-    Accepted = 6
+    WaitingForSignupAudit = ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT,
+    Draft = ThoughtStatus.DRAFT,
+    WaitingForFirstAudit = ThoughtStatus.WAITING_FOR_FIRST_AUDIT,
+    WaitingForFinalAudit = ThoughtStatus.WAITING_FOR_FINAL_AUDIT,
+    Accepted = ThoughtStatus.ACCEPTED
 }
 export function getThoughtStatusName(id: ThoughtStatus): string {
     switch (id) {
@@ -65,9 +65,9 @@ export function getThoughtStatusName(id: ThoughtStatus): string {
 }
 
 export enum NoticeType{
-    UserNotice = 1,
-    ClassNotice = 2,
-    SchoolNotice = 3
+    UserNotice = NoticeType.USER_NOTICE,
+    ClassNotice = NoticeType.CLASS_NOTICE,
+    SchoolNotice = NoticeType.SCHOOL_NOTICE
 }
 export function getNoticeTypeName(id: NoticeType): string {
     switch (id) {
@@ -83,15 +83,15 @@ export function getNoticeTypeName(id: NoticeType): string {
 }
 
 export enum Categ{
-    None = 1,
-    Student = 2,
-    Teacher = 4,
-    Class = 8,
-    Manager = 16,
-    Auditor = 32,
-    System = 64,
-    Inspector = 128,
-    Any = 255
+    None = Categ.NONE,
+    Student = Categ.STUDENT,
+    Teacher = Categ.TEACHER,
+    Class = Categ.CLASS,
+    Manager = Categ.MANAGER,
+    Auditor = Categ.AUDITOR,
+    System = Categ.SYSTEM,
+    Inspector = Categ.INSPECTOR,
+    Any = Categ.ANY
 }
 export function getCategName(id: Categ): string {
     switch (id) {

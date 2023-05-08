@@ -15,6 +15,7 @@ declare module '@vue/runtime-core' {
     ThoughtEditor: typeof import('./src/components/thought/editor.vue')['default']
     ThoughtViewer: typeof import('./src/components/thought/viewer.vue')['default']
     UserChips: typeof import('./src/components/user-chips.vue')['default']
+    UseridInput: typeof import('./src/components/userid-input.vue')['default']
     VApp: typeof import('vuetify/components')['VApp']
     VBreadcrumbs: typeof import('vuetify/components')['VBreadcrumbs']
     VBtn: typeof import('vuetify/components')['VBtn']
