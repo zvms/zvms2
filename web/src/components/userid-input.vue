@@ -1,4 +1,7 @@
 <template>
+  <div style="height: 20px">
+    {{ currentUserInfo }}
+  </div>
   <v-text-field
     type="text"
     autocomplete="userid"
@@ -8,11 +11,6 @@
     @update:model-value="updateCurrentUserInfo"
     :rules="rules"
   >
-    <template #prepend>
-      <div style="height: 20px">
-        {{ currentUserInfo }}
-      </div>
-    </template>
   </v-text-field>
 </template>
 
@@ -49,6 +47,13 @@ export default {
           this.currentUserInfo = `${clsName} ${userName}`;
         }
       );
+    },
+  },
+
+  watch: {
+    modelValue(newVal) {
+      this.userId = newVal;
+      this.updateCurrentUserInfo();
     },
   },
 };

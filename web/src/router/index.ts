@@ -51,7 +51,7 @@ const router = createRouter({
       name: "login",
       component: () => import("../views/login.vue"),
       meta: {
-        authed: anyAuth,
+        authed: unloginedAuth,
         nav: {
           priority: 0,
           title: "登录",

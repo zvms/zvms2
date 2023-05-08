@@ -8,6 +8,7 @@
           <span class="f">V</span>olunteer <span class="f">M</span>anagement
           <span class="f">S</span>ystem
         </p>
+        <v-img :src="iconUrl" width="300px" class="pt-10"/>
       </v-card-text>
     </v-card>
     <v-card>
@@ -38,22 +39,26 @@
           </v-chip>
           开发。
           <br />
-          特别感谢: <v-chip
+          特别感谢:
+          <v-chip
             label
             small
             class="ma-1"
             @click="showContributorInfo(contributorsOther._7086cmd)"
-          >7086cmd</v-chip>的前端初始化配置, 以及<v-chip
+            >7086cmd</v-chip
+          >的前端初始化配置, 以及<v-chip
             label
             small
             class="ma-1"
             @click="showContributorInfo(contributorsOther.zsz)"
-          >zsz</v-chip>的新版图标设计和<v-chip
+            >zsz</v-chip
+          >的新版图标设计和<v-chip
             label
             small
             class="ma-1"
             @click="showContributorInfo(contributorsOther.zjr)"
-          >zjr</v-chip>的疯狂测试。
+            >zjr</v-chip
+          >的疯狂测试。
         </p>
       </v-card-text>
     </v-card>
@@ -77,9 +82,7 @@
   </v-container>
   <v-dialog v-model="contributorInfoDlg">
     <v-card>
-      <v-card-title>
-        关于 {{ contributorInfo.displayName  }}
-      </v-card-title>
+      <v-card-title> 关于 {{ contributorInfo.displayName }} </v-card-title>
       <v-card-text v-html="contributorInfo.infoHtml"></v-card-text>
     </v-card>
   </v-dialog>
@@ -98,6 +101,7 @@ import {
   contributorsOther,
   type Contributor,
 } from "@/utils/contributors";
+import iconUrl from "@/assets/favicon.ico";
 
 export default {
   name: "report",
@@ -111,7 +115,8 @@ export default {
       contributorInfo: undefined as any as Contributor,
       contributorsV1,
       contributorsV2,
-      contributorsOther
+      contributorsOther,
+      iconUrl,
     };
   },
   methods: {

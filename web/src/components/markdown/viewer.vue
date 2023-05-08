@@ -1,6 +1,6 @@
 <template>
   <article
-    class="markdown-body disable-click markdown-viewer"
+    class="markdown-body markdown-viewer"
     v-html="renderedHtml"
   ></article>
 </template>

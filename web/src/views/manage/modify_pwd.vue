@@ -1,30 +1,23 @@
 <template>
-  <v-card>
-    <v-card-title>修改他人密码</v-card-title>
-    <v-card-text>
-      <v-form v-model="isFormValid">
-        <userid-input
-          v-model.trim="form.userId"
-        />
-        <v-text-field
-          v-model="form.newPwd"
-          label="新密码"
-          type="password"
-          prepend-icon="mdi-lock-outline"
-          :rules="rules"
-        />
-        <v-text-field
-          v-model="form.confirmPwd"
-          label="确认密码"
-          type="password"
-          prepend-icon="mdi-lock-outline"
-          :rules="rules"
-          @keyup.native.enter="modifyOthersPwd"
-        />
-        <v-btn class="me-4 submit" @click="modifyOthersPwd">修改密码</v-btn>
-      </v-form>
-    </v-card-text>
-  </v-card>
+  <v-form v-model="isFormValid">
+    <userid-input v-model.trim="form.userId" />
+    <v-text-field
+      v-model="form.newPwd"
+      label="新密码"
+      type="password"
+      prepend-icon="mdi-lock-outline"
+      :rules="rules"
+    />
+    <v-text-field
+      v-model="form.confirmPwd"
+      label="确认密码"
+      type="password"
+      prepend-icon="mdi-lock-outline"
+      :rules="rules"
+      @keyup.native.enter="modifyOthersPwd"
+    />
+    <v-btn class="me-4 submit" @click="modifyOthersPwd">修改密码</v-btn>
+  </v-form>
 </template>
 
 <script lang="ts">
@@ -37,8 +30,8 @@ import { mapStores } from "pinia";
 import UseridInput from "@/components/userid-input.vue";
 
 export default {
-  name: "management",
-  components:{
+  name: "modify-pwd",
+  components: {
     UseridInput,
   },
   data() {
@@ -61,14 +54,15 @@ export default {
           return;
         }
         if (await confirm("确定修改？")) {
-          fApi
-            .modifyotherspassword(
-              parseInt(this.form.userId),
-              md5(this.form.newPwd)
-            )(() => {
+          fApi.modifyotherspassword(
+            parseInt(this.form.userId),
+            md5(this.form.newPwd)
+          )(() => {
             this.form.userId = "";
             this.form.newPwd = "";
             this.form.confirmPwd = "";
+
+            this.$router.push("/");
           });
         }
       }

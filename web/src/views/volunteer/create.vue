@@ -34,14 +34,15 @@
           <v-container
             v-if="advancedOptionsPermission"
             style="margin-left: -15px"
+            class="py-0"
           >
-            <v-row v-if="unselctedClasses.length > 0">
+            <v-row>
               <v-col cols="4">
                 <v-select
                   prepend-icon="mdi-account-multiple"
                   v-model="classNew"
                   label="限定班级"
-                  :items="unselctedClasses"
+                  :items="unselectedClasses"
                   item-title="name"
                   item-value="id"
                 />
@@ -130,8 +131,14 @@ export default {
       VolType,
       Categ,
       countNew: "" as any as number,
-      classNew: NaN,
-      classes: [] as (SingleClass & { selcted?: boolean })[],
+      classNew: -1,
+      classes: [
+        {
+          id: -1,
+          name: "加载中",
+          selected: false,
+        } as any,
+      ] as (SingleClass & { selected?: boolean })[],
       form: {
         name: "",
         time: "",
@@ -205,30 +212,30 @@ export default {
           id: this.classNew,
           max: this.countNew,
         });
-        this.classes[idx].selcted = true;
+        this.classes[idx].selected = true;
         this.setDefaultClass();
       });
     },
     delFromList(i: number) {
       const id = this.form.classSelected.splice(i, 1)[0].id;
       const idx = this.classes.findIndex((v) => v.id == id);
-      this.classes[idx].selcted = false;
+      this.classes[idx].selected = false;
       this.setDefaultClass();
     },
     setDefaultClass() {
       const myClass = this.infoStore.classId;
-      if (this.unselctedClasses.findIndex((v) => v.id == myClass) !== -1) {
+      if (this.unselectedClasses.findIndex((v) => v.id == myClass) !== -1) {
         this.classNew = myClass;
       } else {
-        this.classNew = this.unselctedClasses[0].id;
+        this.classNew = this.unselectedClasses[0].id;
       }
       this.countNew = "" as any as number;
     },
   },
   computed: {
     ...mapStores(useInfoStore),
-    unselctedClasses() {
-      return this.classes.filter((v) => !v.selcted);
+    unselectedClasses() {
+      return this.classes.filter((v) => !v.selected);
     },
     advancedOptionsPermission() {
       return (
