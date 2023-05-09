@@ -1,5 +1,4 @@
 <template>
-  <v-container>
     <v-card>
       <v-card-title> 记录义工 </v-card-title>
       <v-card-text>
@@ -99,7 +98,6 @@
       </v-card-text>
     </v-card>
     <br />
-  </v-container>
 </template>
 
 <script lang="ts">

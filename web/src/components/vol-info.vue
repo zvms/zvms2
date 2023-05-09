@@ -48,7 +48,7 @@
           v-for="j in vol.joiners"
           class="ma-1"
           @click="showStuInfo(j.id)"
-          closable
+          
           @click:close="rollbackSignup(j.id)"
         >
           {{ j.name }}

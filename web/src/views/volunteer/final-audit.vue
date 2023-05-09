@@ -1,5 +1,4 @@
 <template>
-  <v-container>
     <v-card>
       <v-card-title>
         未审核感想列表
@@ -80,7 +79,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-container>
 </template>
 
 <script lang="ts">

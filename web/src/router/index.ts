@@ -190,19 +190,6 @@ const router = createRouter({
         },
       },
     },
-    {
-      path: "/system/view-report",
-      name: "systemViewReport",
-      component: () => import("../views/system/view-report.vue"),
-      meta: {
-        authed: createHasAuth(Categ.System),
-        nav: {
-          priority: 21,
-          title: "查看反馈",
-          icon: "mdi-comment-quote",
-        },
-      },
-    },
   ],
 });
 

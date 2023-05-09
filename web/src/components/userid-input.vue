@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 20px">
+  <div class="user-info-tip">
     {{ currentUserInfo }}
   </div>
   <v-text-field
@@ -42,7 +42,7 @@ export default {
         this.currentUserInfo = "";
         return;
       }
-      fApiNotLoading.skipOkToast.getUserBasicInfo(userId)(
+      fApiNotLoading.skipOkToast.skipFailedToast.getUserBasicInfo(userId)(
         ({ clsName, userName }) => {
           this.currentUserInfo = `${clsName} ${userName}`;
         }
@@ -58,3 +58,11 @@ export default {
   },
 };
 </script>
+<style scoped>
+.user-info-tip {
+  position: relative;
+  left: 170px;
+  top: 28px;
+  height: 0;
+}
+</style>

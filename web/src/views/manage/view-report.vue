@@ -1,24 +1,20 @@
 <template>
-  <v-container>
+  <data-table
+    fixed-header
+    :headers="headers"
+    :items="reports"
+    @click:row="onRowClick"
+  >
+    <template v-slot:body v-if="reports.length === 0">
+      <p class="text-center">是空的~</p>
+    </template>
+  </data-table>
+  <v-dialog v-model="dialog">
     <v-card>
-      <v-card-title> 反馈列表 </v-card-title>
-      <data-table
-        fixed-header
-        :headers="headers"
-        :items="reports"
-        @click:row="onRowClick"
-      >
-        <template v-slot:body v-if="reports.length === 0">
-          <p class="text-center">是空的~</p>
-        </template>
-      </data-table>
+      <v-card-title>反馈信息</v-card-title>
+      <v-card-text>{{ reports[currentReport].content }}</v-card-text>
     </v-card>
-    <v-dialog v-model="dialog">
-      <v-card>
-        <v-card-text>{{ reports[currentReport].content }}</v-card-text>
-      </v-card>
-    </v-dialog>
-  </v-container>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -31,6 +27,7 @@ type DetailedSingleReport = SingleReport & {
 };
 
 export default {
+  name: "view-report",
   components: {
     DataTable,
   },

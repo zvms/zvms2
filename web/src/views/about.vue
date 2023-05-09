@@ -1,5 +1,4 @@
 <template>
-  <v-container>
     <v-card>
       <v-card-title>关于ZVMS</v-card-title>
       <v-card-text>
@@ -79,7 +78,6 @@
         </v-form>
       </v-card-text>
     </v-card>
-  </v-container>
   <v-dialog v-model="contributorInfoDlg">
     <v-card>
       <v-card-title> 关于 {{ contributorInfo.displayName }} </v-card-title>

@@ -1,5 +1,4 @@
 <template>
-  <v-container>
     <v-card>
       <v-card-title> 创建全校通知 </v-card-title>
       <v-card-text>
@@ -37,7 +36,6 @@
       </v-card-text>
     </v-card>
     <br />
-  </v-container>
 </template>
 
 <script lang="ts">

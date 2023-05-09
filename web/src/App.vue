@@ -44,7 +44,7 @@
         </template>
       </v-navigation-drawer>
       <v-main>
-        <v-container>
+        <v-container class="px-1 pb-0 pt-2">
           <RouterView />
         </v-container>
       </v-main>

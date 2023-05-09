@@ -138,6 +138,13 @@ export class ForegroundApi {
     });
   }
 
+  get skipFailedToast(): ForegroundApi {
+    return new ForegroundApi({
+      ...this.config,
+      defaultFailedToast: false,
+    });
+  }
+
   get loadingState(): ForegroundApi {
     const oldConfig: ForegroundApiConfig = this.config;
     return new ForegroundApi({

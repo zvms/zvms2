@@ -96,7 +96,7 @@ export default {
       if (latestUserId && latestUserId.length > 0) {
         this.form.userId = latestUserId;
       }
-    }, 1000);
+    }, 1000000000);
   },
   methods: {
     login() {

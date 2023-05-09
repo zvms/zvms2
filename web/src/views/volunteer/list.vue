@@ -1,5 +1,4 @@
 <template>
-  <v-container>
     <v-card>
       <v-card-title>
         义工列表
@@ -87,7 +86,6 @@
         />
       </v-dialog>
     </v-dialog>
-  </v-container>
 </template>
 
 <script lang="ts">

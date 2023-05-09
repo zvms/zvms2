@@ -1,5 +1,4 @@
 <template>
-  <v-container>
     <v-card>
       <v-card-title>
         我的感想
@@ -50,7 +49,6 @@
         "
       />
     </v-dialog>
-  </v-container>
 </template>
 
 <script lang="ts">
