@@ -91,12 +91,10 @@ export default {
     });
   },
   mounted() {
-    setInterval(() => {
-      const latestUserId = localStorage.getItem(LATEST_USERID_KEY);
-      if (latestUserId && latestUserId.length > 0) {
-        this.form.userId = latestUserId;
-      }
-    }, 1000000000);
+    const latestUserId = localStorage.getItem(LATEST_USERID_KEY);
+    if (latestUserId && latestUserId.length > 0) {
+      this.form.userId = latestUserId;
+    }
   },
   methods: {
     login() {

@@ -12,14 +12,27 @@
   <v-dialog v-model="dialog">
     <v-card>
       <v-card-title>反馈信息</v-card-title>
+      <v-card-text>发送者</v-card-text>
+      <v-chip label small @click="showStuInfo()">{{
+          vol.holderName
+        }}</v-chip>
+      <v-dialog v-model="stuInfoDlg">
+        <v-card>
+          <v-card-title> 用户信息 </v-card-title>
+          <v-card-text>
+            <StuInfo :student="stuInfoData" />
+          </v-card-text>
+        </v-card>
+      </v-dialog>
       <v-card-text>{{ reports[currentReport].content }}</v-card-text>
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import { fApi, type FetchReportsResponse, type SingleReport } from "@/apis";
+import { fApi, UserInfoResponse, type FetchReportsResponse, type SingleReport } from "@/apis";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
+import StuInfo from "@/components/thought/stu-info.vue";
 
 type DetailedSingleReport = SingleReport & {
   index: number;
@@ -30,6 +43,7 @@ export default {
   name: "view-report",
   components: {
     DataTable,
+    StuInfo,
   },
   data() {
     return {
@@ -53,6 +67,8 @@ export default {
       reports: [] as DetailedSingleReport[],
       currentReport: NaN,
       dialog: false,
+      stuInfoDlg: false,
+      stuInfoData: undefined as any as UserInfoResponse,
     };
   },
   beforeMount() {
@@ -66,6 +82,12 @@ export default {
     });
   },
   methods: {
+    showStuInfo(id: number) {
+      fApi.skipOkToast.getUserInfo(id)((info) => {
+        this.stuInfoData = info;
+        this.stuInfoDlg = true;
+      });
+    },
     onRowClick(ev: Event, v: any) {
       const item: DetailedSingleReport = v.item.raw;
       this.currentReport = item.index;
