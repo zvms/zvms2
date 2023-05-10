@@ -9,9 +9,18 @@
       <p class="text-center">是空的~</p>
     </template>
   </data-table>
+
   <v-dialog v-model="dialog">
     <v-card>
       <v-card-title>反馈信息</v-card-title>
+      <v-dialog v-model="stuInfoDlg">
+        <v-card>
+          <v-card-title> 用户信息 </v-card-title>
+            <v-card-text>
+              <StuInfo :student="stuInfoData" />
+            </v-card-text>
+        </v-card>
+      </v-dialog>
       <v-card-text>{{ reports[currentReport].content }}</v-card-text>
     </v-card>
   </v-dialog>

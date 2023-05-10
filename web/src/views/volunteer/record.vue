@@ -108,7 +108,6 @@ import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { fApiNotLoading } from "@/apis/fApi";
 import { timeToHint } from "@/utils/calc";
-import router from "@/router";
 import { toasts } from "@/utils/dialogs";
 
 export default {
@@ -156,7 +155,7 @@ export default {
           this.form.type,
           this.form.reward
         )(() => {
-          router.push("/");
+          this.$router.push("/");
         });
       }
     },

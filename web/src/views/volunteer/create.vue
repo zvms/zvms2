@@ -128,7 +128,6 @@ import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { toasts } from "@/utils/dialogs";
 import { timeToHint } from "@/utils/calc";
-import router from "@/router";
 
 export default {
   data() {
@@ -202,7 +201,7 @@ export default {
           this.form.type,
           this.form.reward
         )((_result) => {
-          router.push("/");
+          this.$router.push("/");
         });
       }
     },

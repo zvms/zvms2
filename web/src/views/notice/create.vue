@@ -42,7 +42,6 @@
 import { fApi } from "@/apis";
 import { NOT_EMPTY, TIME } from "@/utils/validation";
 import { confirm } from "@/utils/dialogs";
-import router from "@/router";
 
 export default {
   data() {
@@ -70,7 +69,7 @@ export default {
           this.form.content,
           this.form.deadtime
         )(() => {
-          router.push("/");
+          this.$router.push("/");
         });
       }
     },

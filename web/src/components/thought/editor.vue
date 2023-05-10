@@ -10,7 +10,10 @@
       <span v-if="thought.status === ThoughtStatus.Accepted">
         时长{{ thought.reward }}分钟
       </span>
-      <span v-if="thought.everRepulsed&&thought.status == ThoughtStatus.Draft" style="color:red">
+      <span
+        v-if="thought.everRepulsed && thought.status == ThoughtStatus.Draft"
+        style="color: red"
+      >
         （上次提交被打回，请修改感想后重新提交
         <span v-if="thought.reason">
           ，打回原因：
@@ -34,6 +37,9 @@
             <v-text-field label="图片ID" v-model.trim="picsId" />
             <v-btn @click="uploadFromId" style="border: 1px gray solid">
               上传
+              <span style="font-size: xx-small; color: gray">
+                （若有多个ID，请依次输入ID后点击上传）
+              </span>
             </v-btn>
           </v-window-item>
           <v-window-item value="from-upload">

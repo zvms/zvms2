@@ -113,7 +113,6 @@ import { useInfoStore } from "@/stores";
 import { fApi, type SingleNotice, type NoticeBody } from "@/apis";
 import { Categ } from "@/apis/types/enums";
 import { mapStores } from "pinia";
-import router from "@/router";
 import { applyNavItems } from "@/utils/nav";
 import { md5 } from "@/utils/md5";
 import { NOT_EMPTY } from "@/utils/validation";
@@ -177,7 +176,7 @@ export default {
       });
       useInfoStore().$reset();
       applyNavItems();
-      router.push("/login");
+      this.$router.push("/login");
     },
     modifyPwd() {
       if (this.isFormValid) {

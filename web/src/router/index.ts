@@ -185,7 +185,7 @@ const router = createRouter({
         authed: createHasAuth(Categ.System),
         nav: {
           priority: 20,
-          title: "TTYD",
+          title: "Terminal",
           icon: "mdi-powershell",
         },
       },
