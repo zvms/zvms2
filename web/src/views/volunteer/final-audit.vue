@@ -1,36 +1,38 @@
 <template>
   <v-card>
-    <v-card-title>
-      未审核感想列表
-      <v-btn @click="fetchThoughts" size="xsmall">
-        <v-icon icon="mdi-reload" size="xsmall" />
-      </v-btn>
+    <v-card-title class="pt-0">
+      <v-container style="margin-bottom: -30px">
+        <v-row>
+          <v-col cols="8" class="pl-3 ma-0">
+            未审核感想列表
+            <v-btn @click="fetchThoughts" size="xsmall">
+              <v-icon icon="mdi-reload" size="xsmall" />
+            </v-btn>
+          </v-col>
+          <v-col cols="4" class="pa-0 ma-0 h-50">
+            <v-select
+              x-small
+              v-model="status"
+              label="状态筛选"
+              :items="
+                [
+                  ThoughtStatus.Accepted,
+                  ThoughtStatus.Draft,
+                  ThoughtStatus.WaitingForFinalAudit,
+                ].map((v) => ({
+                  name: getThoughtStatusName(v),
+                  id: v,
+                }))
+              "
+              item-title="name"
+              item-value="id"
+              prepend-icon="mdi-list-status"
+              @update:model-value="fetchThoughts"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
     </v-card-title>
-    <v-container class="table-filter">
-      <v-row>
-        <v-col cols="8">
-          <v-select
-            x-small
-            v-model="status"
-            label="状态筛选"
-            :items="
-              [
-                ThoughtStatus.Accepted,
-                ThoughtStatus.Draft,
-                ThoughtStatus.WaitingForFinalAudit,
-              ].map((v) => ({
-                name: getThoughtStatusName(v),
-                id: v,
-              }))
-            "
-            item-title="name"
-            item-value="id"
-            prepend-icon="mdi-list-status"
-            @update:model-value="fetchThoughts"
-          />
-        </v-col>
-      </v-row>
-    </v-container>
     <data-table
       fixed-header
       :headers="headers"
@@ -39,6 +41,11 @@
     >
       <template v-slot:body v-if="thoughts.length === 0">
         <p class="text-center">是空的~</p>
+      </template>
+      <template v-slot:item.name="{ item }">
+        <div class="vol-name-in-table">
+          {{ item.raw.name }}
+        </div>
       </template>
     </data-table>
   </v-card>
@@ -136,6 +143,7 @@ export default {
           value: "volName",
           // align: "start",
           sortable: true,
+          width:500
         },
         {
           key: "stuName",
@@ -143,8 +151,9 @@ export default {
           value: "stuName",
           // align: "start",
           sortable: true,
+          width:200
         },
-        { key: "stuId", title: "学号", value: "stuId" },
+        { key: "stuId", title: "学号", value: "stuId", width: 200 },
       ],
 
       thoughts: [] as SingleThought[],

@@ -71,3 +71,10 @@ button.submit {
   margin-bottom: -34px;
   padding-bottom: 0;
 }
+
+.vol-name-in-table {
+  width: 430px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

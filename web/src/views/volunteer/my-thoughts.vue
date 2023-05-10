@@ -1,14 +1,15 @@
 <template>
-    <v-card>
-      <v-card-title>
-        我的感想
-        <v-btn @click="fetchThoughts" size="xsmall">
-          <v-icon icon="mdi-reload" size="xsmall" />
-        </v-btn>
-      </v-card-title>
-      <v-container class="table-filter">
+  <v-card>
+    <v-card-title class="pt-0">
+      <v-container style="margin-bottom: -30px">
         <v-row>
-          <v-col cols="8">
+          <v-col cols="8" class="pl-3 ma-0">
+            我的感想
+            <v-btn @click="fetchThoughts" size="xsmall">
+              <v-icon icon="mdi-reload" size="xsmall" />
+            </v-btn>
+          </v-col>
+          <v-col cols="4" class="pa-0 ma-0 h-50">
             <v-select
               v-model="filter.status"
               label="筛选状态"
@@ -20,35 +21,41 @@
           </v-col>
         </v-row>
       </v-container>
-      <data-table
-        fixed-header
-        :headers="headers"
-        :items="thoughts"
-        @click:row="onRowClick"
-      >
-        <template v-slot:body v-if="thoughts.length === 0">
-          <p class="text-center">是空的~</p>
-        </template>
-        <template v-slot:item.status="{ item }">
-          <v-chip label :color="getThoughtStatusDisplayColor(item.raw.status)">
-            {{ getThoughtStatusName(item.raw.status) }}
-          </v-chip>
-        </template>
-      </data-table>
-    </v-card>
-    <v-dialog v-model="thoughtDlg" persistent fullscreen>
-      <ThoughtEditor
-        :stuName="infoStore.username"
-        :volId="currentVolId"
-        :vol="currentVol"
-        :stuId="currentThoughtStuId"
-        :thought="currentThought"
-        @close="
-          fetchThoughts();
-          thoughtDlg = false;
-        "
-      />
-    </v-dialog>
+    </v-card-title>
+    <data-table
+      fixed-header
+      :headers="headers"
+      :items="thoughts"
+      @click:row="onRowClick"
+    >
+      <template v-slot:body v-if="thoughts.length === 0">
+        <p class="text-center">是空的~</p>
+      </template>
+      <template v-slot:item.name="{ item }">
+        <div class="vol-name-in-table">
+          {{ item.raw.name }}
+        </div>
+      </template>
+      <template v-slot:item.status="{ item }">
+        <v-chip label :color="getThoughtStatusDisplayColor(item.raw.status)">
+          {{ getThoughtStatusName(item.raw.status) }}
+        </v-chip>
+      </template>
+    </data-table>
+  </v-card>
+  <v-dialog v-model="thoughtDlg" persistent fullscreen>
+    <ThoughtEditor
+      :stuName="infoStore.username"
+      :volId="currentVolId"
+      :vol="currentVol"
+      :stuId="currentThoughtStuId"
+      :thought="currentThought"
+      @close="
+        fetchThoughts();
+        thoughtDlg = false;
+      "
+    />
+  </v-dialog>
 </template>
 
 <script lang="ts">
