@@ -186,7 +186,7 @@ const router = createRouter({
         nav: {
           priority: 20,
           title: "系统管理",
-          icon: "mdi-powershell",
+          icon: "mdi-desktop-classic",
         },
       },
     },

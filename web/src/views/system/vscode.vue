@@ -2,7 +2,7 @@
   <a
     href="https://vscode.dev/tunnel/zvms-win10-server/c:/Users/Public/workspace/zvms"
   >
-    <v-btn>VSCode</v-btn>
+    <v-btn>Goto Remote VS Code</v-btn>
   </a>
 </template>
 <script lang="ts">

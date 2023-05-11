@@ -85,7 +85,7 @@ export default {
       this.reports = reports.reverse().map((v, i) => ({
         ...v,
         shortContent:
-          v.content.slice(0, 10) + (v.content.length > 10 ? "..." : ""),
+          v.content.slice(0, 20) + (v.content.length > 20 ? "..." : ""),
         index: i,
       }));
     });
