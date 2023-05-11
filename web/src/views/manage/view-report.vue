@@ -9,13 +9,19 @@
       <p class="text-center">是空的~</p>
     </template>
   </data-table>
+
   <v-dialog v-model="dialog">
     <v-card>
-      <v-card-title>反馈信息</v-card-title>
-      <v-card-text>发送者</v-card-text>
-      <v-chip label small @click="showStuInfo()">{{
-          vol.holderName
-        }}</v-chip>
+      <v-card-title
+        >反馈信息&nbsp;&nbsp;&nbsp;from <v-chip
+          label
+          small
+          @click="showStuInfo(reports[currentReport].reporter)"
+        >
+          {{ reports[currentReport].reporterName }} </v-chip
+        ></v-card-title
+      >
+      <v-card-text>{{ reports[currentReport].content }}</v-card-text>
       <v-dialog v-model="stuInfoDlg">
         <v-card>
           <v-card-title> 用户信息 </v-card-title>
@@ -24,15 +30,19 @@
           </v-card-text>
         </v-card>
       </v-dialog>
-      <v-card-text>{{ reports[currentReport].content }}</v-card-text>
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import { fApi, UserInfoResponse, type FetchReportsResponse, type SingleReport } from "@/apis";
+import {
+  fApi,
+  type FetchReportsResponse,
+  type SingleReport,
+  type UserInfoResponse,
+} from "@/apis";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
-import StuInfo from "@/components/thought/stu-info.vue";
+import StuInfo from "@/components/stu-info.vue";
 
 type DetailedSingleReport = SingleReport & {
   index: number;
@@ -43,7 +53,6 @@ export default {
   name: "view-report",
   components: {
     DataTable,
-    StuInfo,
   },
   data() {
     return {
@@ -67,8 +76,8 @@ export default {
       reports: [] as DetailedSingleReport[],
       currentReport: NaN,
       dialog: false,
-      stuInfoDlg: false,
       stuInfoData: undefined as any as UserInfoResponse,
+      stuInfoDlg: false,
     };
   },
   beforeMount() {
@@ -76,22 +85,22 @@ export default {
       this.reports = reports.reverse().map((v, i) => ({
         ...v,
         shortContent:
-          v.content.slice(0, 10) + (v.content.length > 10 ? "..." : ""),
+          v.content.slice(0, 20) + (v.content.length > 20 ? "..." : ""),
         index: i,
       }));
     });
   },
   methods: {
+    onRowClick(ev: Event, v: any) {
+      const item: DetailedSingleReport = v.item.raw;
+      this.currentReport = item.index;
+      this.dialog = true;
+    },
     showStuInfo(id: number) {
       fApi.skipOkToast.getUserInfo(id)((info) => {
         this.stuInfoData = info;
         this.stuInfoDlg = true;
       });
-    },
-    onRowClick(ev: Event, v: any) {
-      const item: DetailedSingleReport = v.item.raw;
-      this.currentReport = item.index;
-      this.dialog = true;
     },
   },
 };
