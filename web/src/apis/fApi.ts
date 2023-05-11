@@ -1082,6 +1082,13 @@ export class ForegroundApi {
   restartTtyd(): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(this, "POST", `/system/ttyd/restart`);
   }
+  /**
+   * ### [POST] /system/restart
+   * #### 权限: Any
+   */
+  restart(): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(this, "POST", `/system/restart`);
+  }
 
 
 //--METHODS END----

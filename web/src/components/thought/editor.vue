@@ -34,7 +34,7 @@
         </v-tabs>
         <v-window v-if="isThoughtModifiable" v-model="tab">
           <v-window-item value="from-image-bed">
-            <v-text-field label="图片ID" v-model.trim="picsId" />
+            <v-text-field label="图片ID" v-model.trim="picsId" @keyup.native.enter="uploadFromId"/>
             <v-btn @click="uploadFromId" style="border: 1px gray solid">
               上传
               <span style="font-size: xx-small; color: gray">

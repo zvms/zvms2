@@ -1032,3 +1032,17 @@
 ```json
 "any"
 ```
+
+#### 8.2 zvms.views.system
+
+[POST] /system/restart  
+**...**  
+
+参数:
+```json
+"any"
+```
+响应:
+```json
+"any"
+```

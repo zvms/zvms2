@@ -146,6 +146,9 @@ export default {
         } else if (this.form.reward <= 0) {
           toasts.error("义工时间小于等于0。");
           return;
+        } else if (this.form.reward <= 5) {
+          toasts.error("义工时间过短，此处的时间单位是分钟。");
+          return;
         }
         fApi.createAppointedVolunteer(
           this.form.joiners.map((v) => v.id),

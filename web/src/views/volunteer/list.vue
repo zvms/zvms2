@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="pt-0">
-      <v-container style="margin-bottom: -30px;">
+      <v-container style="margin-bottom: -30px">
         <v-row>
           <v-col cols="4" class="pl-3 ma-0">
             义工列表
@@ -43,7 +43,7 @@
       @click:row="onRowClick"
     >
       <template v-slot:body v-if="vols.length === 0">
-        <p class="text-center">是空的~</p>
+        <table-placeholder />
       </template>
       <template v-slot:item.name="{ item }">
         <div class="vol-name-in-table">
@@ -108,12 +108,13 @@ import {
 } from "@/apis";
 import { Categ, getVolStatusName } from "@/apis/types/enums";
 import VolInfo from "@/components/vol-info.vue";
-import { useInfoStore } from "@/stores";
+import { useInfoStore, useLoadingStore } from "@/stores";
 import { getVolStatusDisplayText } from "@/utils/calc";
 import { confirm, toasts } from "@/utils/dialogs";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import ThoughtEditor from "@/components/thought/editor.vue";
+import TablePlaceholder from "@/components/table-placeholder.vue";
 
 interface Action {
   text: string;
@@ -125,6 +126,7 @@ export default {
     VolInfo,
     DataTable,
     ThoughtEditor,
+    TablePlaceholder,
   },
   data() {
     return {
@@ -224,7 +226,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore),
+    ...mapStores(useInfoStore, useLoadingStore),
     isJoiner() {
       return (
         this.current!.vol.joiners.findIndex(

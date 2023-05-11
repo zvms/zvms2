@@ -178,14 +178,14 @@ const router = createRouter({
       },
     },
     {
-      path: "/system/ttyd",
-      name: "systemTtyd",
-      component: () => import("../views/system/ttyd.vue"),
+      path: "/system/",
+      name: "system",
+      component: () => import("../views/system/index.vue"),
       meta: {
         authed: createHasAuth(Categ.System),
         nav: {
           priority: 20,
-          title: "Terminal",
+          title: "系统管理",
           icon: "mdi-powershell",
         },
       },
