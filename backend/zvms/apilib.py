@@ -94,10 +94,10 @@ def deco(impl, params, response, auth):
                     t = datetime.datetime.now().replace(microsecond=0)
                     s = f'{t}[{request.remote_addr}]'
                     if auth != Categ.NONE:
-                        s+=f'({token_data["id"]})'
-                    s+= f'[{request.method}]{request.path}'
+                        s += f'({token_data["id"]})'
+                    s += f'[{request.method}]{request.path}'
                     print(s)
-                    f.write(s+'\n')
+                    f.write(s + '\n')
             check(params, json_data, '传入的数据错误')
             ret = impl(*args, **kwargs, **json_data, token_data=token_data)
             result = ret.get('result')
