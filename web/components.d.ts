@@ -12,6 +12,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StuInfo: typeof import('./src/components/stu-info.vue')['default']
+    TablePlaceholder: typeof import('./src/components/table-placeholder.vue')['default']
     ThoughtEditor: typeof import('./src/components/thought/editor.vue')['default']
     ThoughtViewer: typeof import('./src/components/thought/viewer.vue')['default']
     UserChips: typeof import('./src/components/user-chips.vue')['default']

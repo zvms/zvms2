@@ -24,9 +24,9 @@
       </v-list-item>
       <v-list-item>
         <v-list-item-title>创建者</v-list-item-title>
-        <v-chip label small @click="showStuInfo(vol.holder)">{{
-          vol.holderName
-        }}</v-chip>
+        <v-chip class="ma-1" label small @click="showStuInfo(vol.holder)">
+          {{ vol.holderName }}
+        </v-chip>
       </v-list-item>
       <v-list-item>
         <v-list-item-title>报名情况</v-list-item-title>
@@ -48,7 +48,6 @@
           v-for="j in vol.joiners"
           class="ma-1"
           @click="showStuInfo(j.id)"
-          closable
           @click:close="rollbackSignup(j.id)"
         >
           {{ j.name }}
@@ -57,6 +56,7 @@
       <v-list-item>
         <v-list-item-title>状态</v-list-item-title>
         <v-chip
+          class="ma-1"
           label
           :color="getVolStatusDisplayForUser(infoStore.userId, vol)[1]"
         >

@@ -44,12 +44,12 @@
         </template>
       </v-navigation-drawer>
       <v-main>
-        <v-container>
+        <v-container class="pl-1 pb-0 pt-2 pr-5">
           <RouterView />
         </v-container>
       </v-main>
     </v-theme-provider>
-    <div id="prevent-click" v-if="loadingStore.isLoading"></div>
+    <div id="prevent-click-hover" v-if="loadingStore.isLoading"></div>
   </v-app>
 </template>
 
@@ -75,7 +75,7 @@ export default {
 };
 </script>
 <style scoped>
-#prevent-click {
+#prevent-click-hover {
   position: fixed;
   width: 100%;
   height: 100%;

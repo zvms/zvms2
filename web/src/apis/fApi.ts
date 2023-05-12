@@ -138,6 +138,13 @@ export class ForegroundApi {
     });
   }
 
+  get skipFailedToast(): ForegroundApi {
+    return new ForegroundApi({
+      ...this.config,
+      defaultFailedToast: false,
+    });
+  }
+
   get loadingState(): ForegroundApi {
     const oldConfig: ForegroundApiConfig = this.config;
     return new ForegroundApi({
@@ -774,9 +781,27 @@ export class ForegroundApi {
   /**
    * ### [POST] /volunteer/create/special
    * #### 权限: Any
+   * @param name
+   * @param type
+   * @param reward
+   * @param joiners
    */
-  createSpecialVolunteer(): ForegroundApiRunner<{}> {
-    return createForegroundApiRunner(this, "POST", `/volunteer/create/special`);
+  createSpecialVolunteer(
+    name: string,
+    type: enums.VolType,
+    reward: number,
+    joiners: Array<number>
+  ): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(
+      this,
+      "POST",
+      `/volunteer/create/special`, {
+        name,
+        type,
+        reward,
+        joiners
+      }
+    );
   }
   /**
    * ## 搜索学生感想
@@ -1056,6 +1081,13 @@ export class ForegroundApi {
    */
   restartTtyd(): ForegroundApiRunner<{}> {
     return createForegroundApiRunner(this, "POST", `/system/ttyd/restart`);
+  }
+  /**
+   * ### [POST] /system/restart
+   * #### 权限: Any
+   */
+  restart(): ForegroundApiRunner<{}> {
+    return createForegroundApiRunner(this, "POST", `/system/restart`);
   }
 
 

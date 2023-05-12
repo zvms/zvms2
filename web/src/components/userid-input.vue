@@ -1,4 +1,7 @@
 <template>
+  <div class="user-info-tip">
+    {{ currentUserInfo }}
+  </div>
   <v-text-field
     type="text"
     autocomplete="userid"
@@ -8,11 +11,6 @@
     @update:model-value="updateCurrentUserInfo"
     :rules="rules"
   >
-    <template #prepend>
-      <div style="height: 20px">
-        {{ currentUserInfo }}
-      </div>
-    </template>
   </v-text-field>
 </template>
 
@@ -44,12 +42,27 @@ export default {
         this.currentUserInfo = "";
         return;
       }
-      fApiNotLoading.skipOkToast.getUserBasicInfo(userId)(
+      fApiNotLoading.skipOkToast.skipFailedToast.getUserBasicInfo(userId)(
         ({ clsName, userName }) => {
           this.currentUserInfo = `${clsName} ${userName}`;
         }
       );
     },
   },
+
+  watch: {
+    modelValue(newVal) {
+      this.userId = newVal;
+      this.updateCurrentUserInfo();
+    },
+  },
 };
 </script>
+<style scoped>
+.user-info-tip {
+  position: relative;
+  left: 170px;
+  top: 28px;
+  height: 0;
+}
+</style>

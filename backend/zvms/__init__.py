@@ -25,6 +25,7 @@ def create_app():
     import zvms.tokenlib as tk
     import zvms.views
     import zvms.views.notice
+    import zvms.views.system
     from zvms.apilib import Api
     from zvms.models import db
 

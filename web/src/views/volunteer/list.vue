@@ -1,15 +1,15 @@
 <template>
-  <v-container>
-    <v-card>
-      <v-card-title>
-        义工列表
-        <v-btn @click="fetchVols" size="xsmall">
-          <v-icon icon="mdi-reload" size="xsmall" />
-        </v-btn>
-      </v-card-title>
-      <v-container class="table-filter">
+  <v-card>
+    <v-card-title class="pt-0">
+      <v-container style="margin-bottom: -30px">
         <v-row>
-          <v-col cols="4">
+          <v-col cols="4" class="pl-3 ma-0">
+            义工列表
+            <v-btn @click="fetchVols" size="xsmall">
+              <v-icon icon="mdi-reload" size="xsmall" />
+            </v-btn>
+          </v-col>
+          <v-col cols="4" class="pa-0 ma-0 h-50">
             <v-select
               v-model="filter.status"
               label="筛选状态"
@@ -19,7 +19,7 @@
               item-value="id"
             />
           </v-col>
-          <v-col cols="4">
+          <v-col cols="4" class="py-0 ma-0">
             <v-select
               v-if="
                 infoStore.permission &
@@ -35,59 +35,64 @@
           </v-col>
         </v-row>
       </v-container>
-      <data-table
-        fixed-header
-        :headers="headers"
-        :items="volsForTable"
-        @click:row="onRowClick"
-      >
-        <template v-slot:body v-if="vols.length === 0">
-          <p class="text-center">是空的~</p>
-        </template>
-        <template v-slot:item.status="{ item }">
-          <v-chip label :color="item.raw.statusColor">
-            {{ item.raw.statusText }}
-          </v-chip>
-        </template>
-      </data-table>
-    </v-card>
-    <v-dialog v-if="infoDlg" v-model="infoDlg" persistent fullscreen scrollable>
-      <v-card>
-        <v-card-title variant="outlined">
-          义工 {{ current.vol.name }} 的详细信息
-        </v-card-title>
+    </v-card-title>
+    <data-table
+      fixed-header
+      :headers="headers"
+      :items="volsForTable"
+      @click:row="onRowClick"
+    >
+      <template v-slot:body v-if="vols.length === 0">
+        <table-placeholder />
+      </template>
+      <template v-slot:item.name="{ item }">
+        <div class="vol-name-in-table">
+          {{ item.raw.name }}
+        </div>
+      </template>
+      <template v-slot:item.status="{ item }">
+        <v-chip label :color="item.raw.statusColor">
+          {{ item.raw.statusText }}
+        </v-chip>
+      </template>
+    </data-table>
+  </v-card>
+  <v-dialog v-if="infoDlg" v-model="infoDlg" persistent fullscreen scrollable>
+    <v-card>
+      <v-card-title variant="outlined">
+        义工 {{ current.vol.name }} 的详细信息
+      </v-card-title>
 
-        <v-card-text>
-          <vol-info
-            :vol-id="current.singleVol.id"
-            :vol="current.vol"
-            :signup-rollupable="signupRollupable"
-            class="pa-14"
-          />
-        </v-card-text>
-
-        <v-card-actions>
-          <v-btn
-            v-for="(item, index) in actions"
-            :key="index"
-            @click="item.onclick"
-          >
-            {{ item.text }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-      <v-dialog v-model="thoughtDlg" persistent fullscreen>
-        <ThoughtEditor
-          :stuName="infoStore.username"
-          :volId="current.singleVol.id"
+      <v-card-text>
+        <vol-info
+          :vol-id="current.singleVol.id"
           :vol="current.vol"
-          :stuId="infoStore.userId"
-          :thought="current.thought!!"
-          @close="thoughtDlg = false"
+          :signup-rollupable="signupRollupable"
+          class="pa-14"
         />
-      </v-dialog>
+      </v-card-text>
+
+      <v-card-actions>
+        <v-btn
+          v-for="(item, index) in actions"
+          :key="index"
+          @click="item.onclick"
+        >
+          {{ item.text }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+    <v-dialog v-model="thoughtDlg" persistent fullscreen>
+      <ThoughtEditor
+        :stuName="infoStore.username"
+        :volId="current.singleVol.id"
+        :vol="current.vol"
+        :stuId="infoStore.userId"
+        :thought="current.thought!!"
+        @close="thoughtDlg = false"
+      />
     </v-dialog>
-  </v-container>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -103,12 +108,13 @@ import {
 } from "@/apis";
 import { Categ, getVolStatusName } from "@/apis/types/enums";
 import VolInfo from "@/components/vol-info.vue";
-import { useInfoStore } from "@/stores";
+import { useInfoStore, useLoadingStore } from "@/stores";
 import { getVolStatusDisplayText } from "@/utils/calc";
 import { confirm, toasts } from "@/utils/dialogs";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import ThoughtEditor from "@/components/thought/editor.vue";
+import TablePlaceholder from "@/components/table-placeholder.vue";
 
 interface Action {
   text: string;
@@ -120,6 +126,7 @@ export default {
     VolInfo,
     DataTable,
     ThoughtEditor,
+    TablePlaceholder,
   },
   data() {
     return {
@@ -131,20 +138,24 @@ export default {
           title: "名称",
           value: "name",
           key: "name",
+          width: 430,
         },
         {
           title: "创建者",
           value: "holderName",
           key: "holderName",
+          width: 120,
         },
         {
           title: "状态",
           key: "status",
+          width: 150,
         },
         {
           title: "预期进行时间",
           value: "time",
           key: "time",
+          width: 230,
         },
       ],
       vols: [] as SingleVolunteer[],
@@ -215,7 +226,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore),
+    ...mapStores(useInfoStore, useLoadingStore),
     isJoiner() {
       return (
         this.current!.vol.joiners.findIndex(

@@ -248,3 +248,9 @@ PublicNotice =  Nullable(PublicNoticeNotNone())
 
 class ModOthersPwd(Object):
     pwd = String
+
+class SpecialVolunteer(Object):
+    name = String
+    type = Enum(VolType)
+    reward = Int
+    joiners = Array(Int)

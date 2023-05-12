@@ -16,7 +16,7 @@ def report(report, token_data):
     ).insert()
     return success('反馈成功')
 
-@Api(rule='/report/fetch', method='GET', response='FetchReportsResponse', auth=Categ.SYSTEM)
+@Api(rule='/report/fetch', method='GET', response='FetchReportsResponse', auth=Categ.SYSTEM | Categ.MANAGER)
 def fetch_report(token_data):
     '''获取反馈'''
     return success('获取成功', list_or_error(Report.query.select(

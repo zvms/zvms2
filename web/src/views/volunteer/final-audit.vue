@@ -1,15 +1,15 @@
 <template>
-  <v-container>
-    <v-card>
-      <v-card-title>
-        未审核感想列表
-        <v-btn @click="fetchThoughts" size="xsmall">
-          <v-icon icon="mdi-reload" size="xsmall" />
-        </v-btn>
-      </v-card-title>
-      <v-container class="table-filter">
+  <v-card>
+    <v-card-title class="pt-0">
+      <v-container style="margin-bottom: -30px">
         <v-row>
-          <v-col cols="8">
+          <v-col cols="8" class="pl-3 ma-0">
+            未审核感想列表
+            <v-btn @click="fetchThoughts" size="xsmall">
+              <v-icon icon="mdi-reload" size="xsmall" />
+            </v-btn>
+          </v-col>
+          <v-col cols="4" class="pa-0 ma-0 h-50">
             <v-select
               x-small
               v-model="status"
@@ -32,55 +32,71 @@
           </v-col>
         </v-row>
       </v-container>
-      <data-table
-        fixed-header
-        :headers="headers"
-        :items="thoughts"
-        @click:row="onRowClick"
-      >
-        <template v-slot:body v-if="thoughts.length === 0">
-          <p class="text-center">是空的~</p>
-        </template>
-      </data-table>
+    </v-card-title>
+    <data-table
+      fixed-header
+      :headers="headers"
+      :items="thoughts"
+      @click:row="onRowClick"
+    >
+      <template v-slot:body v-if="thoughts.length === 0">
+        <p class="text-center">是空的~</p>
+      </template>
+      <template v-slot:item.name="{ item }">
+        <div class="vol-name-in-table">
+          {{ item.raw.name }}
+        </div>
+      </template>
+    </data-table>
+  </v-card>
+  <v-dialog v-model="dialog" persistent fullscreen scrollable>
+    <v-card>
+      <v-card-title>详细信息</v-card-title>
+      <v-card-text>
+        <vol-info
+          v-if="currentVol"
+          :vol-id="currentThoughtInfo!.volId"
+          :vol="currentVol"
+          :signup-rollupable="signupRollupable"
+        />
+        <thought-viewer
+          v-if="currentThoughtData"
+          :stu-name="currentThoughtInfo!.stuName"
+          :thought="currentThoughtData"
+          :showWordCount="true"
+        />
+        <v-spacer />
+        发放的{{ getVolTypeName(currentVol!.type) }}时长（分钟）
+        <v-text-field
+          v-model.number="currentReward"
+          type="text"
+          prepend-icon="mdi-clock-time-three-outline"
+          :disabled="!isAuditing"
+        />
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          color="green"
+          class="action"
+          @click.prevent="audit(true)"
+          v-if="isAuditing"
+        >
+          通过
+        </v-btn>
+        <v-btn
+          color="red"
+          class="action"
+          @click.prevent="audit(false)"
+          v-if="isAuditing"
+        >
+          打回
+        </v-btn>
+        <v-btn color="black" class="action" @click.prevent="dialog = false">
+          关闭
+        </v-btn>
+      </v-card-actions>
     </v-card>
-    <v-dialog v-model="dialog" persistent fullscreen scrollable>
-      <v-card>
-        <v-card-title>详细信息</v-card-title>
-        <v-card-text>
-          <vol-info
-            v-if="currentVol"
-            :vol-id="currentThoughtInfo!.volId"
-            :vol="currentVol"
-            :signup-rollupable="signupRollupable"
-          />
-          <thought-viewer
-            v-if="currentThoughtData"
-            :stu-name="currentThoughtInfo!.stuName"
-            :thought="currentThoughtData"
-            :showWordCount="true"
-          />
-          <v-spacer />
-          发放的{{ getVolTypeName(currentVol!.type) }}时长（分钟）
-          <v-text-field
-            v-model.number="currentReward"
-            type="text"
-            prepend-icon="mdi-clock-time-three-outline"
-          />
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="green" class="action" @click.prevent="audit(true)"
-            >通过
-          </v-btn>
-          <v-btn color="red" class="action" @click.prevent="audit(false)"
-            >打回
-          </v-btn>
-          <v-btn color="black" class="action" @click.prevent="dialog = false">
-            关闭
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-container>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -127,6 +143,7 @@ export default {
           value: "volName",
           // align: "start",
           sortable: true,
+          width:500
         },
         {
           key: "stuName",
@@ -134,8 +151,9 @@ export default {
           value: "stuName",
           // align: "start",
           sortable: true,
+          width:200
         },
-        { key: "stuId", title: "学号", value: "stuId" },
+        { key: "stuId", title: "学号", value: "stuId", width: 200 },
       ],
 
       thoughts: [] as SingleThought[],
@@ -216,6 +234,11 @@ export default {
       const isHolder = this.infoStore.userId === this.currentVol!.holder;
       const isThisClassSecretary = false; // (this.infoStore.permission&Categ.Class)&&this.currentVol!.joiners[0]..??;
       return enoughPermission || isHolder || isThisClassSecretary;
+    },
+    isAuditing() {
+      return (
+        this.currentThoughtData!.status == ThoughtStatus.WaitingForFinalAudit
+      );
     },
     ...mapStores(useInfoStore),
   },

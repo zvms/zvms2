@@ -685,7 +685,14 @@
 
 参数:
 ```json
-"any"
+{
+    "name": "string",
+    "type": "VolType",
+    "reward": "number",
+    "joiners": [
+        "number"
+    ]
+}
 ```
 响应:
 ```json
@@ -1015,6 +1022,20 @@
 #### 8.1 zvms.views.system
 
 [POST] /system/ttyd/restart  
+**...**  
+
+参数:
+```json
+"any"
+```
+响应:
+```json
+"any"
+```
+
+#### 8.2 zvms.views.system
+
+[POST] /system/restart  
 **...**  
 
 参数:

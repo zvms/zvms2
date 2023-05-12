@@ -19,11 +19,8 @@
       </div>
     </v-card-title>
     <v-card-text>
-      <v-form v-model.trim="isFormValid">
-        <div style="height: 20px">
-          {{ currentUserInfo }}
-        </div>
-        <userid-input v-model.trim="form.userId" />
+      <v-form v-model="isFormValid">
+        <userid-input v-model="form.userId" />
         <v-text-field
           type="password"
           autocomplete="password"
@@ -33,7 +30,7 @@
           prepend-icon="mdi-lock"
           @keyup.native.enter="login"
         />
-        <v-btn class="me-4 submit" @click="login">登录 </v-btn>
+        <v-btn color="primary" class="me-4 submit" @click="login">登录 </v-btn>
       </v-form>
     </v-card-text>
   </v-card>
@@ -50,10 +47,8 @@
 
 <script lang="ts">
 import { fApi, type PublicNotice } from "@/apis";
-import { fApiNotLoading } from "@/apis/fApi";
 import { Categ } from "@/apis/types/enums";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
-import router from "@/router";
 import { useInfoStore, useLoadingStore } from "@/stores";
 import { toasts } from "@/utils/dialogs";
 import { md5 } from "@/utils/md5";
@@ -61,6 +56,8 @@ import { applyNavItems } from "@/utils/nav";
 import { NOT_EMPTY } from "@/utils/validation";
 import { mapStores } from "pinia";
 import UseridInput from "@/components/userid-input.vue";
+
+const LATEST_USERID_KEY = "zvms.v2.login.latestUserId";
 
 export default {
   name: "login",
@@ -73,7 +70,6 @@ export default {
         userId: "",
         password: "",
       },
-      currentUserInfo: "",
       rules: [NOT_EMPTY()],
       isFormValid: false,
       publicNotice: null as PublicNotice,
@@ -82,19 +78,22 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     const infoStore = useInfoStore();
-    if (
-      infoStore.token?.length > 0 &&
-      !(infoStore.permission & Categ.None)
-    ) {
+    if (infoStore.token?.length > 0 && !(infoStore.permission & Categ.None)) {
       next("/");
-    }else{
-      next()
+    } else {
+      next();
     }
   },
   beforeMount() {
     fApi.skipOkToast.getPublicNotice()((result) => {
       this.publicNotice = result;
     });
+  },
+  mounted() {
+    const latestUserId = localStorage.getItem(LATEST_USERID_KEY);
+    if (latestUserId && latestUserId.length > 0) {
+      this.form.userId = latestUserId;
+    }
   },
   methods: {
     login() {
@@ -125,7 +124,8 @@ export default {
               className: clsName,
             });
             applyNavItems();
-            router.push("/");
+            localStorage.setItem(LATEST_USERID_KEY, this.form.userId);
+            this.$router.push("/");
           });
         });
       }

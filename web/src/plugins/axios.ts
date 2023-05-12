@@ -1,7 +1,7 @@
 import Axios from "axios";
 
-export const serverIP = "172.16.5.4";
-export const baseURL = `https://kermanx-scaling-lamp-q4w4r75jgjgc6wxw-11451.preview.app.github.dev/`;
+export const serverIP = "172.31.2.4";
+export const baseURL = `http://${serverIP}:11452`;
 
 const axios = Axios.create({
   baseURL,

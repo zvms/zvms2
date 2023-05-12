@@ -51,7 +51,7 @@ const router = createRouter({
       name: "login",
       component: () => import("../views/login.vue"),
       meta: {
-        authed: anyAuth,
+        authed: unloginedAuth,
         nav: {
           priority: 0,
           title: "登录",
@@ -178,28 +178,15 @@ const router = createRouter({
       },
     },
     {
-      path: "/system/ttyd",
-      name: "systemTtyd",
-      component: () => import("../views/system/ttyd.vue"),
+      path: "/system/",
+      name: "system",
+      component: () => import("../views/system/index.vue"),
       meta: {
         authed: createHasAuth(Categ.System),
         nav: {
           priority: 20,
-          title: "TTYD",
-          icon: "mdi-powershell",
-        },
-      },
-    },
-    {
-      path: "/system/view-report",
-      name: "systemViewReport",
-      component: () => import("../views/system/view-report.vue"),
-      meta: {
-        authed: createHasAuth(Categ.System),
-        nav: {
-          priority: 21,
-          title: "查看反馈",
-          icon: "mdi-comment-quote",
+          title: "系统管理",
+          icon: "mdi-desktop-classic",
         },
       },
     },

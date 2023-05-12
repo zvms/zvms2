@@ -12,3 +12,7 @@ def restart_ttyd(token_data):
     if os.system(TTYD_PATH) == 0:
         return success('TTYD 重启成功!')
     return error('TTYD重启失败!')
+
+@Api('/system/restart', method='POST', auth=Categ.SYSTEM)
+def restart(token_data):
+    exit()

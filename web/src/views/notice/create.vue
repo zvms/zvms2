@@ -1,5 +1,4 @@
 <template>
-  <v-container>
     <v-card>
       <v-card-title> 创建全校通知 </v-card-title>
       <v-card-text>
@@ -37,14 +36,12 @@
       </v-card-text>
     </v-card>
     <br />
-  </v-container>
 </template>
 
 <script lang="ts">
 import { fApi } from "@/apis";
 import { NOT_EMPTY, TIME } from "@/utils/validation";
 import { confirm } from "@/utils/dialogs";
-import router from "@/router";
 
 export default {
   data() {
@@ -72,7 +69,7 @@ export default {
           this.form.content,
           this.form.deadtime
         )(() => {
-          router.push("/");
+          this.$router.push("/");
         });
       }
     },

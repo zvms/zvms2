@@ -1,6 +1,6 @@
-(import time [perf_counter])
+(import time [perf-counter])
 
-(setv start (perf_counter))
+(setv start (perf-counter))
 
 (require hyrule [case])
 
@@ -24,28 +24,28 @@
 
 (defn write-file [file-name #* content]
   (with [f (open file-name "w" :encoding "utf-8")]
-    (f.write (str.join "" content)))
+    (f.write (.join "" content)))
   (print (os.path.realpath file-name) "生成完成!"))
 
 (defmacro for/join [sep it #* body]
-  `(str.join ~sep (gfor ~@it (str.join "" (map str #(~@body))))))
+  `(.join ~sep (gfor ~@it (.join "" (map str #(~@body))))))
 
 (defn convert [ident src dst]
   (let [elems (map str.lower (case src
     'snake (ident.split "_")
-    'upper_snake (ident.split "_")
+    'upper-snake (ident.split "_")
     'camel (chain #((.group (re.match r"^[a-z]*" ident))) (re.findall r"[A-Z][a-z]*" ident))
     'pascal (re.findall r"[A-Z][a-z]*" ident)
     'lisp (ident.split "-")
     'url (ident.split "/")
     'text (ident.split)))]
     (case dst
-    'snake (str.join "_" elems)
-    'upper_snake (str.join "_" (map str.upper elems))
+    'snake (.join "_" elems)
+    'upper-snake (.join "_" (map str.upper elems))
     'camel (let [iter (iter elems)]
-      (+ (next iter) (str.join "" (map str.capitalize iter))))
-    'pascal (str.join "" (map str.capitalize elems))
-    'lisp (str.join "-" elems))))
+      (+ (next iter) (.join "" (map str.capitalize iter))))
+    'pascal (.join "" (map str.capitalize elems))
+    'lisp (.join "-" elems))))
 
 (setv categs (sorted (gfor [k v] (res.Categ.__dict__.items)
   :if (= (type v) res.Categ)
@@ -57,15 +57,15 @@
     #()
     (for [[k v] categs]
       :if (and (& auth v) (<= v auth))
-      (return (chain #((convert k 'upper_snake 'pascal))
+      (return (chain #((convert k 'upper-snake 'pascal))
       (auth->string (& auth (bnot v))))))))
 
 (with [config-file (open "genconfig.yaml" :encoding "utf-8")]
-  (setv config (yaml.full_load (config-file.read))))
+  (setv config (yaml.full-load (config-file.read))))
 
 (with [mapping-file (open (get config "enums-mapping") :encoding "utf-8")
   template-file (open (get config "apis-template") :encoding "utf-8")]
-  (setv mapping (yaml.full_load (mapping-file.read))
+  (setv mapping (yaml.full-load (mapping-file.read))
     template (template-file.read)))
 
 (write-file (get config "enums")
@@ -74,25 +74,25 @@
     :setv map-this (get mapping enum.__name__)
     :setv valid-cons (lfor [field value] (enum.__dict__.items)
       :if (= (type value) enum)
-      #((convert field 'upper_snake 'pascal) value))]
+      #((convert field 'upper-snake 'pascal) value))]
       "export enum " enum.__name__ "{
 "
 (for/join ",\n" [[field value] valid-cons]
 "    " field " = " value)
 "
 }
-
-export function get" enum.__name__ "Name(id:" enum.__name__ "): string {
-switch (id) {
+export function get" enum.__name__ "Name(id: " enum.__name__ "): string {
+    switch (id) {
 "
 (for/join "" [[field _] valid-cons]
 "        case " enum.__name__ "." field ":
-        return \"" (get map-this field) "\";
+            return \"" (get map-this field) "\";
 ")
 "        default:
-        throw new Error(\"Invalid enum value\");
+             throw new Error(\"Invalid enum value\");
+    }
 }
-}"))
+"))
 
 (write-file (get config "structs") 
 "import * as enums from \"./enums\";
@@ -131,7 +131,7 @@ switch (id) {
   (rule-to-url.sub rule-to-url-sub api.rule))
 
 (defn has-params? [api]
-  (or api.url_params (not (isinstance api.params Any))))
+  (or api.url-params (not (isinstance api.params Any))))
 
 (write-file (get config "apis")
   (rule-methods-block.sub (+ (get config "methods-flag" "start") "\n"
@@ -139,14 +139,14 @@ switch (id) {
 "  /**" (if (is api.func.__doc__ None) "" (+ "
    * ## " api.func.__doc__)) "
    * ### [" api.method "] " api.rule "
-   * #### 权限: " (str.join " | " (auth->string api.auth))
+   * #### 权限: " (.join " | " (auth->string api.auth))
    (if (not (has-params? api)) ""
-    (+ "\n" (for/join "\n" [name (chain api.url_params (api.params.as_params))]
+    (+ "\n" (for/join "\n" [name (chain api.url-params (api.params.as-params))]
 "   * @param " name))) "
    */
   " (convert api.func.__name__ 'snake 'camel) "("
    (if (not (has-params? api)) ""
-    (+ "\n" (for/join ",\n" [[name type] (chain (api.url_params.items) (.items (api.params.as_params)))]
+    (+ "\n" (for/join ",\n" [[name type] (chain (api.url-params.items) (.items (api.params.as-params)))]
 "    " name ": " type) "
   ")) "): ForegroundApiRunner<" (api.response.render) "> {
     return createForegroundApiRunner(" (if (not (has-params? api))
@@ -154,9 +154,9 @@ switch (id) {
 (+ "
       this,
       \"" api.method "\",
-      `" (gen-url api) (let [params (api.params.as_params)
+      `" (gen-url api) (let [params (api.params.as-params)
           args (if (isinstance api.params Any) ""
-        (for/join ",\n" [arg (api.params.as_params)]
+        (for/join ",\n" [arg (api.params.as-params)]
 "        " arg))] (if (= api.method "POST")
         (if params(+ "`, {
 " args "
@@ -190,12 +190,12 @@ switch (id) {
 
 参数:
 ```json
-" (json.dumps (api.params.as_json) :indent 4) "
+" (json.dumps (api.params.as-json) :indent 4) "
 ```
 响应:
 ```json
-" (json.dumps (api.response.as_json) :indent 4) "
+" (json.dumps (api.response.as-json) :indent 4) "
 ```
 ")))))
 
-(print (- (perf_counter) start))
+(print (- (perf-counter) start))

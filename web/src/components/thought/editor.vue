@@ -10,7 +10,10 @@
       <span v-if="thought.status === ThoughtStatus.Accepted">
         时长{{ thought.reward }}分钟
       </span>
-      <span v-if="thought.everRepulsed&&thought.status == ThoughtStatus.Draft" style="color:red">
+      <span
+        v-if="thought.everRepulsed && thought.status == ThoughtStatus.Draft"
+        style="color: red"
+      >
         （上次提交被打回，请修改感想后重新提交
         <span v-if="thought.reason">
           ，打回原因：
@@ -31,10 +34,29 @@
         </v-tabs>
         <v-window v-if="isThoughtModifiable" v-model="tab">
           <v-window-item value="from-image-bed">
-            <v-text-field label="图片ID" v-model.trim="picsId" />
-            <v-btn @click="uploadFromId" style="border: 1px gray solid">
-              上传
-            </v-btn>
+            <v-container>
+              <v-row>
+                <v-col cols="4">
+                  <v-text-field
+                    prepend-icon="mdi-image-multiple"
+                    label="图片ID"
+                    v-model.trim="picsId"
+                    @keyup.native.enter="uploadFromId"
+                  />
+                </v-col>
+                <v-col cols="4">
+                  <v-btn
+                    @click="uploadFromId"
+                    style="border: 1px gray solid; height: 56px"
+                  >
+                    上传
+                    <span style="font-size: xx-small; color: gray">
+                      （若有多个ID，请依次输入ID后点击上传）
+                    </span>
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-container>
           </v-window-item>
           <v-window-item value="from-upload">
             <v-file-input

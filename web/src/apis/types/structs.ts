@@ -238,3 +238,9 @@ export type PublicNotice = PublicNoticeNotNone | null
 export interface ModOthersPwd{
     pwd: string
 }
+export interface SpecialVolunteer{
+    name: string,
+    type: enums.VolType,
+    reward: number,
+    joiners: Array<number>
+}
