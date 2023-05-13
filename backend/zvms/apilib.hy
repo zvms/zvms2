@@ -2,6 +2,7 @@
         pprint [pprint]
         datetime [datetime]
         typing [Callable]
+        pprint [pprint]
         json
         re
         zvms.util [inexact-now]
@@ -41,7 +42,7 @@
                                          api.returns
                                          api.auth)))))
 
-(setv json-header {"Content-Type": "application/json ; charset=utf-8"})
+(setv json-header {"Content-Type" "application/json ; charset=utf-8"})
 
 (defn process [#^Processor proc json #^str msg]
   (try
@@ -57,7 +58,7 @@
   ((wraps impl) 
    (fn [#*args #**kwargs] 
      (import flask [request]
-             zvms.models [Issue]
+             zvms.models [db Issue]
              zvms.tokenlib :as tk)
      (let [json-data (if (in request.method #("GET" "DELETE"))
                        request.args
@@ -95,4 +96,17 @@
              (process returns result "服务器返回的数据错误"))
            #((json.dumps ret) json-header))
          (except [ex [ZvmsError]]
-                 #(json.dumps )))))))
+                 #(json.dumps (error ex.msg)))
+         (except [ex [ProcessorError]]
+                 (let [error-info (dict (zip #("where" "expected" "found")
+                                 ex.args))]
+                   (when __debug__
+                     (pprint error-info))
+                   (insert (Issue
+                            :time (inexact-now)
+                            :reporter 0
+                            :content (.format "(用户: {}) {}: {}'"
+                                              (:id token-data "<未登录>")
+                                              ex.msg
+                                              (json.dumps error-info :indent 4))))
+                   (json.dumps (| (error ex.msg) error-info)))))))))
