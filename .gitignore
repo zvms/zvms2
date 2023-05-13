@@ -8,6 +8,9 @@ dist
 **/venv
 
 web/public/students.txt
+web/src/apis/types/enums.ts
+web/src/apis/types/structs.ts
+web/src/apis/fApi.ts
 
 # local env files
 .env.local

@@ -12,27 +12,31 @@
 (require hyrule *
          zvms.macros *)
 
+(defn split-params [rule params]
+  (let [url-params (dict (gfor param (re.findall r "\<.+?\>" rule)
+                               (if (param.startswith "<int:")
+                                 #((cut param 5 -1) "number")
+                                 #((cut param 1 -1) "string"))))]
+    #((lfor param params (not-in param url-params)) url-params)))
+
 (defclass Api []
   (setv #^(of list "Api") apis []
-        search-url-params (re.compile r"\<.+?\>"))
+        #^(of list Object) structs [])
   
   (defmth __init__ [rule
                     func
+                    url-params
                     [method "GET"]
                     [params Any]
                     [returns Any]
                     [auth Categ.ANY]]
-    (Api.apis.append self)
     (setv self.rule rule
           self.func func
-          self.url-params {}
+          self.url-params url-params
           self.method method
           self.params params
-          self.returns returns)
-    (for [param (Api.search-url-params.findall rule)]
-      (if (arg.startswith "<int:")
-        (setv (get self.url-params (cut param 5 -1)) "number")
-        (setv (get self.url-params (cut param 1 -1)) "string"))))
+          self.returns returns))
+  
   (defn init-app [app]
     (for [api Api.apis]
       (app.add-url-rule api.rule 
@@ -110,3 +114,23 @@
                                               ex.msg
                                               (json.dumps error-info :indent 4))))
                    (json.dumps (| (error ex.msg) error-info)))))))))
+
+(defmacro defstruct [name optional #*fields]
+  `(do
+     (defclass ~name [TypedDict :total ~optional]
+       ~@fields)
+     (Api.structs.append (Object (annotations->params ~fields) ~optional))))
+
+#_(defapi [:rule "/thought/<int:volId>/<int:stuId>/audit/final"
+           :method "POST"
+           :auth Categ.AUDITOR
+           :params 'Accept
+           :doc "'终审感想(义管会)"]
+    final-audit [#^int reward #^int volId #^int stuId]
+    ...)
+
+(defmacro defapi [options name params #*body]
+  `(do
+     (defn ~name [#^TokenData token-data ~@params]
+       ~@body)
+     (Api.apis.append (Api ~name))))
