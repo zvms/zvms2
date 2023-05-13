@@ -14,7 +14,7 @@ export const children = [
   commonStudents,
   classleader,
   studentsUnion,
-  auditor,
+  //auditor,
   appendix,
   rule,
 ];
