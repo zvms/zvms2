@@ -15,4 +15,4 @@ def restart_ttyd(token_data):
 
 @Api('/system/restart', method='POST', auth=Categ.SYSTEM)
 def restart(token_data):
-    exit()
+    raise KeyboardInterrupt

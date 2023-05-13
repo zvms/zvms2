@@ -6,7 +6,11 @@ from tornado.httpserver import HTTPServer
 
 import zvms
 
+server: HTTPServer
+
+
 def start_server():
+    global server
     wsgi = WSGIContainer(zvms.create_app())
     server = HTTPServer(wsgi)
     server.listen(11452)
@@ -16,5 +20,6 @@ if __name__ == '__main__':
     while True:
         try:
             start_server()
-        except SystemExit:
+        except KeyboardInterrupt:
+            server.stop()
             zvms = reload(zvms)
