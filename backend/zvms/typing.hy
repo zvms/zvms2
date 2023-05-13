@@ -1,7 +1,9 @@
 (import contextlib [contextmanager]
         datetime [datetime]
-        types {NoneType}
-        datetime [datetime])
+        types [NoneType]
+        typing [Iterable]
+        datetime [datetime]
+        enum [EnumType])
 
 (require hyrule *
          zvms.macros *)
@@ -58,12 +60,12 @@
   (defmth as-params []
     {}))
 
-(setv Any (Any))
-
 (defclass Object [Processor]
   (setv module "")
 
-  (constructor name fields optional)
+  (constructor #^str name 
+               #^bool optional
+               #^(of dict str Processor) fields)
   
   (defmth render []
     f"{Object.module}{(. (type self) __name__)}")
@@ -134,11 +136,8 @@
       (datetime.strptime json "%y-%m-%d-%H-%M")
       (mismatch))))
 
-(setv URLInt URLInt
-      DateTime DateTime)
-
 (defclass Array [Processor]
-  (constructor item)
+  (constructor #^Processor item)
   
   (defmth render []
     (+ "Array<" (self.item.render) ">"))
@@ -153,7 +152,7 @@
         (self.item.process v)))))
 
 (defclass Union [Processor]
-  (constructor elts)
+  (constructor #^(of Iterable Processor) elts)
   
   (defmth render []
     (.join " | " (gfor elt self.elts (elt.render))))
@@ -173,47 +172,48 @@
                    (or (is self.max None) (< ~comparator self.max))))
      (err)))
 
-(defmacro range-jsonify [name] 
-  `(defmth jsonify []
-    {~name
-     {"__min__" self.min
-      "__max__" self.max
-      "__raw__" (self.simple.jsonify)}}))
+(defmacro metadata-info [name] 
+  `(do
+     (constructor #^Processor simple min max)
 
-(defclass Range [Processor]
-  (defmth __init__ [#^Processor simple [min None] [max None]]
-    (setv self.simple simple
-          self.min min
-          self.max max))
-  
-  (defmth render []
-    (self.simple.render))
-  
-  (range-jsonify "__range__")
+     (defmth render []
+       (self.simple render))
+     
+     (defmth jsonify [] 
+       {~name 
+        {"__min__" self.min 
+         "__max__" self.max 
+         "__raw__" (self.simple.jsonify)}})))
+
+(defmacro def-metadata-fn [name class]
+  `(defn ~name [min [max None]]
+     (when (is max None)
+       (setv max min
+             min 0))
+     (fn [simple]
+       (~class simple min max))))
+
+(def-metadata-fn Range RangeProcessor)
+(def-metadata-fn Len LenProcessor)
+
+(defclass RangeProcessor [Processor]
+  (metadata-info "__range__")
   
   (defmth process [json]
     (let [processed (self.simple.process json)]
       (check-between json)
       processed)))
 
-(defclass Len [Processor]
-  (defmth __init__ [#^Processor simple [min None] [max None] ]
-    (setv self.simple simple
-          self.min min
-          self.max (or max min)))
-  
-  (defmth render []
-    (self.simple.render)) 
-  
-  (range-jsonify "__len__")
+(defclass LenProcessor [Processor]
+  (metadata-info "__len__")
   
   (defmth process [json]
     (let [processed (self.simple.process json)]
       (check-between (len json))
       processed)))
 
-(defclass Enum [Processo]
-  (constructor enum)
+(defclass Enum [Processor]
+  (constructor #^EnumType enum)
   
   (defmth render []
     (+ "enums." self.enum.__name__))
@@ -224,7 +224,7 @@
       (mismatch))))
 
 (defclass URLEnum [Processor]
-  (constructor enum)
+  (constructor #^EnumType enum)
   
   (defmth render []
     (+ "enums." self.enum.__name__))

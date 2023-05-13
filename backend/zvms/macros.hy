@@ -11,11 +11,11 @@
        (yield-from i)
        (yield i)))))
 
-(defmacro constructor [#* fields]
+(defmacro constructor [#*fields]
   `(defn __init__ [self ~@fields]
-     (setv ~@(flatten1 (gfor field fields
+     (setv ~@(flatten1 (gfor field (gfor f fields (if (coll? f) (get f -2) f))
                              #(`(. self ~field) field))))))
 
-(defmacro defmth [name params #* body]
+(defmacro defmth [name params #*body]
   `(defn ~name [self ~@params]
      ~@body))
