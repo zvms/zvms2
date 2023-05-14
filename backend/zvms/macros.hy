@@ -1,8 +1,8 @@
-(eval-when-compile
+(eval-and-compile
  (import hyrule [coll?])
 
  (defn chunks [iterable n]
-   (for [i (range (// (len iterable) n))]
+   (for [i (range 0 (len iterable) n)]
      (yield (cut iterable i (+ i n)))))
  
  (defn flatten1 [iterable]
@@ -17,5 +17,5 @@
                              #(`(. self ~field) field))))))
 
 (defmacro defmth [name params #*body]
-  `(defn ~name [self ~@params]
+  `(defn ~name [self / ~@params]
      ~@body))

@@ -20,6 +20,7 @@ ThoughtStatus:
   WaitingForFinalAudit: 等待审计部审核
   WaitingForFirstAudit: 等待团支书审核
   Accepted: 已通过
+  Special: 特殊
 
 VolStatus:
   Unaudited: 审核后可报名

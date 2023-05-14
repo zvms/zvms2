@@ -1,23 +1,24 @@
 (import functools [wraps]
         pprint [pprint]
         datetime [datetime]
-        types [Callable
-               FunctionType]
+        types [FunctionType]
         typing [Iterable
+                Callable
                 TypedDict]
         pprint [pprint]
         json
         re
         zvms.util [inexact-now]
         zvms.typing *
-        zvms.res [Categ])
+        zvms.res [Categ]
+        zvms.macros [flatten1 chunks])
 
 (require hyrule *
          zvms.macros *)
 
 (defclass Api []
   (setv #^(of list "Api") apis []
-        #^(of list Object) structs [])
+        #^(of dict str Object) structs {})
   
   (constructor #^Callable func
                #^str rule
@@ -47,7 +48,7 @@
   (try
     (proc.process json)
     (except [ex [ProcessorError]]
-            (setv (:msg ex) msg)
+            (setv (get ex "msg") msg)
             (raise ex))))
 
 (defn deco [#^Callable impl 
@@ -63,7 +64,7 @@
                        request.args
                        (try
                          (json.loads (. request (get-data) (decode "utf-8")))
-                         {}))
+                         (except [] {})))
            token-data (if (= auth Categ.None)
                         {}
                         (try
@@ -73,15 +74,15 @@
                             (setv token-data (tk.read token-data))
                             (cond
                               (not (tk.exists token-data))
-                              (return (json.dumps {"type" "ERROR" "message" "Token失效, 请重新登陆"}) json-header)
+                              (return #((json.dumps {"type" "ERROR" "message" "Token失效, 请重新登陆"}) json-header))
                               (not (auth.authorized (:auth token-data)))
-                              (return (json.dumps {"type" "ERROR" "message" "权限不足"}))
+                              (return #((json.dumps {"type" "ERROR" "message" "权限不足"}) json-header))
                               True token-data))
                           (except [InvalidSignatureError]
-                                  (return (json.dumps {"type" "ERROR" "message" "未获取到Token, 请重新登陆"}) json-header))))]
+                                  (return #((json.dumps {"type" "ERROR" "message" "未获取到Token, 请重新登陆"}) json-header)))))]
        (when __debug__
-         (with [(open "log.txt" "a" :encoding "utf-8") f]
-               (let [log f "{(inexact-now)}[{request.remote-addr}]"]
+         (with [f (open "log.txt" "a" :encoding "utf-8")]
+               (let [log f"{(inexact-now)}[{request.remote-addr}]"]
                  (unless (= auth Categ.None)
                          (+= s f "({(:id token-data)})"))
                  (+= s (+ "[" request.method "]" request.path))
@@ -121,7 +122,7 @@
     (setv obj ((fns.pop) obj)))
   obj)
 
-(defn annotations->params-helper [#^hy.models.Object ann]
+(defn annotations->params [#^hy.models.Object ann]
   (match ann
     (hy.models.Symbol)
       (case ann
@@ -131,7 +132,10 @@
         'bool Boolean
         'NoneType Null
         'datetime DateTime
-        else (get Api.structs ann))
+        'Any (Any)
+        else (get Api.structs (str ann)))
+    (hy.models.Expression ['of 'list generic-param])
+      (Array (annotations->params generic-param))
     (hy.models.Expression ['| #*rest])
       (let [metadata []
             union-elts []]
@@ -149,69 +153,47 @@
           True
             (get union-elts 0)))))
 
-(defn annotations->params [#^str name #^bool optional #^(of tuple hy.models.Expression) ann]
-  (Object name optional (dfor [_ key value] ann
-                              key (annotations->params-helper value))))
-
-(defmacro defstruct [name optional #*fields]
+(defmacro defstruct [name base optional #*fields]
+  (setv doc 'None)
+  (when (isinstance (get fields 0) hy.models.String)
+    (setv doc (get fields 0)
+          fields (cut fields 1 None)))
   `(do
-     (defclass ~name [TypedDict :total (not ~optional)]
+     (defclass ~name [TypedDict ~@(if (= base 'None) #() #(base)) :total (not ~optional)]
        ~@fields)
-     (Api.structs.append (annotations->params ~(str name) ~optional ~fields))))
-
-#_(defstruct Accept
-    #^int reward)
-
-#_(do
-    (defclass Accept [TypedDict :total (not False)]
-      #^int reward)
-    (Api.structs.append (annotations->params "Accept" False #('(annotate reward int)))))
-
-#_(defapi [:rule "/thought/<int:volId>/<int:stuId>/audit/final"
-           :method "POST"
-           :auth Categ.AUDITOR
-           :params 'Accept
-           :doc "终审感想(义管会)"]
-    final-audit [#^int reward]
-    ...)
+     (setv (get Api.structs ~(str name)) (Object ~(str name) ~base ~optional ~doc (dfor [_ key value] '~fields (str key) (annotations->params value))))))
 
 (defmacro defapi [options name params #*body]
-  (let [options (| {"method" "GET"
-                    "params-optional" False
-                    "params" None
-                    "returns" None
-                    "doc" ""}
-                   (dict (do-mac options)))
+  (let [options (| {"method" '"GET"
+                    "auth" 'Categ.ANY
+                    "params-optional" 'False
+                    "params" 'None
+                    "returns" 'Any
+                    "doc" '""}
+                   (dfor [k v] (chunks options 2) (. k name) v))
         url-params (dict (gfor param (re.findall r"\<.+?\>" (:rule options))
                                (if (param.startswith "<int:")
                                  #((cut param 5 -1) 'int)
-                                 #((cut param 1 -1) 'str))))]
+                                 #((cut param 1 -1) 'str))))
+        need-params (and (!= (:params options) 'None) (not-in (str (:params options)) Api.structs))]
     `(do
-       ~(if (and (:params options) (not-in (:params options) Api.structs))
-          `(defstruct (:params options) (:params-optional options) params)
-          ...)
+       ~(if need-params
+            `(defstruct ~(:params options)
+               None 
+               ~(get options "params-optional")
+               ~@params)
+            '...)
        (defn ~name [#^TokenData token-data
-                    ~@(gfor [name type] url-params `(annotate ~type ~(hy.models.Symbol name)))
-                    ~@fields]
-         ~@body)
-       (Api.apis.append (Api :func ~name
-                             :url-params (dfor [name type] name (case type
-                                                                  'int "number"
-                                                                  'str "string"))
-                             #**(~(dfor [k v] options :if (!= k "params-optional") k v)))))))
-
-#_(do
-    (defstruct Accept False
-               #^int reward)
-    (defn final-audit [#^TokenData token-data
-                       #^int stuId
-                       #^int volId
-                       #^int reward]
-      ...)
-    (Api.apis.append (Api :func final-audit
-                          :rule "/thought/<int:volId>/<int:stuId>/audit/final"
-                          :method "POST"
-                          :url-params {"volId" "number" "stuId" "number"}
-                          :params (:Accept Api.structs)
-                          :returns None
-                          :doc "终审感想(义管会)")))
+                      ~@(gfor [name type] url-params `(annotate ~type ~(hy.models.Symbol name)))
+                      ~@params]
+           ~@body)
+       (Api.apis.append (Api :func ~name 
+                             :rule ~(:rule options)
+                             :method ~(:method options)
+                             :auth ~(:auth options)
+                             :doc ~(:doc options)
+                             :url-params ~(dfor [name type] url-params name (case type 
+                                                                              'int "number" 
+                                                                              'str "string")) 
+                             :params ~(if need-params `(get Api.structs ~(str (:params options))) None)
+                             :returns (annotations->params '~(:returns options)))))))

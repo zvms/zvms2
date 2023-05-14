@@ -2,7 +2,7 @@
 # 镇海中学义工管理系统后端
 
 ## 配置
-1. 安装mysql(记得改config.py里的uri)
+1. 安装mysql(记得改config.hy里的uri)
 2. 初始化数据库
     ```sql
     source sql.sql
@@ -15,12 +15,5 @@
 
 ## 运行
 ```bash
-$ flask --app zvms run -p 1145 -h 0.0.0.0
-```
-
-或
-
-```bash
-$ export FLASK_APP = zvms
-$ flask run
+$ hy run.hy
 ```

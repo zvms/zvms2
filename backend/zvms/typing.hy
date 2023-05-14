@@ -1,7 +1,8 @@
 (import contextlib [contextmanager]
         datetime [datetime]
         types [NoneType]
-        typing [Iterable]
+        typing [Iterable
+                Optional]
         datetime [datetime]
         enum [EnumType])
 
@@ -38,9 +39,11 @@
 (defmacro err []
   '(Processor.error self json))
 
-(defmacro mismatch []
-  '(except [ValueError TypeError]
-           (err)))
+(defmacro try-type [#*body]
+  `(try
+     ~@body
+     (except [ValueError TypeError]
+             (err))))
 
 (defmacro typecheck [type]
   `(unless (isinstance json ~type) 
@@ -62,36 +65,44 @@
 
 (defclass Object [Processor]
   (setv module "")
-
-  (constructor #^str name 
-               #^bool optional
-               #^(of dict str Processor) fields)
+  
+  (defmth __init__ [#^str name 
+                    #^(of Optional "Object") base 
+                    #^bool optional  
+                    #^(of Optional str) doc
+                    #^(of dict str Processor) fields]
+    (setv self.name name
+          self.base base
+          self.optional optional
+          self.doc doc
+          self.fields fields
+          self.inherited-fields (if (is base None) fields (| fields base.inherited-fields))))
   
   (defmth render []
-    f"{Object.module}{(. (type self) __name__)}")
+    f"{Object.module}{self.name}")
   
   (defmth jsonify []
-    (dfor [k v] (self.fields.items) k (v.jsonify)))
+    (dfor [k v] (self.inherited-fields.items) k (v.jsonify)))
   
   (defmth as-params []
     (dfor [k v] (self.fields.items) k (v.render)))
   
   (defmth process [json]
-    (typecheck dict)
-    (if self.optional
-      (dfor [k v] json
-            (with-path k
-              (if (in k self.fields)
-                (. self fields [k] (process v))
-                v)))
-      (dfor [k v] (self.fields.items)
-            (with-path k
-              (if (in k json)
-                (v.process (get json k))
-                (err)))))))
+    (typecheck dict) 
+    (dict (if self.optional
+            (gfor [k v] json
+                  (with-path k
+                    (if (in k self.inherited-fields)
+                      #(k (.self fields [k] (process v)))
+                      v)))
+            (gfor [k v] (self.inherited-fields.items)
+                  (with-path k
+                    (if (in k json)
+                      #(k (v.process (get json k)))
+                      (err))))))))
 
 (defclass Simple [Processor]
-  (defmth __init__ [#^type type #^str tsname [#^str name None]]
+  (defmth __init__ [#^type type #^str tsname #^str [name None]]
     (setv self.type type
           self.tsname tsname
           self.name (or name tsname)))
@@ -120,9 +131,8 @@
     "urlint")
   
   (defmth process [json]
-    (try
-      (int json)
-      (mismatch))))
+    (try-type
+      (int json))))
 
 (defclass DateTime [Processor]
   (defmth render []
@@ -132,9 +142,8 @@
     "datetime")
   
   (defmth process [json]
-    (try
-      (datetime.strptime json "%y-%m-%d-%H-%M")
-      (mismatch))))
+    (try-type
+      (datetime.strptime json "%y-%m-%d-%H-%M"))))
 
 (defclass Array [Processor]
   (constructor #^Processor item)
@@ -219,9 +228,8 @@
     (+ "enums." self.enum.__name__))
     
   (defmth process [json]
-    (try
-      (self.enum json)
-      (mismatch))))
+    (try-type
+      (self.enum json))))
 
 (defclass URLEnum [Processor]
   (constructor #^EnumType enum)
@@ -233,6 +241,5 @@
     (+ "enums.url." self.enum.__name__))
   
   (defmth process [json]
-    (try
-      (self.enum (int json))
-      (mismatch))))
+    (try-type
+      (self.enum (int json)))))
