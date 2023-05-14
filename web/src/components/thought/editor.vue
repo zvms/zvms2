@@ -51,7 +51,7 @@
                   >
                     上传
                     <span style="font-size: xx-small; color: gray">
-                      （若有多个ID，请依次输入ID后点击上传）
+                      （若有多个ID，请每次输入一个ID后点击上传，重复多次）
                     </span>
                   </v-btn>
                 </v-col>
