@@ -85,7 +85,9 @@
     (dfor [k v] (self.inherited-fields.items) k (v.jsonify)))
   
   (defmth as-params []
-    (dfor [k v] (self.fields.items) k (v.render)))
+    (if self.optional
+      {"kwargs" (self.render)}
+      (dfor [k v] (self.fields.items) k (v.render))))
   
   (defmth process [json]
     (typecheck dict) 

@@ -11,6 +11,7 @@
         zvms.util [inexact-now]
         zvms.typing *
         zvms.res [Categ]
+        zvms.res :as res
         zvms.macros [flatten1 chunks])
 
 (require hyrule *
@@ -21,6 +22,7 @@
         #^(of dict str Object) structs {})
   
   (constructor #^Callable func
+               #^str name
                #^str rule
                #^str method
                #^Categ auth
@@ -34,12 +36,8 @@
       (app.add-url-rule api.rule 
                         :methods [api.method]
                         :view-func (deco api.func 
-                                         (if (is api.params None)
-                                           (Any)
-                                           api.params)
-                                         (if (is api.returns None)
-                                           (Any)
-                                           (annotations->params api.returns))
+                                         api.params
+                                         api.returns
                                          api.auth)))))
 
 (setv json-header {"Content-Type" "application/json ; charset=utf-8"})
@@ -131,12 +129,16 @@
         'str String
         'bool Boolean
         'NoneType Null
-        'datetime DateTime
+        'datetime (DateTime)
         'Any (Any)
-        else (get Api.structs (str ann)))
-    (hy.models.Expression ['of 'list generic-param])
+        else 
+          (let [ann (str ann)]
+            (if (in ann Api.structs)
+              (get Api.structs ann)
+              (getattr res ann))))
+    [of list generic-param]
       (Array (annotations->params generic-param))
-    (hy.models.Expression ['| #*rest])
+    [| #*rest]
       (let [metadata []
             union-elts []]
         (for [i rest]
@@ -159,16 +161,22 @@
     (setv doc (get fields 0)
           fields (cut fields 1 None)))
   `(do
-     (defclass ~name [TypedDict ~@(if (= base 'None) #() #(base)) :total (not ~optional)]
+     (defclass ~name [~(if (= base 'None) 'TypedDict base) :total (not ~optional)]
        ~@fields)
-     (setv (get Api.structs ~(str name)) (Object ~(str name) ~base ~optional ~doc (dfor [_ key value] '~fields (str key) (annotations->params value))))))
+     (setv (get Api.structs ~(str name)) (Object ~(str name) 
+                                                 ~(if (= base 'None)
+                                                    'None
+                                                    `(get Api.structs ~(str base)))
+                                                 ~optional
+                                                 ~doc
+                                                 (dfor [_ key value] '~fields (str key) (annotations->params value))))))
 
 (defmacro defapi [options name params #*body]
   (let [options (| {"method" '"GET"
                     "auth" 'Categ.ANY
                     "params-optional" 'False
                     "params" 'None
-                    "returns" 'Any
+                    "returns" 'None
                     "doc" '""}
                    (dfor [k v] (chunks options 2) (. k name) v))
         url-params (dict (gfor param (re.findall r"\<.+?\>" (:rule options))
@@ -183,17 +191,22 @@
                ~(get options "params-optional")
                ~@params)
             '...)
-       (defn ~name [#^TokenData token-data
-                      ~@(gfor [name type] url-params `(annotate ~type ~(hy.models.Symbol name)))
-                      ~@params]
+       (defn ~name [#^TokenData token-data 
+                    ~@(gfor [name type] (url-params.items) `(annotate ~type ~(hy.models.Symbol name))) 
+                    ~@params]
            ~@body)
        (Api.apis.append (Api :func ~name 
+                             :name ~(str name)
                              :rule ~(:rule options)
                              :method ~(:method options)
                              :auth ~(:auth options)
                              :doc ~(:doc options)
-                             :url-params ~(dfor [name type] url-params name (case type 
+                             :url-params ~(dfor [name type] (url-params.items) name (case type 
                                                                               'int "number" 
                                                                               'str "string")) 
-                             :params ~(if need-params `(get Api.structs ~(str (:params options))) None)
-                             :returns (annotations->params '~(:returns options)))))))
+                             :params ~(if (= (:params options) 'None) 
+                                        '(Any) 
+                                        `(get Api.structs ~(str (:params options))))
+                             :returns ~(if (= (:returns options) 'None)
+                                         '(Any)
+                                         `(annotations->params '~(:returns options))))))))

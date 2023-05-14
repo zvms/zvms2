@@ -9,6 +9,7 @@
         itertools [chain]
         operator [itemgetter]
         typing [Optional]
+        pprint [pprint]
         enum :as e
         json
         sys
@@ -122,20 +123,23 @@ export function get" enum.__name__ "Name(id: " enum.__name__ "): string {
 (defn has-params? [api]
   (or api.url-params (not (isinstance api.params Any))))
 
+#_(for [api Api.apis]
+  (pprint (vars api))
+  (input))
+
 (write-file (get config "apis")
             (rule-methods-block.sub (+ (for/join "" [api Api.apis]
-                                                 "  /**" (if (is api.func.__doc__ None) "" (+ "
-   * ## " api.func.__doc__)) "
+                                                 "
+  /**" (if (is api.doc None) "" (+ "
+   * ## " api.doc)) "
    * ### [" api.method "] " api.rule "
-   * #### 权限: " (.join " | " (auth->string api.auth))
-                                                 (if (not (has-params? api)) ""
-                                                     (+ "\n" (for/join "\n" [name (chain api.url-params (api.params.as-params))]
-                                                                       "   * @param " name))) "
+   * #### 权限: " (.join " | " (auth->string api.auth)) (if (not (has-params? api)) "" 
+                                                          (+ "\n" (for/join "\n" [name (chain api.url-params (api.params.as-params))] 
+"   * @param " name))) "
    */
-  " (convert api.func.__name__ 'snake 'camel) "("
-                                                 (if (not (has-params? api)) ""
-                                                     (+ "\n" (for/join ",\n" [[name type] (chain (api.url-params.items) (.items (api.params.as-params)))]
-                                                                       "    " name ": " type) "
+  " (convert api.name 'lisp 'camel) "(" (if (not (has-params? api)) "" 
+                                                      (+ "\n" (for/join ",\n" [[name type] (chain (api.url-params.items) (.items (api.params.as-params)))] 
+ "    " name ": " type) "
   ")) "): ForegroundApiRunner<" (api.returns.render) "> {
     return createForegroundApiRunner(" (if (not (has-params? api))
                                          (+ "this, \"" api.method "\", `" (gen-url api) "`")
@@ -145,7 +149,7 @@ export function get" enum.__name__ "Name(id: " enum.__name__ "): string {
       `" (gen-url api) (let [params (api.params.as-params)
                              args (if (isinstance api.params Any) ""
                                       (for/join ",\n" [arg (api.params.as-params)]
-                                                "        " arg))] (if (= api.method "POST")
+"        " arg))] (if (= api.method "POST") 
                                                                     (if params (+ "`, {
 " args "
       }") "`,
@@ -159,30 +163,30 @@ export function get" enum.__name__ "Name(id: " enum.__name__ "): string {
 
 ") template))
 
-;; (write-file (get config "doc")
-;;             (let [modules (defaultdict list)]
-;;               (for [api Api.apis]
-;;                 (.append (get modules api.func.__module__) api)) (+
-;;                                                                   "# 镇海中学义工管理系统API文档
+(write-file (get config "doc")
+            (let [modules (defaultdict list)]
+              (for [api Api.apis]
+                (.append (get modules api.func.__module__) api)) (+
+                                                                  "# 镇海中学义工管理系统API文档
 
-;; " (for/join "" [[i [module apis]] (enumerate (modules.items) 1)]
-;;             "## " i "." module "
+" (for/join "" [[i [module apis]] (enumerate (modules.items) 1)]
+            "## " i "." module "
 
-;; ### **" (.__dict__.get (get sys.modules module) "SUMMARY" "...") "**
-;; " (for/join "" [[j api] (enumerate apis 1)] "
-;; #### " i "." j " " module "
+### **" (.__dict__.get (get sys.modules module) "SUMMARY" "...") "**
+" (for/join "" [[j api] (enumerate apis 1)] "
+#### " i "." j " " api.name "
 
-;; [" api.method "] " api.rule "  
-;; **" (or api.doc "...") "**  
+[" api.method "] " api.rule "  
+**" (or api.doc "...") "**  
 
-;; 参数:
-;; ```json
-;; " (json.dumps (api.params.jsonify) :indent 4) "
-;; ```
-;; 返回:
-;; ```json
-;; " (json.dumps (api.returns.jsonify) :indent 4) "
-;; ```
-;; ")))))
+参数:
+```json
+" (json.dumps (api.params.jsonify) :indent 4) "
+```
+返回:
+```json
+" (json.dumps (api.returns.jsonify) :indent 4) "
+```
+")))))
 
 (print (- (perf-counter) start))
