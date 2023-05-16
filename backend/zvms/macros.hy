@@ -11,6 +11,8 @@
        (yield-from i)
        (yield i)))))
 
+(require hyrule [case])
+
 (defmacro constructor [#*fields]
   `(defn __init__ [self ~@fields]
      (setv ~@(flatten1 (gfor field (gfor f fields (if (coll? f) (get f -2) f))
@@ -19,3 +21,31 @@
 (defmacro defmth [name params #*body]
   `(defn ~name [self / ~@params]
      ~@body))
+
+(defmacro select [subject #*args]
+  (setv it (iter args)
+        items [] 
+        action 'add
+        sym (hy.gensym))
+  (while True
+    (try
+      (setv arg (next it))
+      (case arg
+        'as (setv action 'as)
+        'with (setv action 'with)
+        'select (return `(let [~sym ~subject]
+                           (| ~(hy.models.Dict items)
+                              (select (. ~sym ~(next it))
+                                      ~@it))))
+        else
+          (do 
+            (case action 
+              'as (setv (get items -2) (str arg)) 
+              'with (setv (get items -1) arg) 
+              'add (do 
+                     (items.append (str arg)) 
+                     (items.append `(. ~sym ~arg))))
+            (setv action 'add)))
+      (except [StopIteration]
+              (return `(let [~sym ~subject]
+                         ~(hy.models.Dict items)))))))
