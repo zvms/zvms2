@@ -1,4 +1,4 @@
-(import macros [flatten1])
+(import zvms.macros [flatten1])
 
 (defmacro defmodel [name columns #*body]
   (setv auto-increment None)
@@ -20,8 +20,3 @@
                           (scalar))
                    (. self ~auto-increment) (+ (or max 0) 1)))))
      ~@body))
-
-(print (hy.repr (hy.macroexpand '(defmodel Notice
-                                   [[id Integer :primary-key True :auto-increment True]
-                                    [sender-id Integer :name "sender"]]
-                                   (defn [property] sender [self] ...)))))
