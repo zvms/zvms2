@@ -49,3 +49,8 @@
       (except [StopIteration]
               (return `(let [~sym ~subject]
                          ~(hy.models.Dict items)))))))
+
+(defmacro select-many [iterable #*args]
+  (let [sym (hy.gensym)]
+    `(gfor ~sym ~iterable
+           (select ~sym ~@args))))
