@@ -35,3 +35,7 @@ log.txt
 tmp.*
 statitic.py
 apis.md
+
+.clj-kondo
+.lsp
+.pylintrc
