@@ -2,7 +2,7 @@
 
 (setv start (perf-counter))
 
-(require hyrule [case])
+(require zvms.macros [case])
 
 (import enum [IntEnum IntFlag]
         collections [defaultdict]

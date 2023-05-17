@@ -6,8 +6,7 @@
         datetime [datetime]
         enum [EnumType])
 
-(require hyrule *
-         zvms.macros *)
+(require zvms.macros *)
 
 (defclass ProcessorError [Exception]
   #^str message)

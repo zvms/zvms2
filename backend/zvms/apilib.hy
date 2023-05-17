@@ -14,8 +14,7 @@
         zvms.res :as res
         zvms.macros [flatten1 chunks])
 
-(require hyrule *
-         zvms.macros *)
+(require zvms.macros *)
 
 (defclass Api []
   (setv #^(of list "Api") apis []
@@ -28,7 +27,7 @@
                #^Categ auth
                #^(of dict str str) url-params
                #^hy.models.Symbol params
-               returns
+               #^Processor returns
                #^str doc)
   
   (defn init-app [app]
@@ -120,6 +119,12 @@
     (setv obj ((fns.pop) obj)))
   obj)
 
+(defn annotations->params/get [#^hy.models.Symbol ann]
+  (case ann
+    'int URLInt
+    'float URLFloat
+    'str String))
+
 (defn annotations->params [#^hy.models.Object ann]
   (match ann
     (hy.models.Symbol)
@@ -169,7 +174,10 @@
                                                     `(get Api.structs ~(str base)))
                                                  ~optional
                                                  ~doc
-                                                 (dfor [_ key value] '~fields (str key) (annotations->params value))))))
+                                                 (dfor [_ key value] '~fields 
+                                                       (str key) ((if (hy.eval optional)
+                                                                    annotations->params/get
+                                                                    annotations->params) value))))))
 
 (defmacro defapi [options name params #*body]
   (let [options (| {"method" '"GET"

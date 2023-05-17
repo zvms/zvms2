@@ -1,5 +1,8 @@
 (eval-and-compile
- (import hyrule [coll?])
+ (import typing [Iterable])
+
+ (defn coll? [obj]
+   (and (isinstance obj Iterable) (not (isinstance #(str bytes)))))
 
  (defn chunks [iterable n]
    (for [i (range 0 (len iterable) n)]
@@ -11,7 +14,26 @@
        (yield-from i)
        (yield i)))))
 
-(require hyrule [case])
+(defmacro case [subject #*args]
+  (setv items ['cond]
+        sym (hy.gensym)
+        action 'test)
+  (for [arg args]
+    (cond
+      (= action 'test)
+        (if (= arg 'else)
+          (do (items.append 'True)
+              (setv action 'else))
+          (do (items.append `(= ~sym ~arg))
+              (setv action 'body)))
+      (= action 'body)
+        (do (items.append arg)
+            (setv action 'test))
+      (= action 'else)
+        (return `(let [~sym ~subject]
+                   ~@items))))
+  `(let [~sym ~subject]
+     ~@items))
 
 (defmacro constructor [#*fields]
   `(defn __init__ [self ~@fields]

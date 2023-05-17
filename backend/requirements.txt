@@ -5,5 +5,4 @@ cryptography
 pyjwt
 tornado
 hy
-hyrule
 PyYaml

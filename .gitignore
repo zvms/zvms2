@@ -35,6 +35,7 @@ log.txt
 tmp.*
 statitic.py
 apis.md
+config.hy
 
 .clj-kondo
 .lsp
