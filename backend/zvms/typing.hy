@@ -6,7 +6,7 @@
         datetime [datetime]
         enum [EnumType])
 
-(require zvms.macros *)
+(require zvms.util *)
 
 (defclass ProcessorError [Exception]
   #^str message)

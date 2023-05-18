@@ -11,7 +11,7 @@
  (while True
    (try 
      (setv wsgi (WSGIContainer (zvms.create-app)) 
-           server (HTTPServer wsig)) 
+           server (HTTPServer wsgi)) 
      (server.listen 11452) 
      (.start (IOLoop.instance))
      (except [KeyboardInterrupt]

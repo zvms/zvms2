@@ -8,13 +8,13 @@
         pprint [pprint]
         json
         re
-        zvms.util [inexact-now]
+        zvms.util [inexact-now 
+                   chunks]
         zvms.typing *
         zvms.res [Categ]
-        zvms.res :as res
-        zvms.macros [flatten1 chunks])
+        zvms.res :as res)
 
-(require zvms.macros *)
+(require zvms.util *)
 
 (defclass Api []
   (setv #^(of list "Api") apis []
@@ -55,7 +55,7 @@
   ((wraps impl) 
    (fn [#*args #**kwargs] 
      (import flask [request]
-             zvms.models [db Issue]
+             zvms.models [Issue]
              zvms.tokenlib :as tk)
      (let [json-data (if (in request.method #("GET" "DELETE"))
                        request.args
@@ -159,6 +159,7 @@
             (pipline (get union-elts 0))
           True
             (get union-elts 0)))))
+
 
 (defmacro defstruct [name base optional #*fields]
   (setv doc 'None)

@@ -1,38 +1,40 @@
+(setv app None)
+
 (defn create-app []
   (import flask [Flask]
-          flask_cors [CORS])
-  
-  (import zvms.res [STATIC_FOLDER])
+          flask-cors [CORS]
+          zvms.res [STATIC-FOLDER]
+          zvms.config :as config)
 
-  (import zvms.config :as config)
+  (global app)
+
   (setv app (Flask __name__))
-  (CORS app :supports_credential True
+  (CORS app :supports-credential True
         :resources #{"/*" "*"}
-        :max_age 600)
-  (app.config.from_object config)
+        :max-age 600)
+  (app.config.from-object config)
   (setv app.static_folder STATIC_FOLDER)
   
-  (.push (app.test_request_context))
+  (.push (app.test-request_context))
   
-  ((app.errorhandler 404) (fn [e]
+  ((app.errorhandler 404) (fn [ex]
                             #({"type" "ERROR"
                                "message" "请求地址错误"}
                               404)))
-  ((app.errorhandler 500) (fn [e]
+  ((app.errorhandler 500) (fn [ex]
                             #({"type" "ERROR"
                                "message" "服务器内部错误"}
                               500)))
   
-  (import zvms.tokenlib :as tk
-          zvms.views
-          zvms.views.notice [load_public_notice]
+  (import zvms.views
+          ; zvms.views.notice [load-main-menu-notice]
           zvms.apilib [Api]
           zvms.models [db])
   
-  (load_public_notice)
+  ; (load-main-menu-notice)
   
-  (tk.init_app app)
-  (Api.init_app app)
-  (db.init_app app)
+  (Api.init-app app)
+  (db.init-app app)
+  (db.create-all)
   
   app)

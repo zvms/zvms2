@@ -2,7 +2,7 @@
 
 (setv start (perf-counter))
 
-(require zvms.macros [case])
+(require zvms.util [case])
 
 (import enum [IntEnum IntFlag]
         collections [defaultdict]

@@ -1,7 +1,10 @@
-(import zvms.macros [flatten1]
-        zvms db)
+(import flask-sqlalchemy *
+        sqlalchemy *)
 
-(require zvms.macros [defmth])
+(require zvms.util [defmth])
+
+(eval-when-compile
+ (import zvms.util [flatten1]))
 
 (defmacro defmodel [name table-name columns #*body]
   (setv auto-increment None
@@ -37,6 +40,8 @@
                    (. self ~auto-increment) (+ (or max 0) 1)))))
      
      ~@body))
+
+(setv db (SQLAlchemy))
 
 (defn insert [self]
   (db.session.add self)
@@ -84,7 +89,7 @@
      [status SmallInteger]
      [holder-id Integer :name "holder"]
      [time DateTime]
-     [type SmallIntege]
+     [type SmallInteger]
      [reward Integer]]
     (defmth on-delete []
       (. StuVol query (filter-by :vol-id self.id) (delete))))
@@ -93,7 +98,7 @@
     stu-vol
     [[vol-id Integer :primary-key True :name "volunteer"]
      [stu-id Integer :primary-key True :name "student"]
-     [status SmallIntege]
+     [status SmallInteger]
      [thought (String 1024)]
      [reason (String 64)]
      [reward Integer]])
@@ -101,8 +106,8 @@
   (defmodel ClassVol
     class-vol
     [[vol-id Integer :primary-key True :name "volunteer"]
-     [class-id :primary-key True :name "class"]
-     [max integer]])
+     [class-id Integer :primary-key True :name "class"]
+     [max Integer]])
 
   (defmodel Picture
     picture
