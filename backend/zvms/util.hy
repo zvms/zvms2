@@ -86,3 +86,7 @@
   (let [sym (hy.gensym)]
     `(gfor ~sym ~iterable
            (select ~sym ~@args))))
+
+(defmacro select-value [iterable col]
+  (let [sym (hy.gensym)]
+    `(gfor ~sym ~iterable (. ~sym ~col))))

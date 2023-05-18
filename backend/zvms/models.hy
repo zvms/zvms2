@@ -1,7 +1,7 @@
 (import flask-sqlalchemy *
         sqlalchemy *)
 
-(require zvms.util [defmth])
+(require zvms.util [defmth select-value])
 
 (eval-when-compile
  (import zvms.util [flatten1]))
@@ -74,24 +74,40 @@
 
 (defmodel Class
   class
+
   [[id Integer :primary-key True :autoincrement True]
    [name (String 5)]]
+  
   (defmth on-delete []
     (. ClassNotice query (filter-by :class-id self.id) (delete))
     (. ClassVol query (filter-by :class-id self.id) (delete))
     (. User query (filter-by :class-id self.id) (delete))))
 
+(defmacro score-property [name]
+  `(defmth [property] ~name []
+     (sum (select-value (filter (fn [sv] (= (. Volunteer query (get sv.id) type)
+                                            (. VolType ~(hy.models.Symbol (name.upper)))))
+                                (StuVol.query.filter (= StuVol.stu-id self.id)
+                                                     (in_ StuVol.status #(ThoughtStatus.ACCEPTED ThoughtStatus.SPECIAL))))
+                        reward))))
+
 (defmodel User
   user
+
   [[id Integer :primary-key True :autoincrement True]
    [name (String 5)]
    [class-id Integer :name "class"]
    [pwd (String 32)]
    [auth Integer]]
+  
   (defmth on-delete []
     (. UserNotice query (filter-by :user-id self.id) (delete))
     (. StuVol query (filter-by :stu-id self.id) (delete))
-    (. Volunteer query (filter-by :holder-id self.id) (delete))))
+    (. Volunteer query (filter-by :holder-id self.id) (delete)))
+  
+  (score-property inside)
+  (score-property outside)
+  (score-property large))
 
 (defmodel Notice
   notice 

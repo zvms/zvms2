@@ -211,7 +211,7 @@
        (defn ~name [#^TokenData token-data 
                     ~@(gfor [name type] (url-params.items) `(annotate ~type ~(hy.models.Symbol name))) 
                     ~@params]
-         (import zvms.models [success error ~@(:models options)])
+         (import zvms.models [insert success error ~@(:models options)])
          ~@body)
        (Api.apis.append (Api :func ~name 
                              :name ~(str name)

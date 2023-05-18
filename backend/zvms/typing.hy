@@ -206,6 +206,9 @@
 (def-metadata-fn Range RangeProcessor)
 (def-metadata-fn Len LenProcessor)
 
+(defn Positive [simple]
+  (Range simple 1 None))
+
 (defclass RangeProcessor [Processor]
   (metadata-info "__range__")
   
