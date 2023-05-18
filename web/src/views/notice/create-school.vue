@@ -1,7 +1,7 @@
 <template>
-    <v-card>
+    <!--<v-card>
       <v-card-title> 创建全校通知 </v-card-title>
-      <v-card-text>
+      <v-card-text>-->
         <v-form v-model.trim="isFormValid">
           <v-text-field
             v-model.trim="form.title"
@@ -33,8 +33,8 @@
             创建全校通知
           </v-btn>
         </v-form>
-      </v-card-text>
-    </v-card>
+      <!--</v-card-text>
+    </v-card>-->
     <br />
 </template>
 
@@ -44,6 +44,7 @@ import { NOT_EMPTY, TIME } from "@/utils/validation";
 import { confirm } from "@/utils/dialogs";
 
 export default {
+  name: "create",
   data() {
     return {
       TIME,
@@ -60,7 +61,7 @@ export default {
   methods: {
     async createNotice() {
       if (
-        this.isFormValid &&
+        validateForm(this.isFormValid) &&
         (await confirm("确定创建？一旦创建，全校所有人都会看见。请慎重！"))
       ) {
         fApi.sendSchoolNotice(

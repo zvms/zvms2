@@ -11,7 +11,6 @@ import { mapStores } from "pinia";
 
 export default {
   name: "table-placeholder",
-  props: {},
   data() {
     return {};
   },

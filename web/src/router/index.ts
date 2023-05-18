@@ -127,7 +127,7 @@ const router = createRouter({
     {
       path: "/notice/create",
       name: "noticeCreate",
-      component: () => import("../views/notice/create.vue"),
+      component: () => import("../views/notice/index.vue"),
       meta: {
         authed: createHasAuth(Categ.System | Categ.Manager),
         nav: {

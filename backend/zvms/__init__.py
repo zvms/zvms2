@@ -1,3 +1,5 @@
+from zvms.apilib import ZvmsExit
+
 def create_app():
     import traceback
 

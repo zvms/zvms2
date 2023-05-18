@@ -3,23 +3,18 @@
     <v-card-title>
       你好,
       <strong>{{ infoStore.username }}</strong>
-      <span
-        style="
-          font-size: x-large;
-          color: #AAA;
-          text-align: right;
-          float: right;
-          transform: translateY(5px);
-        "
-      >
+      <span style="
+            font-size: x-large;
+            color: #AAA;
+            text-align: right;
+            float: right;
+            transform: translateY(5px);
+          ">
         励志&nbsp;&nbsp;进取&nbsp;&nbsp;勤奋&nbsp;&nbsp;健美
       </span>
     </v-card-title>
     <v-card-text>
-      <user-chips
-        :permission="infoStore.permission"
-        :className="infoStore.className"
-      />
+      <user-chips :permission="infoStore.permission" :className="infoStore.className" />
     </v-card-text>
     <v-card-actions>
       <v-btn @click="pwdDialog = true">修改密码</v-btn>
@@ -46,13 +41,7 @@
     </v-card-title>
     <v-list shaped>
       <v-col v-if="notices.length === 0"> 没有通知哦 </v-col>
-      <v-list-item
-        v-else
-        color="primary"
-        v-for="(notice, i) in notices"
-        :key="i"
-        @click="showNotice(notice)"
-      >
+      <v-list-item v-else color="primary" v-for="(notice, i) in notices" :key="i" @click="showNotice(notice)">
         <v-list-item-title>
           <v-icon>mdi-message-text</v-icon>
           {{ notice.title }}
@@ -79,27 +68,10 @@
       <v-card-title>修改密码</v-card-title>
       <v-card-text>
         <v-form v-model="isFormValid">
-          <v-text-field
-            v-model="oldPwd"
-            label="旧密码"
-            type="password"
-            prepend-icon="mdi-lock-outline"
-            :rules="rules"
-          />
-          <v-text-field
-            v-model="newPwd"
-            label="新密码"
-            type="password"
-            prepend-icon="mdi-lock-outline"
-            :rules="rules"
-          />
-          <v-text-field
-            v-model="confirmPwd"
-            label="确认密码"
-            type="password"
-            prepend-icon="mdi-lock-outline"
-            :rules="rules"
-          />
+          <v-text-field v-model="oldPwd" label="旧密码" type="password" prepend-icon="mdi-lock-outline" :rules="rules" />
+          <v-text-field v-model="newPwd" label="新密码" type="password" prepend-icon="mdi-lock-outline" :rules="rules" />
+          <v-text-field v-model="confirmPwd" label="确认密码" type="password" prepend-icon="mdi-lock-outline"
+            :rules="rules" />
           <v-btn class="me-4 submit" @click="modifyPwd"> 确定 </v-btn>
           <v-btn class="me-4 submit" @click="pwdDialog = false"> 取消 </v-btn>
         </v-form>
@@ -116,7 +88,7 @@ import { mapStores } from "pinia";
 import { applyNavItems } from "@/utils/nav";
 import { md5 } from "@/utils/md5";
 import { NOT_EMPTY } from "@/utils/validation";
-import { toasts } from "@/utils/dialogs";
+import { toasts, validateForm } from "@/utils/dialogs";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
 import PermissionChips from "@/components/user-chips.vue";
 
@@ -179,7 +151,7 @@ export default {
       this.$router.push("/login");
     },
     modifyPwd() {
-      if (this.isFormValid) {
+      if (validateForm(this.isFormValid)) {
         if (this.newPwd !== this.confirmPwd) {
           toasts.error("两次密码不一致");
           this.confirmPwd = "";

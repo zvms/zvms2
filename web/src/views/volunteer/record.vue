@@ -108,7 +108,7 @@ import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { fApiNotLoading } from "@/apis/fApi";
 import { timeToHint } from "@/utils/calc";
-import { toasts } from "@/utils/dialogs";
+import { toasts, validateForm } from "@/utils/dialogs";
 
 export default {
   data() {
@@ -132,7 +132,7 @@ export default {
   },
   methods: {
     recordVolunteer() {
-      if (this.isFormValid) {
+      if (validateForm(this.isFormValid)) {
         if (this.form.joiners.length === 0) {
           toasts.error("需至少选择一名成员！");
           return;

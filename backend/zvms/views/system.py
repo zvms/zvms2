@@ -1,6 +1,6 @@
 import os
 
-from zvms.apilib import Api
+from zvms.apilib import Api, ZvmsExit
 from zvms.util import *
 from zvms.res import TTYD_PATH, Categ
 
@@ -15,4 +15,4 @@ def restart_ttyd(token_data):
 
 @Api('/system/restart', method='POST', auth=Categ.SYSTEM)
 def restart(token_data):
-    raise KeyboardInterrupt
+    raise ZvmsExit

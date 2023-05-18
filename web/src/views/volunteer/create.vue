@@ -126,7 +126,7 @@ import { IS_DECIMAL, IS_POSITIVE, NOT_EMPTY, TIME } from "@/utils/validation";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
-import { toasts } from "@/utils/dialogs";
+import { toasts, validateForm } from "@/utils/dialogs";
 import { timeToHint } from "@/utils/calc";
 
 export default {
@@ -168,7 +168,7 @@ export default {
   },
   methods: {
     createVolunteer() {
-      if (this.isFormValid) {
+      if (validateForm(this.isFormValid)) {
         if (
           this.advancedOptionsPermission &&
           this.form.classSelected.length === 0

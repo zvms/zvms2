@@ -145,7 +145,11 @@ def delete_user(id, token_data):
 
 @Api(rule='/user/<int:id>/mod-others-pwd', method='POST', auth=Categ.SYSTEM | Categ.MANAGER, params='ModOthersPwd')
 def modifyOthersPassword(token_data, id, pwd):
-    User.query.get_or_error(id).pwd = pwd
+    '修改他人的密码'
+    user = User.query.get_or_error(id)
+    if user.auth & Categ.SYSTEM and token_data['auth'] & Categ.MANAGER and not token_data['auth'] & Categ.SYSTEM:
+        return error('???')
+    user.pwd = pwd
     Report(
         reporter=0,
         content=f'用户{token_data["name"]}将{id}的密码修改了',

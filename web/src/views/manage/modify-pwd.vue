@@ -23,7 +23,7 @@
 <script lang="ts">
 import { fApi } from "@/apis";
 import { useInfoStore, useLoadingStore } from "@/stores";
-import { toasts, confirm } from "@/utils/dialogs";
+import { toasts, confirm, validateForm } from "@/utils/dialogs";
 import { md5 } from "@/utils/md5";
 import { NOT_EMPTY } from "@/utils/validation";
 import { mapStores } from "pinia";
@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     async modifyOthersPwd() {
-      if (this.isFormValid) {
+      if (validateForm(this.isFormValid)) {
         if (this.form.newPwd !== this.form.confirmPwd) {
           toasts.error("两次密码不一致");
           this.form.confirmPwd = "";

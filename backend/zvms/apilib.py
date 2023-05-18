@@ -16,6 +16,8 @@ from zvms.typing.checker import CheckerError
 import zvms.tokenlib as tk
 import zvms.typing.structs as structs
 
+class ZvmsExit(KeyboardInterrupt): ...
+
 class Api:
     counter_lock = Lock()
     counter = 0

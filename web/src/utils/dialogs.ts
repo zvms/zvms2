@@ -39,3 +39,9 @@ export async function confirm(msg: string = "确定操作？"): Promise<boolean>
   });
   return res.value;
 }
+export function validateForm(isFormValid: boolean) {
+  if (!isFormValid) {
+    toasts.error("请检查表单是否填写正确");
+  }
+  return isFormValid;
+}

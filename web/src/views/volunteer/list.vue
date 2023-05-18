@@ -110,7 +110,7 @@ import { Categ, getVolStatusName } from "@/apis/types/enums";
 import VolInfo from "@/components/vol-info.vue";
 import { useInfoStore, useLoadingStore } from "@/stores";
 import { getVolStatusDisplayText } from "@/utils/calc";
-import { confirm, toasts } from "@/utils/dialogs";
+import { confirm } from "@/utils/dialogs";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import ThoughtEditor from "@/components/thought/editor.vue";

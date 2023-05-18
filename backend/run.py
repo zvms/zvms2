@@ -20,6 +20,6 @@ if __name__ == '__main__':
     while True:
         try:
             start_server()
-        except KeyboardInterrupt:
+        except zvms.ZvmsExit:
             server.stop()
             zvms = reload(zvms)
