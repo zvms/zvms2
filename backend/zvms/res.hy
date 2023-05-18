@@ -40,7 +40,8 @@
 (defn authorized [#^Categ auth #^Categ needed]
   (& (| Categ.SYSTEM auth) needed))
 
-(setv STATIC-FOLDER (match sys.platform
+(setv PORT 11451
+      STATIC-FOLDER (match sys.platform
                       "win32" "C:\\zvms_backend"
                       "linux" "/tmp/zvms_backend")
       START-TTYD r"start powershell C:\Users\Public\workspace\ttyd\start.ps1"

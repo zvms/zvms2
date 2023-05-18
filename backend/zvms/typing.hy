@@ -38,18 +38,18 @@
 (defmacro err []
   '(Processor.error self json))
 
-(defmacro try-type [#*body]
+(defmacro try-type [#* body]
   `(try
      ~@body
      (except [ValueError TypeError]
              (err))))
 
 (defmacro typecheck [type]
-  `(unless (isinstance json ~type) 
-           (err)))
+  `(when (not (isinstance json ~type)) 
+     (err)))
 
-(defmacro with-path [s #*body]
-  `(with [(Processor.path s)]
+(defmacro with-path [s #* body]
+  `(with [(Processor.path ~s)]
          ~@body))
 
 (defclass Any [Processor]

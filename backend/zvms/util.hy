@@ -19,12 +19,12 @@
 (defn inexact-now []
   (.replace (datetime.now) :microsecond 0))
 
-(defmacro of [obj #*args]
+(defmacro of [obj #* args]
   (if (> (len args) 1)
     `(get ~obj ~args)
     `(get ~obj ~@args)))
 
-(defmacro case [subject #*args]
+(defmacro case [subject #* args]
   (setv items ['cond]
         sym (hy.gensym)
         action 'test)
@@ -45,16 +45,16 @@
   `(let [~sym ~subject]
      (~@items)))
 
-(defmacro constructor [#*fields]
+(defmacro constructor [#* fields]
   `(defn __init__ [self ~@fields]
      (setv ~@(flatten1 (gfor field (gfor f fields (if (coll? f) (get f -2) f))
                              #(`(. self ~field) field))))))
 
-(defmacro defmth [name params #*body]
+(defmacro defmth [name params #* body]
   `(defn ~name [self / ~@params]
      ~@body))
 
-(defmacro select [subject #*args]
+(defmacro select [subject #* args]
   (setv it (iter args)
         items [] 
         action 'add
@@ -82,7 +82,7 @@
               (return `(let [~sym ~subject]
                          ~(hy.models.Dict items)))))))
 
-(defmacro select-many [iterable #*args]
+(defmacro select-many [iterable #* args]
   (let [sym (hy.gensym)]
     `(gfor ~sym ~iterable
            (select ~sym ~@args))))

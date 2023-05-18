@@ -8,13 +8,17 @@
         pprint [pprint]
         json
         re
-        zvms.util [inexact-now 
-                   chunks]
+        jwt
+        zvms.util [inexact-now chunks]
         zvms.typing *
         zvms.res [Categ]
         zvms.res :as res)
 
 (require zvms.util *)
+
+(defclass ZvmsError [Exception] ...)
+
+(defclass ZvmsExit [KeyboardInterrupt] ...)
 
 (defclass Api []
   (setv #^(of list "Api") apis []
@@ -45,55 +49,59 @@
   (try
     (proc.process json)
     (except [ex [ProcessorError]]
-            (setv (get ex "msg") msg)
+            (setv ex.msg msg)
             (raise ex))))
+
+(defn dumps-json [data]
+  #((json.dumps data :ensure-ascii False) json-header))
 
 (defn deco [#^Callable impl 
             #^Processor params 
             #^Processor response
             #^Categ auth]
   ((wraps impl) 
-   (fn [#*args #**kwargs] 
+   (fn [#* args #** kwargs] 
      (import flask [request]
-             zvms.models [Issue]
-             zvms.tokenlib :as tk)
+             zvms.models [Issue
+                          error
+                          insert])
      (let [json-data (if (in request.method #("GET" "DELETE"))
                        request.args
                        (try
                          (json.loads (. request (get-data) (decode "utf-8")))
                          (except [] {})))
-           token-data (if (= auth Categ.None)
+           token-data (if (= auth Categ.NONE)
                         {}
                         (try
                           (let [token-data (request.headers.get "Authorization")]
-                            (when (not data)
-                              (raise InvalidSignatureError))
+                            (when (not token-data)
+                              (raise jwt.InvalidSignatureError))
                             (setv token-data (tk.read token-data))
                             (cond
                               (not (tk.exists token-data))
-                              (return #((json.dumps {"type" "ERROR" "message" "Token失效, 请重新登陆"}) json-header))
+                              (return (dumps-json {"type" "ERROR" "message" "Token失效, 请重新登陆"}))
                               (not (auth.authorized (:auth token-data)))
-                              (return #((json.dumps {"type" "ERROR" "message" "权限不足"}) json-header))
+                              (return (dumps-json {"type" "ERROR" "message" "权限不足"}))
                               True token-data))
-                          (except [InvalidSignatureError]
-                                  (return #((json.dumps {"type" "ERROR" "message" "未获取到Token, 请重新登陆"}) json-header)))))]
+                          (except [jwt.InvalidSignatureError]
+                                  (return (dumps-json {"type" "ERROR" "message" "未获取到Token, 请重新登陆"})))))]
        (when __debug__
          (with [f (open "log.txt" "a" :encoding "utf-8")]
                (let [log f"{(inexact-now)}[{request.remote-addr}]"]
-                 (unless (= auth Categ.None)
-                         (+= s f "({(:id token-data)})"))
-                 (+= s (+ "[" request.method "]" request.path))
-                 (print s)
-                 (print s :file f))))
+                 (when (!= auth Categ.NONE) 
+                   (+= log f"({(:id token-data)})"))
+                 (+= log (+ "[" request.method "]" request.path))
+                 (print log)
+                 (print log :file f))))
        (try
          (let [json-data (process params json-data "传入的数据错误")
-               ret (impl #*args #**kwargs #**json-data :token-data token-data)
-               result (:result ret)]
+               ret (impl #* args #** kwargs #** json-data :token-data token-data)
+               result (ret.get "result")]
            (when (= (:type ret) "SUCCESS")
              (process returns result "服务器返回的数据错误"))
-           #((json.dumps ret) json-header))
+           (dumps-json ret))
          (except [ex [ZvmsError]]
-                 #(json.dumps (error ex.msg)))
+                 (dumps-json (error (get ex.args 0))))
          (except [ex [ProcessorError]]
                  (let [error-info (dict (zip #("where" "expected" "found")
                                  ex.args))]
@@ -101,12 +109,12 @@
                      (pprint error-info))
                    (insert (Issue
                             :time (inexact-now)
-                            :reporter 0
+                            :author 0
                             :content (.format "(用户: {}) {}: {}'"
                                               (:id token-data "<未登录>")
                                               ex.msg
                                               (json.dumps error-info :indent 4))))
-                   (json.dumps (| (error ex.msg) error-info)))))))))
+                   (dumps-json (| (error ex.msg) error-info)))))))))
 
 (defclass TokenData [TypedDict]
   #^int id
@@ -143,7 +151,7 @@
               (getattr res ann))))
     [of list generic-param]
       (Array (annotations->params generic-param))
-    [| #*rest]
+    [| #* rest]
       (let [metadata []
             union-elts []]
         (for [i rest]
@@ -161,7 +169,7 @@
             (get union-elts 0)))))
 
 
-(defmacro defstruct [name base optional #*fields]
+(defmacro defstruct [name base optional #* fields]
   (setv doc 'None)
   (when (isinstance (get fields 0) hy.models.String)
     (setv doc (get fields 0)
@@ -176,17 +184,17 @@
                                                  ~optional
                                                  ~doc
                                                  (dfor [_ key value] '~fields 
-                                                       (str key) ((if (hy.eval optional)
+                                                       (str key) ((if ~optional
                                                                     annotations->params/get
                                                                     annotations->params) value))))))
 
-(defmacro defapi [options name params #*body]
+(defmacro defapi [options name params #* body]
   (let [options (| {"method" '"GET"
                     "auth" 'Categ.ANY
-                    "params-optional" 'False
                     "params" 'None
                     "returns" 'None
-                    "doc" '""}
+                    "doc" '""
+                    "models" '[]}
                    (dfor [k v] (chunks options 2) (. k name) v))
         url-params (dict (gfor param (re.findall r"\<.+?\>" (:rule options))
                                (if (param.startswith "<int:")
@@ -197,13 +205,14 @@
        ~(if need-params
             `(defstruct ~(:params options)
                None 
-               ~(get options "params-optional")
+               ~(= (:method options) '"GET")
                ~@params)
             '...)
        (defn ~name [#^TokenData token-data 
                     ~@(gfor [name type] (url-params.items) `(annotate ~type ~(hy.models.Symbol name))) 
                     ~@params]
-           ~@body)
+         (import zvms.models [success error ~@(:models options)])
+         ~@body)
        (Api.apis.append (Api :func ~name 
                              :name ~(str name)
                              :rule ~(:rule options)

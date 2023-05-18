@@ -23,7 +23,7 @@
 
 (defn write-file [file-name #* content]
   (with [f (open file-name "w" :encoding "utf-8")]
-        (f.write (.join "" content)))
+        (f.write (.join "" (map str content))))
   (print (os.path.realpath file-name) "生成完成!"))
 
 (defmacro for/join [sep it #* body]
@@ -69,12 +69,13 @@
             template (template-file.read)))
 
 (write-file (get config "enums")
+            "export var PORT = " res.PORT ";\n\n"
             (for/join "\n" [enum (res.__dict__.values)
                             :if (and (isinstance enum type) (issubclass enum e.Enum) (not-in enum #(IntEnum IntFlag)))
                             :setv map-this (get mapping enum.__name__)
                             :setv valid-cons (lfor [field value] (enum.__dict__.items)
                                                    :if (= (type value) enum)
-                                                   #((convert field 'upper-snake 'pascal) value))] 
+                                                   #((convert field 'upper-snake 'pascal) value))]
 "export enum " enum.__name__ "{
 " (for/join ",\n" [[field value] valid-cons]
 "    " field " = " value)
@@ -122,10 +123,6 @@ export function get" enum.__name__ "Name(id: " enum.__name__ "): string {
 
 (defn has-params? [api]
   (or api.url-params (not (isinstance api.params Any))))
-
-#_(for [api Api.apis]
-  (pprint (vars api))
-  (input))
 
 (write-file (get config "apis")
             (rule-methods-block.sub (+ (for/join "" [api Api.apis]

@@ -12,7 +12,8 @@
    (try 
      (setv wsgi (WSGIContainer (zvms.create-app)) 
            server (HTTPServer wsgi)) 
-     (server.listen 11452) 
+     (server.listen zvms.res.PORT) 
+     (print "服务开始")
      (.start (IOLoop.instance))
-     (except [KeyboardInterrupt]
+     (except [zvms.ZvmsExit]
              (setv zvms (reload zvms))))))
