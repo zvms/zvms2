@@ -41,7 +41,7 @@
 <script lang="ts">
 import { fApi } from "@/apis";
 import { NOT_EMPTY, TIME } from "@/utils/validation";
-import { confirm } from "@/utils/dialogs";
+import { confirm, validateForm } from "@/utils/dialogs";
 
 export default {
   name: "create",
