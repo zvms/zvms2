@@ -5,11 +5,15 @@
         typing [Iterable
                 Callable
                 TypedDict]
+        enum [IntEnum IntFlag]
+        enum :as e
         pprint [pprint]
         json
         re
         jwt
-        zvms.util [inexact-now chunks]
+        zvms.util [inexact-now 
+                   chunks
+                   convention-convert]
         zvms.typing *
         zvms.res [Categ]
         zvms.res :as res)
@@ -18,11 +22,13 @@
 
 (defclass ZvmsError [Exception] ...)
 
+; tornado会捕获除了KeyboardInterrupt以外的所有异常(包括SystemExit), 故派生自KeyboardInterrupt
 (defclass ZvmsExit [KeyboardInterrupt] ...)
 
 (defclass Api []
   (setv #^(of list "Api") apis []
-        #^(of dict str Object) structs {})
+        #^(of dict str Object) structs {}
+        #^(of dict str (of dict str int)) enums {})
   
   (constructor #^Callable func
                #^str name
@@ -42,6 +48,13 @@
                                          api.params
                                          api.returns
                                          api.auth)))))
+
+(for [enum (res.__dict__.values)]
+  (when (and (isinstance enum type) (issubclass enum e.Enum) (not-in enum #(IntEnum IntFlag)))
+        (setv (get Api.enums enum.__name__) (dfor [field value] (enum.__dict__.items)
+                                                  :if (= (type value) enum)
+                                                  (convention-convert field 'upper-snake 'pascal)
+                                                  value))))
 
 (setv json-header {"Content-Type" "application/json ; charset=utf-8"})
 
@@ -79,9 +92,9 @@
                             (setv token-data (tk.read token-data))
                             (cond
                               (not (tk.exists token-data))
-                              (return (dumps-json {"type" "ERROR" "message" "Token失效, 请重新登陆"}))
+                                (return (dumps-json {"type" "ERROR" "message" "Token失效, 请重新登陆"}))
                               (not (auth.authorized (:auth token-data)))
-                              (return (dumps-json {"type" "ERROR" "message" "权限不足"}))
+                                (return (dumps-json {"type" "ERROR" "message" "权限不足"}))
                               True token-data))
                           (except [jwt.InvalidSignatureError]
                                   (return (dumps-json {"type" "ERROR" "message" "未获取到Token, 请重新登陆"})))))]
@@ -168,7 +181,6 @@
           True
             (get union-elts 0)))))
 
-
 (defmacro defstruct [name base optional #* fields]
   (setv doc 'None)
   (when (isinstance (get fields 0) hy.models.String)
@@ -214,14 +226,16 @@
          (import zvms.models [insert success error ~@(:models options)])
          ~@body)
        (Api.apis.append (Api :func ~name 
-                             :name ~(str name)
-                             :rule ~(:rule options)
+                             :name ~(convention-convert name 'lisp 'camel)
+                             :rule ~(.replace (str (:rule options)) "-" "_")
                              :method ~(:method options)
                              :auth ~(:auth options)
                              :doc ~(:doc options)
-                             :url-params ~(dfor [name type] (url-params.items) name (case type 
-                                                                              'int "number" 
-                                                                              'str "string")) 
+                             :url-params ~(dfor [name type] (url-params.items) 
+                                                (convention-convert name 'lisp 'camel) 
+                                                (case type 
+                                                  'int "number" 
+                                                  'str "string")) 
                              :params ~(if (= (:params options) 'None) 
                                         '(Any) 
                                         `(get Api.structs ~(str (:params options))))

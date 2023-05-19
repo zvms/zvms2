@@ -23,7 +23,8 @@
                                      name))))
 
 (defstruct ClassInfoResponse None False
-           )
+           #^str name
+           #^(of list SingleUser) students)
 
 (defapi [:rule "/class/<int:id>"
          :models [User]

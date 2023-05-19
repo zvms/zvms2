@@ -10,7 +10,6 @@
         operator [itemgetter]
         typing [Optional]
         pprint [pprint]
-        enum :as e
         json
         sys
         re
@@ -29,23 +28,6 @@
 (defmacro for/join [sep it #* body]
   `(.join ~sep (gfor ~@it (.join "" (map str #(~@body))))))
 
-(defn convert [ident src dst]
-  (let [elems (map str.lower (case src
-                               'snake (ident.split "_")
-                               'upper-snake (ident.split "_")
-                               'camel (chain #((.group (re.match r "^[a-z]*" ident))) (re.findall r "[A-Z][a-z]*" ident))
-                               'pascal (re.findall r "[A-Z][a-z]*" ident)
-                               'lisp (ident.split "-")
-                               'url (ident.split "/")
-                               'text (ident.split)))]
-    (case dst
-      'snake (.join "_" elems)
-      'upper-snake (.join "_" (map str.upper elems))
-      'camel (let [iter (iter elems)]
-               (+ (next iter) (.join "" (map str.capitalize iter))))
-      'pascal (.join "" (map str.capitalize elems))
-      'lisp (.join "-" elems))))
-
 (setv categs (sorted (gfor [k v] (res.Categ.__dict__.items)
                            :if (= (type v) res.Categ)
                            #(k v))
@@ -55,7 +37,7 @@
   (setv res [])
   (for [[k v] categs]
     :if (and (& auth v) (<= v auth))
-    (res.append (convert k 'upper-snake 'pascal))
+    (res.append k)
     (&= auth (bnot v))
     (when (= auth 0)
       (return res))))
@@ -70,21 +52,17 @@
 
 (write-file (get config "enums")
             "export var PORT = " res.PORT ";\n\n"
-            (for/join "\n" [enum (res.__dict__.values)
-                            :if (and (isinstance enum type) (issubclass enum e.Enum) (not-in enum #(IntEnum IntFlag)))
-                            :setv map-this (get mapping enum.__name__)
-                            :setv valid-cons (lfor [field value] (enum.__dict__.items)
-                                                   :if (= (type value) enum)
-                                                   #((convert field 'upper-snake 'pascal) value))]
-"export enum " enum.__name__ "{
-" (for/join ",\n" [[field value] valid-cons]
+            (for/join "\n" [[name enum] (Api.enums.items)
+                            :setv map-this (get mapping name)]
+"export enum " name "{
+" (for/join ",\n" [[field value] (enum.items)]
 "    " field " = " value)
 "
 }
-export function get" enum.__name__ "Name(id: " enum.__name__ "): string {
+export function get" name "Name(id: " name "): string {
     switch (id) {
-" (for/join "" [[field _] valid-cons] 
-"        case " enum.__name__ "." field ":
+" (for/join "" [[field _] (enum.items)] 
+"        case " name "." field ":
             return \"" (get map-this field) "\";
 ")
 "        default:
@@ -134,7 +112,7 @@ export function get" enum.__name__ "Name(id: " enum.__name__ "): string {
                                                           (+ "\n" (for/join "\n" [name (chain api.url-params (api.params.as-params))] 
 "   * @param " name))) "
    */
-  " (convert api.name 'lisp 'camel) "(" (if (not (has-params? api)) "" 
+  " api.name "(" (if (not (has-params? api)) "" 
                                                       (+ "\n" (for/join ",\n" [[name type] (chain (api.url-params.items) (.items (api.params.as-params)))] 
  "    " name ": " type) "
   ")) "): ForegroundApiRunner<" (api.returns.render) "> {

@@ -1,5 +1,42 @@
+(defmacro case [subject #* args]
+  (setv items ['cond]
+        sym (hy.gensym)
+        action 'test)
+  (for [arg args]
+    (cond
+      (= action 'test)
+      (if (= arg 'else)
+        (do (items.append 'True)
+            (setv action 'else))
+        (do (items.append `(= ~sym ~arg))
+            (setv action 'body)))
+      (= action 'body)
+      (do (items.append arg)
+          (setv action 'test))
+      (= action 'else)
+      (return `(let [~sym ~subject]
+                 (~@items ~arg)))))
+  `(let [~sym ~subject]
+     (~@items)))
 (eval-and-compile
  (import typing [Iterable])
+
+ (defn convention-convert [ident src dst]
+   (let [elems (map str.lower (case src
+                                'snake (ident.split "_")
+                                'upper-snake (ident.split "_")
+                                'camel (chain #((.group (re.match r "^[a-z]*" ident))) (re.findall r "[A-Z][a-z]*" ident))
+                                'pascal (re.findall r "[A-Z][a-z]*" ident)
+                                'lisp (ident.split "-")
+                                'url (ident.split "/")
+                                'text (ident.split)))]
+     (case dst
+       'snake (.join "_" elems)
+       'upper-snake (.join "_" (map str.upper elems))
+       'camel (let [iter (iter elems)]
+                (+ (next iter) (.join "" (map str.capitalize iter))))
+       'pascal (.join "" (map str.capitalize elems))
+       'lisp (.join "-" elems))))
 
  (defn coll? [obj]
    (and (isinstance obj Iterable) (not (isinstance obj #(str bytes))))) 
@@ -23,27 +60,6 @@
   (if (> (len args) 1)
     `(get ~obj ~args)
     `(get ~obj ~@args)))
-
-(defmacro case [subject #* args]
-  (setv items ['cond]
-        sym (hy.gensym)
-        action 'test)
-  (for [arg args]
-    (cond
-      (= action 'test)
-        (if (= arg 'else)
-          (do (items.append 'True)
-              (setv action 'else))
-          (do (items.append `(= ~sym ~arg))
-              (setv action 'body)))
-      (= action 'body)
-        (do (items.append arg)
-            (setv action 'test))
-      (= action 'else)
-        (return `(let [~sym ~subject]
-                   (~@items ~arg)))))
-  `(let [~sym ~subject]
-     (~@items)))
 
 (defmacro constructor [#* fields]
   `(defn __init__ [self ~@fields]
@@ -72,10 +88,10 @@
         else
           (do 
             (case action 
-              'as (setv (get items -2) (str arg)) 
+              'as (setv (get items -2) (convention-convert arg 'lisp 'camel)) 
               'with (setv (get items -1) arg) 
               'add (do 
-                     (items.append (str arg)) 
+                     (items.append (convention-convert arg 'lisp 'camel)) 
                      (items.append `(. ~sym ~arg))))
             (setv action 'add)))
       (except [StopIteration]

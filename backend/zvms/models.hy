@@ -105,6 +105,21 @@
     (. StuVol query (filter-by :stu-id self.id) (delete))
     (. Volunteer query (filter-by :holder-id self.id) (delete)))
   
+  (defmth get [#^str key]
+    (setv res None)
+    (for [i (User.query.filter-by :name key)]
+      (setv res i)
+      (break))
+    (if (and (key.isdecimal) (is User None))
+      (User.query.get (int key))
+      res))
+  
+  (defmth get/error [#^str key #^str [msg "未查询到相关数据"]]
+    (let [res (self.get key)]
+      (if (is res None)
+        (raise (ZvmsError msg))
+        res)))
+  
   (score-property inside)
   (score-property outside)
   (score-property large))

@@ -28,14 +28,12 @@
 
 (defclass Categ [IntFlag]
   (setv NONE 1
-        STUDENT 2
-        TEACHER 4
-        CLASS 8
-        MANAGER 16
-        AUDITOR 32
-        SYSTEM 64
-        INSPECTOR 128
-        ANY 255))
+        CLASS 2
+        MANAGER 4
+        AUDITOR 8
+        SYSTEM 16
+        INSPECTOR 32
+        ANY 63))
 
 (defn authorized [#^Categ auth #^Categ needed]
   (& (| Categ.SYSTEM auth) needed))

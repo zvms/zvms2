@@ -28,8 +28,8 @@
 (defstruct UserLoginResponse None False
            #^str token
            #^int id
-           #^str userName
-           #^str clsName)
+           #^str name
+           #^str cls)
 
 (defapi [:rule "/user/login"
          :method "POST"
@@ -50,13 +50,7 @@
       (> record.enabled-since now)
         (| (error "登录过于频繁") {"noretry" True})
       True
-        (do
-          (setv user None)
-          (for [i (User.query.filter-by :name id)]
-            (setv user i)
-            (break))
-          (when (and (id.isdecimal) (is user None))
-            (setv user (User.query.get (int id))))
+        (let [user (User.get key)]
           (if (or (is user None) (!= user.pwd pwd))
             (do
               (+= record.times 1)
@@ -68,7 +62,7 @@
                                                       id
                                                       name
                                                       auth
-                                                      class-id as class))
+                                                      class-id as cls))
                        #** (select user
                                    id
                                    name
