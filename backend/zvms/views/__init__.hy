@@ -1,1 +1,2 @@
-(import zvms.views.user)
+(import zvms.views.user
+        zvms.views.class)
