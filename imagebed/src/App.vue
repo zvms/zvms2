@@ -1,10 +1,11 @@
+<!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
   <v-layout>
     <v-app-bar image="favicon.ico" title="镇海中学义工管理系统 校外图片上传" />
     <v-main style="padding-left: 50px; padding-top: 150px">
       <v-form>
         <v-file-input
-          label="点击选择图片，支持拖入"
+          label="点击选择图片，支持拖入，支持多张"
           show-size
           chips
           multiple
@@ -43,7 +44,7 @@ type KeyTable = [short: string, remoteUrl: string][]
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
 export default {
-  name: 'main',
+  name: 'image-bed-main',
   data() {
     return {
       files: [] as File[],
@@ -101,7 +102,7 @@ export default {
     async updateKeyTable(remoteUrls: string[]) {
       const table = await this.fetchTable()
       const lastShortKey = table[table.length - 1][0]
-      const shortKey = (parseInt(lastShortKey, 36) + 1).toString(36)
+      const shortKey = (parseInt(lastShortKey, 36) + (Math.random() * 400 + 100)).toString(36)
       for (const remoteUrl of remoteUrls) {
         table.push([shortKey, remoteUrl])
       }

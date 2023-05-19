@@ -30,7 +30,7 @@
           prepend-icon="mdi-lock"
           @keyup.native.enter="login"
         />
-        <v-btn class="me-4 submit" @click="login">登录 </v-btn>
+        <v-btn color="primary" class="me-4 submit" @click="login">登录 </v-btn>
       </v-form>
     </v-card-text>
   </v-card>
@@ -49,7 +49,6 @@
 import { fApi, type PublicNotice } from "@/apis";
 import { Categ } from "@/apis/types/enums";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
-import router from "@/router";
 import { useInfoStore, useLoadingStore } from "@/stores";
 import { toasts } from "@/utils/dialogs";
 import { md5 } from "@/utils/md5";
@@ -126,7 +125,7 @@ export default {
             });
             applyNavItems();
             localStorage.setItem(LATEST_USERID_KEY, this.form.userId);
-            router.push("/");
+            this.$router.push("/");
           });
         });
       }

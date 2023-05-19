@@ -1,6 +1,6 @@
 <template>
   <v-form v-model="isFormValid">
-    <userid-input v-model.trim="form.userId" />
+    <userid-input v-model="form.userId" />
     <v-text-field
       v-model="form.newPwd"
       label="新密码"

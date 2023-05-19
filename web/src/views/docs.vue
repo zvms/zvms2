@@ -56,7 +56,7 @@ export default {
         return true;
       }
       toasts.error(`找不到文档 "${docId}"`);
-      this.$router.push("/")
+      this.$router.push("/");
       return false;
     },
     renderMermaid() {

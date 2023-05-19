@@ -6,6 +6,7 @@ dist
 **/__pycache__
 /.backup
 **/venv
+.VSCodeCounter/**
 
 web/public/students.txt
 web/src/apis/types/enums.ts

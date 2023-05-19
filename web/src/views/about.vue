@@ -6,12 +6,13 @@
         <span class="f">Z</span>henhai High School
         <span class="f">V</span>olunteer <span class="f">M</span>anagement
         <span class="f">S</span>ystem
-        <img
-          src="https://gitee.com/zvms/zvms/badge/star.svg?theme=dark"
-          alt="star"
-        />
       </p>
-      <v-img :src="iconUrl" width="300px" class="pt-3" />
+      <img
+        src="https://img.shields.io/github/stars/zvms/zvms?logo=github"
+        class="mx-4"
+      />
+      <img src="https://gitee.com/zvms/zvms/badge/star.svg?theme=dark" />
+      <v-img :src="iconUrl" width="300px" class="pt-2" />
     </v-card-text>
   </v-card>
   <v-card>
@@ -66,7 +67,7 @@
     </v-card-text>
   </v-card>
   <v-card v-if="!(infoStore.permission & Categ.None)">
-    <v-card-title>反馈错误</v-card-title>
+    <v-card-title>反馈</v-card-title>
     <v-card-text>
       <v-form v-model="isFormValid">
         <v-textarea
@@ -96,7 +97,6 @@ import { Categ, fApi } from "../apis";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { toasts } from "@/utils/dialogs";
-import router from "@/router";
 import {
   contributorsV1,
   contributorsV2,
@@ -129,7 +129,7 @@ export default {
           return;
         }
         fApi.report(this.report)(() => {
-          router.push("/");
+          this.$router.push("/");
         });
       }
     },

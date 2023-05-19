@@ -128,7 +128,6 @@ import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { toasts } from "@/utils/dialogs";
 import { timeToHint } from "@/utils/calc";
-import router from "@/router";
 
 export default {
   data() {
@@ -186,6 +185,9 @@ export default {
         } else if (this.form.reward <= 0) {
           toasts.error("义工时间小于等于0。");
           return;
+        } else if (this.form.reward <= 5) {
+          toasts.error("义工时间过短，此处的时间单位是分钟。");
+          return;
         }
         fApi.createVolunteer(
           this.advancedOptionsPermission
@@ -202,7 +204,7 @@ export default {
           this.form.type,
           this.form.reward
         )((_result) => {
-          router.push("/");
+          this.$router.push("/");
         });
       }
     },

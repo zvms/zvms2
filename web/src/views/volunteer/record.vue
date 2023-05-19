@@ -108,7 +108,6 @@ import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { fApiNotLoading } from "@/apis/fApi";
 import { timeToHint } from "@/utils/calc";
-import router from "@/router";
 import { toasts } from "@/utils/dialogs";
 
 export default {
@@ -147,6 +146,9 @@ export default {
         } else if (this.form.reward <= 0) {
           toasts.error("义工时间小于等于0。");
           return;
+        } else if (this.form.reward <= 5) {
+          toasts.error("义工时间过短，此处的时间单位是分钟。");
+          return;
         }
         fApi.createAppointedVolunteer(
           this.form.joiners.map((v) => v.id),
@@ -156,7 +158,7 @@ export default {
           this.form.type,
           this.form.reward
         )(() => {
-          router.push("/");
+          this.$router.push("/");
         });
       }
     },
