@@ -196,9 +196,10 @@
                                                  ~optional
                                                  ~doc
                                                  (dfor [_ key value] '~fields 
-                                                       (str key) ((if ~optional
-                                                                    annotations->params/get
-                                                                    annotations->params) value))))))
+                                                       (convention-convert key 'lisp 'camel) 
+                                                       ((if ~optional 
+                                                          annotations->params/get 
+                                                          annotations->params) value))))))
 
 (defmacro defapi [options name params #* body]
   (let [options (| {"method" '"GET"

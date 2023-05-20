@@ -112,8 +112,8 @@
          :models [User Issue]
          :params ModPwd
          :doc "修改某人的密码"]
-  modify-password [#^str oldPwd #^str newPwd]
-  (if (!= (len newPwd) 32)
+  modify-password [#^str old-pwd #^str new-pwd]
+  (if (!= (len new-pwd) 32)
     (error "密码格式错误")
     (do
       (let [user (get/error User id)]
@@ -121,11 +121,11 @@
           (and (!= user.id (:id token-data)) (not (and (& (:auth token-data) (| Categ.SYSTEM Categ.MANAGER))
                                                        (not (& user.auth Categ.SYSTEM)))))
             (error "无权限修改此人的密码")
-          (!= user.pwd oldPwd)
+          (!= user.pwd old-pwd)
             (error "旧密码错误")
           True
             (do
-              (setv user.pwd newPwd)
+              (setv user.pwd new-pwd)
               (when (!= user.id (:id token-data))
                 (insert (Issue
                          :reporter 0

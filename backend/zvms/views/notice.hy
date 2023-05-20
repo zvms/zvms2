@@ -81,7 +81,7 @@
   #^str content)
 
 (defapi [:rule "/notice/mainmenu"
-         :returns "MainMenuNotice"
+         :returns MainMenuNotice
          :auth Categ.NONE
          :doc "获取主页通知"]
   get-mani-menu-notice []
