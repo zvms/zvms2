@@ -43,4 +43,5 @@
                       "win32" "C:\\zvms_backend"
                       "linux" "/tmp/zvms_backend")
       START-TTYD r"start powershell C:\Users\Public\workspace\ttyd\start.ps1"
+      STOP-TTYD r"taskkill /im ttyd.exe /f"
       MAIN-MENU-NOTICE r"C:\Users\Public\workspace\public_notice.txt")

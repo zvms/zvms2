@@ -5,12 +5,12 @@
          zvms.util [select
                     select-many])
 
-(defstruct SingleUser None False
+(defstruct SingleUser 
            #^int id
            #^str name
            #^int auth)
 
-(defstruct SingleClass None False
+(defstruct SingleClass 
            #^int id
            #^str name)
 
@@ -18,11 +18,11 @@
          :models [Class]
          :returns (of list SingleClass)]
   list-classes [] 
-  (success "获取成功" (list (select-many (Class.query.filter (!= Class.id 0)) 
+  (success "获取成功" (select-many (Class.query.filter (!= Class.id 0)) 
                                      id 
-                                     name))))
+                                     name)))
 
-(defstruct ClassInfoResponse None False
+(defstruct ClassInfoResponse 
            #^str name
            #^(of list SingleUser) students)
 

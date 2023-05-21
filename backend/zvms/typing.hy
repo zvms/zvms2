@@ -66,41 +66,28 @@
   (setv module "")
   
   (defmth __init__ [#^str name 
-                    #^(of Optional "Object") base 
-                    #^bool optional  
                     #^(of Optional str) doc
                     #^(of dict str Processor) fields]
     (setv self.name name
-          self.base base
-          self.optional optional
           self.doc doc
-          self.fields fields
-          self.inherited-fields (if (is base None) fields (| fields base.inherited-fields))))
+          self.fields fields))
   
   (defmth render []
     f"{Object.module}{self.name}")
   
   (defmth jsonify []
-    (dfor [k v] (self.inherited-fields.items) k (v.jsonify)))
+    (dfor [k v] (self.fields.items) k (v.jsonify)))
   
   (defmth as-params []
-    (if self.optional
-      {"kwargs" (self.render)}
-      (dfor [k v] (self.fields.items) k (v.render))))
+    (dfor [k v] (self.fields.items) k (v.render)))
   
   (defmth process [json]
     (typecheck dict) 
-    (dict (if self.optional
-            (gfor [k v] json
-                  (with-path k
-                    (if (in k self.inherited-fields)
-                      #(k (.self fields [k] (process v)))
-                      v)))
-            (gfor [k v] (self.inherited-fields.items)
-                  (with-path k
-                    (if (in k json)
-                      #(k (v.process (get json k)))
-                      (err))))))))
+    (dict (gfor [k v] (self.fields.items) 
+                (with-path k 
+                  (if (in k json) 
+                    #(k (v.process (get json k))) 
+                    (err)))))))
 
 (defclass Simple [Processor]
   (defmth __init__ [#^type type #^str tsname #^str [name None]]
@@ -123,17 +110,6 @@
       Float (Simple float "number" "float")
       Boolean (Simple bool "boolean")
       Null (Simple NoneType "null"))
-
-(defclass URLInt [Processor]
-  (defmth render []
-    "number")
-  
-  (defmth jsonify []
-    "urlint")
-  
-  (defmth process [json]
-    (try-type
-      (int json))))
 
 (defclass DateTime [Processor]
   (defmth render []
@@ -234,16 +210,3 @@
   (defmth process [json]
     (try-type
       (self.enum json))))
-
-(defclass URLEnum [Processor]
-  (constructor #^EnumType enum)
-  
-  (defmth render []
-    (+ "enums." self.enum.__name__))
-  
-  (defmth jsonify []
-    (+ "enums.url." self.enum.__name__))
-  
-  (defmth process [json]
-    (try-type
-      (self.enum (int json)))))

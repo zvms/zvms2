@@ -140,12 +140,6 @@
     (setv obj ((fns.pop) obj)))
   obj)
 
-(defn annotations->params/get [#^hy.models.Symbol ann]
-  (case ann
-    'int URLInt
-    'float URLFloat
-    'str String))
-
 (defn annotations->params [#^hy.models.Object ann]
   (match ann
     (hy.models.Symbol)
@@ -181,25 +175,19 @@
           True
             (get union-elts 0)))))
 
-(defmacro defstruct [name base optional #* fields]
+(defmacro defstruct [name #* fields]
   (setv doc 'None)
   (when (isinstance (get fields 0) hy.models.String)
     (setv doc (get fields 0)
           fields (cut fields 1 None)))
   `(do
-     (defclass ~name [~(if (= base 'None) 'TypedDict base) :total (not ~optional)]
+     (defclass ~name [TypedDict]
        ~@fields)
      (setv (get Api.structs ~(str name)) (Object ~(str name) 
-                                                 ~(if (= base 'None)
-                                                    'None
-                                                    `(get Api.structs ~(str base)))
-                                                 ~optional
                                                  ~doc
                                                  (dfor [_ key value] '~fields 
                                                        (convention-convert key 'lisp 'camel) 
-                                                       ((if ~optional 
-                                                          annotations->params/get 
-                                                          annotations->params) value))))))
+                                                       (annotations->params value))))))
 
 (defmacro defapi [options name params #* body]
   (let [options (| {"method" '"GET"
@@ -215,16 +203,14 @@
                                  #((cut param 1 -1) 'str))))
         need-params (and (!= (:params options) 'None) (not-in (str (:params options)) Api.structs))]
     `(do
-       ~(if need-params
-            `(defstruct ~(:params options)
-               None 
-               ~(= (:method options) '"GET")
-               ~@params)
-            '...)
+       ~(if need-params 
+          `(defstruct ~(:params options)
+            ~@params) 
+          '...)
        (defn ~name [#^TokenData token-data 
                     ~@(gfor [name type] (url-params.items) `(annotate ~type ~(hy.models.Symbol name))) 
                     ~@params]
-         (import zvms.models [insert success error ~@(:models options)])
+         (import zvms.models [db insert success error ~@(:models options)])
          ~@body)
        (Api.apis.append (Api :func ~name 
                              :name ~(convention-convert name 'lisp 'camel)

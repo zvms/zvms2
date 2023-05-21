@@ -27,11 +27,11 @@
                               500)))
   
   (import zvms.views
-          ; zvms.views.notice [load-main-menu-notice]
+          zvms.views.notice [load-main-menu-notice]
           zvms.apilib [Api]
           zvms.models [db])
   
-  ; (load-main-menu-notice)
+  (load-main-menu-notice)
   
   (Api.init-app app)
   (db.init-app app)

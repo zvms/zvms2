@@ -25,7 +25,7 @@
   (import zvms [app])
   (jwt.decode (token.encode) :key (:SECRET-KEY app.config) :algorithms "HS256"))
 
-(defstruct UserLoginResponse None False
+(defstruct UserLoginResponse 
            #^str token
            #^int id
            #^str name
@@ -75,7 +75,7 @@
   logout []
   (success "登出成功"))
 
-(defstruct UserInfoResponse None False
+(defstruct UserInfoResponse 
            #^str name
            #^int cls
            #^int auth
@@ -92,7 +92,7 @@
                               class-id as cls
                               class-id as clsName with (fn [id] (. Class query (get id) name)))))
 
-(defstruct StudentScoresResponse None False
+(defstruct StudentScoresResponse 
            #^int inside
            #^int outside
            #^int large)

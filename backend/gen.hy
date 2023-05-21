@@ -79,12 +79,10 @@ export function get" name "Name(id: " name "): string {
                (if (is-not struct.doc None) 
                  f"/* {struct.doc} */\n" 
                  "")
-"export interface " struct.name (if (is struct.base None)
-                                      "" 
-                                      f" extends {struct.base.name}") " {
+"export interface " struct.name " {
 " (for/join ",\n" [[field value] (struct.fields.items) 
                    :if (isinstance value Processor)] 
-            (+ "    " field (if struct.optional "?: " ": ") (value.render))) "
+            (+ "    " field ": " (value.render))) "
 }
     
 ")))

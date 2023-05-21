@@ -85,6 +85,10 @@
                            (| ~(hy.models.Dict items)
                               (select (. ~sym ~(next it))
                                       ~@it))))
+        'from (return `(let [~sym ~subject]
+                         (| ~(hy.models.Dict items)
+                            (select ~(next it)
+                                    ~@it))))
         else
           (do 
             (case action 
@@ -100,9 +104,5 @@
 
 (defmacro select-many [iterable #* args]
   (let [sym (hy.gensym)]
-    `(gfor ~sym ~iterable
+    `(lfor ~sym ~iterable
            (select ~sym ~@args))))
-
-(defmacro select-value [iterable col]
-  (let [sym (hy.gensym)]
-    `(gfor ~sym ~iterable (. ~sym ~col))))

@@ -1,5 +1,6 @@
 (import flask-sqlalchemy *
-        sqlalchemy *)
+        sqlalchemy *
+        zvms.util [inexact-now])
 
 (require zvms.util [defmth select-value])
 
@@ -85,11 +86,13 @@
 
 (defmacro score-property [name]
   `(defmth [property] ~name []
-     (sum (select-value (filter (fn [sv] (= (. Volunteer query (get sv.id) type)
-                                            (. VolType ~(hy.models.Symbol (name.upper)))))
-                                (StuVol.query.filter (= StuVol.stu-id self.id)
-                                                     (in_ StuVol.status #(ThoughtStatus.ACCEPTED ThoughtStatus.SPECIAL))))
-                        reward))))
+     (. db session (query (filter (= StuVol.stu-id self.id)
+                                  (in_ StuVol.status #(ThoughtStatus.ACCEPTED ThoughtStatus.SPECIAL)) 
+                                  (= StuVol.vol-id (any_ (. db session 
+                                                            (query (Volunteer.id.label "id"))
+                                                            (filter-by :type (. VolType ~(hy.models.Symbol (name.upper))))
+                                                            (subquery))))) 
+                          (func.sum StuVol.reward)) (scalar))))
 
 (defmodel User
   user
@@ -139,6 +142,7 @@
 
 (defmodel Volunteer 
   volunteer
+
   [[id Integer :primary-key True :autoincrement True]
    [name (String 32)]
    [description (String 1024)]
@@ -147,11 +151,35 @@
    [time DateTime]
    [type SmallInteger]
    [reward Integer]]
+  
   (defmth on-delete []
-    (. StuVol query (filter-by :vol-id self.id) (delete))))
+    (. StuVol query (filter-by :vol-id self.id) (delete)))
+  
+  (defmth [property] joiners []
+    (select-many (User.query.filter (User.id.in_ (. db session (query (StuVol.stu-id.label "stu_id")) 
+                                                    (filter (= StuVol.id self.id) (!= StuVol.status ThoughtStatus.WAITING-FOR-SIGNUP-AUDIT)) 
+                                                    (subquery))))
+                 id
+                 name
+                 auth))
+  
+  (defmth [property] classes []
+    (select-many (ClassVol.query.filter-by :vol-id self.id)
+                 max
+                 class-id as id
+                 class-id as name with (fn [id]
+                                         (. Class query (get id) name))))
+  
+  (defmth [property] computed-status []
+    (if (< self.time (inexact-now))
+      (if (= self.status VolStatus.AUDITED)
+        VolStatus.FINISHED
+        VolStatus.DEPRECATED)
+      self.status)))
 
-  (defmodel StuVol
+(defmodel StuVol
   stu-vol
+
   [[vol-id Integer :primary-key True :name "volunteer"]
    [stu-id Integer :primary-key True :name "student"]
    [status SmallInteger]
@@ -159,35 +187,41 @@
    [reason (String 64)]
    [reward Integer]])
 
-  (defmodel ClassVol
+(defmodel ClassVol
   class-vol
+
   [[vol-id Integer :primary-key True :name "volunteer"]
    [class-id Integer :primary-key True :name "class"]
    [max Integer]])
 
-  (defmodel Picture
+(defmodel Picture
   picture
+
   [[vol-id Integer :primary-key True :name "volunteer"]
    [stu-id Integer :primary-key True :name "student"]
    [hash (String 32)]
    [extension (String 5)]])
 
-  (defmodel UserNotice
+(defmodel UserNotice
   user-notice
+
   [[user-id Integer :primary-key True :name "user"]
    [notice-id Integer :primary-key True :name "notice"]])
 
-  (defmodel ClassNotice
+(defmodel ClassNotice
   class-notice
+
   [[class-id Integer :primary-key True :name "class"]
    [notice-id Integer :primary-key True :name "notice"]])
   
-  (defmodel SchoolNotice
+(defmodel SchoolNotice
   school-notice
+
   [[notice-id Integer :primary-key True :name "notice"]])
 
 (defmodel Issue
   issue
+
   [[id Integer :primary-key True :autoincrement True]
    [time DateTime]
    [author Integer]
