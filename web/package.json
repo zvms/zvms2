@@ -5,13 +5,15 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && powershell ../scripts/reload-nginx.ps1"
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",
     "@types/marked": "^4.3.1",
     "@vitejs/plugin-legacy": "^4.0.3",
     "axios": "^1.4.0",
+    "core-js": "^3.30.2",
     "crypto-js": "^4.1.1",
     "github-markdown-css": "^5.2.0",
     "lxgw-wenkai-lite-webfont": "^1.7.0",
