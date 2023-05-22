@@ -25,9 +25,9 @@ jobs:
       - name: Init webapp
         working-directory: ./web
         run: |
-          npx pnpm ci
+          npx pnpm i
 
       - name: Build webapp
         working-directory: ./web
         run: |
-          npx pnpm run build
+          npx pnpm build
