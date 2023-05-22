@@ -1,4 +1,6 @@
 /backend/instance
+/scripts/nginx/*/logs
+/scripts/nginx/*/temp
 
 .DS_Store
 node_modules
