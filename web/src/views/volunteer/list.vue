@@ -64,7 +64,7 @@
       </v-card-title>
 
       <v-card-text>
-        <vol-info
+        <vol-viewer
           :vol-id="current.singleVol.id"
           :vol="current.vol"
           :signup-rollupable="signupRollupable"
@@ -73,7 +73,7 @@
       </v-card-text>
       <v-dialog v-if="modDlg" v-model="modDlg">
         <v-card-text>
-          <vol-modify :volId="current.singleVol.id" />
+          <vol-editor :volId="current.singleVol.id" />
         </v-card-text>
       </v-dialog>
 
@@ -112,7 +112,7 @@ import {
   type VolunteerInfoResponse,
 } from "@/apis";
 import { Categ, getVolStatusName } from "@/apis/types/enums";
-import VolInfo from "@/components/vol/vol-info.vue";
+import VolViewer from "@/components/vol/viewer.vue";
 import { useInfoStore, useLoadingStore } from "@/stores";
 import { getVolStatusDisplayText } from "@/utils/calc";
 import { confirm } from "@/utils/dialogs";
@@ -120,7 +120,7 @@ import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import ThoughtEditor from "@/components/thought/editor.vue";
 import TablePlaceholder from "@/components/table-placeholder.vue";
-import VolModify from "@/components/vol/vol-modify.vue";
+import VolEditor from "@/components/vol/editor.vue";
 
 interface Action {
   text: string;
@@ -129,8 +129,8 @@ interface Action {
 
 export default {
   components: {
-    VolModify,
-    VolInfo,
+    VolEditor,
+    VolViewer,
     DataTable,
     ThoughtEditor,
     TablePlaceholder,

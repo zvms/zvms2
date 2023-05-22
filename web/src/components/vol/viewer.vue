@@ -77,7 +77,7 @@ import StuInfo from "../stu-info.vue";
 import { confirm } from "@/utils/dialogs";
 
 export default {
-  name: "vol-info",
+  name: "vol-viewer",
   components: {
     StuInfo,
   },

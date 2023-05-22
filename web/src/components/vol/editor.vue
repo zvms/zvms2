@@ -131,6 +131,7 @@ import { toasts, validateForm } from "@/utils/dialogs";
 import { timeToHint } from "@/utils/calc";
 
 export default {
+  name: "vol-editor",
   data() {
     return {
       TIME,

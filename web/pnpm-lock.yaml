@@ -46,6 +46,9 @@ dependencies:
   sweetalert2:
     specifier: ^11.7.5
     version: registry.npmmirror.com/sweetalert2@11.7.5
+  uuid:
+    specifier: ^9.0.0
+    version: registry.npmmirror.com/uuid@9.0.0
   vue:
     specifier: ^3.3.4
     version: registry.npmmirror.com/vue@3.3.4
@@ -66,6 +69,9 @@ devDependencies:
   '@types/sanitize-html':
     specifier: ^1.27.2
     version: registry.npmmirror.com/@types/sanitize-html@1.27.2
+  '@types/uuid':
+    specifier: ^9.0.1
+    version: registry.npmmirror.com/@types/uuid@9.0.1
   '@vitejs/plugin-vue':
     specifier: ^4.2.3
     version: registry.npmmirror.com/@vitejs/plugin-vue@4.2.3(vite@4.3.8)(vue@3.3.4)
@@ -1945,6 +1951,12 @@ packages:
     name: '@types/scheduler'
     version: 0.16.3
     dev: false
+
+  registry.npmmirror.com/@types/uuid@9.0.1:
+    resolution: {integrity: sha512-rFT3ak0/2trgvp4yYZo5iKFEPsET7vKydKF+VRCxlQ9bpheehyAJH89dAkaLEq/j/RZXJIqcgsmPJKUP1Z28HA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/uuid/-/uuid-9.0.1.tgz}
+    name: '@types/uuid'
+    version: 9.0.1
+    dev: true
 
   registry.npmmirror.com/@vitejs/plugin-legacy@4.0.3(terser@5.17.4)(vite@4.3.8):
     resolution: {integrity: sha512-RqDQOSEmFSNL42vITkNp8HE8Ak1yjGgaav4B6BGcZ8/URK0wikzwSyhNRirHDkp+snflEEk7iPZXTXUYA9exbg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vitejs/plugin-legacy/-/plugin-legacy-4.0.3.tgz}

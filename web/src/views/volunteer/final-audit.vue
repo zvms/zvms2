@@ -53,7 +53,7 @@
     <v-card>
       <v-card-title>详细信息</v-card-title>
       <v-card-text>
-        <vol-info
+        <vol-viewer
           v-if="currentVol"
           :vol-id="currentThoughtInfo!.volId"
           :vol="currentVol"
@@ -122,12 +122,12 @@ import { timeToHint } from "@/utils/calc";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import ThoughtViewer from "@/components/thought/viewer.vue";
-import VolInfo from "@/components/vol/vol-info.vue";
+import VolViewer from "@/components/vol/viewer.vue";
 
 export default {
   components: {
     DataTable,
-    VolInfo,
+    VolViewer,
     ThoughtViewer,
   },
   data() {

@@ -3,8 +3,7 @@ import {
   type SingleVolunteer,
   type VolunteerInfoResponse,
   getVolStatusName,
-ThoughtStatus,
-getThoughtStatusName,
+  ThoughtStatus,
 } from "@/apis";
 
 export function timeToHint(a: number) {
@@ -43,7 +42,6 @@ export function getVolStatusDisplayText(
     getVolStatusDisplayColor(volunteer.status),
   ];
 }
-
 
 export function getThoughtStatusDisplayColor(status: ThoughtStatus) {
   return {
