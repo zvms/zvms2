@@ -122,7 +122,7 @@ import { timeToHint } from "@/utils/calc";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import ThoughtViewer from "@/components/thought/viewer.vue";
-import VolInfo from "@/components/vol-info.vue";
+import VolInfo from "@/components/vol/vol-info.vue";
 
 export default {
   components: {

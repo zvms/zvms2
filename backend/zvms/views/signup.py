@@ -69,7 +69,8 @@ def signup(students, volId, token_data):
 @Api(rule='/signup/<int:volId>/<int:stuId>/rollback', method='POST')
 def rollback_signup(volId, stuId, token_data):
     '''撤回一个报名'''
-    StuVol.query.get_or_error((volId, stuId), '未报名该义工')
+    if StuVol.query.get_or_error((volId, stuId), '未报名该义工').status == ThoughtStatus.WAITING_FOR_SIGNUP_AUDIT:
+        return error('不能撤回一个感想')
     if (Categ.TEACHER | Categ.CLASS).authorized(token_data['auth']):
         auth_cls(User.query.get(stuId).cls_id, token_data, '不能修改其他班级')
     else:

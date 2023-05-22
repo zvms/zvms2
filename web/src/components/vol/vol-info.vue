@@ -37,8 +37,8 @@
         <v-list-item-title>
           已报名（{{ vol.joiners.length }}人）
         </v-list-item-title>
-        <v-chip label small :closable="(infoStore.permission & (Categ.Manager | Categ.System)) > 0" v-for="j in vol.joiners"
-          class="ma-1" @click="showStuInfo(j.id)" @click:close="rollbackSignup(j.id)">
+        <v-chip label small :closable="false/*(infoStore.permission & (Categ.Manager | Categ.System)) > 0*/"
+          v-for="j in vol.joiners" class="ma-1" @click="showStuInfo(j.id)" @click:close="rollbackSignup(j.id)">
           {{ j.name }}
         </v-chip>
       </v-list-item>
@@ -73,7 +73,7 @@ import {
 import { type PropType } from "vue";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
-import StuInfo from "./stu-info.vue";
+import StuInfo from "../stu-info.vue";
 import { confirm } from "@/utils/dialogs";
 
 export default {

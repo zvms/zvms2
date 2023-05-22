@@ -47,6 +47,13 @@
       </v-form>
     </v-card-text>
   </v-card>
+  <v-card>
+    <iframe v-if="!(infoStore.permission & Categ.None)" :src="`http://${serverIP}:4001`" height="500px">
+    </iframe>
+    <p v-else>
+      登录后可以在此处查看镇中天气预报哦
+    </p>
+  </v-card>
   <v-dialog v-model="contributorInfoDlg">
     <v-card>
       <v-card-title> 关于 {{ contributorInfo.displayName }} </v-card-title>
@@ -67,6 +74,7 @@ import {
   contributorsOther,
   type Contributor,
 } from "@/utils/contributors";
+import { serverIP } from "@/plugins/axios";
 import iconUrl from "@/assets/favicon.ico";
 
 export default {
@@ -74,6 +82,7 @@ export default {
   data() {
     return {
       Categ,
+      serverIP,
       report: "",
       rules: [NOT_EMPTY()],
       isFormValid: false,
