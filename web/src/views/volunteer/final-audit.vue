@@ -40,7 +40,7 @@
       @click:row="onRowClick"
     >
       <template v-slot:body v-if="thoughts.length === 0">
-        <p class="text-center">是空的~</p>
+        <table-placeholder/>
       </template>
       <template v-slot:item.name="{ item }">
         <div class="vol-name-in-table">
@@ -123,12 +123,14 @@ import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import ThoughtViewer from "@/components/thought/viewer.vue";
 import VolViewer from "@/components/vol/viewer.vue";
+import TablePlaceholder from "@/components/table-placeholder.vue";
 
 export default {
   components: {
     DataTable,
     VolViewer,
     ThoughtViewer,
+    TablePlaceholder,
   },
   data() {
     return {
