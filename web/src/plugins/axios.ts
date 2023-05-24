@@ -10,14 +10,15 @@ const axios = Axios.create({
     "Content-type": "application/json",
   },
   timeout: 10000,
-  timeoutErrorMessage:"服务器连接超时，请检查网络状态，也有可能是正在维护服务器。",
+  timeoutErrorMessage:
+    "服务器连接超时，请检查网络状态，也有可能是正在维护服务器。",
 });
 
 let currentToken: string = "";
-export function setCurrentToken(token: string){
+export function setCurrentToken(token: string) {
   currentToken = token;
 }
-export {currentToken}
+export { currentToken };
 
 axios.interceptors.request.use(
   (config) => {
@@ -25,7 +26,7 @@ axios.interceptors.request.use(
       ...config.params,
     };
     config.headers = config.headers ?? {};
-    config.headers.Authorization = currentToken || "";
+    config.headers.Authorization = currentToken ?? "";
     return config;
   },
   (error) => Promise.reject(error)

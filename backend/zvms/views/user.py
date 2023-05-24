@@ -1,4 +1,3 @@
-from threading import Lock
 from collections import defaultdict
 import datetime
 
@@ -17,7 +16,6 @@ class IncorrectLoginRecord:
         self.enabled_since = datetime.datetime.now()
 
 incorrect_login_records = defaultdict(IncorrectLoginRecord)
-incorrect_login_records_lock = Lock()
 
 @Api(rule='/user/check')
 def check(token_data):
@@ -34,23 +32,29 @@ def get_user_real_id(fake_id: str) -> int:
     return UserMapping.query.get_or_error(fake_id, '账户不存在').real_id
 
 @Api(rule='/user/login', method='POST', params='Login', response='UserLoginResponse', auth=Categ.NONE)
-def login(id, pwd, token_data):
+def login(id, pwd, devideId, token_data):
     '''登录'''
-    with incorrect_login_records_lock:
-        record = incorrect_login_records[request.remote_addr]
-        if record.times > 5:
-            record.times = 0
-            record.enabled_since = datetime.datetime.now() + datetime.timedelta(minutes=5)
-            return error('登录过于频繁') | {'noretry': True}
-        elif record.enabled_since > datetime.datetime.now():
-            return error('登录过于频繁') | {'noretry': True}
-        real_id = get_user_real_id(id)
-        user = User.query.get(real_id)
-        if not user or user.pwd != pwd:
-            record.times += 1
-            return error('用户名或密码错误') | {'noretry': False}
+    record = incorrect_login_records[devideId]
+    if record.times > 5:
         record.times = 0
-    return success('登录成功', token=tk.generate(**user.select('id', 'name', 'auth', cls='cls_id')), id=real_id)
+        record.enabled_since = datetime.datetime.now() + datetime.timedelta(minutes=5)
+        return error('登录过于频繁') | {'noretry': True}
+    elif record.enabled_since > datetime.datetime.now():
+        return error('登录过于频繁') | {'noretry': True}
+    real_id = get_user_real_id(id)
+    user = User.query.get(real_id)
+    if not user or user.pwd != pwd:
+        record.times += 1
+        return error('用户名或密码错误') | {'noretry': False}
+    record.times = 0
+    return success(
+        '登录成功', 
+        token=tk.generate(**user.select(
+        'id',
+        'name', 
+        'auth', 
+        cls='cls_id') | {'device': devideId}), 
+        id=real_id)
 
 
 @Api(rule='/user/logout', method='POST')

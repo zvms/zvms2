@@ -1,4 +1,4 @@
-import "core-js/stable/array/at";
+import "core-js/stable/array/at"; // polyfill for Array.prototype.at used in v-data-table component.
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";
@@ -11,7 +11,7 @@ import vuetify from "@/plugins/vuetify";
 import "@/assets/main.css";
 import { toasts } from "./utils/dialogs";
 
-export const VERSION = "v2.0.2"
+export const VERSION = "v2.0.2";
 
 const app = createApp(App);
 
@@ -27,7 +27,8 @@ window.addEventListener("error", (ev) => {
   return false;
 });
 
-console.error =  (...ev) => {
-  toasts.error(`前端出错啦！${ev}`);
-  return false;
-}
+const consoleErrorBackup = console.error;
+console.error = (...ev) => {
+  toasts.error(`前端出错啦！${ev.map((v) => v + "").join(", ")}`);
+  consoleErrorBackup(...ev);
+};

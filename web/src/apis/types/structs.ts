@@ -155,7 +155,8 @@ export interface Thought{
 }
 export interface Login{
     id: string,
-    pwd: string
+    pwd: string,
+    devideId: string
 }
 export interface SearchUsers{
     name?: string,

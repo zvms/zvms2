@@ -27,7 +27,8 @@
 ```json
 {
     "id": "string",
-    "pwd": "string"
+    "pwd": "string",
+    "devideId": "string"
 }
 ```
 响应:
@@ -200,7 +201,7 @@
 #### 1.12 zvms.views.user
 
 [POST] /user/<int:id>/mod-others-pwd  
-**...**  
+**修改他人的密码**  
 
 参数:
 ```json

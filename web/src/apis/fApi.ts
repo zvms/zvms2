@@ -182,17 +182,20 @@ export class ForegroundApi {
    * #### 权限: Any
    * @param id
    * @param pwd
+   * @param devideId
    */
   login(
     id: string,
-    pwd: string
+    pwd: string,
+    devideId: string
   ): ForegroundApiRunner<structs.UserLoginResponse> {
     return createForegroundApiRunner(
       this,
       "POST",
       `/user/login`, {
         id,
-        pwd
+        pwd,
+        devideId
       }
     );
   }
@@ -345,6 +348,7 @@ export class ForegroundApi {
     );
   }
   /**
+   * ## 修改他人的密码
    * ### [POST] /user/<int:id>/mod-others-pwd
    * #### 权限: Any
    * @param id

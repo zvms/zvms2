@@ -1,4 +1,5 @@
-import slcImage from "@/assets/slcw.webp"
+import slcImage from "@/assets/slcw.webp";
+import iconUrl from "@/assets/favicon.ico";
 
 export interface Contributor {
   displayName: string;
@@ -67,7 +68,8 @@ export const contributorsOther = {
   zsz: {
     displayName: "zsz",
     infoHtml: `2022级 张圣泽
-政宣部成员`,
+政宣部成员<br/>
+<img src="${iconUrl}" width="300px" class="pt-2" />`,
   },
   _7086cmd: {
     displayName: "7086cmd",

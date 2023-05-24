@@ -64,16 +64,19 @@
       </v-card-title>
 
       <v-card-text>
-        <vol-viewer
+        <vol-info
           :vol-id="current.singleVol.id"
           :vol="current.vol"
           :signup-rollupable="signupRollupable"
           class="pa-14"
         />
       </v-card-text>
+
       <v-dialog v-if="modDlg" v-model="modDlg">
         <v-card-text>
-          <vol-editor :volId="current.singleVol.id" />
+          <vol-modify 
+          :volId="current.singleVol.id"
+          />
         </v-card-text>
       </v-dialog>
 
@@ -112,7 +115,7 @@ import {
   type VolunteerInfoResponse,
 } from "@/apis";
 import { Categ, getVolStatusName } from "@/apis/types/enums";
-import VolViewer from "@/components/vol/viewer.vue";
+import VolInfo from "@/components/vol/viewer.vue";
 import { useInfoStore, useLoadingStore } from "@/stores";
 import { getVolStatusDisplayText } from "@/utils/calc";
 import { confirm } from "@/utils/dialogs";
@@ -120,7 +123,7 @@ import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import ThoughtEditor from "@/components/thought/editor.vue";
 import TablePlaceholder from "@/components/table-placeholder.vue";
-import VolEditor from "@/components/vol/editor.vue";
+import VolModify from "@/components/vol/editor.vue";
 
 interface Action {
   text: string;
@@ -129,8 +132,8 @@ interface Action {
 
 export default {
   components: {
-    VolEditor,
-    VolViewer,
+    VolModify,
+    VolInfo,
     DataTable,
     ThoughtEditor,
     TablePlaceholder,
@@ -200,6 +203,7 @@ export default {
       this.filter.class = -1;
     },
     fetchVols() {
+      this.modDlg = false;
       this.infoDlg = false;
       this.thoughtDlg = false;
       fApi.skipOkToast.listVolunteers({
@@ -232,6 +236,9 @@ export default {
         this.thoughtDlg = true;
       });
     },
+    // modifyVol() {
+    //   this.
+    // }
   },
   computed: {
     ...mapStores(useInfoStore, useLoadingStore),
@@ -273,27 +280,34 @@ export default {
       }
       if (
         this.infoStore.permission &
-          (Categ.Class | Categ.Teacher | Categ.System) &&
-        this.current.vol.status === VolStatus.Unaudited
+        (Categ.Class | Categ.Teacher | Categ.System)
       ) {
+        if (this.current.vol.status === VolStatus.Unaudited) {
+          result.push({
+            text: "允许报名",
+            onclick: async () => {
+              if (await confirm("确定？")) {
+                fApi.auditVolunteer(this.current.singleVol.id)(() => {
+                  this.fetchVols();
+                });
+              }
+            },
+          });
+          result.push({
+            text: "禁止报名",
+            onclick: async () => {
+              if (await confirm("确定？")) {
+                fApi.repulseVolunteer(this.current.singleVol.id)(() => {
+                  this.fetchVols();
+                });
+              }
+            },
+          });
+        }
         result.push({
-          text: "允许报名",
-          onclick: async () => {
-            if (await confirm("确定？")) {
-              fApi.auditVolunteer(this.current.singleVol.id)(() => {
-                this.fetchVols();
-              });
-            }
-          },
-        });
-        result.push({
-          text: "禁止报名",
-          onclick: async () => {
-            if (await confirm("确定？")) {
-              fApi.repulseVolunteer(this.current.singleVol.id)(() => {
-                this.fetchVols();
-              });
-            }
+          text: "修改义工",
+          onclick: () => {
+            this.modDlg = true;
           },
         });
       }

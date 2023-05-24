@@ -30,7 +30,7 @@ export default createVuetify({
       light: {
         dark: false,
         colors: {
-          color1: "#CA0808", //decToHex(202,8,8),
+          color1: "#CA0808",
           color2: "#B21919",
           color3: "#B33232",
           color4: "#891F1F",

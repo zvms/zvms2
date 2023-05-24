@@ -25,10 +25,9 @@
       </v-form>
     </v-card-text>
   </v-card>
-  <v-card v-if="
-    publicNotice &&
+  <v-card v-if="publicNotice &&
     (publicNotice.title.length > 0 || publicNotice.content.length > 0)
-  ">
+    ">
     <v-card-title> 公告：{{ publicNotice.title }} </v-card-title>
     <v-card-text v-html="publicNotice.content"> </v-card-text>
   </v-card>
@@ -38,15 +37,14 @@
 import { fApi, type PublicNotice } from "@/apis";
 import { Categ } from "@/apis/types/enums";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
-import { useInfoStore, useLoadingStore } from "@/stores";
+import { useInfoStore, useLoadingStore, isNoRetry } from "@/stores";
 import { toasts, validateForm } from "@/utils/dialogs";
 import { md5 } from "@/utils/md5";
 import { applyNavItems } from "@/utils/nav";
 import { NOT_EMPTY } from "@/utils/validation";
 import { mapStores } from "pinia";
 import UseridInput from "@/components/userid-input.vue";
-
-const LATEST_USERID_KEY = "zvms.v2.login.latestUserId";
+import { addAssocUser, getDeviceUID, getLatestUser, setLatestUser } from "@/utils/device";
 
 export default {
   name: "login",
@@ -79,15 +77,12 @@ export default {
     });
   },
   mounted() {
-    const latestUserId = localStorage.getItem(LATEST_USERID_KEY);
-    if (latestUserId && latestUserId.length > 0) {
-      this.form.userId = latestUserId;
-    }
+    this.form.userId = getLatestUser() ?? "";
   },
   methods: {
     login() {
       if (validateForm(this.isFormValid)) {
-        if (this.loadingStore.noretry) {
+        if (isNoRetry(this.loadingStore)) {
           toasts.error("密码错误次数过多，请稍等！");
           return;
         }
@@ -100,10 +95,13 @@ export default {
           })
           .login(
             this.form.userId,
-            md5(pwd)
+            md5(pwd),
+            getDeviceUID(),
           )(({ token, id }) => {
             this.infoStore.token = token;
             setCurrentAxiosToken(token);
+            setLatestUser(this.form.userId)
+            addAssocUser(id);
             fApi.skipOkToast.getUserInfo(id)(({ name, cls, auth, clsName }) => {
               this.infoStore.$patch({
                 userId: id,
@@ -113,7 +111,6 @@ export default {
                 className: clsName,
               });
               applyNavItems();
-              localStorage.setItem(LATEST_USERID_KEY, this.form.userId);
               this.$router.push("/");
             });
           });

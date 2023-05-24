@@ -1,6 +1,6 @@
 from functools import wraps
 from pprint import pprint
-from threading import Lock
+import logging
 import datetime
 import json
 import re
@@ -16,10 +16,12 @@ from zvms.typing.checker import CheckerError
 import zvms.tokenlib as tk
 import zvms.typing.structs as structs
 
+logging.basicConfig(filename='log.txt')
+logger = logging.getLogger()
+
 class ZvmsExit(KeyboardInterrupt): ...
 
 class Api:
-    counter_lock = Lock()
     counter = 0
 
     apis: list['Api'] = []
@@ -54,6 +56,8 @@ class Api:
 
 jsonHeader = {"Content-Type": "application/json ; charset=utf-8"}
 
+
+
 def deco(impl, params, response, auth):
     @wraps(impl)
     def wrapper(*args, **kwargs):
@@ -83,23 +87,22 @@ def deco(impl, params, response, auth):
                 return json.dumps({'type': 'ERROR', 'message': "未获取到Token, 请重新登陆"}), jsonHeader
         try:
             if __debug__:
-                with Api.counter_lock:
-                    Api.counter += 1
-                    print('Api访问次数:', Api.counter)
-                    if Api.counter % 10000 == 0:
-                        Report(
-                            reporter=0,
-                            content=f'喜报: Api访问量达到{Api.counter}',
-                            time=datetime.datetime.now()
-                        )
-                with open('log.txt', 'a', encoding='utf-8') as f:
-                    t = datetime.datetime.now().replace(microsecond=0)
-                    s = f'{t}[{request.remote_addr}]'
-                    if auth != Categ.NONE:
-                        s+=f'({token_data["id"]})'
-                    s+= f'[{request.method}]{request.path}'
-                    print(s)
-                    f.write(s+'\n')
+                Api.counter += 1
+                print('Api访问次数:', Api.counter)
+                if Api.counter % 10000 == 0:
+                    Report(
+                        reporter=0,
+                        content=f'喜报: Api访问量达到{Api.counter}',
+                        time=datetime.datetime.now()
+                    )
+                t = datetime.datetime.now().replace(microsecond=0)
+                s = ''
+                if auth != Categ.NONE:
+                    s = f'{t}[{token_data["device"]}]'
+                    s += f'({token_data["id"]})'
+                s += f'[{request.method}]{request.path}'
+                print(s)
+                logger.debug(s + '\n')
             check(params, json_data, '传入的数据错误')
             ret = impl(*args, **kwargs, **json_data, token_data=token_data)
             result = ret.get('result')
@@ -122,4 +125,7 @@ def deco(impl, params, response, auth):
                 content='(用户: {}) {}: {}'.format(token_data['id'] if id in token_data else '<未登录>', ex.message, json.dumps(dict, indent=4))
             ).insert()
             return json.dumps(error(ex.message) | dict)
+        except Exception as ex:
+            import traceback
+            traceback.print_exc()
     return wrapper

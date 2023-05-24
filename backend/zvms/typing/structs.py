@@ -165,6 +165,7 @@ class Thought(Object):
 class Login(Object):
     id = String
     pwd = Len(String, 32, 33)
+    devideId = String
 
 class SearchUsers(Optional):
     name = String

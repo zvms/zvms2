@@ -9,7 +9,6 @@
       </p>
       <img src="https://img.shields.io/github/stars/zvms/zvms?logo=github" class="mx-4" />
       <img src="https://gitee.com/zvms/zvms/badge/star.svg?theme=dark" />
-      <v-img :src="iconUrl" width="300px" class="pt-2" />
     </v-card-text>
   </v-card>
   <v-card>
@@ -48,7 +47,7 @@
     </v-card-text>
   </v-card>
   <v-card>
-    <iframe v-if="!(infoStore.permission & Categ.None)" :src="`http://${serverIP}:4001`" height="500px">
+    <iframe v-if="!(infoStore.permission & Categ.None)" :src="`http://${serverIP}:4001`" height="500px" width="1000px">
     </iframe>
     <p v-else>
       登录后可以在此处查看镇中天气预报哦
