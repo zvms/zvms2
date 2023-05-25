@@ -1,7 +1,7 @@
 (import flask-sqlalchemy *
         sqlalchemy *
         zvms.util [inexact-now]
-        zvms.res [ErrorCode])
+        zvms.res [ErrorCode Categ])
 
 (require zvms.util [defmth select-value])
 
@@ -86,7 +86,7 @@
     (. User query (filter-by :class-id self.id) (delete))))
 
 (defmacro score-property [name]
-  `(defmth [property] ~name []
+  `(defn [property] ~name [self]
      (. db session (query (filter (= StuVol.stu-id self.id)
                                   (StuVol.status.in_ #(ThoughtStatus.ACCEPTED ThoughtStatus.SPECIAL)) 
                                   (= StuVol.vol-id (any_ (. db session 
@@ -109,7 +109,7 @@
     (. StuVol query (filter-by :stu-id self.id) (delete))
     (. Volunteer query (filter-by :holder-id self.id) (delete)))
   
-  (defmth get [#^str key]
+  (defn get [#^str key]
     (setv res None)
     (for [i (User.query.filter-by :name key)]
       (setv res i)
@@ -118,7 +118,7 @@
       (User.query.get (int key))
       res))
   
-  (defmth get/error [#^str key #^ErrorCode [code ErrorCode.NO-RELEVANT-DATA]]
+  (defn get/error [#^str key #^ErrorCode [code ErrorCode.NO-RELEVANT-DATA]]
     (let [res (self.get key)]
       (if (is res None)
         (raise (ZvmsError code))
@@ -156,23 +156,25 @@
   (defmth on-delete []
     (. StuVol query (filter-by :vol-id self.id) (delete)))
   
-  (defmth [property] joiners []
+  (defn [property] joiners [self]
     (select-many (User.query.filter (User.id.in_ (. db session (query (StuVol.stu-id.label "stu_id")) 
                                                     (filter (= StuVol.id self.id) (!= StuVol.status ThoughtStatus.WAITING-FOR-SIGNUP-AUDIT)) 
                                                     (subquery)
                                                     stu-id)))
                  id
                  name
-                 auth))
+                 auth)
+  (defn [property] holder [self]
+    (. User query (get self.holder-id) name)))
   
-  (defmth [property] classes []
+  (defn [property] classes [self]
     (select-many (ClassVol.query.filter-by :vol-id self.id)
                  max
                  class-id as id
                  class-id as name with (fn [id]
                                          (. Class query (get id) name))))
   
-  (defmth [property] computed-status []
+  (defn [property] computed-status [self]
     (if (< self.time (inexact-now))
       (if (= self.status VolStatus.AUDITED)
         VolStatus.FINISHED
@@ -228,3 +230,6 @@
    [time DateTime]
    [author Integer]
    [content (String 255)]])
+
+(defn auth-class [class token-data]
+  (when (and (!= class (:cls token-data)) (not (& (:auth token-data) Categ.SYSTEM)))))

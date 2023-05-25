@@ -161,7 +161,7 @@
           (let [ann (str ann)]
             (if (in ann Api.structs)
               (get Api.structs ann)
-              (getattr res ann))))
+              (Enum (getattr res ann)))))
     [of list generic-param]
       (Array (annotations->params generic-param))
     [| #* rest]

@@ -24,7 +24,9 @@
                  INCORRECT-PASSWORD
                  BAD-PASSWORD
                  INCORRECT-OLD-PASSWORD
-                 NO-ACCESS-TO-OTHER-CLASSES)
+                 NO-ACCESS-TO-OTHER-CLASSES
+                 CLASS-NOT-FOUND
+                 VOLUNTEER-MEMBERS-OVERFLOWN)
 
 (sequential-enum VolType
                  INSIDE

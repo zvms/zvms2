@@ -80,12 +80,12 @@
            #^int auth
            #^str clsName)
 
-(defapi [:rule "/user/<int:id>"
+(defapi [:rule "/user/<id>"
          :models [User]
          :returns UserInfoResponse
          :doc "获取一个用户的详细信息"]
   get-user-info []
-  (success #** (select (get/error User id)
+  (success #** (select (User.get/error id)
                         name
                         auth
                         class-id as cls
@@ -96,17 +96,17 @@
            #^int outside
            #^int large)
 
-(defapi [:rule "/user/<int:id>/scores"
+(defapi [:rule "/user/<id>/scores"
          :models [User]
          :returns StudentScoresResponse
          :doc "获取一个学生用户的义工分"]
   get-student-scores []
-  (success (select (get/error User id)
+  (success (select (User.get/error id)
                     inside
                     outside
                     large)))
 
-(defapi [:rule "/user/<int:id>/mod-pwd"
+(defapi [:rule "/user/<id>/mod-pwd"
          :method "POST"
          :models [User Issue]
          :params ModPwd
@@ -115,7 +115,7 @@
   (if (!= (len new-pwd) 32)
     (error ErrorCode.BAD-PASSWORD)
     (do
-      (let [user (get/error User id)]
+      (let [user (User.get/error id)]
         (cond
           (and (!= user.id (:id token-data)) (not (and (& (:auth token-data) (| Categ.SYSTEM Categ.MANAGER))
                                                        (not (& user.auth Categ.SYSTEM)))))
