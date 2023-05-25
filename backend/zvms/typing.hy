@@ -4,12 +4,13 @@
         typing [Iterable
                 Optional]
         datetime [datetime]
-        enum [EnumType])
+        enum [EnumType]
+        zvms.res [ErrorCode])
 
 (require zvms.util *)
 
 (defclass ProcessorError [Exception]
-  #^str message)
+  #^ErrorCode code)
 
 (defclass Processor []
   (defmth __call__ []

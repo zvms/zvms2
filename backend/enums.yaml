@@ -31,3 +31,21 @@ VolType:
   Inside: 校内义工
   Large: 大型实践
   Outside: 校外义工
+
+ErrorCode:
+  Error404: "请求地址错误"
+  Error500: "服务器内部错误"
+  NotAuthorized: "权限不足"
+  TokenNotFound: "未找到Token, 请重新登录"
+  InterfaceError: "请求接口错误: {}处应为{}, 找到{}"
+  ResponseError: "数据返回错误: {}处应为{}, 找到{}"
+  NoRelevantData: "未查询到相关数据"
+  UserNotFound: "未找到用户"
+  TtydNotSupported: "不支持TTYD"
+  TtydRestart: "TTYD重启成功"
+  TtydFails: "TTYD重启失败"
+  LoginFrequently: "登录过于频繁"
+  IncorrectPassword: "用户名或密码错误"
+  BadPassword: "密码格式错误"
+  IncorrectOldPassword: "旧密码错误"
+  NoAccessToOtherClasses: "无权操作其他班级"

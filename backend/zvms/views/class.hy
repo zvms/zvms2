@@ -18,9 +18,9 @@
          :models [Class]
          :returns (of list SingleClass)]
   list-classes [] 
-  (success "获取成功" (select-many (Class.query.filter (!= Class.id 0)) 
-                                     id 
-                                     name)))
+  (success (select-many (Class.query.filter (!= Class.id 0)) 
+                         id 
+                         name)))
 
 (defstruct ClassInfoResponse 
            #^str name
@@ -30,11 +30,11 @@
          :models [User]
          :returns ClassInfoResponse]
   get-class-info []
-  (success "获取成功" (select (get/error Class id)
-                          name
-                          id students with (fn [id] 
-                                             (list (select-many (User.query.filter (= User.class-id id)
-                                                                                   (& User.auth Categ.STUDENT)) 
-                                                                id 
-                                                                name 
-                                                                auth))))))
+  (success (select (get/error Class id)
+                    name
+                    id students with (fn [id] 
+                                       (list (select-many (User.query.filter (= User.class-id id)
+                                                                             (& User.auth Categ.STUDENT)) 
+                                                          id 
+                                                          name 
+                                                          auth))))))

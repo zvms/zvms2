@@ -8,6 +8,8 @@
         enum [IntEnum IntFlag]
         enum :as e
         pprint [pprint]
+        traceback
+        logging
         json
         re
         jwt
@@ -15,10 +17,15 @@
                    chunks
                    convention-convert]
         zvms.typing *
-        zvms.res [Categ]
+        zvms.res [Categ ErrorCode]
         zvms.res :as res)
 
 (require zvms.util *)
+
+(logging.basicConfig :filename "log.txt"
+                     :level logging.DEBUG)
+
+(setv logger (logging.getLogger))
 
 (defclass ZvmsError [Exception] ...)
 
@@ -58,11 +65,11 @@
 
 (setv json-header {"Content-Type" "application/json ; charset=utf-8"})
 
-(defn process [#^Processor proc json #^str msg]
+(defn process [#^Processor proc json #^ErrorCode code]
   (try
     (proc.process json)
     (except [ex [ProcessorError]]
-            (setv ex.msg msg)
+            (setv ex.code code)
             (raise ex))))
 
 (defn dumps-json [data]
@@ -90,14 +97,11 @@
                             (when (not token-data)
                               (raise jwt.InvalidSignatureError))
                             (setv token-data (tk.read token-data))
-                            (cond
-                              (not (tk.exists token-data))
-                                (return (dumps-json {"type" "ERROR" "message" "Token失效, 请重新登陆"}))
-                              (not (auth.authorized (:auth token-data)))
-                                (return (dumps-json {"type" "ERROR" "message" "权限不足"}))
-                              True token-data))
+                            (if (not (auth.authorized (:auth token-data))) 
+                              (return (dumps-json {"type" "ERROR" "code" ErrorCode.NOT-AUTHORIZED}))
+                              token-data))
                           (except [jwt.InvalidSignatureError]
-                                  (return (dumps-json {"type" "ERROR" "message" "未获取到Token, 请重新登陆"})))))]
+                                  (return (dumps-json {"type" "ERROR" "code" ErrorCode.TOKEN-NOT-FOUND})))))]
        (when __debug__
          (with [f (open "log.txt" "a" :encoding "utf-8")]
                (let [log f"{(inexact-now)}[{request.remote-addr}]"]
@@ -105,29 +109,31 @@
                    (+= log f"({(:id token-data)})"))
                  (+= log (+ "[" request.method "]" request.path))
                  (print log)
-                 (print log :file f))))
+                 (logger.debug log))))
        (try
-         (let [json-data (process params json-data "传入的数据错误")
+         (let [json-data (process params json-data INTERFACE-ERROR)
                ret (impl #* args #** kwargs #** json-data :token-data token-data)
                result (ret.get "result")]
-           (when (= (:type ret) "SUCCESS")
-             (process returns result "服务器返回的数据错误"))
+           (when (and __debug__ (= (:type ret) "SUCCESS"))
+             (process returns result RESPONSE-ERROR))
            (dumps-json ret))
          (except [ex [ZvmsError]]
                  (dumps-json (error (get ex.args 0))))
          (except [ex [ProcessorError]]
-                 (let [error-info (dict (zip #("where" "expected" "found")
-                                 ex.args))]
-                   (when __debug__
-                     (pprint error-info))
-                   (insert (Issue
-                            :time (inexact-now)
-                            :author 0
-                            :content (.format "(用户: {}) {}: {}'"
-                                              (:id token-data "<未登录>")
-                                              ex.msg
-                                              (json.dumps error-info :indent 4))))
-                   (dumps-json (| (error ex.msg) error-info)))))))))
+                 (when __debug__
+                   (for [[key arg] (zip #("where" "expected" "found") ex.args)]
+                     (print args :end " ")
+                     (pprint arg))) 
+                 (insert (Issue 
+                          :time (inexact-now) 
+                          :author 0 
+                          :content (.format "(用户: {}) {}: {}'" 
+                                            (:id token-data "<未登录>") 
+                                            (repr ex.code)
+                                            (json.dumps ex.args :indent 4))))
+                 (dumps-json (| (error ex.code) error-info)))
+         (except [ex [Exception]]
+                 (logger.error (traceback.format-exc ex))))))))
 
 (defclass TokenData [TypedDict]
   #^int id

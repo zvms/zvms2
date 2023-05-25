@@ -1,6 +1,7 @@
 (import flask-sqlalchemy *
         sqlalchemy *
-        zvms.util [inexact-now])
+        zvms.util [inexact-now]
+        zvms.res [ErrorCode])
 
 (require zvms.util [defmth select-value])
 
@@ -53,18 +54,18 @@
   (db.session.add self)
   self)
 
-(defn get/error [model ident #^str [msg "未查询到相关数据"]]
+(defn get/error [model ident #^ErrorCode [code ErrorCode.NO-RELEVANT-DATA]]
   (let [res (model.query.get ident)]
     (if (is res None)
-      (raise (ZvmsError msg))
+      (raise (ZvmsError code))
       res)))
 
-(defn error [#^str msg]
+(defn error [#^ErrorCode code]
   (db.session.rollback)
-  {"type" "ERROR" "message" msg})
+  {"type" "ERROR" "code" code})
 
-(defn success [#^str msg [result None] #**kwargs]
-  (let [res {"type" "SUCCESS" "message" msg}]
+(defn [[result None] #**kwargs]
+  (let [res {"type" "SUCCESS"}]
     (cond
       (not? result None)
         (setv (get res "result") result)
@@ -87,7 +88,7 @@
 (defmacro score-property [name]
   `(defmth [property] ~name []
      (. db session (query (filter (= StuVol.stu-id self.id)
-                                  (in_ StuVol.status #(ThoughtStatus.ACCEPTED ThoughtStatus.SPECIAL)) 
+                                  (StuVol.status.in_ #(ThoughtStatus.ACCEPTED ThoughtStatus.SPECIAL)) 
                                   (= StuVol.vol-id (any_ (. db session 
                                                             (query (Volunteer.id.label "id"))
                                                             (filter-by :type (. VolType ~(hy.models.Symbol (name.upper))))
@@ -117,10 +118,10 @@
       (User.query.get (int key))
       res))
   
-  (defmth get/error [#^str key #^str [msg "未查询到相关数据"]]
+  (defmth get/error [#^str key #^ErrorCode [code ErrorCode.NO-RELEVANT-DATA]]
     (let [res (self.get key)]
       (if (is res None)
-        (raise (ZvmsError msg))
+        (raise (ZvmsError code))
         res)))
   
   (score-property inside)
@@ -158,7 +159,8 @@
   (defmth [property] joiners []
     (select-many (User.query.filter (User.id.in_ (. db session (query (StuVol.stu-id.label "stu_id")) 
                                                     (filter (= StuVol.id self.id) (!= StuVol.status ThoughtStatus.WAITING-FOR-SIGNUP-AUDIT)) 
-                                                    (subquery))))
+                                                    (subquery)
+                                                    stu-id)))
                  id
                  name
                  auth))

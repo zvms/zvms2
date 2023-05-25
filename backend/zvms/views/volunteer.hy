@@ -12,34 +12,48 @@
   #^str name
   #^str time
   #^int status
-  #^bool signable
-  #^(of list SingleUser) joiners
-  #^int holder
-  #^str holder-name)
+  #^bool signable)
 
 (defapi [:rule "/volunteer/list"
          :returns (of list SingleVolunteer)
          :doc "列出义工"]
   list-volunteers []
-  (let [] (success "获取成功" (select-many (Volunteer.query.filter )))))
+  (import sqlalchemy [or_])
+  (success  (select (if (= (:auth token-data) 0)
+                      (Volunteer.query.filter (or_ ( = Volunteer.holder-id (:id token-data))
+                                                   (Volunteer.id.in_ (. db session 
+                                                                        (query (StuVol.vol-id.label "vol_id"))
+                                                                        (filter-by :stu-id (:id token-data))
+                                                                        (subquery)
+                                                                        vol-id))
+                                                   (Volunteer.id.in_ (. db session
+                                                                        (query (ClassVol.vol-id.label "vol_id"))
+                                                                        (filter-by :class-id (:cls token-data))
+                                                                        (subquery)
+                                                                        vol-id))))
+                      Volunteer.query)
+                    id
+                    name 
+                    time with str
+                    calculated-status as status)))
 
 (defapi [:rule "/volunteer/<int:id>"
          :returns VolunteerInfoResponse
          :doc "获取一个义工的详细信息"]
   get-volunteer-info []
-  (success "获取成功" (select (get/error Volunteer id)
-                          name
-                          type
-                          reward
-                          time with str
-                          description
-                          computed-status as status
-                          holder-id as holder
-                          holder-id as holder-name with (fn [id]
-                                                          (. User query (get id) name))
-                          from 
-                          joiners
-                          classes)))
+  (success  (select (get/error Volunteer id)
+                    name
+                    type
+                    reward
+                    time with str
+                    description
+                    computed-status as status
+                    holder-id as holder
+                    holder-id as holder-name with (fn [id]
+                                                    (. User query (get id) name))
+                    from 
+                    joiners
+                    classes)))
 
 (defmacro _create-volunteer [type]
   `(. (insert (Volunteer :name name
@@ -59,13 +73,20 @@
                             #^int reward 
                             #^(of list str) joiners]
   (let [id (_create-volunteer VolType.OUTSIDE)]
+    (insert (ClassVol
+             :class-id (:cls token-data)
+             :vol-id id
+             :max 0))
     (for [joiner joiners]
-      (insert (StuVol :stu-id (. (User.get/error joiner f"学生{joiner}不存在") id)
-                      :vol-id id
-                      :status ThoughtStatus.DRAFT
-                      :thought ""
-                      :reward -1)))
-    (success "创建成功")))
+      (let [joiner (User.get/error joiner ErrorCode.USER-NOT-FOUND)]
+        (if (!= joiner.class-id (:cls token-data))
+          (return (error ErrorCode.NO-ACCESS-TO-OTHER-CLASSES))
+          (insert (StuVol :stu-id joiner.id
+                          :vol-id id
+                          :status ThoughtStatus.DRAFT
+                          :thought ""
+                          :reward -1)))))
+    (success )))
 
 (defmacro [:rule "/volunteer/<int:id>/audit/accept"
            :method "POST"
@@ -96,7 +117,7 @@
                                      :sendtime now
                                      :deadtime (+ now (timedelta :days 3)))) id)]
     (for [joiner joiners]
-      (let [joiner (. (User.get/error joiner f"学生{joiner}不存在") id)]
+      (let [joiner (. (User.get/error joiner ErrorCode.USER-NOT-FOUND) id)]
         (insert (StuVol :vol-id id
                         :stu-id joiner
                         :status ThoughtStatus.ACCEPTED

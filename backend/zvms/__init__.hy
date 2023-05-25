@@ -5,7 +5,7 @@
 (defn create-app []
   (import flask [Flask]
           flask-cors [CORS]
-          zvms.res [STATIC-FOLDER]
+          zvms.res [STATIC-FOLDER ErrorCode]
           zvms.config :as config)
 
   (global app)
@@ -20,10 +20,10 @@
   (.push (app.test-request_context))
   
   ((app.errorhandler 404) (fn [ex]
-                            #(#[[{"type": "ERROR", "message": "请求地址错误"}]]
+                            #(#[[{"type": "ERROR", "code": ErrorCode.ERROR-404}]]
                               404)))
   ((app.errorhandler 500) (fn [ex]
-                            #(#[[{"type": "ERROR", "message": "服务器内部错误"}]]
+                            #(#[[{"type": "ERROR", "code": ErrorCode.ERROR-500}]]
                               500)))
   
   (import zvms.views

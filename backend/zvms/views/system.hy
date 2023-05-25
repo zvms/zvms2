@@ -1,7 +1,8 @@
 (import os
         zvms.apilib *
         zvms.res [START-TTYD
-                  STOP-TTYD])
+                  STOP-TTYD
+                  ErrorCode])
 
 (require zvms.apilib *)
 
@@ -11,11 +12,11 @@
          :doc "重启TTYD"]
   restart-ttyd []
   (if (is START-TTYD None)
-    (error "TTYD 不受支持")
+    (error ErrorCode.TTYD-NOT-SUPPORTED)
     (do (os.system STOP-TTYD)
         (if (= (os.system START-TTYD) 0)
-          (success "TTYD重启成功")
-          (error "TTYD重启失败")))))
+          (success ErrorCode.TTYD-RESTART)
+          (error ErrorCode.TTYD-FAILS)))))
 
 (defapi [:rule "/system/restart"
          :method "POST"

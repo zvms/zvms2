@@ -14,7 +14,7 @@
            :time (inexact-now)
            :author (:id token-data)
            :content content))
-  (success "反馈成功"))
+  (success))
 
 (defstruct FetchIssuesResponse
   #^int author
@@ -27,8 +27,8 @@
          :auth Categ.MANAGER
          :doc "获取反馈"] 
   fetch-issues []
-  (success "获取成功" (select-many Issue.query
-                               author
-                               content
-                               time with str
-                               author as author-name with (fn [id] (. User query (get id) name)))))
+  (success (select-many Issue.query
+                         author
+                         content
+                         time with str
+                         author as author-name with (fn [id] (. User query (get id) name)))))

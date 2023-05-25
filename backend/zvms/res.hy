@@ -1,30 +1,55 @@
 (import enum [IntEnum IntFlag]
         sys)
 
-(defclass VolType [IntEnum]
-  (setv INSIDE 1
-        OUTSIDE 2
-        LARGE 3))
+(eval-when-compile
+ (import zvms.util [flatten1]))
 
-(defclass VolStatus [IntEnum]
-  (setv UNAUDITED 1
-        AUDITED 2
-        REJECTED 3
-        FINISHED 4
-        DEPRECATED 5))
+(defmacro sequential-enum [name #* fields]
+  `(defclass ~name [IntEnum]
+     (setv ~@(flatten1 (gfor [i n] (enumerate fields 1) #(n i))))))
 
-(defclass ThoughtStatus [IntEnum]
-  (setv WAITING-FOR-SIGNUP-AUDIT 1
-        DRAFT 2
-        WAITING-FOR-FIRST-AUDIT 3
-        WAITING-FOR-FINAL-AUDIT 4
-        ACCEPTED 5
-        SPECIAL 6))
+(sequential-enum ErrorCode
+                 ERROR-404
+                 ERROR-500
+                 NOT-AUTHORIZED
+                 TOKEN-NOT-FOUND
+                 INTERFACE-ERROR
+                 RESPONSE-ERROR
+                 NO-RELEVANT-DATA
+                 USER-NOT-FOUND
+                 TTYD-NOT-SUPPORTED
+                 TTYD-RESTART
+                 TTYD-FAILS
+                 LOGIN-FREQUENTLY
+                 INCORRECT-PASSWORD
+                 BAD-PASSWORD
+                 INCORRECT-OLD-PASSWORD
+                 NO-ACCESS-TO-OTHER-CLASSES)
 
-(defclass NoticeType [IntEnum]
-  (setv USER-NOTICE 1
-        CLASS-NOTICE 2
-        SCHOOL-NOTICE 3))
+(sequential-enum VolType
+                 INSIDE
+                 OUTSIDE
+                 LARGE)
+
+(sequential-enum VolStatus
+                 UNAUDITED 
+                 AUDITED 
+                 REJECTED 
+                 FINISHED 
+                 DEPRECATED)
+
+(sequential-enum ThoughtStatus
+                 WAITING-FOR-SIGNUP-AUDIT
+                 DRAFT
+                 WAITING-FOR-FIRST-AUDIT
+                 WAITING-FOR-FINAL-AUDIT
+                 ACCEPTED
+                 SPECIAL)
+
+(sequential-enum NoticeType
+                 USER-NOTICE
+                 CLASS-NOTICE
+                 SCHOOL-NOTICE)
 
 (defclass Categ [IntFlag]
   (setv NONE 1
