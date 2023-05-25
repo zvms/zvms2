@@ -6,7 +6,7 @@ export const toasts = {
     //console.log(`%c${new Date()}\n${msg}`, 'color: #ecf0f1; background: #e74c3c')
     return Swal.fire({
       title: "错误",
-      text: msg || "未知错误",
+      text: msg,
       icon: "error",
       toast: true,
       position: "bottom-end",
@@ -18,7 +18,7 @@ export const toasts = {
     //console.log(`%c${new Date()}\n${msg}`, 'color: #ecf0f1; background: #2ecc71')
     return Swal.fire({
       title: "成功",
-      text: msg || "操作完成",
+      text: msg,
       icon: "success",
       toast: true,
       position: "bottom-end",

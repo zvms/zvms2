@@ -125,19 +125,6 @@ const router = createRouter({
       },
     },
     {
-      path: "/notice/create",
-      name: "noticeCreate",
-      component: () => import("../views/notice/index.vue"),
-      meta: {
-        authed: createHasAuth(Categ.System | Categ.Manager),
-        nav: {
-          priority: 6,
-          title: "创建通知",
-          icon: "mdi-message-draw",
-        },
-      },
-    },
-    {
       path: "/modify/management",
       name: "management",
       component: () => import("../views/manage/index.vue"),

@@ -297,6 +297,7 @@
     "targets": [
         "number"
     ],
+    "anonymous": "boolean",
     "title": "string",
     "content": "string",
     "deadtime": "string"
@@ -318,6 +319,7 @@
     "targets": [
         "number"
     ],
+    "anonymous": "boolean",
     "title": "string",
     "content": "string",
     "deadtime": "string"

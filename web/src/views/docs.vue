@@ -5,19 +5,11 @@
     <h1>{{ currentDoc.title }}</h1>
 
     <v-list density="compact">
-      <v-list-item
-        v-if="currentDoc.parent"
-        prepend-icon="mdi-file-document-outline"
-        @click="goBack"
-      >
+      <v-list-item v-if="currentDoc.parent" prepend-icon="mdi-arrow-u-left-top" @click="goBack">
         <span class="link-tip">返回</span> {{ currentDoc.parent!.title }}
       </v-list-item>
-      <v-list-item
-        prepend-icon="mdi-file-document-outline"
-        v-for="c in currentDoc.children"
-        @click="gotoDoc(c.urlPath)"
-      >
-        <span class="link-tip"></span> {{ c.title }}
+      <v-list-item prepend-icon="mdi-file-document-outline" v-for="c in currentDoc.children" @click="gotoDoc(c.urlPath)">
+        {{ c.title }}
       </v-list-item>
     </v-list>
 

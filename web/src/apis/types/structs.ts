@@ -101,7 +101,8 @@ export interface NoticeBody{
     deadtime: string
 }
 export interface Notice extends NoticeBody{
-    targets: Array<number>
+    targets: Array<number>,
+    anonymous: boolean
 }
 export interface SchoolNotice extends NoticeBody{
     anonymous: boolean

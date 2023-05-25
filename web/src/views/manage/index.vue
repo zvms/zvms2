@@ -18,6 +18,8 @@
 import ModifyPwd from "./modify-pwd.vue";
 import ImportTime from "./import-time.vue";
 import ViewReport from "./view-report.vue";
+import CreateSchool from "../manage/notice-school.vue";
+import CreateUser from "../manage/notice-user.vue";
 
 export default {
   name: "management",
@@ -43,6 +45,16 @@ export default {
           name: "查看反馈",
           id: "view-report",
           component: ViewReport,
+        },
+        {
+          name: "创建全校通知",
+          id: "create-school",
+          component: CreateSchool,
+        },
+        {
+          name: "创建个人通知",
+          id: "create-user",
+          component: CreateUser,
         },
       ];
     },

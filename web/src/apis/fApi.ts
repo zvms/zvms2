@@ -413,12 +413,14 @@ export class ForegroundApi {
    * ### [POST] /notice/send/user
    * #### 权限: Any
    * @param targets
+   * @param anonymous
    * @param title
    * @param content
    * @param deadtime
    */
   sendUserNotice(
     targets: Array<number>,
+    anonymous: boolean,
     title: string,
     content: string,
     deadtime: string
@@ -428,6 +430,7 @@ export class ForegroundApi {
       "POST",
       `/notice/send/user`, {
         targets,
+        anonymous,
         title,
         content,
         deadtime
@@ -439,12 +442,14 @@ export class ForegroundApi {
    * ### [POST] /notice/send/class
    * #### 权限: Any
    * @param targets
+   * @param anonymous
    * @param title
    * @param content
    * @param deadtime
    */
   sendClassNotice(
     targets: Array<number>,
+    anonymous: boolean,
     title: string,
     content: string,
     deadtime: string
@@ -454,6 +459,7 @@ export class ForegroundApi {
       "POST",
       `/notice/send/class`, {
         targets,
+        anonymous,
         title,
         content,
         deadtime

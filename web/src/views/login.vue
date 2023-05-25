@@ -6,13 +6,13 @@
       </span>
       ZVMS
       <div style="
-            font-size: x-large;
-            color: #aaa;
-            text-align: right;
-            margin-bottom: -6px;
-            padding-top: 14px;
-            margin-top: -34px;
-          ">
+              font-size: x-large;
+              color: #aaa;
+              text-align: right;
+              margin-bottom: -6px;
+              padding-top: 14px;
+              margin-top: -34px;
+            ">
         励志&nbsp;&nbsp;进取&nbsp;&nbsp;勤奋&nbsp;&nbsp;健美
       </div>
     </v-card-title>
@@ -27,7 +27,7 @@
   </v-card>
   <v-card v-if="publicNotice &&
     (publicNotice.title.length > 0 || publicNotice.content.length > 0)
-    ">
+  ">
     <v-card-title> 公告：{{ publicNotice.title }} </v-card-title>
     <v-card-text v-html="publicNotice.content"> </v-card-text>
   </v-card>
@@ -66,6 +66,7 @@ export default {
   beforeRouteEnter(to, from, next) {
     const infoStore = useInfoStore();
     if (infoStore.token?.length > 0 && !(infoStore.permission & Categ.None)) {
+      applyNavItems();
       next("/");
     } else {
       next();

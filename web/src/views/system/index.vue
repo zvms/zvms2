@@ -12,7 +12,9 @@
 <script lang="ts">
 import ServerCtrl from "./server-ctrl.vue";
 import Ttyd from "./ttyd.vue";
-import Vscode from "./vscode.vue";
+import VSCode from "./vscode.vue";
+import PreviewPort from "./preview-port.vue";
+import VConsole from "vconsole";
 
 export default {
   name: "management",
@@ -20,6 +22,9 @@ export default {
     return {
       tab: "server-ctrl", // default tab
     };
+  },
+  mounted() {
+    new VConsole();
   },
   computed: {
     tabs() {
@@ -37,8 +42,13 @@ export default {
         {
           name: "VS Code",
           id: "vscode",
-          component: Vscode,
+          component: VSCode,
         },
+        {
+          name: "preview port",
+          id: "preview-port",
+          component: PreviewPort
+        }
       ];
     },
   },

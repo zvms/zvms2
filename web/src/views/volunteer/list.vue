@@ -3,45 +3,24 @@
     <v-card-title class="pt-0">
       <v-container style="margin-bottom: -30px">
         <v-row>
-          <v-col cols="4" class="pl-3 ma-0">
+          <v-col :cols="canFilterClass ? 4 : 8" class="pl-3 ma-0">
             义工列表
             <v-btn @click="fetchVols" size="xsmall">
               <v-icon icon="mdi-reload" size="xsmall" />
             </v-btn>
           </v-col>
           <v-col cols="4" class="pa-0 ma-0 h-50">
-            <v-select
-              v-model="filter.status"
-              label="筛选状态"
-              :items="statusSelectorItems"
-              prepend-icon="mdi-list-status"
-              item-title="name"
-              item-value="id"
-            />
+            <v-select v-model="filter.status" label="筛选状态" :items="statusSelectorItems" prepend-icon="mdi-list-status"
+              item-title="name" item-value="id" />
           </v-col>
-          <v-col cols="4" class="py-0 ma-0">
-            <v-select
-              v-if="
-                infoStore.permission &
-                (Categ.Manager | Categ.Auditor | Categ.System)
-              "
-              prepend-icon="mdi-account-multiple"
-              v-model="filter.class"
-              label="限定班级"
-              :items="classes"
-              item-title="name"
-              item-value="id"
-            />
+          <v-col v-if="canFilterClass" cols="4" class="py-0 ma-0">
+            <v-select prepend-icon="mdi-account-multiple" v-model="filter.class" label="限定班级" :items="classes"
+              item-title="name" item-value="id" />
           </v-col>
         </v-row>
       </v-container>
     </v-card-title>
-    <data-table
-      fixed-header
-      :headers="headers"
-      :items="volsForTable"
-      @click:row="onRowClick"
-    >
+    <data-table fixed-header :headers="headers" :items="volsForTable" @click:row="onRowClick">
       <template v-slot:body v-if="vols.length === 0">
         <table-placeholder />
       </template>
@@ -62,43 +41,25 @@
       <v-card-title variant="outlined">
         义工 {{ current.vol.name }} 的详细信息
       </v-card-title>
-
       <v-card-text>
-        <vol-info
-          :vol-id="current.singleVol.id"
-          :vol="current.vol"
-          :signup-rollupable="signupRollupable"
-          class="pa-14"
-        />
+        <vol-info :vol-id="current.singleVol.id" :vol="current.vol" :signup-rollupable="signupRollupable" class="pa-14" />
       </v-card-text>
-
       <v-dialog v-if="modDlg" v-model="modDlg">
-        <v-card-text>
-          <vol-modify 
-          :volId="current.singleVol.id"
-          />
-        </v-card-text>
+        <v-card>
+          <v-card-text>
+            <vol-modify :volId="current.singleVol.id" />
+          </v-card-text>
+        </v-card>
       </v-dialog>
-
       <v-card-actions>
-        <v-btn
-          v-for="(item, index) in actions"
-          :key="index"
-          @click="item.onclick"
-        >
+        <v-btn v-for="(item, index) in actions" :key="index" @click="item.onclick">
           {{ item.text }}
         </v-btn>
       </v-card-actions>
     </v-card>
     <v-dialog v-model="thoughtDlg" persistent fullscreen>
-      <ThoughtEditor
-        :stuName="infoStore.username"
-        :volId="current.singleVol.id"
-        :vol="current.vol"
-        :stuId="infoStore.userId"
-        :thought="current.thought!!"
-        @close="thoughtDlg = false"
-      />
+      <ThoughtEditor :stuName="infoStore.username" :volId="current.singleVol.id" :vol="current.vol"
+        :stuId="infoStore.userId" :thought="current.thought!!" @close="thoughtDlg = false" />
     </v-dialog>
   </v-dialog>
 </template>
@@ -210,7 +171,7 @@ export default {
         cls:
           this.infoStore.permission &
             (Categ.Manager | Categ.System | Categ.Auditor) &&
-          this.filter.class !== -1
+            this.filter.class !== -1
             ? this.filter.class
             : undefined,
       })((result) => {
@@ -356,6 +317,10 @@ export default {
       const isThisClassSecretary = false; // (this.infoStore.permission&Categ.Class)&&this.currentVol!.joiners[0]..??;
       return enoughPermission || isHolder || isThisClassSecretary;
     },
+    canFilterClass() {
+      return this.infoStore.permission &
+        (Categ.Manager | Categ.Auditor | Categ.System);
+    },
   },
   watch: {
     "filter.class"() {
@@ -370,7 +335,7 @@ export default {
   margin-bottom: 1em;
 }
 
-.v-card-actions > button {
+.v-card-actions>button {
   min-width: 7em;
   font-size: x-large;
   border: solid 1px currentColor;

@@ -39,7 +39,7 @@ import { NOT_EMPTY, TIME } from "@/utils/validation";
 import { confirm, validateForm } from "@/utils/dialogs";
 
 export default {
-  name: "create",
+  name: "notice-school",
   data() {
     return {
       TIME,

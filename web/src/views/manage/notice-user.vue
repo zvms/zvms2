@@ -41,7 +41,7 @@ import { confirm, validateForm } from "@/utils/dialogs";
 import UseridInput from "@/components/userid-input.vue";
 
 export default {
-  name: "create-user",
+  name: "notice-user",
   components: {
     UseridInput,
   },
@@ -68,6 +68,7 @@ export default {
         let t = [parseInt(this.form.target)];
         fApi.sendUserNotice(
           t,
+          this.form.anonymous,
           this.form.title,
           this.form.content,
           this.form.deadtime
