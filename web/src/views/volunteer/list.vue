@@ -75,6 +75,7 @@
               show-cancel
               @submit="modifyVol"
               @cancel="modifyDlg = false"
+              submit-button-name="保持修改"
             />
           </v-card-text>
         </v-card>
@@ -225,7 +226,8 @@ export default {
           vol,
           volModified: {
             ...vol,
-            time: vol.time.slice(2).replace(/[ :]/g, "-").slice(0,-3),
+            classes: [...vol.classes],
+            time: vol.time.slice(2).replace(/[ :]/g, "-").slice(0, -3),
           },
         };
         this.infoDlg = true;

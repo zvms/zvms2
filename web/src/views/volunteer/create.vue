@@ -4,7 +4,12 @@
       创建{{ advancedOptionsPermission ? "" : "校外" }}义工
     </v-card-title>
     <v-card-text>
-      <vol-editor v-model="vol" primary-style @submit="createVol" />
+      <vol-editor
+        v-model="vol"
+        primary-style
+        @submit="createVol"
+        submit-button-name="创建义工"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -23,7 +28,12 @@ export default {
   data() {
     return {
       vol: {
-        classes: [] as ClassVol[],
+        classes: [
+          {
+            id: NaN,
+            max: "" as any,
+          },
+        ] as ClassVol[],
         name: "",
         description: "",
         time: "",
@@ -31,6 +41,9 @@ export default {
         reward: 0,
       } as Volunteer,
     };
+  },
+  created() {
+    this.vol.classes[0].id = this.infoStore.classId;
   },
   methods: {
     createVol() {

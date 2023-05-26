@@ -47,8 +47,8 @@ export default {
         {
           name: "preview port",
           id: "preview-port",
-          component: PreviewPort
-        }
+          component: PreviewPort,
+        },
       ];
     },
   },

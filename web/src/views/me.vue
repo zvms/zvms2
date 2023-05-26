@@ -24,11 +24,11 @@
   <v-card v-if="timeStatVisible">
     <v-card-title> 您在系统上的义工时间 </v-card-title>
     <v-card-text style="font-size: medium">
-      校内义工：{{ insideTime }} 分钟
+      校内义工：{{ insideTime }}
       <br />
-      校外义工：{{ outsideTime }} 分钟
+      校外义工：{{ outsideTime }}
       <br />
-      大型义工：{{ largeTime }} 分钟
+      大型义工：{{ largeTime }}
       <p style="font-size: small">注：不包括纸质义工本上的时间哦。</p>
     </v-card-text>
   </v-card>
@@ -86,6 +86,7 @@ import { fApi, type SingleNotice, type NoticeBody } from "@/apis";
 import { Categ } from "@/apis/types/enums";
 import { mapStores } from "pinia";
 import { applyNavItems } from "@/utils/nav";
+import { timeToHint } from "@/utils/calc";
 import { md5 } from "@/utils/md5";
 import { NOT_EMPTY } from "@/utils/validation";
 import { toasts, validateForm } from "@/utils/dialogs";
@@ -103,9 +104,9 @@ export default {
       curNoticeTitle: "",
       curNoticeText: "",
       notices: [] as SingleNotice[],
-      insideTime: NaN,
-      outsideTime: NaN,
-      largeTime: NaN,
+      insideTime: "加载中...",
+      outsideTime: "加载中...",
+      largeTime: "加载中...",
       pwdDialog: false,
       md5,
       oldPwd: "",
@@ -119,9 +120,9 @@ export default {
     this.fetchNotices();
     if (this.timeStatVisible) {
       fApi.skipOkToast.getStudentStat(this.infoStore.userId)((stat) => {
-        this.insideTime = stat.inside;
-        this.outsideTime = stat.outside;
-        this.largeTime = stat.large;
+        this.insideTime = timeToHint(stat.inside);
+        this.outsideTime = timeToHint(stat.outside);
+        this.largeTime = timeToHint(stat.large);
       });
     }
   },

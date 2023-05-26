@@ -1,16 +1,16 @@
 <template>
   <v-card>
     <v-card-title> 后台管理 </v-card-title>
-    <v-card-text>
-      <v-tabs v-model="tab">
-        <v-tab v-for="t in tabs" :value="t.id"> {{ t.name }} </v-tab>
-      </v-tabs>
-      <v-window v-model="tab" style="font-size: larger">
-        <v-window-item v-for="t in tabs" :value="t.id">
+    <v-tabs v-model="tab">
+      <v-tab v-for="t in tabs" :value="t.id"> {{ t.name }} </v-tab>
+    </v-tabs>
+    <v-window v-model="tab" style="font-size: 18px">
+      <v-window-item v-for="t in tabs" :value="t.id">
+        <v-container>
           <component :is="t.component" />
-        </v-window-item>
-      </v-window>
-    </v-card-text>
+        </v-container>
+      </v-window-item>
+    </v-window>
   </v-card>
 </template>
 
@@ -18,8 +18,8 @@
 import ModifyPwd from "./modify-pwd.vue";
 import ImportTime from "./import-time.vue";
 import ReportList from "./report-list.vue";
-import CreateSchool from "../manage/notice-school.vue";
-import CreateUser from "../manage/notice-user.vue";
+import CreateSchool from "./notice-school.vue";
+import CreateUser from "./notice-user.vue";
 import NoticeList from "./notice-list.vue";
 
 export default {

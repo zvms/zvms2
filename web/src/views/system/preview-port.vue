@@ -1,9 +1,10 @@
 <template>
-  <br/>
-  <v-text-field v-model.number="port" />
-  <a :href="url">
-    <v-btn color="primary" class="submit">PREVIEW</v-btn>
-  </a>
+  <v-container>
+    <v-text-field v-model.number="port" />
+    <a :href="url">
+      <v-btn color="primary" class="submit">PREVIEW</v-btn>
+    </a>
+  </v-container>
 </template>
 <script lang="ts">
 import { serverIP } from "@/plugins/axios";

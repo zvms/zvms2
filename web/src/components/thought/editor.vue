@@ -89,9 +89,9 @@
     </v-card-text>
     <v-card-actions>
       <v-btn v-if="isThoughtModifiable" @click="submitThought">提交</v-btn>
-      <v-btn @click="maySaveThoughtAndClose"
-        >{{ isThoughtModifiable ? "保存并" : "" }}关闭</v-btn
-      >
+      <v-btn @click="maySaveThoughtAndClose">
+        {{ isThoughtModifiable ? "保存并" : "" }}关闭
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>

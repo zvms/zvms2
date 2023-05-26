@@ -111,7 +111,7 @@
         :class="primaryStyle ? 'submit' : ''"
         @click="submit"
       >
-        保存义工
+        {{ submitButtonName }}
       </v-btn>
       <v-btn v-if="showCancel" @click="$emit('cancel')"> 取消 </v-btn>
     </v-card-actions>
@@ -142,6 +142,10 @@ export default {
     primaryStyle: {
       type: Boolean,
       default: () => false,
+    },
+    submitButtonName: {
+      type: String,
+      required: true,
     },
   },
   emits: ["update:modelValue", "submit", "cancel"],
