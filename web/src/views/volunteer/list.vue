@@ -10,17 +10,34 @@
             </v-btn>
           </v-col>
           <v-col cols="4" class="pa-0 ma-0 h-50">
-            <v-select v-model="filter.status" label="筛选状态" :items="statusSelectorItems" prepend-icon="mdi-list-status"
-              item-title="name" item-value="id" />
+            <v-select
+              v-model="filter.status"
+              label="筛选状态"
+              :items="statusSelectorItems"
+              prepend-icon="mdi-list-status"
+              item-title="name"
+              item-value="id"
+            />
           </v-col>
           <v-col v-if="canFilterClass" cols="4" class="py-0 ma-0">
-            <v-select prepend-icon="mdi-account-multiple" v-model="filter.class" label="限定班级" :items="classes"
-              item-title="name" item-value="id" />
+            <v-select
+              prepend-icon="mdi-account-multiple"
+              v-model="filter.class"
+              label="限定班级"
+              :items="classes"
+              item-title="name"
+              item-value="id"
+            />
           </v-col>
         </v-row>
       </v-container>
     </v-card-title>
-    <data-table fixed-header :headers="headers" :items="volsForTable" @click:row="onRowClick">
+    <data-table
+      fixed-header
+      :headers="headers"
+      :items="volsForTable"
+      @click:row="onRowClick"
+    >
       <template v-slot:body v-if="vols.length === 0">
         <table-placeholder />
       </template>
@@ -42,24 +59,45 @@
         义工 {{ current.vol.name }} 的详细信息
       </v-card-title>
       <v-card-text>
-        <vol-info :vol-id="current.singleVol.id" :vol="current.vol" :signup-rollupable="signupRollupable" class="pa-14" />
+        <vol-viewer
+          :vol-id="current.singleVol.id"
+          :vol="current.vol"
+          :signup-rollupable="signupRollupable"
+          class="pa-14"
+        />
       </v-card-text>
-      <v-dialog v-if="modDlg" v-model="modDlg">
+      <v-dialog v-model="modifyDlg">
         <v-card>
+          <v-card-title> 修改义工 </v-card-title>
           <v-card-text>
-            <vol-modify :volId="current.singleVol.id" />
+            <vol-editor
+              v-model="current.volModified"
+              show-cancel
+              @submit="modifyVol"
+              @cancel="modifyDlg = false"
+            />
           </v-card-text>
         </v-card>
       </v-dialog>
       <v-card-actions>
-        <v-btn v-for="(item, index) in actions" :key="index" @click="item.onclick">
+        <v-btn
+          v-for="(item, index) in actions"
+          :key="index"
+          @click="item.onclick"
+        >
           {{ item.text }}
         </v-btn>
       </v-card-actions>
     </v-card>
     <v-dialog v-model="thoughtDlg" persistent fullscreen>
-      <ThoughtEditor :stuName="infoStore.username" :volId="current.singleVol.id" :vol="current.vol"
-        :stuId="infoStore.userId" :thought="current.thought!!" @close="thoughtDlg = false" />
+      <thought-editor
+        :stuName="infoStore.username"
+        :volId="current.singleVol.id"
+        :vol="current.vol"
+        :stuId="infoStore.userId"
+        :thought="current.thought!!"
+        @close="thoughtDlg = false"
+      />
     </v-dialog>
   </v-dialog>
 </template>
@@ -74,9 +112,10 @@ import {
   type SingleVolunteer,
   type ThoughtInfoResponse,
   type VolunteerInfoResponse,
+  type Volunteer,
 } from "@/apis";
 import { Categ, getVolStatusName } from "@/apis/types/enums";
-import VolInfo from "@/components/vol/viewer.vue";
+import VolViewer from "@/components/vol/viewer.vue";
 import { useInfoStore, useLoadingStore } from "@/stores";
 import { getVolStatusDisplayText } from "@/utils/calc";
 import { confirm } from "@/utils/dialogs";
@@ -84,7 +123,7 @@ import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import ThoughtEditor from "@/components/thought/editor.vue";
 import TablePlaceholder from "@/components/table-placeholder.vue";
-import VolModify from "@/components/vol/editor.vue";
+import VolEditor from "@/components/vol/editor.vue";
 
 interface Action {
   text: string;
@@ -93,8 +132,8 @@ interface Action {
 
 export default {
   components: {
-    VolModify,
-    VolInfo,
+    VolViewer,
+    VolEditor,
     DataTable,
     ThoughtEditor,
     TablePlaceholder,
@@ -139,12 +178,12 @@ export default {
         singleVol: SingleVolunteer;
         vol: VolunteerInfoResponse;
         thought?: ThoughtInfoResponse;
+        volModified: Volunteer;
       },
       picsId: "",
       infoDlg: false,
       thoughtDlg: false,
-      tab: "one",
-      modDlg: false,
+      modifyDlg: false,
     };
   },
   beforeMount() {
@@ -164,14 +203,14 @@ export default {
       this.filter.class = -1;
     },
     fetchVols() {
-      this.modDlg = false;
+      this.modifyDlg = false;
       this.infoDlg = false;
       this.thoughtDlg = false;
       fApi.skipOkToast.listVolunteers({
         cls:
           this.infoStore.permission &
             (Categ.Manager | Categ.System | Categ.Auditor) &&
-            this.filter.class !== -1
+          this.filter.class !== -1
             ? this.filter.class
             : undefined,
       })((result) => {
@@ -184,6 +223,10 @@ export default {
         this.current = {
           singleVol: item,
           vol,
+          volModified: {
+            ...vol,
+            time: vol.time.slice(2).replace(/[ :]/g, "-").slice(0,-3),
+          },
         };
         this.infoDlg = true;
       });
@@ -197,9 +240,19 @@ export default {
         this.thoughtDlg = true;
       });
     },
-    // modifyVol() {
-    //   this.
-    // }
+    modifyVol() {
+      fApi.modifyVolunteer(
+        this.current!.singleVol.id,
+        this.current!.volModified.classes,
+        this.current!.volModified.name,
+        this.current!.volModified.description,
+        this.current!.volModified.time,
+        this.current!.volModified.type,
+        this.current!.volModified.reward
+      )((_result) => {
+        this.fetchVols();
+      });
+    },
   },
   computed: {
     ...mapStores(useInfoStore, useLoadingStore),
@@ -268,7 +321,7 @@ export default {
         result.push({
           text: "修改义工",
           onclick: () => {
-            this.modDlg = true;
+            this.modifyDlg = true;
           },
         });
       }
@@ -318,8 +371,10 @@ export default {
       return enoughPermission || isHolder || isThisClassSecretary;
     },
     canFilterClass() {
-      return this.infoStore.permission &
-        (Categ.Manager | Categ.Auditor | Categ.System);
+      return (
+        this.infoStore.permission &
+        (Categ.Manager | Categ.Auditor | Categ.System)
+      );
     },
   },
   watch: {
@@ -335,7 +390,7 @@ export default {
   margin-bottom: 1em;
 }
 
-.v-card-actions>button {
+.v-card-actions > button {
   min-width: 7em;
   font-size: x-large;
   border: solid 1px currentColor;

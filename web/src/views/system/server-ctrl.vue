@@ -1,8 +1,8 @@
 <template>
+  <br/>
   <v-btn class="ma-30" @click="restartBackend">
     <span style="font-size: x-large"> Restart backend </span>
   </v-btn>
-  <br />
 </template>
 <script lang="ts">
 import { fApi } from "@/apis";

@@ -17,9 +17,10 @@
 <script lang="ts">
 import ModifyPwd from "./modify-pwd.vue";
 import ImportTime from "./import-time.vue";
-import ViewReport from "./view-report.vue";
+import ReportList from "./report-list.vue";
 import CreateSchool from "../manage/notice-school.vue";
 import CreateUser from "../manage/notice-user.vue";
+import NoticeList from "./notice-list.vue";
 
 export default {
   name: "management",
@@ -44,7 +45,7 @@ export default {
         {
           name: "查看反馈",
           id: "view-report",
-          component: ViewReport,
+          component: ReportList,
         },
         {
           name: "创建全校通知",
@@ -55,6 +56,11 @@ export default {
           name: "创建个人通知",
           id: "create-user",
           component: CreateUser,
+        },
+        {
+          name: "查看已发通知",
+          id: "report-list",
+          component: NoticeList,
         },
       ];
     },

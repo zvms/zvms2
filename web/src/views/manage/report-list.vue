@@ -6,21 +6,22 @@
     @click:row="onRowClick"
   >
     <template v-slot:body v-if="reports.length === 0">
-      <p class="text-center">是空的~</p>
+      <table-placeholder />
     </template>
   </data-table>
 
   <v-dialog v-model="dialog">
     <v-card>
-      <v-card-title
-        >反馈信息&nbsp;&nbsp;&nbsp;from <v-chip
+      <v-card-title>
+        反馈信息&nbsp;&nbsp;&nbsp;from
+        <v-chip
           label
           small
           @click="showStuInfo(reports[currentReport].reporter)"
         >
-          {{ reports[currentReport].reporterName }} </v-chip
-        ></v-card-title
-      >
+          {{ reports[currentReport].reporterName }}
+        </v-chip>
+      </v-card-title>
       <v-card-text>{{ reports[currentReport].content }}</v-card-text>
       <v-dialog v-model="stuInfoDlg">
         <v-card>
@@ -35,14 +36,10 @@
 </template>
 
 <script lang="ts">
-import {
-  fApi,
-  type FetchReportsResponse,
-  type SingleReport,
-  type UserInfoResponse,
-} from "@/apis";
+import { fApi, type SingleReport, type UserInfoResponse } from "@/apis";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import StuInfo from "@/components/stu-info.vue";
+import TablePlaceHolder from "@/components/table-placeholder.vue";
 
 type DetailedSingleReport = SingleReport & {
   index: number;
@@ -50,9 +47,10 @@ type DetailedSingleReport = SingleReport & {
 };
 
 export default {
-  name: "view-report",
+  name: "report-list",
   components: {
     DataTable,
+    TablePlaceHolder,
   },
   data() {
     return {

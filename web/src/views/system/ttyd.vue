@@ -1,4 +1,5 @@
 <template>
+  <br/>
   <v-btn @click="restart">Restart ttyd</v-btn>
   <v-btn @click="reload">Reload iframe</v-btn>
   <br />

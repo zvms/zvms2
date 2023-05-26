@@ -7,8 +7,8 @@
         <span class="f">V</span>olunteer <span class="f">M</span>anagement
         <span class="f">S</span>ystem
       </p>
-      <img src="https://img.shields.io/github/stars/zvms/zvms?logo=github" class="mx-4" />
-      <img src="https://gitee.com/zvms/zvms/badge/star.svg?theme=dark" />
+      <img src="https://img.shields.io/github/stars/zvms/zvms?logo=github" title="github.com/zvms/zvms" class="mx-4" />
+      <img src="https://gitee.com/zvms/zvms/badge/star.svg?theme=dark" title="gitee.com/zvms/zvms" />
     </v-card-text>
   </v-card>
   <v-card>
@@ -62,8 +62,8 @@
 </template>
 
 <script lang="ts">
-import { NOT_EMPTY } from "../utils/validation";
-import { Categ, fApi } from "../apis";
+import { NOT_EMPTY } from "@/utils/validation";
+import { Categ, fApi } from "@/apis";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { toasts, validateForm } from "@/utils/dialogs";
@@ -74,7 +74,6 @@ import {
   type Contributor,
 } from "@/utils/contributors";
 import { serverIP } from "@/plugins/axios";
-import iconUrl from "@/assets/favicon.ico";
 
 export default {
   name: "report",
@@ -90,7 +89,6 @@ export default {
       contributorsV1,
       contributorsV2,
       contributorsOther,
-      iconUrl,
     };
   },
   methods: {

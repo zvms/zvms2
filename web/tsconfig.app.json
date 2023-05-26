@@ -22,6 +22,7 @@
     ],
     "allowJs": true,
     "strict": true,
-    "importsNotUsedAsValues": "remove"
+    "importsNotUsedAsValues": "remove",
+    "resolvePackageJsonExports": true
   }
 }

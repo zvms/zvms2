@@ -26,7 +26,9 @@ code {
 }
 
 button.submit {
-  border: solid 1px currentColor;
+  font-size: large;
+  color: black !important;
+  border: solid 1px rgb(var(--v-theme-color3));
 }
 
 .v-card {
