@@ -28,12 +28,7 @@ export default {
   data() {
     return {
       vol: {
-        classes: [
-          {
-            id: NaN,
-            max: "" as any,
-          },
-        ] as ClassVol[],
+        classes: [] as ClassVol[],
         name: "",
         description: "",
         time: "",
@@ -43,7 +38,12 @@ export default {
     };
   },
   created() {
-    this.vol.classes[0].id = this.infoStore.classId;
+    if (!this.advancedOptionsPermission) {
+      this.vol.classes.push({
+        id: this.infoStore.classId,
+        max: "" as any,
+      });
+    }
   },
   methods: {
     createVol() {
