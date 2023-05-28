@@ -18,7 +18,7 @@
         zvms.res :as res
         zvms.views
         zvms.typing *
-        zvms.apilib [Api])
+        zvms.apilib [Api convention-convert])
 
 (defn write-file [file-name #* content]
   (with [f (open file-name "w" :encoding "utf-8")]
@@ -95,26 +95,28 @@ export function get" name "Name(id: " name "): string {
       Object.module "structs.")
 
 (defn gen-url [api]
-  (rule-to-url.sub rule-to-url-sub api.rule))
-
-(defn has-params? [api]
-  (or api.url-params (not (isinstance api.params Any))))
+  (.join "" (gfor d (re.split r"(\<.+?\>)" api.rule)
+             :if d 
+             (if (and (d.startswith "<") (d.endswith ">"))
+               (+ "${"(convention-convert (. re (match r"\<(?:int:)?(.+?)\>" d) (group 1)) 'snake 'camel) "}")
+               d))))
 
 (write-file (get config "apis")
-            (rule-methods-block.sub (+ (for/join "" [api Api.apis]
+            (rule-methods-block.sub (+ (for/join "" [api Api.apis
+                                                     :setv has-params? (or api.url-params (not (isinstance api.params Any)))]
                                                  "
   /**" (if (is api.doc None) "" (+ "
    * ## " api.doc)) "
    * ### [" api.method "] " api.rule "
-   * #### 权限: " (.join " | " (auth->string api.auth)) (if (not (has-params? api)) "" 
+   * #### 权限: " (.join " | " (auth->string api.auth)) (if (not has-params?) "" 
                                                           (+ "\n" (for/join "\n" [name (chain api.url-params (api.params.as-params))] 
 "   * @param " name))) "
    */
-  " api.name "(" (if (not (has-params? api)) "" 
+  " api.name "(" (if (not has-params?) "" 
                                                       (+ "\n" (for/join ",\n" [[name type] (chain (api.url-params.items) (.items (api.params.as-params)))] 
  "    " name ": " type) "
   ")) "): ForegroundApiRunner<" (api.returns.render) "> {
-    return createForegroundApiRunner(" (if (not (has-params? api))
+    return createForegroundApiRunner(" (if (not has-params?)
                                          (+ "this, \"" api.method "\", `" (gen-url api) "`")
                                          (+ "
       this,
@@ -122,14 +124,10 @@ export function get" name "Name(id: " name "): string {
       `" (gen-url api) (let [params (api.params.as-params)
                              args (if (isinstance api.params Any) ""
                                       (for/join ",\n" [arg (api.params.as-params)]
-"        " arg))] (if (= api.method "POST") 
-                                                                    (if params (+ "`, {
+"        " arg))] (if params (+ "`, {
 " args "
       }") "`,
-      {}")
-                                                                    (if params (+ "?` + toURLSearchParams(
-" args "
-      )") "`"))) "
+      {}")) "
     ")) ");
   }
 ") "

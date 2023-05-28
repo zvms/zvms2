@@ -6,3 +6,4 @@ pyjwt
 tornado
 hy
 PyYaml
+requirements

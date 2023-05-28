@@ -1,9 +1,10 @@
 (import flask-sqlalchemy *
         sqlalchemy *
         zvms.util [inexact-now]
-        zvms.res [ErrorCode Categ])
+        zvms.res [ErrorCode Categ]
+        zvms.apilib [ZvmsError])
 
-(require zvms.util [defmth select-value])
+(require zvms.util [defmth select])
 
 (eval-when-compile
  (import zvms.util [flatten1]))
@@ -189,21 +190,37 @@
    [status SmallInteger]
    [thought (String 1024)]
    [reason (String 64)]
-   [reward Integer]])
+   [reward Integer]]
+  
+  (defn [property] stu []
+    (Student.query.get self.stu-id))
+  
+  (defn [property] vol []
+    (Volunteer.query.get self.vol-id))
+  
+  (defn [property] pics []
+    (select (ThoughtPic :stu-id self.stu-id :vol-id self.vol-id)
+            pic-id as id
+            select pic
+              hash
+              extension as type)))
 
 (defmodel ClassVol
   class-vol
 
   [[vol-id Integer :primary-key True :name "volunteer"]
    [class-id Integer :primary-key True :name "class"]
-   [max Integer]])
+   [max Integer]]
+  
+  (defn [property] now []
+    (sum (map (fn [sv] (= sv.stu.class-id self.class-id)) (StuVol.query.filter-by :vol-id self.vol-id)))))
 
 (defmodel Picture
   picture
 
-  [[vol-id Integer :primary-key True :name "volunteer"]
+  [[identifier (String 32) :primary-key True]
+   [vol-id Integer :primary-key True :name "volunteer"]
    [stu-id Integer :primary-key True :name "student"]
-   [hash (String 32)]
    [extension (String 5)]])
 
 (defmodel UserNotice
@@ -232,4 +249,9 @@
    [content (String 255)]])
 
 (defn auth-class [class token-data]
-  (when (and (!= class (:cls token-data)) (not (& (:auth token-data) Categ.SYSTEM)))))
+  (when (and (!= class (:cls token-data)) (not (& (:auth token-data) Categ.SYSTEM)))
+    (raise (ZvmsError ErrorCode.CLASS-NOT-PERMITTED))))
+
+(defn auth-self [id token-data]
+  (when (and (!= id (:id token-data)) (not (& (:auth token-data) Categ.SYSTEM)))
+    (raise ZvmsError ErrorCode.NOT-AUTHORIZED)))

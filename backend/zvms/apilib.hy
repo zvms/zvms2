@@ -163,7 +163,11 @@
               (get Api.structs ann)
               (Enum (getattr res ann)))))
     [of list generic-param]
+      :if (and (= of 'of) (= list 'list))
       (Array (annotations->params generic-param))
+    [of Optional param]
+      :if (and (= of 'of) (= Optional 'Optional))
+      (Union #((annotations->params param) Null))
     [| #* rest]
       (let [metadata []
             union-elts []]
@@ -214,7 +218,7 @@
             ~@params) 
           '...)
        (defn ~name [#^TokenData token-data 
-                    ~@(gfor [name type] (url-params.items) `(annotate ~type ~(hy.models.Symbol name))) 
+                    ~@(gfor [name type] (url-params.items) `(annotate ~(hy.models.Symbol name) ~type)) 
                     ~@params]
          (import zvms.models [db insert success error ~@(:models options)])
          ~@body)

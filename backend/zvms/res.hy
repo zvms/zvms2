@@ -26,7 +26,17 @@
                  INCORRECT-OLD-PASSWORD
                  NO-ACCESS-TO-OTHER-CLASSES
                  CLASS-NOT-FOUND
-                 VOLUNTEER-MEMBERS-OVERFLOWN)
+                 VOLUNTEER-MEMBERS-OVERFLOWN
+                 VOLUNTEER-NOT-FOUND
+                 VOLUNTEER-NOT-AUDITED
+                 VOLUNTEER-FINISHED
+                 STUDENT-ALREADY-JOINED
+                 CLASS-NOT-PERMITTED
+                 VOLUNTEER-LIMITS-EXCEEDED
+                 CANT-BE-SUBMITTED
+                 NO-DUPLICATED-SUBMIT
+                 PICTURE-UPLOAD-FAILED
+                 BASE64-PARSING-ERROR)
 
 (sequential-enum VolType
                  INSIDE

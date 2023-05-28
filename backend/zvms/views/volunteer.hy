@@ -138,7 +138,7 @@
                           :status ThoughtStatus.DRAFT
                           :thought ""
                           :reward -1)))))
-    (success )))
+    (success)))
 
 (defmacro audit-volunteer-api [rule doc name status message]
   `(defapi [:rule ~rule
@@ -165,7 +165,7 @@
 (audit-volunteer-api "/volunteer/<int:id>/audit/accept"
                      "审核通过义工"
                      accept-volunteer
-                     ACCEPTED
+                     AUDITED
                      "您的义工{}已过审")
 
 (audit-volunteer-api "/volunteer/<int:id>/audit/reject"
@@ -189,7 +189,7 @@
                             #^(of list SpecialVolunteerJoiner) joiners]
   (let [id (. (insert (Volunteer :name name
                                  :description ""
-                                 :status VolStatus.ACCEPTED
+                                 :status VolStatus.AUDITED
                                  :holder-id (:id token-data)
                                  :time (inexact-now)
                                  :type type

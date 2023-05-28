@@ -51,7 +51,13 @@
        (yield-from i)
        (yield i)))))
 
-(import datetime [datetime])
+(import datetime [datetime]
+        hashlib)
+
+(defn md5ify [#^bytes data]
+  (let [md5 (hashlib.md5)]
+    (md5.update data)
+    (md5.hexdigest)))
 
 (defn inexact-now []
   (.replace (datetime.now) :microsecond 0))
@@ -106,3 +112,7 @@
   (let [sym (hy.gensym)]
     `(lfor ~sym ~iterable
            (select ~sym ~@args))))
+
+(defmacro with-name [model]
+  `(fn [id]
+    (. ~model query (get id) name)))
