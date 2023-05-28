@@ -100,7 +100,7 @@
   user
 
   [[id Integer :primary-key True :autoincrement True]
-   [name (String 5)]
+   [name (String 5) :unique True]
    [class-id Integer :name "class"]
    [pwd (String 32)]
    [auth Integer]]
@@ -135,8 +135,8 @@
    [title (String 32)]
    [content (String 1024)]
    [sender Integer]
-   [sendtime DateTime]
-   [deadtime DateTime]]
+   [deadtime DateTime] 
+   [sendtime DateTime]]
   (defmth on-delete []
     (. UserNotice query (filter-by :notice-id self.id) (delete))
     (. ClassNotice query (filter-by :notice-id self.id) (delete))
@@ -148,8 +148,8 @@
   [[id Integer :primary-key True :autoincrement True]
    [name (String 32)]
    [description (String 1024)]
-   [status SmallInteger]
    [holder-id Integer :name "holder"]
+   [status SmallInteger]
    [time DateTime]
    [type SmallInteger]
    [reward Integer]]
@@ -220,8 +220,7 @@
 
   [[identifier (String 32) :primary-key True]
    [vol-id Integer :primary-key True :name "volunteer"]
-   [stu-id Integer :primary-key True :name "student"]
-   [extension (String 5)]])
+   [stu-id Integer :primary-key True :name "student"]])
 
 (defmodel UserNotice
   user-notice
