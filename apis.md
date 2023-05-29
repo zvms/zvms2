@@ -857,7 +857,7 @@
 #### 6.7 zvms.views.thought
 
 [POST] /thought/<int:volId>/<int:stuId>/audit/final  
-**终审感想(义管会)**  
+**审核感想(义管会)**  
 
 参数:
 ```json

@@ -10,13 +10,24 @@
             </v-btn>
           </v-col>
           <v-col cols="4" class="pa-0 ma-0 h-50">
-            <v-select v-model="filter.status" label="筛选状态" :items="statusSelectorItems" item-title="name" item-value="id"
-              prepend-icon="mdi-list-status" />
+            <v-select
+              v-model="filter.status"
+              label="筛选状态"
+              :items="statusSelectorItems"
+              item-title="name"
+              item-value="id"
+              prepend-icon="mdi-list-status"
+            />
           </v-col>
         </v-row>
       </v-container>
     </v-card-title>
-    <data-table fixed-header :headers="headers" :items="thoughts" @click:row="onRowClick">
+    <data-table
+      fixed-header
+      :headers="headers"
+      :items="thoughts"
+      @click:row="onRowClick"
+    >
       <template v-slot:body v-if="thoughts.length === 0">
         <table-placeholder />
       </template>
@@ -33,11 +44,17 @@
     </data-table>
   </v-card>
   <v-dialog v-model="thoughtDlg" persistent fullscreen>
-    <ThoughtEditor :stuName="infoStore.username" :volId="currentVolId" :vol="currentVol" :stuId="currentThoughtStuId"
-      :thought="currentThought" @close="
+    <ThoughtEditor
+      :stuName="infoStore.username"
+      :volId="currentVolId"
+      :vol="currentVol"
+      :stuId="currentThoughtStuId"
+      :thought="currentThought"
+      @close="
         fetchThoughts();
-      thoughtDlg = false;
-      " />
+        thoughtDlg = false;
+      "
+    />
   </v-dialog>
 </template>
 
@@ -56,13 +73,13 @@ import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import ThoughtEditor from "@/components/thought/editor.vue";
 import { getThoughtStatusDisplayColor } from "@/utils/calc";
-import TablePlaceHolder from "@/components/table-placeholder.vue"
+import TablePlaceholder from "@/components/table-placeholder.vue";
 
 export default {
   components: {
     DataTable,
     ThoughtEditor,
-    TablePlaceHolder,
+    TablePlaceholder,
   },
   data() {
     return {
@@ -159,7 +176,7 @@ export default {
   margin-bottom: 1em;
 }
 
-.v-card-actions>button {
+.v-card-actions > button {
   min-width: 7em;
   font-size: x-large;
   border: solid 1px currentColor;

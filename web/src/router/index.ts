@@ -36,7 +36,7 @@ const router = createRouter({
     {
       path: "/",
       name: "me",
-      component: () => import("../views/me.vue"),
+      component: () => import("@/views/me.vue"),
       meta: {
         authed: loginedAuth,
         nav: {
@@ -49,7 +49,7 @@ const router = createRouter({
     {
       path: "/login",
       name: "login",
-      component: () => import("../views/login.vue"),
+      component: () => import("@/views/login.vue"),
       meta: {
         authed: unloginedAuth,
         nav: {
@@ -62,7 +62,7 @@ const router = createRouter({
     {
       path: "/volunteer/list",
       name: "volunteerList",
-      component: () => import("../views/volunteer/list.vue"),
+      component: () => import("@/views/volunteer/list.vue"),
       meta: {
         authed: loginedAuth,
         nav: {
@@ -75,7 +75,7 @@ const router = createRouter({
     {
       path: "/volunteer/my-thoughts",
       name: "myThoughts",
-      component: () => import("../views/volunteer/my-thoughts.vue"),
+      component: () => import("@/views/volunteer/my-thoughts.vue"),
       meta: {
         authed: createHasAuth(Categ.Student),
         nav: {
@@ -88,7 +88,7 @@ const router = createRouter({
     {
       path: "/volunteer/create",
       name: "volunteerCreate",
-      component: () => import("../views/volunteer/create.vue"),
+      component: () => import("@/views/volunteer/create.vue"),
       meta: {
         authed: loginedAuth,
         nav: {
@@ -101,7 +101,7 @@ const router = createRouter({
     {
       path: "/volunteer/record",
       name: "volunteerRecord",
-      component: () => import("../views/volunteer/record.vue"),
+      component: () => import("@/views/volunteer/record.vue"),
       meta: {
         authed: createHasAuth(Categ.Manager | Categ.System | Categ.Auditor),
         nav: {
@@ -114,7 +114,7 @@ const router = createRouter({
     {
       path: "/volunteer/finalAudit",
       name: "volunteerFinalAudit",
-      component: () => import("../views/volunteer/final-audit.vue"),
+      component: () => import("@/views/volunteer/final-audit.vue"),
       meta: {
         authed: createHasAuth(Categ.System | Categ.Manager | Categ.Auditor),
         nav: {
@@ -127,7 +127,7 @@ const router = createRouter({
     {
       path: "/modify/management",
       name: "management",
-      component: () => import("../views/manage/index.vue"),
+      component: () => import("@/views/manage/index.vue"),
       meta: {
         authed: createHasAuth(Categ.System | Categ.Manager),
         nav: {
@@ -140,7 +140,7 @@ const router = createRouter({
     {
       path: "/docs/:docId",
       name: "docs",
-      component: () => import("../views/docs.vue"),
+      component: () => import("@/views/docs.vue"),
       meta: {
         authed: anyAuth,
         nav: {
@@ -154,7 +154,7 @@ const router = createRouter({
     {
       path: "/about",
       name: "about",
-      component: () => import("../views/about.vue"),
+      component: () => import("@/views/about.vue"),
       meta: {
         authed: anyAuth,
         nav: {
@@ -167,7 +167,7 @@ const router = createRouter({
     {
       path: "/system/",
       name: "system",
-      component: () => import("../views/system/index.vue"),
+      component: () => import("@/views/system/index.vue"),
       meta: {
         authed: createHasAuth(Categ.System),
         nav: {

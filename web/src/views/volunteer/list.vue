@@ -75,7 +75,7 @@
               show-cancel
               @submit="modifyVol"
               @cancel="modifyDlg = false"
-              submit-button-name="保持修改"
+              submit-button-name="保存修改"
             />
           </v-card-text>
         </v-card>
@@ -327,6 +327,18 @@ export default {
           },
         });
       }
+      if (this.infoStore.permission & (Categ.System | Categ.Manager)) {
+        result.push({
+          text: "删除义工",
+          onclick: async () => {
+            if (await confirm("确定删除？此操作不可逆")) {
+              fApi.deleteVolunteer(this.current!.singleVol.id)(() => {
+                this.fetchVols();
+              });
+            }
+          },
+        });
+      }
       result.push({
         text: "关闭",
         onclick: () => {
@@ -337,11 +349,14 @@ export default {
     },
     volsForTable() {
       return this.vols
-        .map((vol) => ({
-          ...vol,
-          statusText: getVolStatusDisplayText(this.infoStore.userId, vol)[0],
-          statusColor: getVolStatusDisplayText(this.infoStore.userId, vol)[1],
-        }))
+        .map((vol) => {
+          const dt = getVolStatusDisplayText(this.infoStore.userId, vol);
+          return {
+            ...vol,
+            statusText: dt[0],
+            statusColor: dt[1],
+          }
+        })
         .filter(
           (v) => this.filter.status === -1 || v.status === this.filter.status
         );

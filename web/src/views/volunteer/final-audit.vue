@@ -40,7 +40,7 @@
       @click:row="onRowClick"
     >
       <template v-slot:body v-if="thoughts.length === 0">
-        <table-placeholder/>
+        <table-placeholder />
       </template>
       <template v-slot:item.name="{ item }">
         <div class="vol-name-in-table">
@@ -145,7 +145,7 @@ export default {
           value: "volName",
           // align: "start",
           sortable: true,
-          width:500
+          width: 500,
         },
         {
           key: "stuName",
@@ -153,7 +153,7 @@ export default {
           value: "stuName",
           // align: "start",
           sortable: true,
-          width:200
+          width: 200,
         },
         { key: "stuId", title: "学号", value: "stuId", width: 200 },
       ],
@@ -196,7 +196,9 @@ export default {
         )((thought) => {
           this.currentVol = volunteer;
           this.currentThoughtData = thought;
-          this.currentReward = volunteer.reward;
+          this.currentReward = this.isAuditing
+            ? volunteer.reward
+            : thought.reward;
           this.dialog = true;
         });
       });

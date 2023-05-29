@@ -39,7 +39,7 @@
 import { fApi, type SingleReport, type UserInfoResponse } from "@/apis";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import StuInfo from "@/components/stu-info.vue";
-import TablePlaceHolder from "@/components/table-placeholder.vue";
+import TablePlaceholder from "@/components/table-placeholder.vue";
 
 type DetailedSingleReport = SingleReport & {
   index: number;
@@ -50,7 +50,7 @@ export default {
   name: "report-list",
   components: {
     DataTable,
-    TablePlaceHolder,
+    TablePlaceholder,
   },
   data() {
     return {
