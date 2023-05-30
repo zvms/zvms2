@@ -53,3 +53,8 @@
 
 ![](https://xhfs4.ztytech.com/CA107011/f58c3cc726f74f18bb9d425c469eabd2.png)
 -->
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/zvms/zvms.svg)](https://starchart.cc/zvms/zvms)
+
