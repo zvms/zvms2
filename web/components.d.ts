@@ -33,6 +33,7 @@ declare module '@vue/runtime-core' {
     VForm: typeof import('vuetify/components')['VForm']
     VIcon: typeof import('vuetify/components')['VIcon']
     VImg: typeof import('vuetify/components')['VImg']
+    VInfiniteScroll: typeof import('vuetify/components')['VInfiniteScroll']
     VList: typeof import('vuetify/components')['VList']
     VListItem: typeof import('vuetify/components')['VListItem']
     VListItemSubtitle: typeof import('vuetify/components')['VListItemSubtitle']
@@ -53,6 +54,7 @@ declare module '@vue/runtime-core' {
     VTextarea: typeof import('vuetify/components')['VTextarea']
     VTextField: typeof import('vuetify/components')['VTextField']
     VThemeProvider: typeof import('vuetify/components')['VThemeProvider']
+    VTooltip: typeof import('vuetify/components')['VTooltip']
     VWindow: typeof import('vuetify/components')['VWindow']
     VWindowItem: typeof import('vuetify/components')['VWindowItem']
   }

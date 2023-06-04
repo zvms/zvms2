@@ -55,7 +55,7 @@ export default {
         this.vol.type,
         this.vol.reward
       )(() => {
-        this.$router.push("/");
+        this.$router.push("/volunteer/list");
       });
     },
   },

@@ -7,8 +7,23 @@
         <span class="f">V</span>olunteer <span class="f">M</span>anagement
         <span class="f">S</span>ystem
       </p>
-      <img src="https://img.shields.io/github/stars/zvms/zvms?logo=github" title="github.com/zvms/zvms" class="mx-4" />
-      <img src="https://gitee.com/zvms/zvms/badge/star.svg?theme=dark" title="gitee.com/zvms/zvms" />
+      <v-img
+        src="https://img.shields.io/github/stars/zvms/zvms?logo=github"
+        width="70"
+        class="my-1"
+      >
+        <v-tooltip activator="parent" location="right">
+          访问github.com/zvms/zvms，给出一个star吧~
+        </v-tooltip>
+      </v-img>
+      <v-img
+        src="https://gitee.com/zvms/zvms/badge/star.svg?theme=dark"
+        width="70"
+      >
+        <v-tooltip activator="parent" location="right">
+          访问gitee.com/zvms/zvms，给出一个star吧~
+        </v-tooltip>
+      </v-img>
     </v-card-text>
   </v-card>
   <v-card>
@@ -16,22 +31,49 @@
     <v-card-text>
       <p style="font-size: larger">
         本项目初版由
-        <v-chip label small class="ma-1" v-for="c in contributorsV1" @click="showContributorInfo(c)">
+        <v-chip
+          label
+          small
+          class="ma-1"
+          v-for="c in contributorsV1"
+          @click="showContributorInfo(c)"
+        >
           {{ c.displayName }}
         </v-chip>
         开发。
         <br />
         新版由
-        <v-chip label small class="ma-1" v-for="c in contributorsV2" @click="showContributorInfo(c)">
+        <v-chip
+          label
+          small
+          class="ma-1"
+          v-for="c in contributorsV2"
+          @click="showContributorInfo(c)"
+        >
           {{ c.displayName }}
         </v-chip>
         开发。
         <br />
         特别感谢:
-        <v-chip label small class="ma-1"
-          @click="showContributorInfo(contributorsOther._7086cmd)">7086cmd</v-chip>的前端初始化配置, 以及<v-chip label small
-          class="ma-1" @click="showContributorInfo(contributorsOther.zsz)">zsz</v-chip>的新版图标设计和<v-chip label small
-          class="ma-1" @click="showContributorInfo(contributorsOther.zjr)">zjr</v-chip>的疯狂测试。
+        <v-chip
+          label
+          small
+          class="ma-1"
+          @click="showContributorInfo(contributorsOther._7086cmd)"
+          >7086cmd</v-chip
+        >的前端初始化配置, 以及<v-chip
+          label
+          small
+          class="ma-1"
+          @click="showContributorInfo(contributorsOther.zsz)"
+          >zsz</v-chip
+        >的新版图标设计和<v-chip
+          label
+          small
+          class="ma-1"
+          @click="showContributorInfo(contributorsOther.zjr)"
+          >zjr</v-chip
+        >的疯狂测试。
       </p>
     </v-card-text>
   </v-card>
@@ -39,7 +81,13 @@
     <v-card-title>反馈</v-card-title>
     <v-card-text>
       <v-form v-model="isFormValid">
-        <v-textarea v-model.trim="report" :rules="rules" label="问题的描述" type="text" prepend-icon="mdi-alert" />
+        <v-textarea
+          v-model.trim="report"
+          :rules="rules"
+          label="问题的描述"
+          type="text"
+          prepend-icon="mdi-alert"
+        />
         <v-btn color="primary" class="submit" @click="submitReport">
           提交
         </v-btn>
@@ -47,11 +95,14 @@
     </v-card-text>
   </v-card>
   <v-card>
-    <iframe v-if="!(infoStore.permission & Categ.None)" :src="`http://${serverIP}:4001`" height="500px" width="1000px">
+    <iframe
+      v-if="!(infoStore.permission & Categ.None)"
+      :src="`http://${serverIP}:4001`"
+      height="500px"
+      width="1000px"
+    >
     </iframe>
-    <p v-else>
-      登录后可以在此处查看镇中天气预报哦
-    </p>
+    <p v-else>登录后可以在此处查看镇中天气预报哦</p>
   </v-card>
   <v-dialog v-model="contributorInfoDlg">
     <v-card>
@@ -80,6 +131,7 @@ export default {
   data() {
     return {
       Categ,
+      toasts,
       serverIP,
       report: "",
       rules: [NOT_EMPTY()],

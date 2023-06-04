@@ -18,6 +18,8 @@ export const contributorsV1 = [
   {
     displayName: "Zecyel",
     infoHtml: `2020级 朱程炀<br/>
+<img src="https://foruda.gitee.com/avatar/1677005889603604423/2133909_zhuchengyang_1604067001.png!avatar200"/>
+<br/>
 Zecyel, SOF-Architect, Zest Programmer.<br/>
 See: github.com/zecyel <img src="https://img.shields.io/badge/-@zecyel-181717?style=for-the-badge&logo=github&logoColor=white"/><br/>
 Star every repo you find!`,
@@ -29,9 +31,9 @@ Star every repo you find!`,
   {
     displayName: "So1aric",
     infoHtml: `<span>2021级 沈乐宸</span><br/>
-    Linux enthusiast.<br/>
+    <a href="http://172.31.2.4:14516">Linux enthusiast.</a><br/>
     <img src="https://img.shields.io/badge/-@So1aric-181717?style=for-the-badge&logo=github&logoColor=white"/><br/>
-    <img src="${slcImage}" width="130"/>`,
+    <img src="${slcImage}" width="130" />`,
   },
   {
     displayName: "Solecour",

@@ -3,7 +3,7 @@
     <userid-input v-model="form.userId" />
     <v-text-field
       v-model="form.newPwd"
-      label="新密码"
+      label="新密码 default: zvms"
       type="password"
       prepend-icon="mdi-lock-outline"
       :rules="rules"
@@ -38,8 +38,8 @@ export default {
     return {
       form: {
         userId: "",
-        newPwd: "",
-        confirmPwd: "",
+        newPwd: "zvms",
+        confirmPwd: "zvms",
       },
       rules: [NOT_EMPTY()],
       isFormValid: false,
@@ -61,7 +61,6 @@ export default {
             this.form.userId = "";
             this.form.newPwd = "";
             this.form.confirmPwd = "";
-
             this.$router.push("/");
           });
         }

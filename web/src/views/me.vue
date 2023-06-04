@@ -3,18 +3,23 @@
     <v-card-title>
       你好,
       <strong>{{ infoStore.username }}</strong>
-      <span style="
-            font-size: x-large;
-            color: #AAA;
-            text-align: right;
-            float: right;
-            transform: translateY(5px);
-          ">
+      <span
+        style="
+          font-size: x-large;
+          color: #aaa;
+          text-align: right;
+          float: right;
+          transform: translateY(5px);
+        "
+      >
         励志&nbsp;&nbsp;进取&nbsp;&nbsp;勤奋&nbsp;&nbsp;健美
       </span>
     </v-card-title>
     <v-card-text>
-      <user-chips :permission="infoStore.permission" :className="infoStore.className" />
+      <user-chips
+        :permission="infoStore.permission"
+        :className="infoStore.className"
+      />
     </v-card-text>
     <v-card-actions>
       <v-btn @click="pwdDialog = true">修改密码</v-btn>
@@ -39,19 +44,32 @@
         <v-icon icon="mdi-reload" size="xsmall" />
       </v-btn>
     </v-card-title>
-    <v-list shaped>
-      <v-col v-if="notices.length === 0"> 没有通知哦 </v-col>
-      <v-list-item v-else color="primary" v-for="(notice, i) in notices" :key="i" @click="showNotice(notice)">
-        <v-list-item-title>
-          <v-icon>mdi-message-text</v-icon>
-          {{ notice.title }}
-        </v-list-item-title>
-        <v-list-item-subtitle>
-          来自:{{ notice.senderName }}&emsp; 发送时间:{{ notice.sendtime }}
-        </v-list-item-subtitle>
-        {{ notice.content }}
-      </v-list-item>
-    </v-list>
+    <p v-if="notices.length === 0">没有通知哦</p>
+    <infinite-scroll
+      v-else
+      :items="displayedNotices"
+      @load="loadNotice"
+      empty-text="没有更多通知了..."
+      style="margin-top: -22px"
+    >
+      <template v-for="notice in displayedNotices" :key="notice.sendtime">
+        <v-list-item @click="showNotice(notice)">
+          <v-list-item-title>
+            <v-icon>mdi-message-text</v-icon>
+            {{ notice.title }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            来自:{{ notice.senderName }}&emsp; 发送时间:{{ notice.sendtime }}
+          </v-list-item-subtitle>
+          {{ notice.content }}
+        </v-list-item>
+      </template>
+      <template v-slot:load-more="{ props }">
+        <v-btn style="border: 1px grey solid" v-bind="props">
+          加载更多通知
+        </v-btn>
+      </template>
+    </infinite-scroll>
   </v-card>
 
   <v-dialog v-model="noticeDialog">
@@ -68,10 +86,27 @@
       <v-card-title>修改密码</v-card-title>
       <v-card-text>
         <v-form v-model="isFormValid">
-          <v-text-field v-model="oldPwd" label="旧密码" type="password" prepend-icon="mdi-lock-outline" :rules="rules" />
-          <v-text-field v-model="newPwd" label="新密码" type="password" prepend-icon="mdi-lock-outline" :rules="rules" />
-          <v-text-field v-model="confirmPwd" label="确认密码" type="password" prepend-icon="mdi-lock-outline"
-            :rules="rules" />
+          <v-text-field
+            v-model="oldPwd"
+            label="旧密码"
+            type="password"
+            prepend-icon="mdi-lock-outline"
+            :rules="rules"
+          />
+          <v-text-field
+            v-model="newPwd"
+            label="新密码"
+            type="password"
+            prepend-icon="mdi-lock-outline"
+            :rules="rules"
+          />
+          <v-text-field
+            v-model="confirmPwd"
+            label="确认密码"
+            type="password"
+            prepend-icon="mdi-lock-outline"
+            :rules="rules"
+          />
           <v-btn class="me-4 submit" @click="modifyPwd"> 确定 </v-btn>
           <v-btn class="me-4 submit" @click="pwdDialog = false"> 取消 </v-btn>
         </v-form>
@@ -92,11 +127,13 @@ import { NOT_EMPTY } from "@/utils/validation";
 import { toasts, validateForm } from "@/utils/dialogs";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
 import PermissionChips from "@/components/user-chips.vue";
+import { VInfiniteScroll as InfiniteScroll } from "vuetify/labs/VInfiniteScroll";
 
 export default {
   name: "me",
   components: {
     PermissionChips,
+    InfiniteScroll,
   },
   data() {
     return {
@@ -104,6 +141,7 @@ export default {
       curNoticeTitle: "",
       curNoticeText: "",
       notices: [] as SingleNotice[],
+      displayedNotices: [] as SingleNotice[],
       insideTime: "加载中...",
       outsideTime: "加载中...",
       largeTime: "加载中...",
@@ -135,6 +173,7 @@ export default {
           receiver: this.infoStore.userId,
         })((result2) => {
           this.notices = [...result1.reverse(), ...result2.reverse()];
+          this.displayedNotices = this.notices.slice(0, 3);
         });
       });
     },
@@ -168,6 +207,19 @@ export default {
           this.pwdDialog = false;
         });
       }
+    },
+    async loadNotice({ done }: any) {
+      const len = this.displayedNotices.length;
+      if (len === this.notices.length) {
+        done("empty");
+        return;
+      }
+      this.displayedNotices.push(...this.notices.slice(len, len + 3));
+      if (len + 3 >= this.notices.length) {
+        done("empty");
+        return;
+      }
+      done("ok");
     },
   },
   computed: {

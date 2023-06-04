@@ -3,7 +3,6 @@ import Swal from "sweetalert2";
 
 export const toasts = {
   error: async (msg: string) => {
-    //console.log(`%c${new Date()}\n${msg}`, 'color: #ecf0f1; background: #e74c3c')
     return Swal.fire({
       title: "错误",
       text: msg,
@@ -15,11 +14,32 @@ export const toasts = {
     });
   },
   success: async (msg: string) => {
-    //console.log(`%c${new Date()}\n${msg}`, 'color: #ecf0f1; background: #2ecc71')
     return Swal.fire({
       title: "成功",
       text: msg,
       icon: "success",
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 4000,
+    });
+  },
+  info: async (msg: string) => {
+    return Swal.fire({
+      title: "信息",
+      text: msg,
+      icon: "info",
+      toast: true,
+      position: "bottom-end",
+      showConfirmButton: false,
+      timer: 4000,
+    });
+  },
+  warning: async (msg: string) => {
+    return Swal.fire({
+      title: "注意",
+      text: msg,
+      icon: "warning",
       toast: true,
       position: "bottom-end",
       showConfirmButton: false,
@@ -41,7 +61,7 @@ export async function confirm(msg: string = "确定操作？"): Promise<boolean>
 }
 export function validateForm(isFormValid: boolean) {
   if (!isFormValid) {
-    toasts.error("请检查表单是否填写正确");
+    toasts.warning("请检查表单是否填写正确");
   }
   return isFormValid;
 }

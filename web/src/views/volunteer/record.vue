@@ -86,7 +86,7 @@
           />
           <v-text-field
             v-model.number="form.reward"
-            :rules="rules"
+            :rules="[IS_DECIMAL(), IS_VAILD(), ...rules]"
             type="text"
             label="记录的时长（分钟）"
             prepend-icon="mdi-clock-time-three-outline"
@@ -102,18 +102,19 @@
 
 <script lang="ts">
 import { fApi, VolType, type SingleUserWithoutAuth } from "@/apis";
-import { NOT_EMPTY, TIME } from "@/utils/validation";
+import { NOT_EMPTY, TIME, IS_DECIMAL, IS_VAILD } from "@/utils/validation";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { fApiNotLoading } from "@/apis/fApi";
-import { timeToHint } from "@/utils/calc";
 import { toasts, validateForm } from "@/utils/dialogs";
 
 export default {
   data() {
     return {
       TIME,
+      IS_VAILD,
+      IS_DECIMAL,
       VolType,
       Categ,
       userNew: "" as any as number,
@@ -137,19 +138,6 @@ export default {
           toasts.error("需至少选择一名成员！");
           return;
         }
-        if (this.form.reward == 114514 || this.form.reward == 1919810) {
-          toasts.error("请不要恶意填写时间！");
-          return;
-        } else if (this.form.reward > 300) {
-          toasts.error(`义工时间过长。有${timeToHint(this.form.reward)}。`);
-          return;
-        } else if (this.form.reward <= 0) {
-          toasts.error("义工时间小于等于0。");
-          return;
-        } else if (this.form.reward <= 5) {
-          toasts.error("义工时间过短，此处的时间单位是分钟。");
-          return;
-        }
         fApi.createAppointedVolunteer(
           this.form.joiners.map((v) => v.id),
           this.form.name,
@@ -158,7 +146,7 @@ export default {
           this.form.type,
           this.form.reward
         )(() => {
-          this.$router.push("/");
+          this.$router.push("/volunteer/list");
         });
       }
     },

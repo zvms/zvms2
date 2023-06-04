@@ -26,3 +26,17 @@ export const TIME = () => (v: any) => {
   }
   return true;
 };
+
+import { timeToHint } from "./calc";
+export const IS_VAILD = () => (v: any) => {
+  if (v == 114514 || v == 1919810) {
+    return "请不要恶意填写时间！";
+  } else if (v > 360) {
+    return `义工时间过长。有${timeToHint(v)}`;
+  } else if (v <= 0) {
+    return "义工时间小于等于0";
+  } else if (v <= 5) {
+    return "义工时间过短，此处的时间单位是分钟";
+  }
+  return true;
+};

@@ -102,7 +102,7 @@ export default {
     async updateKeyTable(remoteUrls: string[]) {
       const table = await this.fetchTable()
       const lastShortKey = table[table.length - 1][0]
-      const shortKey = (parseInt(lastShortKey, 36) + (Math.random() * 400 + 100)).toString(36)
+      const shortKey = (parseInt(lastShortKey, 36) + Math.floor(Math.random() * 400 + 100)).toString(36)
       for (const remoteUrl of remoteUrls) {
         table.push([shortKey, remoteUrl])
       }

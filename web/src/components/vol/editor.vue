@@ -99,7 +99,7 @@
     />
     <v-text-field
       v-model.number="modelValue.reward"
-      :rules="[IS_DECIMAL(), IS_POSITIVE(), ...rules]"
+      :rules="[IS_DECIMAL(), IS_POSITIVE(), IS_VAILD(), ...rules]"
       type.trim="text"
       label="预期时长（分钟）"
       prepend-icon="mdi-clock-time-three-outline"
@@ -121,12 +121,11 @@
 <script lang="ts">
 import { type PropType } from "vue";
 import { fApi, type SingleClass, VolType, type Volunteer } from "@/apis";
-import { IS_DECIMAL, IS_POSITIVE, NOT_EMPTY, TIME } from "@/utils/validation";
+import { IS_DECIMAL, IS_POSITIVE, NOT_EMPTY, TIME, IS_VAILD } from "@/utils/validation";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { toasts, validateForm } from "@/utils/dialogs";
-import { timeToHint } from "@/utils/calc";
 
 export default {
   name: "vol-editor",
@@ -154,6 +153,7 @@ export default {
       TIME,
       IS_DECIMAL,
       IS_POSITIVE,
+      IS_VAILD,
       VolType,
       Categ,
       countNew: "" as any as number,
@@ -222,24 +222,6 @@ export default {
           this.modelValue.classes.length === 0
         ) {
           toasts.error("必须至少选择一个班级。请点击“+”号添加班级");
-          return;
-        }
-        if (
-          this.modelValue.reward == 114514 ||
-          this.modelValue.reward == 1919810
-        ) {
-          toasts.error("请不要恶意填写时间！");
-          return;
-        } else if (this.modelValue.reward > 300) {
-          toasts.error(
-            `义工时间过长。有${timeToHint(this.modelValue.reward)}。`
-          );
-          return;
-        } else if (this.modelValue.reward <= 0) {
-          toasts.error("义工时间小于等于0。");
-          return;
-        } else if (this.modelValue.reward <= 5) {
-          toasts.error("义工时间过短，此处的时间单位是分钟。");
           return;
         }
         this.$emit("submit");
