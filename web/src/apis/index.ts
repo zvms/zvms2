@@ -1,3 +1,2 @@
-export { fApi } from "./fApi";
-
+export * from "./fApi";
 export * from "./types";

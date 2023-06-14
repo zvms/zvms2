@@ -2,7 +2,7 @@ import "core-js/stable/array/at"; // polyfill for Array.prototype.at used in v-d
 
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import piniaPluginPersist from "pinia-plugin-persist";
+import piniaPluginPersist from "pinia-plugin-persist"; //@ts-ignore
 
 import App from "@/App.vue";
 import router from "@/router";

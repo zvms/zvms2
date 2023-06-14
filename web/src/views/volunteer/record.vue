@@ -106,7 +106,7 @@ import { NOT_EMPTY, TIME, IS_DECIMAL, IS_VAILD } from "@/utils/validation";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
-import { fApiNotLoading } from "@/apis/fApi";
+import { fApiNotLoading } from "@/apis";
 import { toasts, validateForm } from "@/utils/dialogs";
 
 export default {

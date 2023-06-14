@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { fApiNotLoading } from "@/apis/fApi";
+import { fApiNotLoading } from "@/apis";
 import { NOT_EMPTY } from "@/utils/validation";
 
 export default {
