@@ -31,7 +31,7 @@ Star every repo you find!`,
   {
     displayName: "So1aric",
     infoHtml: `<span>2021级 沈乐宸</span><br/>
-    <a href="http://172.31.2.4:14516">Linux enthusiast.</a><br/>
+    <a href="http://172.31.2.4:16541">Linux enthusiast.</a><br/>
     <img src="https://img.shields.io/badge/-@So1aric-181717?style=for-the-badge&logo=github&logoColor=white"/><br/>
     <img src="${slcImage}" width="130" />`,
   },

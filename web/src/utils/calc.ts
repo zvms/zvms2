@@ -52,3 +52,7 @@ export function getThoughtStatusDisplayColor(status: ThoughtStatus) {
     [ThoughtStatus.WaitingForSignupAudit]: "null",
   }[status] ?? "<NULL>";
 }
+
+export const NoRetryTime = 5 * 60 * 1000;
+
+export const MaxLoadingTime = 10 * 1000;

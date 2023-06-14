@@ -20,16 +20,16 @@ function toURLSearchParams(
 }
 
 interface ForegroundApiConfig {
-  beforeReq(info: ReqInfo): void;
-  errorReq(e: Error, info: ReqInfo): void;
+  beforeReq(info: ReqInfo, ctx: ReqCtx): void;
+  errorReq(e: Error, info: ReqInfo, ctx: ReqCtx): void;
 
-  successedRes(res: AxiosResponse<any>, info: ReqInfo): void;
-  failedRes(res: AxiosResponse<any> | undefined, info: ReqInfo): void;
+  successedRes(res: AxiosResponse<any>, info: ReqInfo, ctx: ReqCtx): void;
+  failedRes(res: AxiosResponse<any> | undefined, info: ReqInfo, ctx: ReqCtx): void;
 
-  afterProcess(info: ReqInfo): void;
-  errorProcess(e: Error, info: ReqInfo): void;
+  afterProcess(info: ReqInfo, ctx: ReqCtx): void;
+  errorProcess(e: Error, info: ReqInfo, ctx: ReqCtx): void;
 
-  cleanup(info: ReqInfo): void;
+  cleanup(info: ReqInfo, ctx: ReqCtx): void;
 
   defaultFailedToast: boolean;
   defaultOkToast: boolean;
@@ -40,6 +40,8 @@ interface ReqInfo {
   method: MethodType;
   id: number;
 }
+
+export type ReqCtx = Record<string | number | symbol, unknown>;
 
 let _reqId = 0;
 
@@ -65,6 +67,8 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
     id: _reqId++,
   };
 
+  const ctx = {};
+
   const methods = {
     POST: axios.post,
     GET: axios.get,
@@ -75,11 +79,11 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
 
   const func = methods[method];
   if (!func) {
-    config.errorReq(new Error(`Method ${method} is not supported`), info);
+    config.errorReq(new Error(`Method ${method} is not supported`), info, ctx);
   }
 
   return async (processor: ForegroundApiProcessor<R> = () => {}) => {
-    config.beforeReq(info);
+    config.beforeReq(info, ctx);
     try {
       let res;
       try {
@@ -95,31 +99,31 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
             toasts.error((e as Error).message);
           }
         }
-        config.errorReq(e as Error, info);
+        config.errorReq(e as Error, info, ctx);
         throw e;
       }
 
       if (res?.data?.type !== "SUCCESS") {
-        config.failedRes(res, info);
+        config.failedRes(res, info, ctx);
         if (config.defaultFailedToast) {
           toasts.error(res?.data?.message);
         }
       } else {
         const { message, result } = res?.data;
-        config.successedRes(res, info);
+        config.successedRes(res, info, ctx);
         try {
           await processor(result);
           if (config.defaultOkToast) {
             toasts.success(message);
           }
-          config.afterProcess(info);
+          config.afterProcess(info, ctx);
         } catch (e) {
-          config.errorProcess(e as Error, info);
+          config.errorProcess(e as Error, info, ctx);
         }
-        config.afterProcess(info);
+        config.afterProcess(info, ctx);
       }
     } finally {
-      config.cleanup(info);
+      config.cleanup(info, ctx);
     }
   };
 }
@@ -146,16 +150,17 @@ export class ForegroundApi {
   }
 
   get loadingState(): ForegroundApi {
+    const loadingSymbolKey = Symbol();
     const oldConfig: ForegroundApiConfig = this.config;
     return new ForegroundApi({
       ...oldConfig,
-      beforeReq(info) {
-        oldConfig.beforeReq(info);
-        useLoadingStore().incLoading();
+      beforeReq(info, ctx) {
+        oldConfig.beforeReq(info, ctx);
+        ctx[loadingSymbolKey] = useLoadingStore().incLoading();
       },
-      cleanup(info) {
-        oldConfig.cleanup(info);
-        useLoadingStore().decLoading();
+      cleanup(info, ctx) {
+        oldConfig.cleanup(info, ctx);
+        useLoadingStore().decLoading(ctx[loadingSymbolKey] as symbol);
       },
     });
   }
@@ -354,7 +359,7 @@ export class ForegroundApi {
    * @param id
    * @param pwd
    */
-  modifyotherspassword(
+  modifyOthersPassword(
     id: number,
     pwd: string
   ): ForegroundApiRunner<{}> {
@@ -1106,16 +1111,16 @@ export class ForegroundApi {
 }
 
 export const fApiNotLoading = new ForegroundApi({
-  beforeReq(info: ReqInfo) {},
-  errorReq(e: Error, info: ReqInfo) {},
+  beforeReq(info: ReqInfo, ctx: ReqCtx) {},
+  errorReq(e: Error, info: ReqInfo, ctx: ReqCtx) {},
 
-  successedRes(res: AxiosResponse<any>, info: ReqInfo) {},
-  failedRes(res: AxiosResponse<any> | undefined, info: ReqInfo) {},
+  successedRes(res: AxiosResponse<any>, info: ReqInfo, ctx: ReqCtx) {},
+  failedRes(res: AxiosResponse<any> | undefined, info: ReqInfo, ctx: ReqCtx) {},
 
-  afterProcess(info: ReqInfo) {},
-  errorProcess(e: Error, info: ReqInfo) {},
+  afterProcess(info: ReqInfo, ctx: ReqCtx) {},
+  errorProcess(e: Error, info: ReqInfo, ctx: ReqCtx) {},
 
-  cleanup(info: ReqInfo) {},
+  cleanup(info: ReqInfo, ctx: ReqCtx) {},
 
   defaultFailedToast: true,
   defaultOkToast: true,

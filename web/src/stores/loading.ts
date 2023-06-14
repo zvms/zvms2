@@ -1,25 +1,41 @@
-import { defineStore, mapState } from "pinia";
+import { defineStore } from "pinia";
+import { NoRetryTime, MaxLoadingTime } from "@/utils/calc";
+
+export interface LoadingRecord {
+  symbol: symbol;
+  start: number;
+}
 
 export const useLoadingStore = defineStore("loading", {
   state: () => {
     return {
-      loadingNum: 0,
+      loadings: [] as LoadingRecord[],
       noretryStart: NaN, // start time
     };
   },
   actions: {
-    incLoading() {
-      this.loadingNum++;
+    incLoading(): Symbol {
+      const symbol = Symbol();
+      this.loadings.push({
+        symbol,
+        start: Date.now()
+      });
+      return symbol;
     },
-    decLoading() {
-      if (this.loadingNum <= 0) {
-        throw new Error("Cannot decrease loadingNum: loadingNum<=0");
+    decLoading(symbol: Symbol) {
+      const idx = this.loadings.findIndex((v) => v.symbol === symbol)
+      if (idx === -1) {
+        throw new Error("Cannot decrease loadingNum: no such symbol");
       }
-      this.loadingNum--;
+      this.loadings.splice(idx, 1);
     },
-  },
-  getters: {
-    isLoading: (state) => state.loadingNum > 0,
+    calcIsLoading() { // This can't be a getter, because it uses current time and may modify `this.loadings`
+      const now = Date.now()
+      this.loadings = this.loadings.filter(
+        v => v.start + MaxLoadingTime > now
+      );
+      return this.loadings.length > 0;
+    }
   },
   persist: {
     enabled: true,
@@ -33,15 +49,11 @@ export const useLoadingStore = defineStore("loading", {
   },
 });
 
-export function mapIsLoading() {
-  return mapState(useLoadingStore, ["isLoading"]);
-}
-
 export function isNoRetry(
   loadingStore: ReturnType<typeof useLoadingStore>
 ): boolean {
   return (
     Number.isFinite(loadingStore.noretryStart) &&
-    loadingStore.noretryStart + 1000 * 60 * 5 >= Date.now()
+    loadingStore.noretryStart + NoRetryTime >= Date.now()
   );
 }
