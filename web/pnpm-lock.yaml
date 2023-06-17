@@ -22,9 +22,6 @@ dependencies:
   github-markdown-css:
     specifier: ^5.2.0
     version: registry.npmmirror.com/github-markdown-css@5.2.0
-  lxgw-wenkai-lite-webfont:
-    specifier: ^1.7.0
-    version: registry.npmmirror.com/lxgw-wenkai-lite-webfont@1.7.0
   marked:
     specifier: ^4.3.0
     version: registry.npmmirror.com/marked@4.3.0
@@ -3439,12 +3436,6 @@ packages:
     dependencies:
       yallist: registry.npmmirror.com/yallist@4.0.0
     dev: true
-
-  registry.npmmirror.com/lxgw-wenkai-lite-webfont@1.7.0:
-    resolution: {integrity: sha512-VcQYNRpdXAxaZsJ18rfT1mmAreGqkIFNZ/9pdVLbT2Tkb+2lLWJDXq4zYxMEk9AcecSnxO31R2LHh5ieLlxjRg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lxgw-wenkai-lite-webfont/-/lxgw-wenkai-lite-webfont-1.7.0.tgz}
-    name: lxgw-wenkai-lite-webfont
-    version: 1.7.0
-    dev: false
 
   registry.npmmirror.com/magic-string@0.27.0:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/magic-string/-/magic-string-0.27.0.tgz}
