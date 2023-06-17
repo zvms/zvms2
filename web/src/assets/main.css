@@ -8,12 +8,12 @@
   z-index: 10000 !important;
 }
 body {
-  font-family: "LXGW WenKai Screen", sans-serif;
+  font-family: "LXGW WenKai", sans-serif;
   font-size: larger;
 }
 pre,
 code {
-  font-family: "LXGW WenKai Screen", sans-serif;
+  font-family: "LXGW WenKai Mono", sans-serif;
 }
 
 .v-card-title {
