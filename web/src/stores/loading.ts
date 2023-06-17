@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { NoRetryTime, MaxLoadingTime } from "@/utils/calc";
+import { NoRetryTime, MaxLoadingTime } from "@/plugins/axios";
 
 export interface LoadingRecord {
   symbol: symbol;
