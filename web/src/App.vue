@@ -58,7 +58,7 @@
 import { applyNavItems } from "@/utils/nav";
 import { useNavStore, useLoadingStore } from "@/stores";
 import { mapStores } from "pinia";
-import { VERSION } from "./main";
+import { VERSION } from "@/utils/metadata";
 
 export default {
   name: "App",

@@ -14,8 +14,6 @@ import "@/assets/main.css";
 
 import { registerTelemetry } from "@/utils/telemetry";
 
-export const VERSION = "v2.0.2";
-
 const app = createApp(App);
 
 app.use(createPinia().use(piniaPluginPersist));
