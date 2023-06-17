@@ -90,8 +90,8 @@ export default {
         const pwd = this.form.password;
         fApi
           .setFailedRes((res, info) => {
-            if (res?.data?.noretry) {
-              this.loadingStore.noretryStart = Date.now();
+            if (res?.data?.noRetry) {
+              this.loadingStore.noRetryStart = Date.now();
             }
           })
           .login(

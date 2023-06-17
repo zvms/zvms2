@@ -39,7 +39,7 @@
             <v-progress-circular
               color="primary"
               indeterminate
-              v-show="loadingStore.calcIsLoading()"
+              v-show="loadingStore.isLoading"
             />
           </div>
         </template>
@@ -50,7 +50,7 @@
         </v-container>
       </v-main>
     </v-theme-provider>
-    <div id="prevent-click-hover" v-if="loadingStore.calcIsLoading()"></div>
+    <div id="prevent-click-hover" v-if="loadingStore.isLoading"></div>
   </v-app>
 </template>
 
