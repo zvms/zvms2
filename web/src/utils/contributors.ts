@@ -1,5 +1,6 @@
 import slcImage from "@/assets/slcw.webp";
 import iconUrl from "@/assets/favicon.ico";
+import clcImage from "@/assets/clcshinano.gif";
 
 export interface Contributor {
   displayName: string;
@@ -62,7 +63,9 @@ export const contributorsV2 = [
   },
   {
     displayName: "clc",
-    infoHtml: `2022级 陈浏畅<br/>一只蒟蒻`,
+    infoHtml: `2022级 陈浏畅<br/>
+    一只蒟蒻<br/>
+    <img src="${clcImage}">`,
   },
 ] satisfies Contributor[];
 
