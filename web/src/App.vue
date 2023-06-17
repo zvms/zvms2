@@ -39,7 +39,7 @@
             <v-progress-circular
               color="primary"
               indeterminate
-              v-show=""
+              v-show="loadingStore.calcIsLoading()"
             />
           </div>
         </template>
