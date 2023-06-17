@@ -16,7 +16,10 @@ from zvms.typing.checker import CheckerError
 import zvms.tokenlib as tk
 import zvms.typing.structs as structs
 
-logging.basicConfig(filename='log.txt')
+logging.basicConfig(
+    filename='log.txt',
+    level=logging.DEBUG
+)
 logger = logging.getLogger()
 
 class ZvmsExit(KeyboardInterrupt): ...
@@ -127,5 +130,6 @@ def deco(impl, params, response, auth):
             return json.dumps(error(ex.message) | dict)
         except Exception as ex:
             import traceback
-            traceback.print_exc()
+            info = traceback.format_exc()
+            logger.error(info)
     return wrapper

@@ -2,6 +2,8 @@
 /scripts/nginx/*/logs
 /scripts/nginx/*/temp
 
+/web/deploy
+
 .DS_Store
 node_modules
 dist

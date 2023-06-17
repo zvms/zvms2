@@ -108,6 +108,7 @@ class NoticeBody(Object):
     
 class Notice(NoticeBody):
     targets = Array(Int)
+    anonymous = Boolean
 
 class SchoolNotice(NoticeBody):
     anonymous = Boolean

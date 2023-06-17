@@ -16,6 +16,7 @@ class IncorrectLoginRecord:
         self.enabled_since = datetime.datetime.now()
 
 incorrect_login_records = defaultdict(IncorrectLoginRecord)
+ips = {}
 
 @Api(rule='/user/check')
 def check(token_data):
@@ -47,6 +48,7 @@ def login(id, pwd, devideId, token_data):
         record.times += 1
         return error('用户名或密码错误') | {'noretry': False}
     record.times = 0
+    ips[request.remote_addr] = (user.id, user.name)
     return success(
         '登录成功', 
         token=tk.generate(**user.select(
@@ -148,7 +150,7 @@ def delete_user(id, token_data):
     return success('删除成功')
 
 @Api(rule='/user/<int:id>/mod-others-pwd', method='POST', auth=Categ.SYSTEM | Categ.MANAGER, params='ModOthersPwd')
-def modifyOthersPassword(token_data, id, pwd):
+def modify_others_password(token_data, id, pwd):
     '修改他人的密码'
     user = User.query.get_or_error(id)
     if user.auth & Categ.SYSTEM and token_data['auth'] & Categ.MANAGER and not token_data['auth'] & Categ.SYSTEM:

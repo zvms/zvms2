@@ -41,9 +41,9 @@ def _save_notice(title, content, deadtime, id):
 
 
 @Api(rule='/notice/send/user', method='POST', params='Notice', auth=Categ.MANAGER | Categ.TEACHER)
-def send_user_notice(title, content, deadtime, targets, token_data):
+def send_user_notice(title, content, deadtime, targets, anonymous, token_data):
     '''发送用户通知'''
-    id = _save_notice(title, content, deadtime, token_data['id'])
+    id = _save_notice(title, content, deadtime, 0 if anonymous else token_data['id'])
     for i in targets:
         if User.query.get_or_error(i, '未找到目标用户').auth == Categ.STUDENT and not (token_data['auth'] & Categ.SYSTEM):
             return error('不能对普通学生发通知')
@@ -52,9 +52,9 @@ def send_user_notice(title, content, deadtime, targets, token_data):
 
 
 @Api(rule='/notice/send/class', method='POST', params='Notice', auth=Categ.MANAGER | Categ.TEACHER)
-def send_class_notice(title, content, deadtime, targets, token_data):
+def send_class_notice(title, content, deadtime, targets, anonymous, token_data):
     '''发送班级通知'''
-    id = _save_notice(title, content, deadtime, token_data['id'])
+    id = _save_notice(title, content, deadtime, 0 if anonymous else token_data['id'])
     for i in targets:
         Class.query.get_or_error(i, '未找到目标班级')
         ClassNotice(cls_id=i, notice_id=id).insert()
@@ -97,7 +97,7 @@ public_notice_content = ""
 def load_public_notice():
     global public_notice_title, public_notice_content
     try:
-        with open(PUBLIC_NOTICE_PATH,'rt',-1,'utf-8') as f:
+        with open(PUBLIC_NOTICE_PATH, 'rt', -1, 'utf-8') as f:
             public_notice_title = f.readline()
             public_notice_content = f.read()
             print("Public notice loaded.")

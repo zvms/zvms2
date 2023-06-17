@@ -107,13 +107,15 @@ class Volunteer(ModelMixIn, db.Model):
     @property
     def holder(self):
         return User.query.get(self.holder_id)
-    
+
     @property
     def classes(self):
         return list(ClassVol.query.filter_by(vol_id=self.id).select('max', id='cls_id'))
-    
+
     @property
     def calculated_status(self):
+        if self.status == VolStatus.REJECTED:
+            return VolStatus.REJECTED
         if is_outdated(self.time):
             return VolStatus.FINISHED if self.status == VolStatus.AUDITED else VolStatus.DEPRECATED
         return self.status
@@ -143,7 +145,7 @@ class StuVol(ModelMixIn, db.Model):
     @property
     def stu_name(self):
         return User.query.get(self.stu_id).name
-    
+
     @property
     def vol(self):
         return Volunteer.query.get(self.vol_id)
@@ -151,7 +153,7 @@ class StuVol(ModelMixIn, db.Model):
     @property
     def vol_name(self):
         return self.vol.name
-    
+
     @property
     def vol_time(self):
         return self.vol.time

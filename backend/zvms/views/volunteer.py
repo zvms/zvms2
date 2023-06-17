@@ -209,7 +209,7 @@ def create_appointed_volunteer(token_data, joiners, **kwargs):
 
 
 @Api(rule='/volunteer/<int:id>/modify', method='POST', params='Volunteer')
-def modify_volunteer(token_data, id, classes, **kwargs):
+def modify_volunteer(token_data, id, classes, time, **kwargs):
     '''修改义工'''
     vol = Volunteer.query.get_or_error(id)
     auth_self(vol.holder_id, token_data, '权限不足: 不能修改其他人的义工')
@@ -217,8 +217,8 @@ def modify_volunteer(token_data, id, classes, **kwargs):
         cls_ = Class.query.get_or_error(cls['id'], '班级不存在')
         if cls['max'] > cls_.members.count():
             return error('义工永远无法报满')
-        cv = ClassVol.query.get((cls['id'], id))
-        if cv:
+        cv = ClassVol.query.get((id, cls['id']))
+        if cv is None:
             ClassVol(
                 cls_id=cls['id'],
                 vol_id=id,
@@ -228,7 +228,7 @@ def modify_volunteer(token_data, id, classes, **kwargs):
             cv.max = cls['max']
         if cv.now > cls['max']:
             return error('义工报名溢出')
-    vol.update(**kwargs)
+    vol.update(time=try_parse_time(time), **kwargs)
     return success('修改成功')
 
 
@@ -237,6 +237,8 @@ def delete_volunteer(token_data, id):
     '''删除义工'''
     auth_self(Volunteer.query.get_or_error(id).holder_id, token_data, '权限不足: 不能删除其他人的义工')
     Volunteer.query.filter_by(id=id).delete()
+    ClassVol.query.filter_by(vol_id=id).delete()
+    StuVol.query.filter_by(vol_id=id).delete()
     return success('删除成功')
 
 
@@ -274,8 +276,8 @@ def repulse_volunteer(token_data, id):
     UserNotice(
         user_id=vol.holder_id,
         notice_id=Notice(
-            title='义工过审',
-            content=f'您的义工{vol.name}已被打回, 其他学生无法将看见和报名该义.',
+            title='义工被打回',
+            content=f'您的义工 {vol.name} 已被打回, 其他学生无法将看见和报名该义工。',
             sendtime=datetime.datetime.now(),
             deadtime=datetime.datetime.now() + datetime.timedelta(days=10),
             sender=0
