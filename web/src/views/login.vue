@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { fApi, type PublicNotice } from "@/apis";
+import { fApi, fApiNotLoading, type PublicNotice } from "@/apis";
 import { Categ } from "@/apis/types/enums";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
 import { useInfoStore, useLoadingStore, isNoRetry } from "@/stores";
@@ -73,7 +73,7 @@ export default {
     }
   },
   beforeMount() {
-    fApi.skipOkToast.getPublicNotice()((result) => {
+    fApiNotLoading.skipOkToast.getPublicNotice()((result) => {
       this.publicNotice = result;
     });
   },
