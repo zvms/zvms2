@@ -30,7 +30,8 @@ export const useLoadingStore = defineStore("loading", {
     decLoading(symbol: Symbol, timeout = false) {
       const idx = this.loadings.findIndex((v) => v.symbol === symbol)
       if (idx === -1) {
-        throw new Error("Cannot decrease loadingNum: no such symbol");
+        // throw new Error("Cannot decrease loadingNum: no such symbol");
+        return;
       }
       if (!timeout) {
         clearTimeout(this.loadings[idx].timer);

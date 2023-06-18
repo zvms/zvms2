@@ -39,14 +39,14 @@ def login(id, pwd, devideId, token_data):
     if record.times > 5:
         record.times = 0
         record.enabled_since = datetime.datetime.now() + datetime.timedelta(minutes=5)
-        return error('登录过于频繁') | {'noretry': True}
+        return error('登录过于频繁') | {'noRetry': True}
     elif record.enabled_since > datetime.datetime.now():
-        return error('登录过于频繁') | {'noretry': True}
+        return error('登录过于频繁') | {'noRetry': True}
     real_id = get_user_real_id(id)
     user = User.query.get(real_id)
     if not user or user.pwd != pwd:
         record.times += 1
-        return error('用户名或密码错误') | {'noretry': False}
+        return error('用户名或密码错误') | {'noRetry': False}
     record.times = 0
     ips[request.remote_addr] = (user.id, user.name)
     return success(
