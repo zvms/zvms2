@@ -47,7 +47,7 @@ export const useLoadingStore = defineStore("loading", {
     strategies: [
       {
         storage: localStorage,
-        key: "zvms/v2/noRetry_start",
+        key: "zvms/v2/no_retry_start",
         paths: ["noRetryStart"],
       },
     ],
