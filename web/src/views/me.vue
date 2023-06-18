@@ -27,7 +27,7 @@
     </v-card-actions>
   </v-card>
   <v-card v-if="timeStatVisible">
-    <v-card-title> 您在系统上的义工时间 </v-card-title>
+    <v-card-title>您在系统上的义工时间</v-card-title>
     <v-card-text style="font-size: medium">
       校内义工：{{ insideTime }}
       <br />
@@ -107,8 +107,8 @@
             prepend-icon="mdi-lock-outline"
             :rules="rules"
           />
-          <v-btn class="me-4 submit" @click="modifyPwd"> 确定 </v-btn>
-          <v-btn class="me-4 submit" @click="pwdDialog = false"> 取消 </v-btn>
+          <v-btn class="me-4 submit" @click="modifyPwd">确定</v-btn>
+          <v-btn class="me-4 submit" @click="pwdDialog = false">取消</v-btn>
         </v-form>
       </v-card-text>
     </v-card>

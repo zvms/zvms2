@@ -63,7 +63,7 @@ export default {
     async createNotice() {
       if (
         validateForm(this.isFormValid) &&
-        (await confirm(`确定创建发送给${ this.form.target }的通知？`))
+        (await confirm(`确定创建发送给${this.form.target}的通知？`))
       ) {
         let t = [parseInt(this.form.target)];
         fApi.sendUserNotice(

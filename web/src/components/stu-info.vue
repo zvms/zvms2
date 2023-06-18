@@ -16,7 +16,7 @@ export default {
       type: Object as PropType<UserInfoResponse>,
       required: true,
     },
-  }
+  },
 };
 </script>
 <style scoped>

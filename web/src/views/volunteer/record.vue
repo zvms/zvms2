@@ -1,103 +1,103 @@
 <template>
-    <v-card>
-      <v-card-title> 记录义工 </v-card-title>
-      <v-card-text>
-        <v-form v-model="isFormValid">
-          <v-text-field
-            v-model.trim="form.name"
-            :rules="rules"
-            type="text"
-            label="义工名称"
-            prepend-icon="mdi-pen"
-          />
-          <v-select
-            prepend-icon="mdi-shape"
-            label="义工类型"
-            :items="[
-              {
-                name: '校外义工',
-                value: VolType.Outside,
-              },
-              {
-                name: '校内义工',
-                value: VolType.Inside,
-              },
-            ]"
-            item-title="name"
-            item-value="value"
-            v-model="form.type"
-          />
-          <v-container style="margin-left: -15px;">
-            <v-row>
-              <v-col cols="4">
-                <v-text-field
-                  prepend-icon="mdi-account-multiple"
-                  v-model.number="userNew"
-                  label="学生学号"
-                  @update:model-value="updateCurrentUserName"
-                />
-              </v-col>
-              <v-col cols="4" class="pl-7 pt-8" style="font-size: larger">
-                {{ userNewName }}
-                <span v-if="userNewName.length===0" style="opacity: 40%;">
-                  请输入学号
-                </span>
-              </v-col>
-              <v-col cols="2">
-                <v-btn
-                  rounded
-                  class="mx-2 add"
-                  flat
-                  @click="addToList"
-                  :disabled="!(userNewName.length > 0)"
-                >
-                  <v-icon size="x-large"> mdi-plus </v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-            <v-row v-for="(user, i) in form.joiners" :key="user.id">
-              <v-col cols="4" class="pl-16" style="font-size: larger">
-                {{ user.id }}
-              </v-col>
-              <v-col cols="4" class="pl-7" style="font-size: larger">
-                {{ user.name }}</v-col
+  <v-card>
+    <v-card-title>记录义工</v-card-title>
+    <v-card-text>
+      <v-form v-model="isFormValid">
+        <v-text-field
+          v-model.trim="form.name"
+          :rules="rules"
+          type="text"
+          label="义工名称"
+          prepend-icon="mdi-pen"
+        />
+        <v-select
+          prepend-icon="mdi-shape"
+          label="义工类型"
+          :items="[
+            {
+              name: '校外义工',
+              value: VolType.Outside,
+            },
+            {
+              name: '校内义工',
+              value: VolType.Inside,
+            },
+          ]"
+          item-title="name"
+          item-value="value"
+          v-model="form.type"
+        />
+        <v-container style="margin-left: -15px">
+          <v-row>
+            <v-col cols="4">
+              <v-text-field
+                prepend-icon="mdi-account-multiple"
+                v-model.number="userNew"
+                label="学生学号"
+                @update:model-value="updateCurrentUserName"
+              />
+            </v-col>
+            <v-col cols="4" class="pl-7 pt-8" style="font-size: larger">
+              {{ userNewName }}
+              <span v-if="userNewName.length === 0" style="opacity: 40%">
+                请输入学号
+              </span>
+            </v-col>
+            <v-col cols="2">
+              <v-btn
+                rounded
+                class="mx-2 add"
+                flat
+                @click="addToList"
+                :disabled="!(userNewName.length > 0)"
               >
-              <v-col cols="2">
-                <v-btn rounded class="mx-2 delete" flat @click="delFromList(i)">
-                  <v-icon size="x-large"> mdi-minus </v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-container>
-          <!---->
-          <v-text-field
-            v-model.trim="form.time"
-            :rules="[TIME(), ...rules]"
-            type="text"
-            label="预期进行时间（e.g. 23-9-1-10-30表示23年9月1日10时30分）"
-            prepend-icon="mdi-calendar-range"
-          />
-          <v-textarea
-            v-model.trim="form.description"
-            :rules="rules"
-            type="text"
-            label="义工描述"
-            prepend-icon="mdi-text"
-          />
-          <v-text-field
-            v-model.number="form.reward"
-            :rules="[IS_DECIMAL(), IS_VAILD(), ...rules]"
-            type="text"
-            label="记录的时长（分钟）"
-            prepend-icon="mdi-clock-time-three-outline"
-          />
-          <v-btn color="primary" class="submit" @click="recordVolunteer">
-            记录义工
-          </v-btn>
-        </v-form>
-      </v-card-text>
-    </v-card>
-    <br />
+                <v-icon size="x-large">mdi-plus</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row v-for="(user, i) in form.joiners" :key="user.id">
+            <v-col cols="4" class="pl-16" style="font-size: larger">
+              {{ user.id }}
+            </v-col>
+            <v-col cols="4" class="pl-7" style="font-size: larger">
+              {{ user.name }}
+            </v-col>
+            <v-col cols="2">
+              <v-btn rounded class="mx-2 delete" flat @click="delFromList(i)">
+                <v-icon size="x-large">mdi-minus</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-container>
+        <!---->
+        <v-text-field
+          v-model.trim="form.time"
+          :rules="[TIME(), ...rules]"
+          type="text"
+          label="预期进行时间（e.g. 23-9-1-10-30表示23年9月1日10时30分）"
+          prepend-icon="mdi-calendar-range"
+        />
+        <v-textarea
+          v-model.trim="form.description"
+          :rules="rules"
+          type="text"
+          label="义工描述"
+          prepend-icon="mdi-text"
+        />
+        <v-text-field
+          v-model.number="form.reward"
+          :rules="[IS_DECIMAL(), IS_VAILD(), ...rules]"
+          type="text"
+          label="记录的时长（分钟）"
+          prepend-icon="mdi-clock-time-three-outline"
+        />
+        <v-btn color="primary" class="submit" @click="recordVolunteer">
+          记录义工
+        </v-btn>
+      </v-form>
+    </v-card-text>
+  </v-card>
+  <br />
 </template>
 
 <script lang="ts">

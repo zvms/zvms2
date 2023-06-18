@@ -16,9 +16,11 @@
               <v-list-item-title style="font-size: medium">
                 <span
                   style="color: rgb(var(--v-theme-color2)); font-size: larger"
-                  >镇海中学</span
                 >
-                <br />义工管理系统
+                  镇海中学
+                </span>
+                <br />
+                义工管理系统
               </v-list-item-title>
               <v-list-item-subtitle>{{ VERSION }}</v-list-item-subtitle>
             </v-list-item>

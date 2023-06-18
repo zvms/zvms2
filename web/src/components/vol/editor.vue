@@ -57,7 +57,7 @@
             @click="addToList"
             :disabled="!(countNew > 0)"
           >
-            <v-icon size="x-large"> mdi-plus </v-icon>
+            <v-icon size="x-large">mdi-plus</v-icon>
           </v-btn>
         </v-col>
       </v-row>
@@ -70,7 +70,7 @@
         </v-col>
         <v-col cols="2">
           <v-btn rounded class="mx-2 delete" flat @click="delFromList(i)">
-            <v-icon size="x-large"> mdi-minus </v-icon>
+            <v-icon size="x-large">mdi-minus</v-icon>
           </v-btn>
         </v-col>
       </v-row>
@@ -113,7 +113,7 @@
       >
         {{ submitButtonName }}
       </v-btn>
-      <v-btn v-if="showCancel" @click="$emit('cancel')"> 取消 </v-btn>
+      <v-btn v-if="showCancel" @click="$emit('cancel')">取消</v-btn>
     </v-card-actions>
   </v-form>
 </template>
@@ -121,7 +121,13 @@
 <script lang="ts">
 import { type PropType } from "vue";
 import { fApi, type SingleClass, VolType, type Volunteer } from "@/apis";
-import { IS_DECIMAL, IS_POSITIVE, NOT_EMPTY, TIME, IS_VAILD } from "@/utils/validation";
+import {
+  IS_DECIMAL,
+  IS_POSITIVE,
+  NOT_EMPTY,
+  TIME,
+  IS_VAILD,
+} from "@/utils/validation";
 import { mapStores } from "pinia";
 import { useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";

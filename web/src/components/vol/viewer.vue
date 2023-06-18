@@ -16,9 +16,9 @@
       <v-list-item>
         <v-list-item-title>
           {{ getVolTypeName(vol.type) }}（预期）时长
-          <span style="font-size: medium"
-            >&emsp;&emsp;注：实际获得时长由审计部决定。</span
-          >
+          <span style="font-size: medium"></span>
+            &emsp;&emsp;注：实际获得时长由审计部决定。
+          </span>
         </v-list-item-title>
         {{ timeToHint(vol.reward) }}
       </v-list-item>
@@ -66,7 +66,7 @@
     </v-list>
     <v-dialog v-model="stuInfoDlg">
       <v-card>
-        <v-card-title> 报名信息 </v-card-title>
+        <v-card-title>报名信息</v-card-title>
         <v-card-text>
           <StuInfo :student="stuInfoData" />
         </v-card-text>
@@ -135,7 +135,10 @@ export default {
     },
     async rollbackSignup(id: number) {
       if (await confirm("确定要撤销报名吗？")) {
-        fApi.skipOkToast.rollbackSignup(this.volId, id)(() => {
+        fApi.skipOkToast.rollbackSignup(
+          this.volId,
+          id
+        )(() => {
           this.stuInfoDlg = false;
           toasts.success("撤销报名成功，请刷新页面");
           this.$emit("update");

@@ -68,7 +68,7 @@
       </v-card-text>
       <v-dialog v-model="modifyDlg">
         <v-card>
-          <v-card-title> 修改义工 </v-card-title>
+          <v-card-title>修改义工</v-card-title>
           <v-card-text>
             <vol-editor
               v-model="current.volModified"
@@ -355,7 +355,7 @@ export default {
             ...vol,
             statusText: dt[0],
             statusColor: dt[1],
-          }
+          };
         })
         .filter(
           (v) => this.filter.status === -1 || v.status === this.filter.status

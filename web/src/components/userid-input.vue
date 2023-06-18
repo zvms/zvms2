@@ -10,8 +10,7 @@
     prepend-icon="mdi-account"
     @update:model-value="updateCurrentUserInfo"
     :rules="rules"
-  >
-  </v-text-field>
+  ></v-text-field>
 </template>
 
 <script lang="ts">

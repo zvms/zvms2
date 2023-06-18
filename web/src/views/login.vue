@@ -1,35 +1,46 @@
 <template>
   <v-card>
     <v-card-title class="headline primary white--text">
-      登录&nbsp;&nbsp;<span style="color: #888; font-weight: bolder">
-        镇海中学义工管理系统
-      </span>
+      登录&nbsp;&nbsp;
+      <span style="color: #888; font-weight: bolder">镇海中学义工管理系统</span>
       ZVMS
-      <div style="
-              font-size: x-large;
-              color: #aaa;
-              text-align: right;
-              margin-bottom: -6px;
-              padding-top: 14px;
-              margin-top: -34px;
-            ">
+      <div
+        style="
+          font-size: x-large;
+          color: #aaa;
+          text-align: right;
+          margin-bottom: -6px;
+          padding-top: 14px;
+          margin-top: -34px;
+        "
+      >
         励志&nbsp;&nbsp;进取&nbsp;&nbsp;勤奋&nbsp;&nbsp;健美
       </div>
     </v-card-title>
     <v-card-text>
       <v-form v-model="isFormValid">
         <userid-input v-model="form.userId" />
-        <v-text-field type="password" autocomplete="password" v-model="form.password" :rules="rules" label="密码"
-          prepend-icon="mdi-lock" @keyup.native.enter="login" />
-        <v-btn color="primary" class="me-4 submit" @click="login">登录 </v-btn>
+        <v-text-field
+          type="password"
+          autocomplete="password"
+          v-model="form.password"
+          :rules="rules"
+          label="密码"
+          prepend-icon="mdi-lock"
+          @keyup.native.enter="login"
+        />
+        <v-btn color="primary" class="me-4 submit" @click="login">登录</v-btn>
       </v-form>
     </v-card-text>
   </v-card>
-  <v-card v-if="publicNotice &&
-    (publicNotice.title.length > 0 || publicNotice.content.length > 0)
-  ">
-    <v-card-title> 公告：{{ publicNotice.title }} </v-card-title>
-    <v-card-text v-html="publicNotice.content"> </v-card-text>
+  <v-card
+    v-if="
+      publicNotice &&
+      (publicNotice.title.length > 0 || publicNotice.content.length > 0)
+    "
+  >
+    <v-card-title>公告：{{ publicNotice.title }}</v-card-title>
+    <v-card-text v-html="publicNotice.content"></v-card-text>
   </v-card>
 </template>
 
@@ -44,7 +55,12 @@ import { applyNavItems } from "@/utils/nav";
 import { NOT_EMPTY } from "@/utils/validation";
 import { mapStores } from "pinia";
 import UseridInput from "@/components/userid-input.vue";
-import { addAssocUser, getDeviceUID, getLatestUser, setLatestUser } from "@/utils/device";
+import {
+  addAssocUser,
+  getDeviceUID,
+  getLatestUser,
+  setLatestUser,
+} from "@/utils/device";
 
 export default {
   name: "login",
@@ -97,24 +113,24 @@ export default {
           .login(
             this.form.userId,
             md5(pwd),
-            getDeviceUID(),
+            getDeviceUID()
           )(({ token, id }) => {
-            this.infoStore.token = token;
-            setCurrentAxiosToken(token);
-            setLatestUser(this.form.userId)
-            addAssocUser(id);
-            fApi.skipOkToast.getUserInfo(id)(({ name, cls, auth, clsName }) => {
-              this.infoStore.$patch({
-                userId: id,
-                username: name,
-                permission: auth,
-                classId: cls,
-                className: clsName,
-              });
-              applyNavItems();
-              this.$router.push("/");
+          this.infoStore.token = token;
+          setCurrentAxiosToken(token);
+          setLatestUser(this.form.userId);
+          addAssocUser(id);
+          fApi.skipOkToast.getUserInfo(id)(({ name, cls, auth, clsName }) => {
+            this.infoStore.$patch({
+              userId: id,
+              username: name,
+              permission: auth,
+              classId: cls,
+              className: clsName,
             });
+            applyNavItems();
+            this.$router.push("/");
           });
+        });
       }
     },
   },

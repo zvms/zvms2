@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-btn class="ma-30" @click="restartBackend">
-      <span style="font-size: x-large"> Restart backend </span>
+      <span style="font-size: x-large">Restart backend</span>
     </v-btn>
   </v-container>
 </template>

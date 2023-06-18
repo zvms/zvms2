@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title> 您在义工 {{ vol.name }} 的感想 </v-card-title>
+    <v-card-title>您在义工 {{ vol.name }} 的感想</v-card-title>
     <v-card-text>
       感想状态：
       <br />
@@ -29,8 +29,8 @@
         <div class="my-3 divider"></div>
         感想图片：
         <v-tabs v-if="isThoughtModifiable" v-model="tab">
-          <v-tab value="from-image-bed"> 通过图片ID上传 </v-tab>
-          <v-tab value="from-upload"> 从本地上传（学海平板无效） </v-tab>
+          <v-tab value="from-image-bed">通过图片ID上传</v-tab>
+          <v-tab value="from-upload">从本地上传（学海平板无效）</v-tab>
         </v-tabs>
         <v-window v-if="isThoughtModifiable" v-model="tab">
           <v-window-item value="from-image-bed">

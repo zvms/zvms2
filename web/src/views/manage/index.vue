@@ -1,8 +1,8 @@
 <template>
   <v-card>
-    <v-card-title> 后台管理 </v-card-title>
+    <v-card-title>后台管理</v-card-title>
     <v-tabs v-model="tab">
-      <v-tab v-for="t in tabs" :value="t.id"> {{ t.name }} </v-tab>
+      <v-tab v-for="t in tabs" :value="t.id">{{ t.name }}</v-tab>
     </v-tabs>
     <v-window v-model="tab" style="font-size: 18px">
       <v-window-item v-for="t in tabs" :value="t.id">

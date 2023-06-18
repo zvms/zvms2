@@ -25,7 +25,7 @@
       <v-card-text>{{ reports[currentReport].content }}</v-card-text>
       <v-dialog v-model="stuInfoDlg">
         <v-card>
-          <v-card-title> 用户信息 </v-card-title>
+          <v-card-title>用户信息</v-card-title>
           <v-card-text>
             <StuInfo :student="stuInfoData" />
           </v-card-text>

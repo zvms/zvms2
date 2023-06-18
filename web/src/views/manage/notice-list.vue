@@ -22,11 +22,11 @@
         {{ notices[currentNotice].content }}
       </v-card-text>
       <v-card-actions>
-        <v-btn @click="deleteNotice" style="color: red"> 删除 </v-btn>
+        <v-btn @click="deleteNotice" style="color: red">删除</v-btn>
       </v-card-actions>
       <v-dialog v-model="stuInfoDlg">
         <v-card>
-          <v-card-title> 用户信息 </v-card-title>
+          <v-card-title>用户信息</v-card-title>
           <v-card-text>
             <StuInfo :student="stuInfoData" />
           </v-card-text>
