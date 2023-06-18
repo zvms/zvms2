@@ -1,5 +1,5 @@
 import { useNavStore, useInfoStore } from "@/stores";
-import { Categ } from "@/apis/types/enums";
+import { Categ } from "@/apis";
 import router, { type NavItemInfo } from "@/router";
 
 export function getNavItems(permission: Categ) {
