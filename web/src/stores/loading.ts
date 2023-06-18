@@ -3,7 +3,6 @@ import { NoRetryTime, MaxLoadingTime } from "@/plugins/axios";
 
 export interface LoadingRecord {
   symbol: symbol;
-  start: number;
   timer: number;
 }
 
@@ -20,7 +19,6 @@ export const useLoadingStore = defineStore("loading", {
       const symbol = Symbol();
       this.loadings.push({
         symbol,
-        start: Date.now(),
         timer: window.setTimeout(() => {
           this.decLoading(symbol, true);
         }, MaxLoadingTime)
