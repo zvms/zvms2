@@ -11,7 +11,7 @@
 <script lang="ts">
 import { sanitize } from "@/utils/sanitize";
 
-import MdEditor, { type ToolbarNames } from "md-editor-v3";
+import { MdEditor, type ToolbarNames } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 
 export default {

@@ -20,6 +20,7 @@
       "vuetify",
       "crypto-js"
     ],
-    "importsNotUsedAsValues": "remove"
+    "importsNotUsedAsValues": "remove",
+    "resolvePackageJsonExports": false
   }
 }

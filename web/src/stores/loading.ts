@@ -21,11 +21,10 @@ export const useLoadingStore = defineStore("loading", {
       this.loadings.push({
         symbol,
         start: Date.now(),
-        timer: setTimeout(() => {
+        timer: window.setTimeout(() => {
           this.decLoading(symbol, true);
         }, MaxLoadingTime)
       });
-      loadingStateChangeCallback(true);
       return symbol;
     },
     decLoading(symbol: Symbol, timeout = false) {
