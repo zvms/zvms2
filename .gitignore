@@ -14,6 +14,8 @@ dist
 
 web/public/students.txt
 
+.cache
+
 # local env files
 .env.local
 .env.*.local
