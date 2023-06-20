@@ -65,7 +65,7 @@ export const contributorsV2 = [
     displayName: "clc",
     infoHtml: `2022级 陈浏畅<br/>
     一只蒟蒻<br/>
-    <img src="${clcImage}">`,
+    <img src="${clcImage}" width="160" height="134" lazy><br/>`,
   },
 ] satisfies Contributor[];
 

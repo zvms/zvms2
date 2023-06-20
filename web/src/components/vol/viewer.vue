@@ -16,7 +16,7 @@
       <v-list-item>
         <v-list-item-title>
           {{ getVolTypeName(vol.type) }}（预期）时长
-          <span style="font-size: medium"></span>
+          <span style="font-size: medium">
             &emsp;&emsp;注：实际获得时长由审计部决定。
           </span>
         </v-list-item-title>
