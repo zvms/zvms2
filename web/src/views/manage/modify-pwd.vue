@@ -54,7 +54,7 @@ export default {
           return;
         }
         if (await confirm("确定修改？")) {
-          fApi.modifyotherspassword(
+          fApi.modifyOthersPassword(
             parseInt(this.form.userId),
             md5(this.form.newPwd)
           )(() => {
