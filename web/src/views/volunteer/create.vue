@@ -33,7 +33,7 @@ export default {
         description: "",
         time: "",
         type: VolType.Outside,
-        reward: 0,
+        reward: "" as any,
       } as Volunteer,
     };
   },
