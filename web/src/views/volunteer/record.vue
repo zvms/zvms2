@@ -104,10 +104,9 @@
 import { fApi, VolType, type SingleUserWithoutAuth } from "@/apis";
 import { NOT_EMPTY, TIME, IS_DECIMAL, IS_VAILD } from "@/utils/validation";
 import { mapStores } from "pinia";
-import { useInfoStore } from "@/stores";
+import { useDialogStore, useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { fApiNotLoading } from "@/apis";
-import { toasts, validateForm } from "@/utils/dialogs";
 
 export default {
   data() {
@@ -133,9 +132,9 @@ export default {
   },
   methods: {
     recordVolunteer() {
-      if (validateForm(this.isFormValid)) {
+      if (this.dialogStore.validateForm(this.isFormValid)) {
         if (this.form.joiners.length === 0) {
-          toasts.error("需至少选择一名成员！");
+          this.dialogStore.error("需至少选择一名成员！");
           return;
         }
         fApi.createAppointedVolunteer(
@@ -174,7 +173,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore),
+    ...mapStores(useInfoStore, useDialogStore),
   },
 };
 </script>

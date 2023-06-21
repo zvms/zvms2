@@ -34,7 +34,7 @@ export const useDialogStore = defineStore("dialog", {
     };
   },
   actions: {
-    confirm(title: string, message: string): Promise<boolean> {
+    confirm(title: string, message: string = ""): Promise<boolean> {
       const promise = new Promise<boolean>((resolve, reject) => {
         const key = Date.now();
         this.dialog = {
@@ -85,6 +85,12 @@ export const useDialogStore = defineStore("dialog", {
         message,
       };
       this.registerTimeout(key, 3000);
+    },
+    validateForm(isFormValid: boolean) {
+      if (!isFormValid) {
+        this.error("请检查表单是否填写正确");
+      }
+      return isFormValid;
     },
     registerTimeout(key: number, timeout: number) {
       setTimeout(() => {

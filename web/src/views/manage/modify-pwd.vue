@@ -22,8 +22,7 @@
 
 <script lang="ts">
 import { fApi } from "@/apis";
-import { useInfoStore, useLoadingStore } from "@/stores";
-import { toasts, confirm, validateForm } from "@/utils/dialogs";
+import { useDialogStore, useInfoStore, useLoadingStore } from "@/stores";
 import { md5 } from "@/utils/md5";
 import { NOT_EMPTY } from "@/utils/validation";
 import { mapStores } from "pinia";
@@ -47,13 +46,13 @@ export default {
   },
   methods: {
     async modifyOthersPwd() {
-      if (validateForm(this.isFormValid)) {
+      if (this.dialogStore.validateForm(this.isFormValid)) {
         if (this.form.newPwd !== this.form.confirmPwd) {
-          toasts.error("两次密码不一致");
+          this.dialogStore.error("两次密码不一致");
           this.form.confirmPwd = "";
           return;
         }
-        if (await confirm("确定修改？")) {
+        if (await this.dialogStore.confirm("确定修改？")) {
           fApi.modifyOthersPassword(
             parseInt(this.form.userId),
             md5(this.form.newPwd)
@@ -68,7 +67,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore, useLoadingStore),
+    ...mapStores(useInfoStore, useLoadingStore, useDialogStore),
   },
 };
 </script>

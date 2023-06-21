@@ -27,8 +27,9 @@
 </template>
 
 <script lang="ts">
+import { mapStores } from "pinia";
 import { docs, type DocItem } from "@/docs";
-import { toasts } from "@/utils/dialogs";
+import { useDialogStore } from "@/stores";
 import "github-markdown-css";
 import mermaid from "mermaid";
 
@@ -56,7 +57,7 @@ export default {
         this.currentDoc = docs[docId as keyof typeof docs];
         return true;
       }
-      toasts.error(`找不到文档 "${docId}"`);
+      this.dialogStore.error(`找不到文档 "${docId}"`);
       this.$router.push("/");
       return false;
     },
@@ -80,6 +81,7 @@ export default {
     }
   },
   computed: {
+    ...mapStores(useDialogStore),
     breadcrumbs() {
       return this.currentDoc.path
         .map((p) => ({

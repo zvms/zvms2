@@ -109,9 +109,8 @@ import {
 import MarkdownViewer from "@/components/markdown/viewer.vue";
 import MarkdownEditor from "@/components/markdown/editor.vue";
 import { baseURL } from "@/plugins/axios";
-import { useInfoStore } from "@/stores";
+import { useInfoStore, useDialogStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
-import { toasts, confirm } from "@/utils/dialogs";
 import { ArrayBufferToWordArray, getPicsById } from "@/utils/pics";
 import { mapStores } from "pinia";
 import type { PropType } from "vue";
@@ -185,14 +184,14 @@ export default {
   methods: {
     async uploadFromId() {
       if (Number.isNaN(parseInt(this.picsId, 36))) {
-        toasts.error("图片ID格式错误");
+        this.dialogStore.error("图片ID格式错误");
         return;
       }
       try {
         const pics = await getPicsById(this.picsId);
 
         if (pics.length === 0) {
-          toasts.error("图片不存在");
+          this.dialogStore.error("图片不存在");
           return;
         }
         for (const pic of pics) {
@@ -212,18 +211,18 @@ export default {
         }
         this.picsId = "";
       } catch (err: any) {
-        toasts.error("通过ID获取图床图片失败! " + err?.message);
+        this.dialogStore.error("通过ID获取图床图片失败! " + err?.message);
       }
     },
     async uploadImg(files: File[]) {
       const newFile = files[0];
       if (newFile.size > 1024 * 1024 * 10) {
-        toasts.error("图片大小不能超过10MB");
+        this.dialogStore.error("图片大小不能超过10MB");
         return;
       }
       const arrayBuffer = await newFile.arrayBuffer();
       if (!arrayBuffer) {
-        toasts.error(`文件${newFile.name}上传失败！`);
+        this.dialogStore.error(`文件${newFile.name}上传失败！`);
         return;
       }
       this.pics.push({
@@ -267,7 +266,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore),
+    ...mapStores(useInfoStore, useDialogStore),
     isJoiner() {
       return (
         this.vol.joiners.findIndex((v) => v.id === this.infoStore.userId) !== -1
@@ -291,7 +290,7 @@ export default {
         }
         return pics;
       } catch (e: any) {
-        toasts.error(`图片上传失败！原因：${e.message}`);
+        this.dialogStore.error(`图片上传失败！原因：${e.message}`);
         throw e;
       }
     },

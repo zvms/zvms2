@@ -1,3 +1,4 @@
+/*
 //@ZhangZiSu.cn
 import Swal from "sweetalert2";
 
@@ -59,9 +60,11 @@ export async function confirm(msg: string = "确定操作？"): Promise<boolean>
   });
   return res.value;
 }
+
 export function validateForm(isFormValid: boolean) {
   if (!isFormValid) {
-    toasts.warning("请检查表单是否填写正确");
+    use.warning("请检查表单是否填写正确");
   }
   return isFormValid;
 }
+*/

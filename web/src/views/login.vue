@@ -48,8 +48,7 @@
 import { fApi, fApiNotLoading, type PublicNotice } from "@/apis";
 import { Categ } from "@/apis/types/enums";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
-import { useInfoStore, useLoadingStore, isNoRetry } from "@/stores";
-import { toasts, validateForm } from "@/utils/dialogs";
+import { useInfoStore, useLoadingStore, isNoRetry, useDialogStore } from "@/stores";
 import { md5 } from "@/utils/md5";
 import { applyNavItems } from "@/utils/nav";
 import { NOT_EMPTY } from "@/utils/validation";
@@ -98,9 +97,9 @@ export default {
   },
   methods: {
     login() {
-      if (validateForm(this.isFormValid)) {
+      if (this.dialogStore.validateForm(this.isFormValid)) {
         if (isNoRetry(this.loadingStore)) {
-          toasts.error("密码错误次数过多，请稍等！");
+          this.dialogStore.error("密码错误次数过多，请稍等！");
           return;
         }
         const pwd = this.form.password;
@@ -135,7 +134,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore, useLoadingStore),
+    ...mapStores(useInfoStore, useLoadingStore, useDialogStore),
   },
 };
 </script>

@@ -126,8 +126,7 @@
 import { NOT_EMPTY } from "@/utils/validation";
 import { Categ, fApi } from "@/apis";
 import { mapStores } from "pinia";
-import { useInfoStore } from "@/stores";
-import { toasts, validateForm } from "@/utils/dialogs";
+import { useDialogStore, useInfoStore } from "@/stores";
 import {
   contributorsV1,
   contributorsV2,
@@ -141,7 +140,6 @@ export default {
   data() {
     return {
       Categ,
-      toasts,
       serverIP,
       report: "",
       rules: [NOT_EMPTY()],
@@ -155,9 +153,9 @@ export default {
   },
   methods: {
     submitReport() {
-      if (validateForm(this.isFormValid)) {
+      if (this.dialogStore.validateForm(this.isFormValid)) {
         if (this.report.length > 199) {
-          toasts.error("抱歉，反馈长度过长！");
+          this.dialogStore.error("抱歉，反馈长度过长！");
           return;
         }
         fApi.report(this.report)(() => {
@@ -171,7 +169,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore),
+    ...mapStores(useInfoStore, useDialogStore),
   },
 };
 </script>

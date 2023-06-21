@@ -1,5 +1,4 @@
-import { toasts } from "@/utils/dialogs";
-import { useInfoStore, useLoadingStore } from "@/stores";
+import { useInfoStore, useLoadingStore, useDialogStore } from "@/stores";
 import { type AxiosResponse } from "axios";
 import axios, { currentToken, setCurrentToken } from "@/plugins/axios";
 import * as structs from "./types/structs";
@@ -86,6 +85,7 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
     config.beforeReq(info, ctx);
     try {
       let res;
+      let dialogStore = useDialogStore();
       try {
         if(currentToken===""){
           setCurrentToken(useInfoStore().token)
@@ -94,9 +94,9 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
       } catch (e: any) {
         if (config.defaultFailedToast) {
           if (e?.code === "ERR_NETWORK") {
-            toasts.error("服务器内部错误！");
+            dialogStore.error("网络异常！请链接校内网络。");
           } else {
-            toasts.error((e as Error).message);
+            dialogStore.error((e as Error).message);
           }
         }
         config.errorReq(e as Error, info, ctx);
@@ -106,7 +106,7 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
       if (res?.data?.type !== "SUCCESS") {
         config.failedRes(res, info, ctx);
         if (config.defaultFailedToast) {
-          toasts.error(res?.data?.message);
+          dialogStore.error(res?.data?.message);
         }
       } else {
         const { message, result } = res?.data;
@@ -114,7 +114,7 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
         try {
           await processor(result);
           if (config.defaultOkToast) {
-            toasts.success(message);
+            dialogStore.success(message);
           }
           config.afterProcess(info, ctx);
         } catch (e) {
