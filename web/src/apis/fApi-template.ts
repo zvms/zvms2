@@ -1,9 +1,9 @@
-import { toasts } from "@/utils/dialogs";
-import { useInfoStore, useLoadingStore } from "@/stores";
+import { useInfoStore, useLoadingStore, useDialogStore } from "@/stores";
 import { type AxiosResponse } from "axios";
 import axios, { currentToken, setCurrentToken } from "@/plugins/axios";
 import * as structs from "./types/structs";
 import * as enums from "./types/enums";
+import { toasts } from "@/plugins/toastification";
 
 function toURLSearchParams(
   kwargs?: any //Record<string, number | string | undefined>
@@ -94,7 +94,7 @@ export function createForegroundApiRunner<T extends any[], R extends any>(
       } catch (e: any) {
         if (config.defaultFailedToast) {
           if (e?.code === "ERR_NETWORK") {
-            toasts.error("服务器内部错误！");
+            toasts.error("网络异常！请链接校内网络。");
           } else {
             toasts.error((e as Error).message);
           }

@@ -109,13 +109,13 @@ import {
 import MarkdownViewer from "@/components/markdown/viewer.vue";
 import MarkdownEditor from "@/components/markdown/editor.vue";
 import { baseURL } from "@/plugins/axios";
-import { useInfoStore } from "@/stores";
+import { useInfoStore, useDialogStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
-import { toasts, confirm } from "@/utils/dialogs";
 import { ArrayBufferToWordArray, getPicsById } from "@/utils/pics";
 import { mapStores } from "pinia";
 import type { PropType } from "vue";
 import CryptoJS from "crypto-js";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "thought-editor",
@@ -245,7 +245,7 @@ export default {
       )(then);
     },
     async submitThought() {
-      if (await confirm("确定提交？提交后不可修改！")) {
+      if (await this.dialogStore.confirm("确定提交？提交后不可修改！")) {
         fApi.submitThought(
           this.volId,
           this.infoStore.userId,
@@ -267,7 +267,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore),
+    ...mapStores(useInfoStore, useDialogStore),
     isJoiner() {
       return (
         this.vol.joiners.findIndex((v) => v.id === this.infoStore.userId) !== -1

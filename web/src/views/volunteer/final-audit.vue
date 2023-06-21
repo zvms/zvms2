@@ -100,7 +100,6 @@
 </template>
 
 <script lang="ts">
-import { confirm } from "@/utils/dialogs";
 // import {
 //   validate,
 //   validateNotNAN,
@@ -117,7 +116,7 @@ import {
   getThoughtStatusName,
   Categ,
 } from "@/apis";
-import { useInfoStore } from "@/stores";
+import { useDialogStore, useInfoStore } from "@/stores";
 import { timeToHint } from "@/utils/calc";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
@@ -207,7 +206,7 @@ export default {
      * @param status `true` for ok.
      */
     async audit(status: boolean) {
-      if (await confirm()) {
+      if (await this.dialogStore.confirm("确定通过？")) {
         if (status) {
           fApi.finalAudit(
             this.currentThoughtInfo!.volId,
@@ -231,6 +230,7 @@ export default {
     },
   },
   computed: {
+    ...mapStores(useDialogStore),
     signupRollupable(): boolean {
       const enoughPermission = Boolean(
         this.infoStore.permission & (Categ.Manager | Categ.System)

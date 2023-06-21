@@ -104,10 +104,10 @@
 import { fApi, VolType, type SingleUserWithoutAuth } from "@/apis";
 import { NOT_EMPTY, TIME, IS_DECIMAL, IS_VAILD } from "@/utils/validation";
 import { mapStores } from "pinia";
-import { useInfoStore } from "@/stores";
+import { useDialogStore, useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { fApiNotLoading } from "@/apis";
-import { toasts, validateForm } from "@/utils/dialogs";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   data() {
@@ -133,7 +133,7 @@ export default {
   },
   methods: {
     recordVolunteer() {
-      if (validateForm(this.isFormValid)) {
+      if (toasts.validateForm(this.isFormValid)) {
         if (this.form.joiners.length === 0) {
           toasts.error("需至少选择一名成员！");
           return;
@@ -174,7 +174,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore),
+    ...mapStores(useInfoStore, useDialogStore),
   },
 };
 </script>

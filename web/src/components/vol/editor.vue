@@ -129,9 +129,9 @@ import {
   IS_VAILD,
 } from "@/utils/validation";
 import { mapStores } from "pinia";
-import { useInfoStore } from "@/stores";
+import { useDialogStore, useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
-import { toasts, validateForm } from "@/utils/dialogs";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "vol-editor",
@@ -222,7 +222,7 @@ export default {
       this.countNew = "" as any as number;
     },
     submit() {
-      if (validateForm(this.isFormValid)) {
+      if (toasts.validateForm(this.isFormValid)) {
         if (
           this.advancedOptionsPermission &&
           this.modelValue.classes.length === 0
@@ -235,7 +235,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore),
+    ...mapStores(useInfoStore, useDialogStore),
     unselectedClasses() {
       return this.classes.filter((v) => !v.selected);
     },

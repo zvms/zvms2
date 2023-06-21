@@ -116,7 +116,7 @@
 </template>
 
 <script lang="ts">
-import { useInfoStore } from "@/stores";
+import { useDialogStore, useInfoStore } from "@/stores";
 import { fApi, type SingleNotice, type NoticeBody } from "@/apis";
 import { Categ } from "@/apis/types/enums";
 import { mapStores } from "pinia";
@@ -124,10 +124,10 @@ import { applyNavItems } from "@/utils/nav";
 import { timeToHint } from "@/utils/calc";
 import { md5 } from "@/utils/md5";
 import { NOT_EMPTY } from "@/utils/validation";
-import { toasts, validateForm } from "@/utils/dialogs";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
 import PermissionChips from "@/components/user-chips.vue";
 import { VInfiniteScroll as InfiniteScroll } from "vuetify/labs/VInfiniteScroll";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "me",
@@ -191,7 +191,7 @@ export default {
       this.$router.push("/login");
     },
     modifyPwd() {
-      if (validateForm(this.isFormValid)) {
+      if (toasts.validateForm(this.isFormValid)) {
         if (this.newPwd !== this.confirmPwd) {
           toasts.error("两次密码不一致");
           this.confirmPwd = "";
@@ -223,7 +223,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore),
+    ...mapStores(useInfoStore, useDialogStore),
     timeStatVisible() {
       return this.infoStore.permission & Categ.Student;
     },

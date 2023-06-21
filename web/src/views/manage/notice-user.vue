@@ -37,8 +37,10 @@
 <script lang="ts">
 import { fApi } from "@/apis";
 import { NOT_EMPTY, TIME } from "@/utils/validation";
-import { confirm, validateForm } from "@/utils/dialogs";
 import UseridInput from "@/components/userid-input.vue";
+import { mapStores } from "pinia";
+import { useDialogStore } from "@/stores";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "notice-user",
@@ -62,8 +64,8 @@ export default {
   methods: {
     async createNotice() {
       if (
-        validateForm(this.isFormValid) &&
-        (await confirm(`确定创建发送给${this.form.target}的通知？`))
+        toasts.validateForm(this.isFormValid) &&
+        (await this.dialogStore.confirm(`确定创建发送给${this.form.target}的通知？`))
       ) {
         let t = [parseInt(this.form.target)];
         fApi.sendUserNotice(
@@ -78,5 +80,8 @@ export default {
       }
     },
   },
+  computed:{
+    ...mapStores(useDialogStore)
+  }
 };
 </script>

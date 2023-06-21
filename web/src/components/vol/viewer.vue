@@ -92,9 +92,9 @@ import {
 } from "@/apis";
 import { type PropType } from "vue";
 import { mapStores } from "pinia";
-import { useInfoStore } from "@/stores";
+import { useDialogStore, useInfoStore } from "@/stores";
 import StuInfo from "../stu-info.vue";
-import { confirm, toasts } from "@/utils/dialogs";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "vol-viewer",
@@ -134,7 +134,7 @@ export default {
       });
     },
     async rollbackSignup(id: number) {
-      if (await confirm("确定要撤销报名吗？")) {
+      if (await this.dialogStore.confirm("确定要撤销报名吗？")) {
         fApi.skipOkToast.rollbackSignup(
           this.volId,
           id
@@ -147,7 +147,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore),
+    ...mapStores(useInfoStore, useDialogStore),
     volClassesNormalized() {
       return this.vol.classes.filter((v) => v.max > 0);
     },

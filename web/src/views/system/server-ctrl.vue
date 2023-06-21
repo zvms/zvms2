@@ -6,8 +6,10 @@
   </v-container>
 </template>
 <script lang="ts">
+import { mapStores } from "pinia";
 import { fApi } from "@/apis";
-import { confirm } from "@/utils/dialogs";
+import { useDialogStore } from "@/stores";
+
 export default {
   name: "server-ctrl",
   data() {
@@ -15,14 +17,17 @@ export default {
   },
   methods: {
     async restartBackend() {
-      if (await confirm("确定重启？")) {
-        if (await confirm("确定重启*2 ？")) {
-          if (await confirm("确定重启*3 ？")) {
+      if (await this.dialogStore.confirm("确定重启？")) {
+        if (await this.dialogStore.confirm("确定重启*2 ？")) {
+          if (await this.dialogStore.confirm("确定重启*3 ？")) {
             fApi.restart()();
           }
         }
       }
     },
   },
+  computed:{
+    ...mapStores(useDialogStore)
+  }
 };
 </script>

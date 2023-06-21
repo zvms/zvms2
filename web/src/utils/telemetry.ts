@@ -1,4 +1,4 @@
-import { toasts } from "@/utils/dialogs";
+import { toasts } from "@/plugins/toastification";
 
 export function registerTelemetry() {
   window.addEventListener("error", (ev) => {

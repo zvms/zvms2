@@ -27,10 +27,12 @@
 </template>
 
 <script lang="ts">
+import { mapStores } from "pinia";
 import { docs, type DocItem } from "@/docs";
-import { toasts } from "@/utils/dialogs";
+import { useDialogStore } from "@/stores";
 import "github-markdown-css";
 import mermaid from "mermaid";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   data() {
@@ -80,6 +82,7 @@ export default {
     }
   },
   computed: {
+    ...mapStores(useDialogStore),
     breadcrumbs() {
       return this.currentDoc.path
         .map((p) => ({

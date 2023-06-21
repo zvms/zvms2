@@ -1,5 +1,5 @@
 <template>
-  <v-app class="overflow-y-hidden" full-height>
+  <v-app full-height>
     <v-theme-provider theme="light">
       <v-navigation-drawer
         app
@@ -53,12 +53,24 @@
       </v-main>
     </v-theme-provider>
     <div id="prevent-click-hover" v-if="loadingStore.isLoading"></div>
+    <v-dialog v-if="dialogStore.dialog" persistent fullscreen>
+      <v-card style="position: fixed; left: 30%; width: 40%; height: 40%">
+        <v-card-title>{{ dialogStore.dialog!.title }}</v-card-title>
+        <v-card-text>
+          {{ dialogStore.dialog!.message }}
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="dialogStore.dialog!.resolve(true)">确认</v-btn>
+          <v-btn @click="dialogStore.dialog!.resolve(false)">取消</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
 <script lang="ts">
 import { applyNavItems } from "@/utils/nav";
-import { useNavStore, useLoadingStore } from "@/stores";
+import { useNavStore, useLoadingStore, useDialogStore } from "@/stores";
 import { mapStores } from "pinia";
 import { VERSION } from "@/utils/metadata";
 
@@ -73,7 +85,7 @@ export default {
     applyNavItems();
   },
   computed: {
-    ...mapStores(useNavStore, useLoadingStore),
+    ...mapStores(useNavStore, useLoadingStore, useDialogStore),
   },
 };
 </script>

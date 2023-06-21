@@ -16,19 +16,13 @@
         src="https://img.shields.io/github/stars/zvms/zvms?logo=github"
         width="70"
         class="my-1"
-      >
-        <v-tooltip activator="parent" location="right">
-          访问github.com/zvms/zvms，给出一个star吧~
-        </v-tooltip>
-      </v-img>
+        @click="toasts.info('访问github.com/zvms/zvms，给出一个star吧~')"
+      ></v-img>
       <v-img
         src="https://gitee.com/zvms/zvms/badge/star.svg?theme=dark"
         width="70"
-      >
-        <v-tooltip activator="parent" location="right">
-          访问gitee.com/zvms/zvms，给出一个star吧~
-        </v-tooltip>
-      </v-img>
+        @click="toasts.info('访问gitee.com/zvms/zvms，给出一个star吧~')"
+      ></v-img>
     </v-card-text>
   </v-card>
   <v-card>
@@ -99,7 +93,7 @@
           :rules="rules"
           label="问题的描述"
           type="text"
-          prepend-icon="mdi-alert"
+          prepend-icon="mdi-comment-text-outline"
         />
         <v-btn color="primary" class="submit" @click="submitReport">提交</v-btn>
       </v-form>
@@ -126,8 +120,7 @@
 import { NOT_EMPTY } from "@/utils/validation";
 import { Categ, fApi } from "@/apis";
 import { mapStores } from "pinia";
-import { useInfoStore } from "@/stores";
-import { toasts, validateForm } from "@/utils/dialogs";
+import { useDialogStore, useInfoStore } from "@/stores";
 import {
   contributorsV1,
   contributorsV2,
@@ -135,14 +128,15 @@ import {
   type Contributor,
 } from "@/utils/contributors";
 import { serverIP } from "@/plugins/axios";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "report",
   data() {
     return {
       Categ,
-      toasts,
       serverIP,
+      toasts,
       report: "",
       rules: [NOT_EMPTY()],
       isFormValid: false,
@@ -155,7 +149,7 @@ export default {
   },
   methods: {
     submitReport() {
-      if (validateForm(this.isFormValid)) {
+      if (toasts.validateForm(this.isFormValid)) {
         if (this.report.length > 199) {
           toasts.error("抱歉，反馈长度过长！");
           return;
@@ -171,7 +165,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore),
+    ...mapStores(useInfoStore, useDialogStore),
   },
 };
 </script>

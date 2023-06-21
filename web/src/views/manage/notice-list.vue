@@ -37,11 +37,12 @@
 </template>
 
 <script lang="ts">
+import { mapStores } from "pinia";
 import { fApi, type SingleNotice, type UserInfoResponse } from "@/apis";
-import { confirm } from "@/utils/dialogs";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import StuInfo from "@/components/stu-info.vue";
 import TablePlaceholder from "@/components/table-placeholder.vue";
+import { useDialogStore } from "@/stores";
 
 type DetailedSingleNotice = SingleNotice & {
   index: number;
@@ -111,11 +112,14 @@ export default {
       });
     },
     async deleteNotice() {
-      if (await confirm("确定删除？")) {
+      if (await this.dialogStore.confirm("确定删除？")) {
         fApi.deleteNotice(this.notices[this.currentNotice].id)();
         this.fetchNotices();
       }
     },
+  },
+  computed: {
+    ...mapStores(useDialogStore),
   },
 };
 </script>
