@@ -16,19 +16,13 @@
         src="https://img.shields.io/github/stars/zvms/zvms?logo=github"
         width="70"
         class="my-1"
-      >
-        <v-tooltip activator="parent" location="right">
-          访问github.com/zvms/zvms，给出一个star吧~
-        </v-tooltip>
-      </v-img>
+        @click="toasts.info('访问github.com/zvms/zvms，给出一个star吧~')"
+      ></v-img>
       <v-img
         src="https://gitee.com/zvms/zvms/badge/star.svg?theme=dark"
         width="70"
-      >
-        <v-tooltip activator="parent" location="right">
-          访问gitee.com/zvms/zvms，给出一个star吧~
-        </v-tooltip>
-      </v-img>
+        @click="toasts.info('访问gitee.com/zvms/zvms，给出一个star吧~')"
+      ></v-img>
     </v-card-text>
   </v-card>
   <v-card>
@@ -99,7 +93,7 @@
           :rules="rules"
           label="问题的描述"
           type="text"
-          prepend-icon="mdi-alert"
+          prepend-icon="mdi-comment-text-outline"
         />
         <v-btn color="primary" class="submit" @click="submitReport">提交</v-btn>
       </v-form>
@@ -142,6 +136,7 @@ export default {
     return {
       Categ,
       serverIP,
+      toasts,
       report: "",
       rules: [NOT_EMPTY()],
       isFormValid: false,
