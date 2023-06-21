@@ -1,6 +1,6 @@
 <template>
   <p class="text-center">
-    <span v-if="loadingStore.calcIsLoading()">加载中...</span>
+    <span v-if="loadingStore.isLoading">加载中...</span>
     <span v-else>是空的~</span>
   </p>
 </template>
