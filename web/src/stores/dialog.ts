@@ -47,36 +47,40 @@ export const useDialogStore = defineStore("dialog", {
       return promise;
     },
     success(message: string) {
+      const key = Date.now();
       this.dialog = {
         type: DialogType.Success,
-        key: Date.now(),
+        key,
         message,
       };
-      this.registerTimeout(this.dialog.key, 3000);
+      this.registerTimeout(key, 3000);
     },
     error(message: string) {
+      const key = Date.now();
       this.dialog = {
         type: DialogType.Error,
-        key: Date.now(),
+        key,
         message,
       };
-      this.registerTimeout(this.dialog.key, 5000);
+      this.registerTimeout(key, 5000);
     },
     warn(message: string) {
+      const key = Date.now();
       this.dialog = {
         type: DialogType.Warn,
-        key: Date.now(),
+        key,
         message,
       };
-      this.registerTimeout(this.dialog.key, 3000);
+      this.registerTimeout(key, 3000);
     },
     info(message: string) {
+      const key = Date.now();
       this.dialog = {
         type: DialogType.Info,
-        key: Date.now(),
+        key,
         message,
       };
-      this.registerTimeout(this.dialog.key, 3000);
+      this.registerTimeout(key, 3000);
     },
     registerTimeout(key: number, timeout: number) {
       setTimeout(() => {
