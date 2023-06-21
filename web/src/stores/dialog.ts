@@ -36,12 +36,16 @@ export const useDialogStore = defineStore("dialog", {
   actions: {
     confirm(title: string, message: string): Promise<boolean> {
       const promise = new Promise<boolean>((resolve, reject) => {
+        const key = Date.now();
         this.dialog = {
           type: DialogType.Confirm,
-          key: Date.now(),
+          key,
           title,
           message,
-          resolve,
+          resolve: (v) => {
+            this.close(key);
+            resolve(v);
+          },
         };
       });
       return promise;
