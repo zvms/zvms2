@@ -38,6 +38,7 @@ import { mapStores } from "pinia";
 import { fApi } from "@/apis";
 import { NOT_EMPTY, TIME } from "@/utils/validation";
 import { useDialogStore } from "@/stores";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "notice-school",
@@ -57,7 +58,7 @@ export default {
   methods: {
     async createNotice() {
       if (
-        this.dialogStore.validateForm(this.isFormValid) &&
+        toasts.validateForm(this.isFormValid) &&
         (await this.dialogStore.confirm("确定创建？一旦创建，全校所有人都会看见。请慎重！"))
       ) {
         fApi.sendSchoolNotice(

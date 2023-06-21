@@ -107,6 +107,7 @@ import { mapStores } from "pinia";
 import { useDialogStore, useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
 import { fApiNotLoading } from "@/apis";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   data() {
@@ -132,9 +133,9 @@ export default {
   },
   methods: {
     recordVolunteer() {
-      if (this.dialogStore.validateForm(this.isFormValid)) {
+      if (toasts.validateForm(this.isFormValid)) {
         if (this.form.joiners.length === 0) {
-          this.dialogStore.error("需至少选择一名成员！");
+          toasts.error("需至少选择一名成员！");
           return;
         }
         fApi.createAppointedVolunteer(

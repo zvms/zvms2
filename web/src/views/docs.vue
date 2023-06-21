@@ -32,6 +32,7 @@ import { docs, type DocItem } from "@/docs";
 import { useDialogStore } from "@/stores";
 import "github-markdown-css";
 import mermaid from "mermaid";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   data() {
@@ -57,7 +58,7 @@ export default {
         this.currentDoc = docs[docId as keyof typeof docs];
         return true;
       }
-      this.dialogStore.error(`找不到文档 "${docId}"`);
+      toasts.error(`找不到文档 "${docId}"`);
       this.$router.push("/");
       return false;
     },

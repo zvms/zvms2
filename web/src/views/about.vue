@@ -134,6 +134,7 @@ import {
   type Contributor,
 } from "@/utils/contributors";
 import { serverIP } from "@/plugins/axios";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "report",
@@ -153,9 +154,9 @@ export default {
   },
   methods: {
     submitReport() {
-      if (this.dialogStore.validateForm(this.isFormValid)) {
+      if (toasts.validateForm(this.isFormValid)) {
         if (this.report.length > 199) {
-          this.dialogStore.error("抱歉，反馈长度过长！");
+          toasts.error("抱歉，反馈长度过长！");
           return;
         }
         fApi.report(this.report)(() => {

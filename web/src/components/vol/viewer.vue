@@ -94,6 +94,7 @@ import { type PropType } from "vue";
 import { mapStores } from "pinia";
 import { useDialogStore, useInfoStore } from "@/stores";
 import StuInfo from "../stu-info.vue";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "vol-viewer",
@@ -139,7 +140,7 @@ export default {
           id
         )(() => {
           this.stuInfoDlg = false;
-          this.dialogStore.success("撤销报名成功，请刷新页面");
+          toasts.success("撤销报名成功，请刷新页面");
           this.$emit("update");
         });
       }

@@ -131,6 +131,7 @@ import {
 import { mapStores } from "pinia";
 import { useDialogStore, useInfoStore } from "@/stores";
 import { Categ } from "@/apis/types/enums";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "vol-editor",
@@ -193,7 +194,7 @@ export default {
       }
       fApi.skipOkToast.getClassStudentNum(this.classNew)(({ num: maxNum }) => {
         if (this.countNew > maxNum) {
-          this.dialogStore.error(`超过班级最大人数！最大人数：${maxNum}人。`);
+          toasts.error(`超过班级最大人数！最大人数：${maxNum}人。`);
           this.countNew = maxNum;
         }
         const idx = this.classes.findIndex((v) => v.id == this.classNew);
@@ -221,12 +222,12 @@ export default {
       this.countNew = "" as any as number;
     },
     submit() {
-      if (this.dialogStore.validateForm(this.isFormValid)) {
+      if (toasts.validateForm(this.isFormValid)) {
         if (
           this.advancedOptionsPermission &&
           this.modelValue.classes.length === 0
         ) {
-          this.dialogStore.error("必须至少选择一个班级。请点击“+”号添加班级");
+          toasts.error("必须至少选择一个班级。请点击“+”号添加班级");
           return;
         }
         this.$emit("submit");

@@ -115,6 +115,7 @@ import { ArrayBufferToWordArray, getPicsById } from "@/utils/pics";
 import { mapStores } from "pinia";
 import type { PropType } from "vue";
 import CryptoJS from "crypto-js";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "thought-editor",
@@ -184,14 +185,14 @@ export default {
   methods: {
     async uploadFromId() {
       if (Number.isNaN(parseInt(this.picsId, 36))) {
-        this.dialogStore.error("图片ID格式错误");
+        toasts.error("图片ID格式错误");
         return;
       }
       try {
         const pics = await getPicsById(this.picsId);
 
         if (pics.length === 0) {
-          this.dialogStore.error("图片不存在");
+          toasts.error("图片不存在");
           return;
         }
         for (const pic of pics) {
@@ -211,18 +212,18 @@ export default {
         }
         this.picsId = "";
       } catch (err: any) {
-        this.dialogStore.error("通过ID获取图床图片失败! " + err?.message);
+        toasts.error("通过ID获取图床图片失败! " + err?.message);
       }
     },
     async uploadImg(files: File[]) {
       const newFile = files[0];
       if (newFile.size > 1024 * 1024 * 10) {
-        this.dialogStore.error("图片大小不能超过10MB");
+        toasts.error("图片大小不能超过10MB");
         return;
       }
       const arrayBuffer = await newFile.arrayBuffer();
       if (!arrayBuffer) {
-        this.dialogStore.error(`文件${newFile.name}上传失败！`);
+        toasts.error(`文件${newFile.name}上传失败！`);
         return;
       }
       this.pics.push({
@@ -244,7 +245,7 @@ export default {
       )(then);
     },
     async submitThought() {
-      if (await confirm("确定提交？提交后不可修改！")) {
+      if (await this.dialogStore.confirm("确定提交？提交后不可修改！")) {
         fApi.submitThought(
           this.volId,
           this.infoStore.userId,
@@ -290,7 +291,7 @@ export default {
         }
         return pics;
       } catch (e: any) {
-        this.dialogStore.error(`图片上传失败！原因：${e.message}`);
+        toasts.error(`图片上传失败！原因：${e.message}`);
         throw e;
       }
     },

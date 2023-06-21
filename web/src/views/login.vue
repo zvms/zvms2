@@ -60,6 +60,7 @@ import {
   getLatestUser,
   setLatestUser,
 } from "@/utils/device";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "login",
@@ -97,9 +98,9 @@ export default {
   },
   methods: {
     login() {
-      if (this.dialogStore.validateForm(this.isFormValid)) {
+      if (toasts.validateForm(this.isFormValid)) {
         if (isNoRetry(this.loadingStore)) {
-          this.dialogStore.error("密码错误次数过多，请稍等！");
+          toasts.error("密码错误次数过多，请稍等！");
           return;
         }
         const pwd = this.form.password;

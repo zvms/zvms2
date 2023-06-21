@@ -117,9 +117,8 @@ import {
 } from "@/apis";
 import { Categ, getVolStatusName } from "@/apis/types/enums";
 import VolViewer from "@/components/vol/viewer.vue";
-import { useInfoStore, useLoadingStore } from "@/stores";
+import { useDialogStore, useInfoStore, useLoadingStore } from "@/stores";
 import { getVolStatusDisplayText } from "@/utils/calc";
-import { confirm } from "@/utils/dialogs";
 import { mapStores } from "pinia";
 import { VDataTable as DataTable } from "vuetify/labs/VDataTable";
 import ThoughtEditor from "@/components/thought/editor.vue";
@@ -257,7 +256,7 @@ export default {
     },
   },
   computed: {
-    ...mapStores(useInfoStore, useLoadingStore),
+    ...mapStores(useInfoStore, useLoadingStore, useDialogStore),
     isJoiner() {
       return (
         this.current!.vol.joiners.findIndex(
@@ -284,7 +283,7 @@ export default {
         result.push({
           text: "报名",
           onclick: async () => {
-            if (await confirm("确定报名？")) {
+            if (await this.dialogStore.confirm("确定报名？")) {
               fApi.signup(this.current.singleVol.id, [this.infoStore.userId])(
                 () => {
                   this.fetchVols();
@@ -302,7 +301,7 @@ export default {
           result.push({
             text: "允许报名",
             onclick: async () => {
-              if (await confirm("确定？")) {
+              if (await this.dialogStore.confirm("确定？")) {
                 fApi.auditVolunteer(this.current.singleVol.id)(() => {
                   this.fetchVols();
                 });
@@ -312,7 +311,7 @@ export default {
           result.push({
             text: "禁止报名",
             onclick: async () => {
-              if (await confirm("确定？")) {
+              if (await this.dialogStore.confirm("确定？")) {
                 fApi.repulseVolunteer(this.current.singleVol.id)(() => {
                   this.fetchVols();
                 });
@@ -331,7 +330,7 @@ export default {
         result.push({
           text: "删除义工",
           onclick: async () => {
-            if (await confirm("确定删除？此操作不可逆")) {
+            if (await this.dialogStore.confirm("确定删除？此操作不可逆")) {
               fApi.deleteVolunteer(this.current!.singleVol.id)(() => {
                 this.fetchVols();
               });

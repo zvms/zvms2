@@ -53,46 +53,24 @@
       </v-main>
     </v-theme-provider>
     <div id="prevent-click-hover" v-if="loadingStore.isLoading"></div>
-    <v-dialog
-      v-if="dialogStore.dialog?.type === DialogType.Confirm"
-      persistent
-      fullscreen
-    >
+    <v-dialog v-if="dialogStore.dialog" persistent fullscreen>
       <v-card style="position: fixed; left: 30%; width: 40%; height: 40%">
-        <v-card-title>{{ (dialogStore.dialog as any).title }}</v-card-title>
+        <v-card-title>{{ dialogStore.dialog!.title }}</v-card-title>
         <v-card-text>
           {{ dialogStore.dialog!.message }}
         </v-card-text>
         <v-card-actions>
-          <v-btn @click="(dialogStore.dialog as any).resolve(true)">确认</v-btn>
-          <v-btn @click="(dialogStore.dialog as any).resolve(false)">
-            取消
-          </v-btn>
+          <v-btn @click="dialogStore.dialog!.resolve(true)">确认</v-btn>
+          <v-btn @click="dialogStore.dialog!.resolve(false)">取消</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <template
-      v-if="
-        dialogStore.dialog !== null &&
-        dialogStore.dialog?.type !== DialogType.Confirm
-      "
-      persistent
-      fullscreen
-    >
-    <v-icon :color="toastIconColor">{{ toastIconName }}</v-icon>
-    {{ dialogStore.dialog!.message }}
-  </template>
   </v-app>
 </template>
 
 <script lang="ts">
 import { applyNavItems } from "@/utils/nav";
-import {
-  useNavStore,
-  useLoadingStore,
-  useDialogStore,
-  DialogType,
-} from "@/stores";
+import { useNavStore, useLoadingStore, useDialogStore } from "@/stores";
 import { mapStores } from "pinia";
 import { VERSION } from "@/utils/metadata";
 
@@ -101,7 +79,6 @@ export default {
   data() {
     return {
       VERSION,
-      DialogType,
     };
   },
   beforeMount() {
@@ -109,24 +86,6 @@ export default {
   },
   computed: {
     ...mapStores(useNavStore, useLoadingStore, useDialogStore),
-    toastIconName() {
-      return {
-        [DialogType.Confirm]: "<NULL>",
-        [DialogType.Success]: "mdi-check-outline",
-        [DialogType.Error]: "mdi-close-outline",
-        [DialogType.Warn]: "mdi-alert-outline",
-        [DialogType.Info]: "mdi-information-outline",
-      }[this.dialogStore.dialog!.type];
-    },
-    toastIconColor() {
-      return {
-        [DialogType.Confirm]: "<NULL>",
-        [DialogType.Success]: "green",
-        [DialogType.Error]: "red",
-        [DialogType.Warn]: "yellow",
-        [DialogType.Info]: "blue",
-      }[this.dialogStore.dialog!.type];
-    },
   },
 };
 </script>

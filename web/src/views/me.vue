@@ -127,6 +127,7 @@ import { NOT_EMPTY } from "@/utils/validation";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
 import PermissionChips from "@/components/user-chips.vue";
 import { VInfiniteScroll as InfiniteScroll } from "vuetify/labs/VInfiniteScroll";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "me",
@@ -190,9 +191,9 @@ export default {
       this.$router.push("/login");
     },
     modifyPwd() {
-      if (this.dialogStore.validateForm(this.isFormValid)) {
+      if (toasts.validateForm(this.isFormValid)) {
         if (this.newPwd !== this.confirmPwd) {
-          this.dialogStore.error("两次密码不一致");
+          toasts.error("两次密码不一致");
           this.confirmPwd = "";
           return;
         }

@@ -27,6 +27,7 @@ import { md5 } from "@/utils/md5";
 import { NOT_EMPTY } from "@/utils/validation";
 import { mapStores } from "pinia";
 import UseridInput from "@/components/userid-input.vue";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "modify-pwd",
@@ -46,9 +47,9 @@ export default {
   },
   methods: {
     async modifyOthersPwd() {
-      if (this.dialogStore.validateForm(this.isFormValid)) {
+      if (toasts.validateForm(this.isFormValid)) {
         if (this.form.newPwd !== this.form.confirmPwd) {
-          this.dialogStore.error("两次密码不一致");
+          toasts.error("两次密码不一致");
           this.form.confirmPwd = "";
           return;
         }

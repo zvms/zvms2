@@ -40,6 +40,7 @@ import { NOT_EMPTY, TIME } from "@/utils/validation";
 import UseridInput from "@/components/userid-input.vue";
 import { mapStores } from "pinia";
 import { useDialogStore } from "@/stores";
+import { toasts } from "@/plugins/toastification";
 
 export default {
   name: "notice-user",
@@ -63,7 +64,7 @@ export default {
   methods: {
     async createNotice() {
       if (
-        this.dialogStore.validateForm(this.isFormValid) &&
+        toasts.validateForm(this.isFormValid) &&
         (await this.dialogStore.confirm(`确定创建发送给${this.form.target}的通知？`))
       ) {
         let t = [parseInt(this.form.target)];

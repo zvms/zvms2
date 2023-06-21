@@ -56,6 +56,9 @@ dependencies:
   vue-router:
     specifier: ^4.2.2
     version: registry.npmmirror.com/vue-router@4.2.2(vue@3.3.4)
+  vue-toastification:
+    specifier: 2.0.0-rc.5
+    version: 2.0.0-rc.5(vue@3.3.4)
   vuetify:
     specifier: ^3.3.4
     version: registry.npmmirror.com/vuetify@3.3.4(typescript@5.0.4)(vue@3.3.4)
@@ -871,6 +874,14 @@ packages:
 
   /uc.micro@1.0.6:
     resolution: {integrity: sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==}
+    dev: false
+
+  /vue-toastification@2.0.0-rc.5(vue@3.3.4):
+    resolution: {integrity: sha512-q73e5jy6gucEO/U+P48hqX+/qyXDozAGmaGgLFm5tXX4wJBcVsnGp4e/iJqlm9xzHETYOilUuwOUje2Qg1JdwA==}
+    peerDependencies:
+      vue: ^3.0.2
+    dependencies:
+      vue: registry.npmmirror.com/vue@3.3.4
     dev: false
 
   /w3c-keyname@2.2.8:
