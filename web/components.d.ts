@@ -53,7 +53,6 @@ declare module '@vue/runtime-core' {
     VTextarea: typeof import('vuetify/components')['VTextarea']
     VTextField: typeof import('vuetify/components')['VTextField']
     VThemeProvider: typeof import('vuetify/components')['VThemeProvider']
-    VTooltip: typeof import('vuetify/components')['VTooltip']
     VWindow: typeof import('vuetify/components')['VWindow']
     VWindowItem: typeof import('vuetify/components')['VWindowItem']
   }

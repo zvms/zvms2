@@ -39,7 +39,7 @@
       (publicNotice.title.length > 0 || publicNotice.content.length > 0)
     "
   >
-    <v-card-title>公告：{{ publicNotice.title }}</v-card-title>
+    <v-card-title v-html="publicNotice.title"></v-card-title>
     <v-card-text v-html="publicNotice.content"></v-card-text>
   </v-card>
 </template>
@@ -127,6 +127,7 @@ export default {
               classId: cls,
               className: clsName,
             });
+            this.loadingStore.noRetryStart = NaN;
             applyNavItems();
             this.$router.push("/");
           });

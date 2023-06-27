@@ -52,7 +52,7 @@ export const contributorsV2 = [
     infoHtml: `2022级 邱念楚 <br/> 关注<a href="http://172.31.2.4:19198">define-syntax.org</a>`,
   },
   {
-    displayName: "_Kerman_xtr",
+    displayName: "_Kerman",
     infoHtml: `2022级 熊桐睿<br/>
     <i>_Kerman is async</i><br/>
     <img src="https://img.shields.io/badge/-@KermanX-181717?style=flat-square&logo=github&logoColor=white"/><br/>
@@ -65,7 +65,7 @@ export const contributorsV2 = [
     displayName: "clc",
     infoHtml: `2022级 陈浏畅<br/>
     一只蒟蒻<br/>
-    <img src="${clcImage}" width="160" height="134" lazy><br/>`,
+    <img src="${clcImage}" width="240" height="201" lazy><br/>`,
   },
 ] satisfies Contributor[];
 
@@ -84,17 +84,17 @@ github.com/7086cmd|逸一时误一世，逸久逸久 Bug 已零|大 Bug 病了�
   zjr: {
     displayName: "zjr",
     infoHtml: `<style>
-		body {
-			background-color: #252525;
-			margin: 0;
-			padding: 0;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			height:100vh;
-		}
+    div.zjr {
+      background-color: #252525;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height:100vh;
+      }
 
-		h1 {
+		h1.zjr {
 			color: #000000;
 			font-family: "STKaiti", sans-serif;
 			font-weight: bold;
@@ -109,7 +109,7 @@ github.com/7086cmd|逸一时误一世，逸久逸久 Bug 已零|大 Bug 病了�
       		outline:none;
 		}
 
-		h1:hover {
+		h1.zjr:hover {
 			text-shadow:none;
 			transform: rotateY(360deg);
 		}
@@ -124,6 +124,6 @@ github.com/7086cmd|逸一时误一世，逸久逸久 Bug 已零|大 Bug 病了�
 				opacity: 1;
 			}
 		}
-	</style><h1>这是周济睿<br>文档编写以及流程测试<br>纯合致死<br>不啻微芒，造炬成阳</h1>` ,
+	</style><div class="zjr"><h1 class="zjr">这是周济睿<br>文档编写以及流程测试<br>纯合致死<br>不啻微芒，造炬成阳</h1></div>` ,
   },
 } satisfies Record<string, Contributor>;

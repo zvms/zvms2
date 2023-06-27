@@ -48,3 +48,4 @@ elif sys.platform == 'linux':
 TTYD_PATH = r'start powershell C:\Users\Public\workspace\ttyd\start.ps1'
 
 PUBLIC_NOTICE_PATH = r'C:\Users\Public\workspace\public_notice.txt'
+ZVMS_EXPANSIONS_PATH = r'C:\Users\Public\workspace\zvms_expansions.txt'

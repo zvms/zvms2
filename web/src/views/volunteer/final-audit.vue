@@ -206,7 +206,7 @@ export default {
      * @param status `true` for ok.
      */
     async audit(status: boolean) {
-      if (await this.dialogStore.confirm("确定通过？")) {
+      if (await this.dialogStore.confirm(`确定${status?"通过":"打回"}？`)) {
         if (status) {
           fApi.finalAudit(
             this.currentThoughtInfo!.volId,

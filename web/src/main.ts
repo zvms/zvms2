@@ -9,7 +9,7 @@ import piniaPluginPersist from "pinia-plugin-persist";
 import App from "@/App.vue";
 import Router from "@/router";
 import Vuetify from "@/plugins/vuetify";
-import Toast from "@/plugins/toastification";
+import Toast, {options} from "@/plugins/toastification";
 
 import "@/assets/main.css";
 
@@ -20,7 +20,7 @@ const app = createApp(App);
 app.use(createPinia().use(piniaPluginPersist));
 app.use(Router);
 app.use(Vuetify);
-app.use(Toast);
+app.use(Toast, options);
 
 app.mount("#app");
 

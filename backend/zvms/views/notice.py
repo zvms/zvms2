@@ -93,18 +93,30 @@ def modify_notice(id, title, content, deadtime, token_data):
 
 public_notice_title = ""
 public_notice_content = ""
+zvms_expansions = ["ZHZX Volunteer Management System"]
 
 def load_public_notice():
-    global public_notice_title, public_notice_content
+    global public_notice_title, public_notice_content, zvms_expansions
     try:
         with open(PUBLIC_NOTICE_PATH, 'rt', -1, 'utf-8') as f:
             public_notice_title = f.readline()
+            try:
+                with open(ZVMS_EXPANSIONS_PATH, 'rt', -1, 'utf-8') as f1:
+                    zvms_expansions = [s.strip() for s in f1.read().split('\n') if len(s.strip())>0]
+            except FileNotFoundError:
+                pass
             public_notice_content = f.read()
             print("Public notice loaded.")
-    except FileNotFoundError as err:
-        print(f"找不到public_notice: {PUBLIC_NOTICE_PATH}")
+    except FileNotFoundError:
+        pass
 
 @Api(rule='/notice/public', method='GET', response='PublicNotice', auth=Categ.NONE)
 def get_public_notice(token_data):
     '''获取公开通知'''
-    return success('获取公开通知成功', title=public_notice_title, content=public_notice_content)
+    big_prime_number = 10457
+    seconds_per_hour = 60*60
+    utc_seconds = datetime.datetime.now().timestamp()
+    utc_hours = int(utc_seconds/seconds_per_hour + 8)
+    utc_days = utc_hours%24
+    expansion = zvms_expansions[(utc_days*big_prime_number)%len(zvms_expansions)]
+    return success('获取公开通知成功', title=public_notice_title.replace('{}', expansion), content=public_notice_content)

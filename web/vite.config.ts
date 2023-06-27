@@ -31,6 +31,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      //"mermaid": "https://cdn.bootcdn.net/ajax/libs/mermaid/10.1.0/mermaid.esm.min.mjs",
     },
   },
 });

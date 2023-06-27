@@ -1,4 +1,4 @@
-import Toast, { useToast, POSITION } from "vue-toastification";
+import Toast, { useToast, POSITION, type PluginOptions} from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
 const defaultOptions = {
@@ -9,13 +9,15 @@ const defaultOptions = {
   hideProgressBar: true,
 };
 
+const iconClass = "mdi v-icon v-icon--size-large";
+
 export const toasts = {
   success(message: string) {
     useToast().success(message, {
       ...defaultOptions,
       timeout: 2000,
       icon: {
-        icon: "mdi-check-outline",
+        iconClass: "mdi-check-outline " + iconClass,
       },
     });
   },
@@ -24,7 +26,7 @@ export const toasts = {
       ...defaultOptions,
       timeout: 5000,
       icon: {
-        icon: "mdi-close-outline",
+        iconClass: "mdi-close-outline " + iconClass,
       },
     });
   },
@@ -33,7 +35,7 @@ export const toasts = {
       ...defaultOptions,
       timeout: 3000,
       icon: {
-        icon: "mdi-alert-outline",
+        iconClass: "mdi-alert-outline " + iconClass,
       },
     });
   },
@@ -42,7 +44,7 @@ export const toasts = {
       ...defaultOptions,
       timeout: 2000,
       icon: {
-        icon: "mdi-information-outline",
+        iconClass: "mdi-information-box-outline " + iconClass,
       },
     });
   },
@@ -53,5 +55,9 @@ export const toasts = {
     return isFormValid;
   },
 };
+
+export const options: PluginOptions = {
+  maxToasts: 3
+}
 
 export default Toast;

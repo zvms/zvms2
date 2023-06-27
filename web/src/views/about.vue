@@ -105,6 +105,8 @@
       :src="`http://${serverIP}:4001`"
       height="500px"
       width="1000px"
+      seamless
+      frameborder="0"
     ></iframe>
     <p v-else>登录后可以在此处查看镇中天气预报哦</p>
   </v-card>
