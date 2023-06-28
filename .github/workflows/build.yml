@@ -31,3 +31,9 @@ jobs:
         working-directory: ./web
         run: |
           npx pnpm build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: dist
+          path: ./web/dist
