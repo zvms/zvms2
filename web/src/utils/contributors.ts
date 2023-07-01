@@ -78,7 +78,7 @@ export const contributorsOther = {
   },
   _7086cmd: {
     displayName: "7086cmd",
-    infoHtml: `蛟川书院 初三 吴承宇<br/>
+    infoHtml: `2023级 吴承宇<br/>
 github.com/7086cmd|逸一时误一世，逸久逸久 Bug 已零|大 Bug 病了二 Bug 瞧，三 Bug 采药四 Bug 嗷|菜到除了头全是#00FF00`,
   },
   zjr: {
