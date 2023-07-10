@@ -58,11 +58,11 @@
           label
           small
           class="ma-1"
-          @click="showContributorInfo(contributorsOther._7086cmd)"
+          @click="showContributorInfo(contributorsOther.hhj)"
         >
-          7086cmd
+          hhj
         </v-chip>
-        的前端初始化配置, 以及
+        提供和部署的校外服务器, 以及
         <v-chip
           label
           small

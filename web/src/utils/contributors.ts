@@ -67,19 +67,49 @@ export const contributorsV2 = [
     一只蒟蒻<br/>
     <img src="${clcImage}" width="240" height="201" lazy><br/>`,
   },
+  {
+    displayName: "7086cmd",
+    infoHtml: `2023级 吴承宇<br/>
+github.com/7086cmd|逸一时误一世，逸久逸久 Bug 已零|大 Bug 病了二 Bug 瞧，三 Bug 采药四 Bug 嗷|菜到除了头全是#00FF00`,
+  },
+  {
+    displayName: "byh",
+    infoHtml: `2023级 鲍屹涵<br/>`,
+  },
 ] satisfies Contributor[];
 
 export const contributorsOther = {
+  hhj:{
+    displayName: "hhj",
+    infoHtml: `2022级 黄浩杰<br/>
+    <style>
+        /* 添加彩虹动画 */
+        @keyframes rainbow {
+            0%   {color: red;}
+            16%  {color: orange;}
+            33%  {color: yellow;}
+            50%  {color: green;}
+            66%  {color: blue;}
+            83%  {color: indigo;}
+            100% {color: violet;}
+        }
+
+        /* 添加动画效果 */
+        .rainbow-text {
+            animation: rainbow 2s infinite;
+        }
+    </style>
+    <h1 class="rainbow-text">黄浩杰的自我介绍</h1>
+    <p>我是黄浩杰，来自2023级5班。</p>
+    <p>我的个人博客可以在 010305.xyz 找到。</p>
+    <p>如果你想联系我，可以通过QQ：2648616832。</p>
+    <p> <img src="https://010305.xyz/hhj.jpg"/> </p>`
+  },
   zsz: {
     displayName: "zsz",
     infoHtml: `2022级 张圣泽
 政宣部成员<br/>
 <img src="${iconUrl}" width="300px" class="pt-2" />`,
-  },
-  _7086cmd: {
-    displayName: "7086cmd",
-    infoHtml: `2023级 吴承宇<br/>
-github.com/7086cmd|逸一时误一世，逸久逸久 Bug 已零|大 Bug 病了二 Bug 瞧，三 Bug 采药四 Bug 嗷|菜到除了头全是#00FF00`,
   },
   zjr: {
     displayName: "zjr",
@@ -113,7 +143,7 @@ github.com/7086cmd|逸一时误一世，逸久逸久 Bug 已零|大 Bug 病了�
 			text-shadow:none;
 			transform: rotateY(360deg);
 		}
-		
+
 		@keyframes pop-up {
 			from {
 				transform: scale(0.5);
@@ -124,6 +154,6 @@ github.com/7086cmd|逸一时误一世，逸久逸久 Bug 已零|大 Bug 病了�
 				opacity: 1;
 			}
 		}
-	</style><div class="zjr"><h1 class="zjr">这是周济睿<br>文档编写以及流程测试<br>纯合致死<br>不啻微芒，造炬成阳</h1></div>` ,
+	</style><div class="zjr"><h1 class="zjr">这是周济睿<br>文档编写以及流程测试<br>纯合致死<br>不啻微芒，造炬成阳</h1></div>`,
   },
 } satisfies Record<string, Contributor>;
