@@ -7,7 +7,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import autoImport from "unplugin-auto-import/vite";
 import vueComponents from "unplugin-vue-components/vite";
 import { Vuetify3Resolver } from "unplugin-vue-components/resolvers";
-import mdPlugin, { Mode } from "vite-plugin-markdown";
+import mdPlugin, { Mode } from "vite-plugin-markdown-mermaid";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -31,7 +31,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      //"mermaid": "https://cdn.bootcdn.net/ajax/libs/mermaid/10.1.0/mermaid.esm.min.mjs",
     },
   },
 });

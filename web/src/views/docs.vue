@@ -30,8 +30,7 @@
 import { mapStores } from "pinia";
 import { docs, type DocItem } from "@/docs";
 import { useDialogStore } from "@/stores";
-import "github-markdown-css";
-import mermaid from "mermaid";
+import "github-markdown-css/github-markdown-light.css";
 import { toasts } from "@/plugins/toastification";
 
 export default {
@@ -42,12 +41,6 @@ export default {
   },
   beforeMount() {
     this.load(this.$route.params.docId);
-  },
-  mounted() {
-    this.renderMermaid();
-  },
-  updated() {
-    this.renderMermaid();
   },
   methods: {
     load(docId: string | string[]): boolean {
@@ -61,11 +54,6 @@ export default {
       toasts.error(`找不到文档 "${docId}"`);
       this.$router.push("/");
       return false;
-    },
-    renderMermaid() {
-      mermaid.run({
-        querySelector: ".language-mermaid",
-      });
     },
     gotoDoc(path: string) {
       this.$router.push(path);
