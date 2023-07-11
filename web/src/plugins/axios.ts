@@ -3,13 +3,14 @@ import Axios from "axios";
 //import { VERSION } from "@/utils/metadata";
 
 export const serverIP = "172.31.2.4";
-export const baseURL = `http://${serverIP}:11452`;
-
+export const baseURL =
+  window.location.hostname === "zhzx.top"
+    ? "https://vercelapi.zhzx.top"
+    : `http://${serverIP}:11452`;
 
 export const NoRetryTime = 5 * 60 * 1000;
 
 export const MaxLoadingTime = 10 * 1000;
-
 
 const axios = Axios.create({
   baseURL,
