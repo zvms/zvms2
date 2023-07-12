@@ -53,7 +53,7 @@
       </v-main>
     </v-theme-provider>
     <div id="prevent-click-hover" v-if="loadingStore.isLoading"></div>
-    <v-card v-if="dialogStore.dialog" style="position: fixed; left: 30%; width: 40%; top:30%; height: 30%">
+    <v-card v-if="dialogStore.dialog" style="position: fixed; left: 30%; width: 40%; top:30%; height: 30%; z-index: 9999;">
       <v-card-title>{{ dialogStore.dialog!.title }}</v-card-title>
       <v-card-text>
         {{ dialogStore.dialog!.message }}

@@ -132,4 +132,5 @@ def deco(impl, params, response, auth):
             import traceback
             info = traceback.format_exc()
             logger.error(info)
+            return error(ex.__class__.__name__)
     return wrapper

@@ -99,6 +99,7 @@
       </v-form>
     </v-card-text>
   </v-card>
+  <!--
   <v-card>
     <iframe
       v-if="!(infoStore.permission & Categ.None)"
@@ -110,6 +111,7 @@
     ></iframe>
     <p v-else>登录后可以在此处查看镇中天气预报哦</p>
   </v-card>
+  -->
   <v-dialog v-model="contributorInfoDlg">
     <v-card>
       <v-card-title>关于 {{ contributorInfo.displayName }}</v-card-title>

@@ -35,7 +35,7 @@ export const IS_VAILD = () => (v: any) => {
   //  return `义工时间过长。有${timeToHint(v)}`;
   } else if (v <= 0) {
     return "义工时间小于等于0";
-  } else if (v <= 5) {
+  } else if (v <= 10) {
     return "义工时间过短，此处的时间单位是分钟";
   }
   return true;
