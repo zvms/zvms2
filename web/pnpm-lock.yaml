@@ -13,7 +13,7 @@ dependencies:
     version: 4.3.1
   '@vitejs/plugin-legacy':
     specifier: ^4.1.0
-    version: 4.1.0(terser@5.18.2)(vite@4.3.8)
+    version: 4.1.0(terser@5.18.2)(vite@4.3.9)
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -78,10 +78,10 @@ devDependencies:
     version: 9.0.2
   '@vitejs/plugin-vue':
     specifier: ^4.2.3
-    version: 4.2.3(vite@4.3.8)(vue@3.3.4)
+    version: 4.2.3(vite@4.3.9)(vue@3.3.4)
   '@vitejs/plugin-vue-jsx':
     specifier: ^3.0.1
-    version: 3.0.1(vite@4.3.8)(vue@3.3.4)
+    version: 3.0.1(vite@4.3.9)(vue@3.3.4)
   '@vue/tsconfig':
     specifier: ^0.4.0
     version: 0.4.0
@@ -98,11 +98,11 @@ devDependencies:
     specifier: ^0.22.12
     version: 0.22.12(vue@3.3.4)
   vite:
-    specifier: 4.3.8
-    version: 4.3.8(@types/node@18.16.19)(terser@5.18.2)
+    specifier: 4.3.9
+    version: 4.3.9(@types/node@18.16.19)(terser@5.18.2)
   vite-plugin-markdown-mermaid:
     specifier: ^1.0.2
-    version: 1.0.2(typescript@5.0.4)(vite@4.3.8)
+    version: 1.0.2(typescript@5.0.4)(vite@4.3.9)
   vue-tsc:
     specifier: ^1.8.4
     version: 1.8.4(typescript@5.0.4)
@@ -2068,7 +2068,7 @@ packages:
     resolution: {integrity: sha512-0x+Acegd8k6lFJc7SN4kVhO669fBiMtBjq/WqX2C8Uz5mSgS+nRvfXs0BK2aiV67T0rauBoAmEkQfURQjI2+4Q==}
     dev: false
 
-  /@vitejs/plugin-legacy@4.1.0(terser@5.18.2)(vite@4.3.8):
+  /@vitejs/plugin-legacy@4.1.0(terser@5.18.2)(vite@4.3.9):
     resolution: {integrity: sha512-bLPHaKAKtPq40Cx2Hauz/VE39kStx7gUC21RM+0/OvBgiOlqrK3b1mIMUc4Cak1xLOrK99j174/7xczfu4OLHA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -2083,12 +2083,12 @@ packages:
       regenerator-runtime: 0.13.11
       systemjs: 6.14.1
       terser: 5.18.2
-      vite: 4.3.8(@types/node@18.16.19)(terser@5.18.2)
+      vite: 4.3.9(@types/node@18.16.19)(terser@5.18.2)
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@vitejs/plugin-vue-jsx@3.0.1(vite@4.3.8)(vue@3.3.4):
+  /@vitejs/plugin-vue-jsx@3.0.1(vite@4.3.9)(vue@3.3.4):
     resolution: {integrity: sha512-+Jb7ggL48FSPS1uhPnJbJwWa9Sr90vQ+d0InW+AhBM22n+cfuYqJZDckBc+W3QSHe1WDvewMZfa4wZOtk5pRgw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -2098,20 +2098,20 @@ packages:
       '@babel/core': 7.22.8
       '@babel/plugin-transform-typescript': 7.22.5(@babel/core@7.22.8)
       '@vue/babel-plugin-jsx': 1.1.5(@babel/core@7.22.8)
-      vite: 4.3.8(@types/node@18.16.19)(terser@5.18.2)
+      vite: 4.3.9(@types/node@18.16.19)(terser@5.18.2)
       vue: 3.3.4
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-vue@4.2.3(vite@4.3.8)(vue@3.3.4):
+  /@vitejs/plugin-vue@4.2.3(vite@4.3.9)(vue@3.3.4):
     resolution: {integrity: sha512-R6JDUfiZbJA9cMiguQ7jxALsgiprjBeHL5ikpXfJCH62pPHtI+JdJ5xWj6Ev73yXSlYl86+blXn1kZHQ7uElxw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.3.8(@types/node@18.16.19)(terser@5.18.2)
+      vite: 4.3.9(@types/node@18.16.19)(terser@5.18.2)
       vue: 3.3.4
     dev: true
 
@@ -4613,7 +4613,7 @@ packages:
       mutation-observer: 1.0.3
     dev: false
 
-  /vite-plugin-markdown-mermaid@1.0.2(typescript@5.0.4)(vite@4.3.8):
+  /vite-plugin-markdown-mermaid@1.0.2(typescript@5.0.4)(vite@4.3.9):
     resolution: {integrity: sha512-bfQslv4saGvoCHDaVD/B4Y+5S8tXaEbbl//hShFb5oJe4IqzkWhJ5OSNsTupxYKraecb6kZd8bQPnfUigDXvHg==}
     peerDependencies:
       vite: ^2.0.0 || ^3.0.0 || ^4.0.0
@@ -4625,7 +4625,7 @@ packages:
       htmlparser2: 6.1.0
       markdown-it: 12.3.2
       node-mermaid-render: 1.0.3(typescript@5.0.4)
-      vite: 4.3.8(@types/node@18.16.19)(terser@5.18.2)
+      vite: 4.3.9(@types/node@18.16.19)(terser@5.18.2)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -4634,8 +4634,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /vite@4.3.8(@types/node@18.16.19)(terser@5.18.2):
-    resolution: {integrity: sha512-uYB8PwN7hbMrf4j1xzGDk/lqjsZvCDbt/JC5dyfxc19Pg8kRm14LinK/uq+HSLNswZEoKmweGdtpbnxRtrAXiQ==}
+  /vite@4.3.9(@types/node@18.16.19)(terser@5.18.2):
+    resolution: {integrity: sha512-qsTNZjO9NoJNW7KnOrgYwczm0WctJ8m/yqYAMAK9Lxt4SoySUfS5S8ia9K7JHpa3KEeMfyF8LoJ3c5NeBJy6pg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
