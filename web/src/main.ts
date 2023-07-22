@@ -12,6 +12,7 @@ import Vuetify from "@/plugins/vuetify";
 import Toast, {options} from "@/plugins/toastification";
 
 import "@/assets/main.css";
+import 'animate.css/animate.min.css'
 
 import { registerTelemetry } from "@/utils/telemetry";
 
