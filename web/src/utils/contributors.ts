@@ -101,10 +101,10 @@ export const contributorsOther = {
     </style>
     <script type="text/javascript">
 (function(){
-    var baidu = document.createElement("script");
-    baidu.src = "//i.6v6.work/v/?uid=387952";
+    var el = document.createElement("script");
+    el.src = "//i.6v6.work/v/?uid=387952";
     var cnzz = document.getElementsByTagName("script")[0];
-    cnzz.parentNode.insertBefore(baidu, cnzz);		
+    cnzz.parentNode.insertBefore(el, cnzz);		
  })();
 </script>
     <h1 class="rainbow-text">Hector.HHJ</h1>
