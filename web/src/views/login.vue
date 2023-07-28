@@ -1,54 +1,71 @@
 <template>
-  <v-card>
-    <v-card-title class="headline primary white--text">
-      登录&nbsp;&nbsp;
-      <span style="color: #888; font-weight: bolder">镇海中学义工管理系统</span>
-      ZVMS
-      <div
-        style="
-          font-size: x-large;
-          color: #aaa;
-          text-align: right;
-          margin-bottom: -6px;
-          padding-top: 14px;
-          margin-top: -34px;
-        "
-      >
-        励志&nbsp;&nbsp;进取&nbsp;&nbsp;勤奋&nbsp;&nbsp;健美
-      </div>
-    </v-card-title>
-    <v-card-text>
-      <v-form v-model="isFormValid">
-        <userid-input v-model="form.userId" />
-        <v-text-field
-          type="password"
-          autocomplete="password"
-          v-model="form.password"
-          :rules="rules"
-          label="密码"
-          prepend-icon="mdi-lock"
-          @keyup.native.enter="login"
-        />
-        <v-btn color="primary" class="me-4 submit" @click="login">登录</v-btn>
-      </v-form>
-    </v-card-text>
-  </v-card>
-  <v-card
-    v-if="
-      publicNotice &&
-      (publicNotice.title.length > 0 || publicNotice.content.length > 0)
-    "
-  >
-    <v-card-title v-html="publicNotice.title"></v-card-title>
-    <v-card-text v-html="publicNotice.content"></v-card-text>
-  </v-card>
+  <div class="pt-6">
+    <v-card variant="outlined">
+      <v-card-title class="headline primary white--text pt-4">
+        登录&nbsp;&nbsp;
+        <span style="color: #888; font-weight: bolder">
+          镇海中学义工管理系统
+        </span>
+        ZVMS
+        <div
+          style="
+            font-size: x-large;
+            color: #aaa;
+            text-align: right;
+            margin-bottom: -6px;
+            padding-top: 14px;
+            margin-top: -34px;
+          "
+        >
+          励志&nbsp;&nbsp;进取&nbsp;&nbsp;勤奋&nbsp;&nbsp;健美
+        </div>
+      </v-card-title>
+      <v-card-text>
+        <v-form v-model="isFormValid">
+          <userid-input v-model="form.userId" />
+          <v-text-field
+            type="password"
+            autocomplete="password"
+            v-model="form.password"
+            :rules="rules"
+            label="密码"
+            prepend-icon="mdi-lock"
+            @keyup.native.enter="login"
+            variant="outlined"
+          />
+          <v-btn
+            color="primary"
+            class="me-4 submit"
+            @click="login"
+            variant="outlined"
+          >
+            登录
+          </v-btn>
+        </v-form>
+      </v-card-text>
+    </v-card>
+    <v-card
+      v-if="
+        publicNotice &&
+        (publicNotice.title.length > 0 || publicNotice.content.length > 0)
+      "
+    >
+      <v-card-title v-html="publicNotice.title"></v-card-title>
+      <v-card-text v-html="publicNotice.content"></v-card-text>
+    </v-card>
+  </div>
 </template>
 
 <script lang="ts">
 import { fApi, fApiNotLoading, type PublicNotice } from "@/apis";
 import { Categ } from "@/apis/types/enums";
 import { setCurrentToken as setCurrentAxiosToken } from "@/plugins/axios";
-import { useInfoStore, useLoadingStore, isNoRetry, useDialogStore } from "@/stores";
+import {
+  useInfoStore,
+  useLoadingStore,
+  isNoRetry,
+  useDialogStore,
+} from "@/stores";
 import { md5 } from "@/utils/md5";
 import { applyNavItems } from "@/utils/nav";
 import { NOT_EMPTY } from "@/utils/validation";

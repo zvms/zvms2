@@ -8,14 +8,15 @@
         touchless
       >
         <v-list nav dense class="py-0">
-          <v-list-item line="two" class="px-0">
+          <v-list-item line="one" class="px-0">
             <!-- <v-list-item tile class="w-50">
               <img src="./assets/logo.png" />
             </v-list-item> -->
-            <v-list-item class="pt-5">
+            <v-list-item class="pt-4">
               <v-list-item-title style="font-size: medium">
                 <span
                   style="color: rgb(var(--v-theme-color2)); font-size: larger"
+                  class="py-2 pt-4"
                 >
                   镇海中学
                 </span>

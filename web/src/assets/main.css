@@ -1,5 +1,20 @@
 /*@import "lxgw-wenkai-lite-webfont/style.css";*/
 
+@font-face {
+  font-family: "Source Han Sans";
+  src: url("./SourceHanSansSC-Regular.woff2");
+}
+
+@font-face {
+  font-family: "Ubuntu Mono";
+  src: url("./UbuntuMono-R.ttf");
+}
+
+@font-face {
+  font-family: "Ubuntu";
+  src: url("./Ubuntu-R.ttf");
+}
+
 .v-card {
   margin-bottom: 0.5em;
 }
@@ -8,12 +23,13 @@
   z-index: 10000 !important;
 }
 body {
-  font-family: "LXGW WenKai", sans-serif;
+  font-family: "Ubuntu", "Source Han Sans", sans-serif;
   font-size: larger;
+  user-select: none;
 }
 pre,
 code {
-  font-family: "LXGW WenKai Mono", sans-serif;
+  font-family: "Ubuntu Mono", "Source Han Sans SC", sans-serif;
 }
 
 .v-card-title {

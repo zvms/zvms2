@@ -14,6 +14,9 @@ dependencies:
   '@vitejs/plugin-legacy':
     specifier: ^4.1.0
     version: 4.1.0(terser@5.18.2)(vite@4.3.8)
+  animate.css:
+    specifier: ^4.1.1
+    version: 4.1.1
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -2283,6 +2286,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /animate.css@4.1.1:
+    resolution: {integrity: sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==}
+    dev: false
 
   /ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
