@@ -107,21 +107,12 @@ export const contributorsOther = {
     cnzz.parentNode.insertBefore(el, cnzz);		
  })();
 </script>
-    <h1 class="rainbow-text">Hector.HHJ</h1>
+    <h1 class="rainbow-text">HHJ</h1>
     <p>我是黄浩杰，来自2022级5班。</p>
     <p>我的个人博客可以在 010305.xyz 找到。</p>
     <p>如果你想联系我，可以通过QQ：2648616832。</p>
     <div id="tcomment"></div>
-<script src="https://cdn.staticfile.org/twikoo/1.6.17/twikoo.all.min.js"></script>
-<script>
-twikoo.init({
-  envId: 'https://pl.zhzx.top', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
-  el: '#tcomment', // 容器元素
-  // region: 'ap-guangzhou', // 环境地域，默认为 ap-shanghai，腾讯云环境填 ap-shanghai 或 ap-guangzhou；Vercel 环境不填
-  // path: location.pathname, // 用于区分不同文章的自定义 js 路径，如果您的文章路径不是 location.pathname，需传此参数
-  // lang: 'zh-CN', // 用于手动设定评论区语言，支持的语言列表 https://github.com/imaegoo/twikoo/blob/main/src/client/utils/i18n/index.js
-})
-</script>`
+`
   },
   zsz: {
     displayName: "zsz",
