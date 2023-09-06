@@ -27,21 +27,21 @@ export default createVuetify({
 
   theme: {
     themes: {
-      light: {
-        dark: false,
-        colors: {
-          color1: "#CA0808",
-          color2: "#B21919",
-          color3: "#B33232",
-          color4: "#891F1F",
-          color5: "#33333F",
-          color6: "#6E6E76",
-          color7: "#766E6E",
-          color8: "#524040",
-          color9: "#5F2817",
-          color10: "#D98640",
-        },
-      },
+    //   light: {
+    //     dark: false,
+    //     colors: {
+    //       color1: "#CA0808",
+    //       color2: "#B21919",
+    //       color3: "#B33232",
+    //       color4: "#891F1F",
+    //       color5: "#33333F",
+    //       color6: "#6E6E76",
+    //       color7: "#766E6E",
+    //       color8: "#524040",
+    //       color9: "#5F2817",
+    //       color10: "#D98640",
+    //     },
+    //   },
     },
   },
 });
