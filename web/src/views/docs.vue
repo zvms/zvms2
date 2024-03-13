@@ -1,28 +1,40 @@
 <template>
   <v-sheet>
     <v-breadcrumbs :items="breadcrumbs"></v-breadcrumbs>
+    <transition
+      enter-active-class="animate__animated animate__fadeInDown"
+      leave-active-class="animate__animated animate__fadeOutDown"
+    >
+      <div v-if="!changing">
+        <h1 v-if="breadcrumbs.length !== 1 && !changing">
+          {{ currentDoc.title }}
+        </h1>
 
-    <h1>{{ currentDoc.title }}</h1>
+        <v-list density="compact">
+          <v-list-item
+            v-if="currentDoc.parent"
+            prepend-icon="mdi-arrow-u-left-top"
+            @click="goBack"
+          >
+            <span class="link-tip">返回</span>
+            {{ currentDoc.parent!.title }}
+          </v-list-item>
+          <v-list-item
+            prepend-icon="mdi-file-document-outline"
+            v-for="c in currentDoc.children"
+            @click="gotoDoc(c.urlPath)"
+          >
+            {{ c.title }}
+          </v-list-item>
+        </v-list>
 
-    <v-list density="compact">
-      <v-list-item
-        v-if="currentDoc.parent"
-        prepend-icon="mdi-arrow-u-left-top"
-        @click="goBack"
-      >
-        <span class="link-tip">返回</span>
-        {{ currentDoc.parent!.title }}
-      </v-list-item>
-      <v-list-item
-        prepend-icon="mdi-file-document-outline"
-        v-for="c in currentDoc.children"
-        @click="gotoDoc(c.urlPath)"
-      >
-        {{ c.title }}
-      </v-list-item>
-    </v-list>
-
-    <article class="markdown-body" v-html="currentDoc.content"></article>
+        <article
+          v-if="!changing"
+          class="markdown-body"
+          v-html="currentDoc.content"
+        ></article>
+      </div>
+    </transition>
   </v-sheet>
 </template>
 
@@ -37,6 +49,7 @@ export default {
   data() {
     return {
       currentDoc: undefined as any as DocItem,
+      changing: false,
     };
   },
   beforeMount() {
@@ -56,10 +69,18 @@ export default {
       return false;
     },
     gotoDoc(path: string) {
+      this.changing = true;
       this.$router.push(path);
+      setTimeout(() => {
+        this.changing = false;
+      }, 100);
     },
     goBack() {
+      this.changing = true;
       this.$router.push(this.currentDoc.parent!.urlPath);
+      setTimeout(() => {
+        this.changing = false;
+      }, 200);
     },
   },
   beforeRouteUpdate(to, _from, next) {

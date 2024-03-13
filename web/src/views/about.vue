@@ -1,7 +1,9 @@
 <template>
-  <v-card>
-    <v-card-title>关于ZVMS</v-card-title>
-    <v-card-text>
+  <div>
+
+  <VCard>
+    <VCardTitle>关于ZVMS</VCardTitle>
+    <VCardText>
       <p style="font-size: medium">
         <span class="f">Z</span>
         henhai High School
@@ -12,95 +14,96 @@
         <span class="f">S</span>
         ystem
       </p>
-      <v-img
+      <VImg
         src="https://img.shields.io/github/stars/zvms/zvms?logo=github"
         width="70"
         class="my-1"
-        @click="toasts.info('访问github.com/zvms/zvms，给出一个star吧~')"
-      ></v-img>
-      <v-img
+        @click="toasts.info('请访问 github.com/zvms/zvms，给出一个star吧~')"
+      ></VImg>
+      <VImg
         src="https://gitee.com/zvms/zvms/badge/star.svg?theme=dark"
         width="70"
-        @click="toasts.info('访问gitee.com/zvms/zvms，给出一个star吧~')"
-      ></v-img>
-    </v-card-text>
-  </v-card>
-  <v-card>
-    <v-card-title>关于开发者</v-card-title>
-    <v-card-text>
+        @click="toasts.info('请访问 gitee.com/zvms/zvms，给出一个star吧~')"
+      ></VImg>
+    </VCardText>
+  </VCard>
+  <VCard>
+    <VCardTitle>关于开发者</VCardTitle>
+    <VCardText>
       <p style="font-size: larger">
         本项目初版由
-        <v-chip
+        <VChip
           label
           small
           class="ma-1"
-          v-for="c in contributorsV1"
+          v-for="(c, idx) in contributorsV1"
           @click="showContributorInfo(c)"
+          :key="idx"
         >
           {{ c.displayName }}
-        </v-chip>
+        </VChip>
         开发。
         <br />
         新版由
-        <v-chip
+        <VChip
           label
           small
           class="ma-1"
-          v-for="c in contributorsV2"
+          v-for="(c, idx) in contributorsV2"
+          :key="idx"
           @click="showContributorInfo(c)"
         >
           {{ c.displayName }}
-        </v-chip>
+        </VChip>
         开发。
         <br />
         特别感谢:
-        <v-chip
+        <VChip
           label
           small
           class="ma-1"
           @click="showContributorInfo(contributorsOther.hhj)"
         >
           hhj
-        </v-chip>
+        </VChip>
         提供和部署的校外服务器, 以及
-        <v-chip
+        <VChip
           label
           small
           class="ma-1"
           @click="showContributorInfo(contributorsOther.zsz)"
         >
           zsz
-        </v-chip>
+        </VChip>
         的新版图标设计和
-        <v-chip
+        <VChip
           label
           small
           class="ma-1"
           @click="showContributorInfo(contributorsOther.zjr)"
         >
           zjr
-        </v-chip>
+        </VChip>
         的疯狂测试。
       </p>
-    </v-card-text>
-  </v-card>
-  <v-card v-if="!(infoStore.permission & Categ.None)">
-    <v-card-title>反馈</v-card-title>
-    <v-card-text>
-      <v-form v-model="isFormValid">
-        <v-textarea
+    </VCardText>
+  </VCard>
+  <VCard v-if="!(infoStore.permission & Categ.None)">
+    <VCardTitle>反馈</VCardTitle>
+    <VCardText>
+      <VForm v-model="isFormValid">
+        <VTextarea
           v-model.trim="report"
           :rules="rules"
           label="问题的描述"
           type="text"
           prepend-icon="mdi-comment-text-outline"
         />
-        <v-btn color="primary" class="submit" @click="submitReport">提交</v-btn>
-      </v-form>
-    </v-card-text>
-  </v-card>
-  <!--
-  <v-card>
+        <VBtn color="primary" class="submit" @click="submitReport">提交</VBtn>
+      </VForm>
+    </VCardText>
+  </VCard>
+  <VCard>
     <iframe
       v-if="!(infoStore.permission & Categ.None)"
       :src="`http://${serverIP}:4001`"
@@ -109,15 +112,15 @@
       seamless
       frameborder="0"
     ></iframe>
-    <p v-else>登录后可以在此处查看镇中天气预报哦</p>
-  </v-card>
-  -->
-  <v-dialog v-model="contributorInfoDlg">
-    <v-card>
-      <v-card-title>关于 {{ contributorInfo.displayName }}</v-card-title>
-      <v-card-text v-html="contributorInfo.infoHtml"></v-card-text>
-    </v-card>
-  </v-dialog>
+    <p v-else>登录后可以在此查看镇中天气预报</p>
+  </VCard>
+  <VDialog v-model="contributorInfoDlg">
+    <VCard>
+      <VCardTitle>关于 {{ contributorInfo.displayName }}</VCardTitle>
+      <VCardText v-html="contributorInfo.infoHtml"></VCardText>
+    </VCard>
+  </VDialog>
+  </div>
 </template>
 
 <script lang="ts">

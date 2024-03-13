@@ -80,7 +80,7 @@ github.com/7086cmd|逸一时误一世，逸久逸久 Bug 已零|大 Bug 病了�
 
 export const contributorsOther = {
   hhj:{
-    displayName: "hhj",
+    displayName: "Hector",
     infoHtml: `2022级 黄浩杰<br/>
     <style>
         /* 添加彩虹动画 */
@@ -99,11 +99,20 @@ export const contributorsOther = {
             animation: rainbow 2s infinite;
         }
     </style>
-    <h1 class="rainbow-text">黄浩杰的自我介绍</h1>
-    <p>我是黄浩杰，来自2023级5班。</p>
+    <script type="text/javascript">
+(function(){
+    var el = document.createElement("script");
+    el.src = "//i.6v6.work/v/?uid=387952";
+    var cnzz = document.getElementsByTagName("script")[0];
+    cnzz.parentNode.insertBefore(el, cnzz);		
+ })();
+</script>
+    <h1 class="rainbow-text">HHJ</h1>
+    <p>我是黄浩杰，来自2022级5班。</p>
     <p>我的个人博客可以在 010305.xyz 找到。</p>
     <p>如果你想联系我，可以通过QQ：2648616832。</p>
-    <p> <img src="https://010305.xyz/hhj.jpg"/> </p>`
+    <div id="tcomment"></div>
+`
   },
   zsz: {
     displayName: "zsz",
