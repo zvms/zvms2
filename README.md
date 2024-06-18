@@ -4,7 +4,7 @@
 
 ## 应用截图：
 
-### 登陆页面
+### 登录页面
 
 ![登录页面](https://xhfs4.ztytech.com/CA107011/d02c8ebb422c4bfa8288a5e35146effa.png)
 
