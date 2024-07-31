@@ -2,7 +2,7 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 
 const keyTableApiUrl =
-  "https://gitee.com/api/v5/repos/zvms/zvms-imagebed/issues/comments/17281159?access_token=bce04e8d78a6e8e5fa514aa96d79d417";
+  "https://gitee.com/api/v5/repos/zvms/zvms-imagebed/issues/comments/17281159?access_token=TOKEN";
 
 type KeyTable = [short: string, remoteUrl: string][];
 
